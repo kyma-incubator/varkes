@@ -1,0 +1,12 @@
+{
+    "name": "kyma-application-connector",
+    "version": "0.0.1",
+    "description": "kyma application controller interface",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "request": "^2.88.0"
+    }
+}
