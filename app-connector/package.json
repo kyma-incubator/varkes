@@ -1,0 +1,11 @@
+{
+  "name": "app-connector",
+  "version": "1.0.0",
+  "description": "request certificates to connect with kyma",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC"
+}
