@@ -4,7 +4,7 @@
   "description": "request certificates to connect with kyma",
   "main": "server/server.js",
   "scripts": {
-    "prestart": "openssl genrsa -out keys/ec-default.key 2048",
+    "prestart": "node prestart.js",
     "start": "node ."
   },
   "author": "",
@@ -12,7 +12,10 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "request": "^2.88.0",
-    "require": "^2.4.20"
+    "request": "^2.88.0"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.wdf.sap.corp:SAP-CP-Extension-Factory/harmonia.git"
   }
 }
