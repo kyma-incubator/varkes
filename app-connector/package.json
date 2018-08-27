@@ -4,8 +4,13 @@
   "description": "request certificates to connect with kyma",
   "main": "server/server.js",
   "scripts": {
-    "test": "test"
+    "prestart": "openssl genrsa -out keys/ec-default.key 2048",
+    "start": "node ."
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "request": "^2.88.0"
+  }
 }
