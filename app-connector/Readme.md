@@ -2,7 +2,7 @@
 
 For running with docker,
 
-- `docker build -t harmonia/server .`
+- `npm run docker`
 - `docker run -p 3000:3000 harmonia/server`
 
 Go to localhost:3000.

@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title>Harmonia</title>
+
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+</head>
+
+<body>
+    <h1>Harmonia</h1>
+
+    Token Url<input type="text" id="input"><br>
+    <button id="button">Send!</button>
+
+    <div>
+        <b>Response:</b>
+        <br>
+        <p id="response">
+
+
+        </p>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#button").click(function () {
+                console.log($("#input").val())
+
+                $.post("/startConnection/", {
+                    tokenUrl: $("input").val()
+                },
+                    function (data, status) {
+                        $("#response").text(data)
+                    }
+                )
+
+
+            })
+        })
+
+    </script>
+</body>
+
+</html>

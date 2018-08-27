@@ -3,15 +3,15 @@ var connector = require("./connector")
 const bodyParser = require('body-parser');
 var utility = require('./utility')
 
-var app =  express();
+var app = express();
 app.use(bodyParser.json());
 var config = utility.readJsonFileSync("config.json")
 app.post(config.startConnUrl, function (req, res) {
 
-     if(!req.body)res.sendStatus(400);
+    if (!req.body) res.sendStatus(400);
 
-     connector.exportKeys(req.body.url,config.keyDir);
-     res.send(200);
+    connector.exportKeys(req.body.url, config.keyDir);
+    res.send(200);
 });
 
 app.get("/", function (req, res) {
