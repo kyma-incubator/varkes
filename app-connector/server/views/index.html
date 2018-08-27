@@ -29,14 +29,15 @@
             $("#button").click(function () {
                 console.log($("#input").val())
 
-                $.post("/startConnection/", {
-                    tokenUrl: $("input").val()
+                $.post("/startConn", {
+                    url: $("input").val()
                 },
                     function (data, status) {
+                        console.log(data)
                         $("#response").text(data)
                     }
                 )
-
+                $.get("/", data => { console.log(data) })
 
             })
         })

@@ -1,23 +1,25 @@
 var express = require("express")
 var connector = require("./connector")
 const bodyParser = require('body-parser');
-var utility = require('./utility')
-
+const CONFIG = require("../config")
 var app = express();
 app.use(bodyParser.json());
-var config = utility.readJsonFileSync("config.json")
-app.post(config.startConnUrl, function (req, res) {
+
+app.post("/startConn", function (req, res) {
 
     if (!req.body) res.sendStatus(400);
 
-    connector.exportKeys(req.body.url, config.keyDir);
-    res.send(200);
+    connector.exportKeys(req.body.url, (data) => {
+
+        res.send(data)
+    })
 });
 
 app.get("/", function (req, res) {
-    res.end("testing")
+    res.sendfile("server/views/index.html")
 })
-var server = app.listen(parseInt(config.port), function () {
+
+var server = app.listen(3000, function () {
     var host = server.address().address
     var port = server.address().port
 
