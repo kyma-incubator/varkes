@@ -1,12 +1,17 @@
 var express = require("express")
 var connector = require("./connector")
+const bodyParser = require('body-parser');
 
+var app =  express();
+//var urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.use(bodyParser.json());
 
-var app = express()
-var url
 app.post('/startConnection/', function (req, res) {
 
-    console.log(res.body);
+     if(!req.body)res.sendStatus(400);
+
+     connector.exportKeys(req.body.url);
+     res.send(200);
 });
 
 app.get("/", function (req, res) {
