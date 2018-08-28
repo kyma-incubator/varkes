@@ -17,6 +17,6 @@
   },
   "repository": {
     "type": "ssh",
-    "url": "git@github.wdf.sap.corp:SAP-CP-Extension-Factory/harmonia.git"
+    "url": "git@github.com:kyma-incubator/varkes.git"
   }
 }
