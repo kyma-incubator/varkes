@@ -6,17 +6,18 @@
   "scripts": {
     "prestart": "node prestart.js",
     "start": "node .",
-    "docker": "docker build -t harmonia/server . && docker run -p 3000:3000 harmonia/server"
+    "build": "docker build -t varkes/server ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-resource": "^1.0.0",
     "request": "^2.88.0"
   },
   "repository": {
     "type": "ssh",
-    "url": "git@github.wdf.sap.corp:SAP-CP-Extension-Factory/harmonia.git"
+    "url": "git@github.com:kyma-incubator/varkes.git"
   }
 }
