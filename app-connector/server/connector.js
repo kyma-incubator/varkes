@@ -1,8 +1,10 @@
 var request = require("request")
 const { exec } = require('child_process')
 const fs = require("fs")
+const path = require("path")
 var CONFIG = require("../config")
-const keysDirectory = CONFIG.keyDir
+const keysDirectory = path.resolve(CONFIG.keyDir)
+console.log(keysDirectory)
 module.exports =
     {
         exportKeys: function (url, cb) {
@@ -41,8 +43,8 @@ module.exports =
 function runOpenSSL(subject, cb) {
     subject = "/" + subject.replace(/,/g, "/")
     console.log(subject)
-    console.log(`openssl.exe req -new -out ${keysDirectory}/test.csr -key ${keysDirectory}/ec-default.key -subj "${subject}"`)
-    exec(`openssl.exe req -new -out ${keysDirectory}/test.csr -key ${keysDirectory}/ec-default.key -subj "${subject}"`, (err, stdout, stderr) => {
+    console.log(`openssl req -new -out ${keysDirectory}/test.csr -key ${keysDirectory}/ec-default.key -subj "${subject}"`)
+    exec(`openssl req -new -out ${keysDirectory}/test.csr -key ${keysDirectory}/ec-default.key -subj "${subject}"`, (err, stdout, stderr) => {
         console.log("asdsad")
         cb()
     })
