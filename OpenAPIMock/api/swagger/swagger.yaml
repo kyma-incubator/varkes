@@ -2,16 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: openAPIMock
-# during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
-basePath: /
-# 
-schemes:
-  # tip: remove http to make production-grade
-  - http
-  - https
-# format of bodies a client can send (Content-Type)
+
 consumes:
   - application/json
 # format of the responses to the client (Accepts)
@@ -151,11 +142,9 @@ paths:
           description: "Not Found"
       
   /{baseSiteId}/cardtypes:
-    x-swagger-router-controller: mock_controller
     get: 
       tags: 
         - "Miscs"
-      operationId: cardTypes
       summary: "Get a list of supported payment card types."
       description: "Lists supported payment card types."
       consumes: 
@@ -186,7 +175,27 @@ paths:
         200: 
           description: "OK"
           schema: 
-            $ref: "#/definitions/CardTypeListWsDTO"
+            type: "object"
+            properties: 
+              cardTypes: 
+                type: "array"
+                items: 
+                  type: "object"
+                  properties: 
+                    code: 
+                      type: "string"
+                    name: 
+                      type: "string"
+            default:
+              cardTypes:
+              - 
+                  code: code1
+                  name: card1
+                    
+              - 
+                  code: code2
+                  name: card2
+
         401: 
           description: "Unauthorized"
         403: 
@@ -195,7 +204,6 @@ paths:
           description: "Not Found"
       
   /{baseSiteId}/catalogs: 
-    x-swagger-router-controller: cafe
     get: 
       tags: 
         - "Catalogs"
@@ -664,6 +672,7 @@ definitions:
         type: "array"
         items: 
           $ref: "#/definitions/CardTypeWsDTO"
+   
   CardTypeWsDTO: 
     type: "object"
     properties: 
