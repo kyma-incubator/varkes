@@ -6,16 +6,17 @@ tags:
 - name: 'Metadata Service'
   description: 'API for registering services in Kyma.'
 paths:
-  /v1/health:
+  /metadata:
     get:
-      summary: 'Returns health of a service'
-      operationId: 'getHealth'
+      summary: 'Returns Open API spec of server'
+      operationId: 'returnmetadata'
       tags:
-        - 'health'
+        - 'metadata'
       responses:
         '200':
-          description: 'The service is in a good health'
-  /v1/metadata/services:
+          description: 'This document in yaml form'
+          
+  /services:
     post:
       tags:
       - 'services'
@@ -67,7 +68,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-  /v1/metadata/services/{serviceId}:
+  /services/{serviceId}:
     get:
       tags:
       - 'services'

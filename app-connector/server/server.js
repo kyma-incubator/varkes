@@ -32,7 +32,9 @@ app.get("/", function (req, res) {
     res.sendfile("server/views/index.html")
 })
 
-
+app.get("/metadata", function (req, res) {
+    res.sendfile("swagger.yaml")
+})
 
 var server = app.listen(CONFIG.port, function () {
     var host = server.address().address
