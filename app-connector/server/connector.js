@@ -1,7 +1,8 @@
 var request = require("request")
 const { exec } = require('child_process')
 const fs = require("fs")
-var keysDirectory = require("../config").keyDir
+var CONFIG = require("../config")
+const keysDirectory = CONFIG.keyDir
 module.exports =
     {
         exportKeys: function (url, cb) {
