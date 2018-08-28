@@ -1,5 +1,6 @@
-FROM node
+FROM node:alpine
 
+RUN apk add --no-cache openssl
 COPY . /app
 WORKDIR /app
 

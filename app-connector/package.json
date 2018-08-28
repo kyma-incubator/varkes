@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "node prestart.js",
     "start": "node .",
-    "docker": "docker build -t harmonia/server . && docker run -p 3000:3000 harmonia/server"
+    "build": "docker build -t varkes/server ."
   },
   "author": "",
   "license": "ISC",
