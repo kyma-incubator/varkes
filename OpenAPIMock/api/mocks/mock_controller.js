@@ -31,7 +31,7 @@ module.exports = {
 
         app.use(function (req, res, next) {
             console.log("logging");
-            var requestslog = "URL:\n" + req.url + "\n" + "HEADER: \n";
+            var requestslog = "URL:\n" + req.url + "\n" + utility.getCurrentDateTime() + "\nHEADER: \n";
             requestslog += req.rawHeaders;
             if (Object.keys(req.body).length != 0) {
                 console.log("body")
