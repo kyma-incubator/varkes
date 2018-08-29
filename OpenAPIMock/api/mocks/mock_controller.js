@@ -1,50 +1,83 @@
 'use strict';
 
+var utility = require('../utility/utility')
+var yaml = require('js-yaml');
+const fs = require('fs');
+const util = require('util');
+var app = require('express')();
+module.exports = {
+    app,
+    init: function () {
+        return app;
 
-process.env.DEBUG = 'swagger:middleware';
+    },
+    registerCustomResponses: function (app_modified) {
+        app = app_modified;
+        console.log("starting custom function");
+        app.post('/:baseSiteId/cms/components', function (req, res, next) {
 
-var express = require('express');
-var middleware = require('swagger-express-middleware');
-var path = require('path');
-var util = require('util')
-const bodyParser = require('body-parser');
-var app = express();
-app.use(bodyParser.json());
+            console.log("entered post");
+            res.body = {
+                "idList": [
+                    "4",
+                    "5"
+                ]
+            }
+            next();
+        });
 
-//middleware(path.join(__dirname, '../tests/files/petstore.yaml'), app, function(err, middleware) {
-middleware(path.join(__dirname, '../swagger/swagger.yaml'), app, function (err, middleware) {
-    // Add all the Swagger Express Middleware, or just the ones you need.
-    // NOTE: Some of these accept optional options (omitted here for brevity)
-    app.use(
-        middleware.metadata(),
-        middleware.CORS(),
-        middleware.files(),
-        middleware.parseRequest(),
-        middleware.validateRequest(),
-    );
-    app.post('/:baseSiteId/cms/components', function (req, res, next) {
+    },
+    recordRequest: function () {
 
-        console.log("entered post");
-        res.body = {
-            "idList": [
-                "4",
-                "5"
-            ]
+        app.use(function (req, res, next) {
+            console.log("logging");
+            var requestslog = "URL:\n" + req.url + "\n" + "HEADER: \n";
+            requestslog += req.rawHeaders;
+            if (Object.keys(req.body).length != 0) {
+                console.log("body")
+                requestslog += "\nBODY: \n" + JSON.stringify(req.body);
+            }
+            requestslog += "\n============================================\n";
+            utility.writeToFile("requests.log", requestslog);
+            next();
+        });
+
+    },
+
+
+    createMetadataEndpoint: function () {
+        try {
+            var doc = yaml.safeLoad(fs.readFileSync('api/swagger/swagger.yaml', 'utf8'));
+            app.get('/metadata', function (req, res) {
+                res.type('text/x-yaml')
+                res.status(200)
+                res.send(doc)
+            });
+
+        } catch (e) {
+            console.log(e);
         }
-        next();
-    });
 
-    app.use(middleware.mock())
+    },
+    customErrorResponses: function (app_modified) {
 
-    app.use(function (err, req, res, next) {
-        console.log("error status")
-        console.log(err.status)
-        res.status(err.status);
-        res.type('json');
-        res.send(util.format('{error:\"Errorrrr\"}', err.status, err.message));
-    });
+        app = app_modified;
+        app.use(function (err, req, res, next) {
+            console.log("error status")
+            console.log(err.status)
+            if (!err.status) {
+                res.status(500);
+                res.type('json');
+                res.send(util.format('{error:\"Something went Wrong\"}'));
+            }
+            else if (err.status = 400) {
+                res.status(err.status);
+                res.type('json');
+                res.send(util.format('{error:\"Errorrrr\"}', err.status, err.message));
+            }
+        });
 
-    app.listen(10000, function () {
-        console.log('OpenAPI Mock is now running at http://localhost:10000');
-    });
-});
+    }
+
+};
+

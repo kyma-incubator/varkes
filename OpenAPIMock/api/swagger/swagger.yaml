@@ -142,6 +142,7 @@ paths:
           description: "Not Found"
       
   /{baseSiteId}/cardtypes:
+    x-swagger-router-controller: mock_controller
     get: 
       tags: 
         - "Miscs"
@@ -175,17 +176,7 @@ paths:
         200: 
           description: "OK"
           schema: 
-            type: "object"
-            properties: 
-              cardTypes: 
-                type: "array"
-                items: 
-                  type: "object"
-                  properties: 
-                    code: 
-                      type: "string"
-                    name: 
-                      type: "string"
+            $ref: "#/definitions/CardTypeListWsDTO"
             default:
               cardTypes:
               - 
