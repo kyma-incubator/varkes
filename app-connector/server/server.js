@@ -9,22 +9,22 @@ const CONFIG = require("../config")
 var app = express();
 app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
-if (fs.existsSync(CONFIG.apiFile)) {
-    CONFIG.URLs = JSON.parse(fs.readFileSync(CONFIG.apiFile))
+if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
+    CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
 }
 
 require("./middleware").defineMW(app)
 
 app.resource('services', require("./resources/service"))
 
-app.post("/startConn", function (req, res) {
-
+app.post(CONFIG.startConnUrl, function (req, res) {
     if (!req.body) res.sendStatus(400);
 
     connector.exportKeys(req.body.url, (data) => {
 
-        fs.writeFileSync(path.resolve(CONFIG.keyDir, "api.json"), JSON.stringify(data), "utf8")
+        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
         res.send(data)
+        CONFIG.URLs = data
     })
 });
 
@@ -43,3 +43,4 @@ var server = app.listen(CONFIG.port, function () {
     console.log("Example app listening at http://%s:%s", host, port)
 
 });
+module.exports = server

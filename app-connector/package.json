@@ -6,7 +6,8 @@
   "scripts": {
     "prestart": "node prestart.js",
     "start": "node .",
-    "build": "docker build -t varkes/server ."
+    "build": "docker build -t varkes/server .",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,10 @@
     "express": "^4.16.3",
     "express-resource": "^1.0.0",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "supertest": "^3.1.0"
   },
   "repository": {
     "type": "ssh",
