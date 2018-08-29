@@ -3,45 +3,124 @@
 <head>
     <title>Harmonia</title>
 
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    </head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="css/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="js/json.editor.min.js"></script>
 </head>
 
 <body>
     <h1>Harmonia</h1>
 
-    Token Url<input type="text" id="input"><br>
-    <button id="button">Send!</button>
-
     <div>
-        <b>Response:</b>
-        <br>
-        <p id="response">
-
-
-        </p>
+        Token Url<input type="text" id="input"><br>
+        <button id="button" onclick="giveToken()">Send!</button>
     </div>
 
 
+    <div id="services" style="float:left">
+        <ul>
+
+        </ul>
+    </div>
+    <div style="float:right">
+
+        <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
+
+        <button id="create_service" onclick="createService()">Create Service</button>
+    </div>
+
     <script>
         $(document).ready(function () {
-            $("#button").click(function () {
-                console.log($("#input").val())
-
-                $.post("/startConn", {
-                    url: $("input").val()
-                },
-                    function (data, status) {
-                        console.log(data)
-                        $("#response").text(data)
-                    }
-                )
-                $.get("/", data => { console.log(data) })
-
-            })
+            getServices()
         })
 
+        function deleteService(serviceID) {
+            $.ajax({
+                url: `/services/${serviceID}`,
+                type: "DELETE",
+                success: function (data) {
+                    getServices()
+                }
+            })
+        }
+        function getServices() {
+            $("#services ul").empty()
+            $.ajax(
+                {
+                    type: "get",
+                    url: "/services",
+                    success: function (data) {
+                        data.forEach(element => {
+                            $("#services ul").append(`<li><span>${element.id}</span> <a href="#" onClick=showService('${element.id}')>Show</a> <a href="#" onClick="deleteService('${element.id}')">Delete</a></li>`)
+                        });
+                    }
+
+                }
+            ).fail(function (xhr, options, error) {
+                $("#services ul").text("No certificate defined, please a token url")
+            })
+        }
+
+        function createService() {
+            $.ajax({
+                type: "POST",
+                url: "/services",
+                data: JSON.stringify(editor.get()),
+                success: function (data) {
+                    console.log(data)
+                    getServices()
+                },
+                contentType: "application/json"
+            }
+
+            )
+        }
+        function giveToken() {
+            $.ajax({
+                type: "POST",
+                url: "/startConn",
+                data: `{ "url": "${$("#input").val()}" }`,
+                success: function (data) {
+
+                    getServices()
+                },
+                contentType: "application/json"
+            }
+
+            )
+        }
+
+        function showService(serviceID) {
+            $.ajax({
+                type: "get",
+                url: `/services/${serviceID}`,
+                success: function (data) {
+                    $("#serviceJSON").val(JSON.stringify(data))
+                    editor.set(data)
+                }
+            })
+        }
+
+
+
+        var container = document.getElementById("jsoneditor");
+        var options = {};
+        var editor = new JSONEditor(container, options);
+
+        // set json
+        var json = {
+            "Array": [1, 2, 3],
+            "Boolean": true,
+            "Null": null,
+            "Number": 123,
+            "Object": { "a": "b", "c": "d" },
+            "String": "Hello World"
+        };
+        editor.set(json);
+
+        // get json
+        var json = editor.get();
     </script>
 </body>
 

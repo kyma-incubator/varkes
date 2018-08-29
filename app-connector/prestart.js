@@ -13,5 +13,5 @@ if (!fs.existsSync(path.resolve(CONFIG.keyDir, "ec-default.key"))) {
         LOGGER.logger.log("info", "Private key generated")
     })
 } else {
-    LOGGER.logger.log("info", "Private key exists ", body)
+    LOGGER.logger.log("info", "Private key exists ")
 }

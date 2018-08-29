@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
     CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
 }
-
+app.use(express.static('server/views'))
 require("./middleware").defineMW(app)
 
 app.resource('services', require("./resources/service"))

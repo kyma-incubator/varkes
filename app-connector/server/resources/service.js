@@ -54,19 +54,21 @@ function getServices(cb) {
 
 
 function createService(serviceJSON, cb) {
-    request.post({
-        url: CONFIG.URLs.metadataUrl,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: serviceJSON,
-        agentOptions: {
-            cert: fs.readFileSync(certFile),
-            key: fs.readFileSync(keyFile)
-        }
-    }, function (error, httpResponse, body) {
-        cb(body)
-    });
+
+    console.log(serviceJSON),
+        request.post({
+            url: CONFIG.URLs.metadataUrl,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            json: serviceJSON,
+            agentOptions: {
+                cert: fs.readFileSync(certFile),
+                key: fs.readFileSync(keyFile)
+            }
+        }, function (error, httpResponse, body) {
+            cb(body)
+        });
 }
 
 
