@@ -40,7 +40,7 @@ var server = app.listen(CONFIG.port, function () {
     var host = server.address().address
     var port = server.address().port
 
-    console.log("Example app listening at http://%s:%s", host, port)
+    console.log("App connector listening at http://%s:%s", host, port)
 
 });
 module.exports = server

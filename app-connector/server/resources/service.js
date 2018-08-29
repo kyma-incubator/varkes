@@ -1,6 +1,7 @@
 var CONFIG = require("../../config")
 const path = require("path")
 var request = require("request")
+var LOGGER = require("../logger")
 const fs = require("fs")
 
 const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
@@ -38,7 +39,6 @@ exports.destroy = function (req, res) {
 };
 
 function getServices(cb) {
-    console.log(CONFIG.URLs.metadataUrl)
     request.get({
         url: CONFIG.URLs.metadataUrl,
         agentOptions: {
@@ -54,7 +54,6 @@ function getServices(cb) {
 
 
 function createService(serviceJSON, cb) {
-    console.log(CONFIG.URLs.metadataUrl)
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -66,7 +65,6 @@ function createService(serviceJSON, cb) {
             key: fs.readFileSync(keyFile)
         }
     }, function (error, httpResponse, body) {
-        console.log(error)
         cb(body)
     });
 }
@@ -114,7 +112,7 @@ function updateService(serviceID, serviceJSON, cb) {
             key: fs.readFileSync(keyFile)
         }
     }, function (error, httpResponse, body) {
-        console.log(error)
+
         cb(body)
     });
 }
