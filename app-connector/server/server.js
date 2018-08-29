@@ -18,13 +18,13 @@ require("./middleware").defineMW(app)
 app.resource('services', require("./resources/service"))
 
 app.post(CONFIG.startConnUrl, function (req, res) {
-    console.log("server:" + req.body)
     if (!req.body) res.sendStatus(400);
 
     connector.exportKeys(req.body.url, (data) => {
 
         fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
         res.send(data)
+        CONFIG.URLs = data
     })
 });
 

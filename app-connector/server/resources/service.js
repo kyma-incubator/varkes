@@ -3,10 +3,8 @@ const path = require("path")
 var request = require("request")
 const fs = require("fs")
 
-var keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
     , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
-    , serviceMetadata = path.resolve(CONFIG.assetDir, "basic-service-metadata.json")
-
 
 exports.index = function (req, res) {
     getServices(data => {
@@ -15,8 +13,9 @@ exports.index = function (req, res) {
 };
 
 exports.create = function (req, res) {
-    deployService(data => {
-        res.send(JSON.parse(data))
+    const serviceJSON = req.body
+    createService(serviceJSON, data => {
+        res.send(data)
     })
 };
 
@@ -27,8 +26,8 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    updateService(req.params.service, (data) => {
-        res.send(JSON.parse(data))
+    updateService(req.params.service, req.body, (data) => {
+        res.send(data)
     })
 };
 
@@ -54,14 +53,14 @@ function getServices(cb) {
 
 
 
-function deployService(cb) {
+function createService(serviceJSON, cb) {
     console.log(CONFIG.URLs.metadataUrl)
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
             "Content-Type": "application/json"
         },
-        body: fs.readFileSync(serviceMetadata),
+        json: serviceJSON,
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
@@ -103,13 +102,13 @@ function showService(serviceID, cb) {
  * @param {string} serviceID ID of the service to be deleted.
  * @param {function} cb The callback that handles the response.
  */
-function updateService(serviceID, cb) {
+function updateService(serviceID, serviceJSON, cb) {
     request.put({
         url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
         headers: {
             "Content-Type": "application/json"
         },
-        body: fs.readFileSync(serviceMetadata),
+        json: serviceJSON,
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
