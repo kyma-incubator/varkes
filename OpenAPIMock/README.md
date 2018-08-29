@@ -61,7 +61,7 @@ Node js code
 
 The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/mocks/mock_controller.js) where the user  
 
-- **Write his/her custom code for handling some of the responses and registering them to the express app.** <br>
+- **Write his/her custom code for handling some of the responses and registering them to the express app in the registerCustomResponses function.** <br>
         The following is an example of listening to the post endpoint "/:baseSiteId/cms/components" and replacing the body with a user defined idList
 ````javascript
 app.post('/:baseSiteId/cms/components', function (req, res, next) {
@@ -97,4 +97,20 @@ app.use(function (err, req, res, next) {
 ````
 
 
- 
+ Starting the application
+--------------------------
+There are two ways to start the application.
+
+- **start it as a node using npm command as follows:** <br>
+Go to the directory of the application and write in the terminal
+````bash
+npm start
+````
+
+- **start it as a docker image as follows:** <br>
+
+Go to the directory of the application and write in the terminal
+````bash
+docker build -t <tag_name> .
+docker run -p <chosen_ip>:10000 <tag_name>
+````
