@@ -1,25 +1,31 @@
 <html>
 
 <head>
-    <title>Harmonia</title>
+    <title>Varkes App Connector</title>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link href="css/jsoneditor.min.css" rel="stylesheet" type="text/css">
     <script src="js/json.editor.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
 
 <body>
-    <h1>Harmonia</h1>
+    <h1>Varkes App Connector</h1>
 
-    <div>
-        Token Url<input type="text" id="input"><br>
-        <button id="button" onclick="giveToken()">Send!</button>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="input">
+        <label class="mdl-textfield__label" for="sample3">Token URL</label>
+
     </div>
-
-
-    <div id="services" style="float:left">
-        <ul>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service" onclick="giveToken()">
+        Send
+    </button>
+    <div id="services">
+        <ul class="demo-list-item mdl-list" style="float:left">
 
         </ul>
     </div>
@@ -27,7 +33,9 @@
 
         <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
 
-        <button id="create_service" onclick="createService()">Create Service</button>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service" onclick="createService()">Create
+            Service
+        </button>
     </div>
 
     <script>
@@ -46,19 +54,29 @@
         }
         function getServices() {
             $("#services ul").empty()
+            console.log("get Services called")
             $.ajax(
                 {
                     type: "get",
                     url: "/services",
                     success: function (data) {
                         data.forEach(element => {
-                            $("#services ul").append(`<li><span>${element.id}</span> <a href="#" onClick=showService('${element.id}')>Show</a> <a href="#" onClick="deleteService('${element.id}')">Delete</a></li>`)
+                            $("#services ul").append
+                                (`
+                                <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                   ${element.id}
+                </span>
+                <a href="#" onClick=showService('${element.id}')>Show</a> 
+                <a href="#" onClick="updateService('${element.id}')">Update</a> 
+                <a href="#" onClick="deleteService('${element.id}')">Delete</a>
+                                </li>`)
                         });
                     }
 
                 }
             ).fail(function (xhr, options, error) {
-                $("#services ul").text("No certificate defined, please a token url")
+                $("#services ul").text("No certificate defined, please provide a token url")
             })
         }
 
@@ -75,6 +93,19 @@
             }
 
             )
+        }
+
+        function updateService(serviceId) {
+            $.ajax({
+                type: "PUT",
+                url: `/services/${serviceId}`,
+                data: JSON.stringify(editor.get()),
+                success: function (data) {
+                    console.log(data)
+                    getServices()
+                },
+                contentType: "application/json"
+            })
         }
         function giveToken() {
             $.ajax({
@@ -110,12 +141,39 @@
 
         // set json
         var json = {
-            "Array": [1, 2, 3],
-            "Boolean": true,
-            "Null": null,
-            "Number": 123,
-            "Object": { "a": "b", "c": "d" },
-            "String": "Hello World"
+            "provider": "SAP Hybris",
+            "name": "ec-mock-service-4",
+            "description": "testing... 1.2.3.",
+            "api": {
+                "targetUrl": "http://localhost/target",
+                "credentials": {
+                    "oauth": {
+                        "url": "http://localhost/oauth/validate",
+                        "clientId": "string",
+                        "clientSecret": "string"
+                    }
+                },
+                "spec": {}
+            },
+            "events": {
+                "spec": {}
+            },
+            "documentation": {
+                "displayName": "string",
+                "description": "string",
+                "type": "string",
+                "tags": [
+                    "string"
+                ],
+                "docs": [
+                    {
+                        "title": "string",
+                        "type": "string",
+                        "source": "string"
+                    }
+                ]
+            }
+
         };
         editor.set(json);
 
