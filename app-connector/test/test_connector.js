@@ -1,14 +1,13 @@
 process.env.NODE_ENV = 'test';
+
 var request = require('supertest');
 var server = require("../server/server");
 var CONFIG = require("../config")
-var LOGGER = require("../server/logger")
 const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve(CONFIG.assetDir, "basic-service-metadata.json")
 deleteNonEmptyFolder(CONFIG.keyDir)
 require("../prestart")
-
 
 describe('basic routes', function () {
 
@@ -36,29 +35,21 @@ describe('basic routes', function () {
 describe("Connect to kyma", function () {
 
 
-    var confURL
-    it("can get token from kyma", done => {
-        request("http://127.0.0.1:8080/v1/remoteenvironments/hmc-default/tokens")
-            .post("").expect(201).end((err, res) => {
-                console.log(res.body)
-                confURL = res.body
-                !err ? done() : {}
-            })
-    })
-
     it("kyma can create certs from token", done => {
 
+        require("./get_token").getToken(data => {
+            confURL = data
+            request(server)
+                .post(CONFIG.startConnUrl).send(
 
-        request(server)
-            .post(CONFIG.startConnUrl).send(
+                    { "url": confURL }
 
-                confURL
+                ).set('Accept', 'application/json').
+                expect(200).end((err, res) => {
 
-            ).set('Accept', 'application/json').
-            expect(200).end((err, res) => {
-
-                !err ? done() : {}
-            })
+                    !err ? done() : {}
+                })
+        })
     })
 
 })
@@ -115,6 +106,7 @@ describe("service endpoints", () => {
 
 
     after(() => {
+        fs.unlinkSync("test.log")
         deleteNonEmptyFolder(CONFIG.keyDir)
         server.close()
     })

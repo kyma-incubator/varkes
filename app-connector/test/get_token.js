@@ -1,10 +1,31 @@
 var request = require("request")
 
 
-request.post(
-    "http://127.0.0.1:8080/v1/remoteenvironments/hmc-default/tokens",
-    (error, response, body) => {
-        resp = JSON.parse(body)
-        console.log(JSON.parse(body).url)
 
-    });
+getToken(data => console.log(data))
+
+function getToken(cb) {
+
+    if (process.env.TOKENURL) {
+        console.log("token given from env")
+        cb(process.env.TOKENURL)
+    }
+    else {
+        request.post(
+            "http://127.0.0.1:8080/v1/remoteenvironments/hmc-default/tokens",
+            (error, response, body) => {
+                try {
+                    resp = JSON.parse(body)
+
+                    cb(resp.url)
+                } catch (e) {
+                    console.log("couldn't get token")
+                    cb(undefined)
+                }
+            });
+    }
+}
+
+module.exports = {
+    getToken: getToken
+}
