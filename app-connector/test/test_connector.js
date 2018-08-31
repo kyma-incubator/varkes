@@ -116,6 +116,7 @@ describe("service endpoints", () => {
 
     after(() => {
         deleteNonEmptyFolder(CONFIG.keyDir)
+        server.close()
     })
 })
 
