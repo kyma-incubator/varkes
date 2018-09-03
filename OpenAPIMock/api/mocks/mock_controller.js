@@ -17,6 +17,7 @@ module.exports = {
         app.post('/:baseSiteId/cms/components', function (req, res, next) {
 
             console.log("entered post");
+            res.body.idList.push("4")
             res.body = {
                 "idList": [
                     "4",
@@ -28,6 +29,7 @@ module.exports = {
         app.get('/authorizationserver/oauth/token', function (req, res, next) {
 
             console.log("entered oauth");
+            console.log(req.body)
             res.type('application/json')
             res.status(200)
             res.send({ access_token_url: req.query.redirect_uri + "/#token=2223" })
