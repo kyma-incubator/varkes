@@ -6,7 +6,6 @@ var middleware = require('swagger-express-middleware');
 var path = require('path');
 const bodyParser = require('body-parser');
 var mock_controller = require("./api/mocks/mock_controller");
-
 //pass the express app to the mock controller
 var app = mock_controller.init();
 app.use(bodyParser.json());
@@ -32,7 +31,12 @@ middleware(path.join(__dirname, 'api/swagger/swagger.yaml'), app, function (err,
   // creates user defined responses for certain error codes
   mock_controller.customErrorResponses(app);
 
-  app.listen(10000, function () {
-    console.log('OpenAPI Mock is now running at http://localhost:10000');
-  });
+
+
 });
+
+var server = app.listen(10000, function () {
+  console.log('OpenAPI Mock is now running at http://localhost:10000');
+
+});
+module.exports = server
