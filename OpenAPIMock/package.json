@@ -21,6 +21,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "build": "docker build -t varkes/openapi .",
+    "test": "mocha"
   }
 }
