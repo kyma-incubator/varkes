@@ -25,6 +25,13 @@ module.exports = {
             }
             next();
         });
+        app.get('/authorizationserver/oauth/token', function (req, res, next) {
+
+            console.log("entered oauth");
+            res.type('application/json')
+            res.status(200)
+            res.send({ access_token_url: req.query.redirect_uri + "/#token=2223" })
+        });
 
     },
     recordRequest: function () {

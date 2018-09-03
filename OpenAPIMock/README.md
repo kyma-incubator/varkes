@@ -13,7 +13,10 @@ OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet
 Creates a request.log file that contains the urls being called, the header of the request and the body of the request if exists
 
 - **Returns the OpenAPI specification as metadata** <br>
-By calling /metadata user can see the OpenAPI specification being use in text/x-yaml format
+By calling '/metadata' user can see the OpenAPI specification being use in text/x-yaml format
+
+- **Returns a dummy OAuth2 token** <br>
+By calling the base url '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
 
 Installation and Use
 --------------------------
