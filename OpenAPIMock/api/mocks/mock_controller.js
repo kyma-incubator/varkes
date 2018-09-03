@@ -29,10 +29,20 @@ module.exports = {
         app.get('/authorizationserver/oauth/token', function (req, res, next) {
 
             console.log("entered oauth");
-            console.log(req.body)
+            console.log(req.swagger.operation.responses[200].schema.default)
             res.type('application/json')
             res.status(200)
             res.send({ access_token_url: req.query.redirect_uri + "/#token=2223" })
+        });
+
+        app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+
+            console.log("entered cardtypes");
+            var cardTypes = req.swagger.operation.responses[200].schema.default.cardTypes;
+            cardTypes.push({ code: "code3", name: "card3" })
+            res.type('application/json')
+            res.status(200)
+            res.send({ "cardTypes": cardTypes })
         });
 
     },

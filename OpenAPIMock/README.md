@@ -79,6 +79,19 @@ app.post('/:baseSiteId/cms/components', function (req, res, next) {
             next();
         });
 ````
+- **Add a some extra items to the default response** <br>
+        The following is an example of listening to the get endpoint "/:baseSiteId/cardtypes" which returns two items as response, "card1" and "card2", then adding a third item to the array
+````javascript
+app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+
+            console.log("entered cardtypes");
+            var cardTypes = req.swagger.operation.responses[200].schema.default.cardTypes;
+            cardTypes.push({ code: "code3", name: "card3" })
+            res.type('application/json')
+            res.status(200)
+            res.send({ "cardTypes": cardTypes })
+        });
+````
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
         the following example checks if the error status is not known or if it's 400 then sends a custom error message accordingly
 
