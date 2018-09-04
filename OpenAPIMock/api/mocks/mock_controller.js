@@ -101,7 +101,7 @@ module.exports = {
                 res.type('json');
                 res.send(util.format('{error:\"Something went Wrong\"}'));
             }
-            else if (err.status = 400) {
+            else if (err.status == 400) {
                 res.status(err.status);
                 res.type('json');
                 res.send(util.format('{error:\"Errorrrr\"}', err.status, err.message));
