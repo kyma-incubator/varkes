@@ -3,11 +3,15 @@
 var utility = require('../utility/utility')
 var yaml = require('js-yaml');
 const fs = require('fs');
+const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 var app = require('express')();
+var openApi_doc = {};
+var Oauth_endpoint_key = "/authorizationserver/oauth/token"
 module.exports = {
     app,
     init: function () {
+        openApi_doc = yaml.safeLoad(fs.readFileSync('api/swagger/swagger.yaml', 'utf8'));
         return app;
 
     },
@@ -66,17 +70,25 @@ module.exports = {
 
     createMetadataEndpoint: function () {
         try {
-            var doc = yaml.safeLoad(fs.readFileSync('api/swagger/swagger.yaml', 'utf8'));
+
             app.get('/metadata', function (req, res) {
                 res.type('text/x-yaml')
                 res.status(200)
-                res.send(doc)
+                res.send(openApi_doc)
             });
 
         } catch (e) {
             console.log(e);
         }
 
+    },
+    createOAuth2Endpoint: function () {
+        var Oauth_endpoint = yaml.safeLoad(fs.readFileSync('api/swagger/OAuth_template.yaml', 'utf8'));
+        openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
+        var openAPIDoc_string = JSON.stringify(openApi_doc)
+        utility.writeToFile("api/swagger/trial.json", openAPIDoc_string, true);
+        var yml_format = pretty_yaml.stringify(openApi_doc);
+        utility.writeToFile("api/swagger/swagger.yaml", yml_format, true);
     },
     customErrorResponses: function (app_modified) {
 

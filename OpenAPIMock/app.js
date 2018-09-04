@@ -11,7 +11,7 @@ var app = mock_controller.init();
 app.use(bodyParser.json());
 //register the function that records the requests to our application to the express app
 mock_controller.recordRequest();
-
+mock_controller.createOAuth2Endpoint();
 mock_controller.createMetadataEndpoint();
 
 

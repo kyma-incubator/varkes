@@ -10,6 +10,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.12.3",
+    "json-to-pretty-yaml": "^1.2.2",
     "path": "^0.12.7",
     "swagger-express-middleware": "^1.0.0-alpha.12",
     "swagger-express-mw": "^0.7.0",
