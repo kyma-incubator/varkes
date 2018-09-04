@@ -4,6 +4,7 @@
   },
   "n-odata-server": {
     "path": "/odata/*",
-    "odataversion": "2"
+    "odataversion": "2",
+    "useViaMiddleware": true
   }
 }

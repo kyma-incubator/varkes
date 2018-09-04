@@ -14,15 +14,6 @@
     "ACL": {},
     "RoleMapping": {},
     "Role": {},
-    "person": {
-      "1": "{\"firstname\":\"omar\",\"lastname\":\"elbadrawi\",\"id\":1}",
-      "2": "{\"firstname\":\"omar\",\"lastname\":\"elbadrawi\",\"id\":2}",
-      "3": "{\"firstname\":\"mike\",\"lastname\":\"posner\",\"id\":3}",
-      "4": "{\"firstname\":\"DJ\",\"lastname\":\"Khaled\",\"id\":4}",
-      "5": "{\"firstname\":\"DJ\",\"lastname\":\"Khaled\",\"id\":5}",
-      "6": "{\"firstname\":\"Don\",\"lastname\":\"Omar\",\"id\":6}",
-      "15": "{\"firstname\":\"DUA\",\"lastname\":\"LIPA\",\"id\":15}"
-    },
     "AssignedInterestsType": {
       "1": "{\"ItemOfInterest\":\"Item1\",\"CampaignTemplate\":\"Item2\",\"id\":1}"
     }

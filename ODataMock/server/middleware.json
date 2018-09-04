@@ -34,6 +34,11 @@
   "auth": {},
   "parse": {},
   "routes": {
+    "n-odata-server#odata": {
+      "paths": [
+        "/odata/*"
+      ]
+    },
     "loopback#rest": {
       "paths": [
         "${restApiRoot}"
@@ -45,6 +50,6 @@
     "loopback#urlNotFound": {}
   },
   "final:after": {
-    "strong-error-handler": {}
+    "loopback#errorHandler": {}
   }
 }
