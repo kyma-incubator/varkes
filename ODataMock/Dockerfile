@@ -1,15 +1,8 @@
-FROM node:carbon
- 
-# Create app directory
-WORKDIR /usr/src/app
- 
-COPY package.json .
-COPY package-lock.json .
- 
+FROM node:alpine
+
+COPY . /app
+WORKDIR /app
+
 RUN npm install
- 
-COPY . .
- 
-EXPOSE 8080
- 
-CMD [ "npm", "start" ]
+EXPOSE 10000
+CMD ["npm","start"]

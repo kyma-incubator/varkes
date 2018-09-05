@@ -22,6 +22,9 @@ podTemplate(label: label) {
                                 },
                                 "openapi-mock": {
                                     load('OpenAPIMock/Jenkinsfile.groovy').execute()
+                                },
+                                "odata-mock": {
+                                    load('ODataMock/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }
