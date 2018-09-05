@@ -25,11 +25,12 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 ````bash
 npm install
 ````
-Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml)
+Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml)<br>
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js) file specified by the "specification_file" element
 
 You need to remove the host, schemes and basePath keys in order for swagger-express-middleware to do it's magic
-
-Now you don't need to write a custom response in your javascript code for every endpoint in the file,
+<br>
+You don't need to write a custom response in your javascript code for every endpoint in the file,
 for the endpoints that your are satisfied with a default response you add the default key with the response object to your response of the endpoint in the file as shown
 
 ````yaml
@@ -80,16 +81,20 @@ app.post('/:baseSiteId/cms/components', function (req, res, next) {
         });
 ````
 - **Add a some extra items to the default response** <br>
-        The following is an example of listening to the get endpoint "/:baseSiteId/cardtypes" which returns two items as response, "card1" and "card2", then adding a third item to the array
+        The following is an example of listening to the get endpoint "/:baseSiteId/cardtypes" which returns two items as response, "card1" and "card2", then adding a third item to the array by overwriting the send function for the response object "res"
 ````javascript
-app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+ app.get('/:baseSiteId/cardtypes', function (req, res, next) {
 
             console.log("entered cardtypes");
-            var cardTypes = req.swagger.operation.responses[200].schema.default.cardTypes;
-            cardTypes.push({ code: "code3", name: "card3" })
-            res.type('application/json')
-            res.status(200)
-            res.send({ "cardTypes": cardTypes })
+            var oldSend = res.send;
+            res.send = function (data) {
+                // arguments[0] (or `data`) contains the response body
+                data = JSON.parse(data);
+                data.cardTypes.push({ code: "code3", name: "card3" })
+                arguments[0] = JSON.stringify(data);
+                oldSend.apply(res, arguments);
+            }
+            next();
         });
 ````
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
@@ -111,7 +116,22 @@ app.use(function (err, req, res, next) {
             }
         });
 ````
+[Config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js)
+--------------------------
+In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
 
+````javascript
+module.exports = {
+    specification_file: 'api/swagger/swagger.yaml',
+    request_log_path: 'requests.log',
+    OAuth_template_path: 'api/swagger/OAuth_template.yaml',
+    error_messages: {
+        500: '{error:\"Something went Wrong\"}',
+        400: '{error:\"Errorrrr\"}',
+        404: '{error:\"End Point not found\"}'
+    }
+}
+````
 
  Starting the application
 --------------------------
