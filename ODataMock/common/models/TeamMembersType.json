@@ -1,0 +1,1 @@
+{"name":"TeamMembersType","plural":"TeamMembersTypes","base":"PersistedModel","idInjection":true,"options":{"validateUpsert":true},"properties":{"CampaignTemplate":{"required":true,"type":"string"},"CampaignTemplateTeamMemberName":{"required":true,"type":"string"},"IsOwner":{"type":"boolean"},"FullName":{"type":"string"}},"validations":[],"relations":{},"acls":[],"methods":{}}

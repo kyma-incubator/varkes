@@ -3,11 +3,16 @@
 var utility = require('../utility/utility')
 var yaml = require('js-yaml');
 const fs = require('fs');
+const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
+const config = require('../config')
 var app = require('express')();
+var openApi_doc = {};
+var Oauth_endpoint_key = "/authorizationserver/oauth/token"
 module.exports = {
     app,
     init: function () {
+        openApi_doc = yaml.safeLoad(fs.readFileSync(config.specification_file, 'utf8'));
         return app;
 
     },
@@ -26,13 +31,32 @@ module.exports = {
             }
             next();
         });
-        app.get('/authorizationserver/oauth/token', function (req, res, next) {
+        app.get(Oauth_endpoint_key, function (req, res, next) {
 
             console.log("entered oauth");
-            console.log(req.body)
-            res.type('application/json')
-            res.status(200)
-            res.send({ access_token_url: req.query.redirect_uri + "/#token=2223" })
+            var oldSend = res.send;
+            res.send = function (data) {
+                // arguments[0] (or `data`) contains the response body
+                data = JSON.parse(data);
+                data.addedMessage = 'this is added to default response'
+                arguments[0] = JSON.stringify(data);
+                oldSend.apply(res, arguments);
+            }
+            next();
+        });
+
+        app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+
+            console.log("entered cardtypes");
+            var oldSend = res.send;
+            res.send = function (data) {
+                // arguments[0] (or `data`) contains the response body
+                data = JSON.parse(data);
+                data.cardTypes.push({ code: "code3", name: "card3" })
+                arguments[0] = JSON.stringify(data);
+                oldSend.apply(res, arguments);
+            }
+            next();
         });
 
     },
@@ -47,7 +71,7 @@ module.exports = {
                 requestslog += "\nBODY: \n" + JSON.stringify(req.body);
             }
             requestslog += "\n============================================\n";
-            utility.writeToFile("requests.log", requestslog);
+            utility.writeToFile(config.request_log_path, requestslog);
             next();
         });
 
@@ -56,17 +80,23 @@ module.exports = {
 
     createMetadataEndpoint: function () {
         try {
-            var doc = yaml.safeLoad(fs.readFileSync('api/swagger/swagger.yaml', 'utf8'));
+
             app.get('/metadata', function (req, res) {
                 res.type('text/x-yaml')
                 res.status(200)
-                res.send(doc)
+                res.send(openApi_doc)
             });
 
         } catch (e) {
             console.log(e);
         }
 
+    },
+    createOAuth2Endpoint: function () {
+        var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(config.OAuth_template_path, 'utf8'));
+        openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
+        var yml_format = pretty_yaml.stringify(openApi_doc);
+        utility.writeToFile(config.specification_file, yml_format, true);
     },
     customErrorResponses: function (app_modified) {
 
@@ -75,15 +105,11 @@ module.exports = {
             console.log("error status")
             console.log(err.status)
             if (!err.status) {
-                res.status(500);
-                res.type('json');
-                res.send(util.format('{error:\"Something went Wrong\"}'));
+                err.status = 500;
             }
-            else if (err.status = 400) {
-                res.status(err.status);
-                res.type('json');
-                res.send(util.format('{error:\"Errorrrr\"}', err.status, err.message));
-            }
+            res.status(err.status);
+            res.type('json');
+            res.send(util.format(config.error_messages[err.status]));
         });
 
     }
