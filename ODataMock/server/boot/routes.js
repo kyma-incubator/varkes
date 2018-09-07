@@ -1,7 +1,19 @@
 var bodyParser = require('body-parser');
+var utility = require('../../common/utility/utility')
 module.exports = function (app) {
-    // Install a "/ping" route that returns "pong"
-    app.get('/odata/authorizationserver/oauth/*', function (req, res, next) {
+    app.use(function (req, res, next) {
+        console.log("logging");
+        var requestslog = "URL:\n" + req.url + "\n" + utility.getCurrentDateTime() + "\nHEADER: \n";
+        requestslog += req.rawHeaders;
+        if (Object.keys(req.body).length != 0) {
+            console.log("body")
+            requestslog += "\nBODY: \n" + JSON.stringify(req.body);
+        }
+        requestslog += "\n============================================\n";
+        utility.writeToFile('requests.log', requestslog);
+        next();
+    });
+    app.get('/authorizationserver/oauth/*', function (req, res, next) {
         if (req.query.response_type && req.query.scope) {
             if (req.query.redirect_uri) {
                 res.status(200)
