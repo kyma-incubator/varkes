@@ -2,7 +2,7 @@ var request = require("request")
 
 
 
-getToken(data => console.log(data))
+require.main === module ? getToken(data => console.log(data)) : console.log("required")
 
 function getToken(cb) {
 

@@ -12,7 +12,9 @@ module.exports =
             request.get( //Step 4
                 url,
                 function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
+                    if (error) throw new error(error)
+                    else if (response.statusCode !== 200) throw new error(response.statusCode)
+                    else if (response.statusCode == 200) {
 
 
                         LOGGER.logger.log("info", "Connector received: ", body)

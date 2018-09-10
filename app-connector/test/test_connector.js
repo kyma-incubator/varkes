@@ -7,7 +7,7 @@ const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve(CONFIG.assetDir, "basic-service-metadata.json")
 deleteNonEmptyFolder(CONFIG.keyDir)
-require("../prestart")
+require("../prestart").generatePrivateKey(data => console.log(data))
 
 describe('basic routes', function () {
 
@@ -50,7 +50,7 @@ describe("Connect to kyma", function () {
                     !err ? done() : {}
                 })
         })
-    })
+    }).timeout(4000)
 
 })
 describe("service endpoints", () => {
@@ -81,6 +81,16 @@ describe("service endpoints", () => {
             .expect(200).end((err, res) => {
                 serviceId = res.body.id
                 !err ? done() : {}
+
+                it("deletes a specific service", done => {
+                    request(server)
+                        .delete(`/services/${serviceId}`)
+                        .expect(200).end((err, res) => {
+                            console.log(res)
+                            !err ? done() : console.log(err)
+                        })
+                }).timeout(3000)
+
             })
     })
 
@@ -97,11 +107,6 @@ describe("service endpoints", () => {
             ).set("Accept", "application/json").expect(200, done)
     })
 
-    it("deletes a specific service", done => {
-        request(server)
-            .delete(`/services/${serviceId}`)
-            .expect(200, done)
-    })
 
 
 
