@@ -3,7 +3,8 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var bodyParser = require('body-parser');
-var parser = require('../common/utility/parser')
+var config = require('./config.json')
+var parser = require(config.parserPath)
 var app = module.exports = loopback();
 app.use(bodyParser.json());
 let server;
@@ -32,7 +33,7 @@ app.stop = () => {
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 parser.parser();
-parser.parseEdmx("common/EDMX_MODEL_SPECIFICATION.xml").then(function (result) {
+parser.parseEdmx(config.edmxFilePath).then(function (result) {
   boot(app, __dirname, function (err) {
     if (err) throw err;
 

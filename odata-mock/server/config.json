@@ -20,5 +20,7 @@
     "cors": false
   },
   "legacyExplorer": false,
-  "logoutSessionsOnSensitiveChanges": true
+  "logoutSessionsOnSensitiveChanges": true,
+  "edmxFilePath": "common/EDMX_MODEL_SPECIFICATION.xml",
+  "parserPath": "../common/utility/parser"
 }
