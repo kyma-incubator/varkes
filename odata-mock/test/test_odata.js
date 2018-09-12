@@ -19,7 +19,7 @@ describe('controllers', function () {
 
         });
 
-        describe('GET metadata', function () {
+        describe('GET AssignedInterestsTypes', function () {
 
             it('should return response 200', function (done) {
 
