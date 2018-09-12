@@ -1,7 +1,7 @@
 'use strict';
 
 
-process.env.DEBUG = 'swagger:middleware';
+//process.env.DEBUG = 'swagger:middleware';
 var middleware = require('swagger-express-middleware');
 var path = require('path');
 const bodyParser = require('body-parser');
@@ -13,6 +13,7 @@ mock_controller.createOAuth2Endpoint();
 app.use(bodyParser.json());
 //register the function that records the requests to our application to the express app
 mock_controller.recordRequest();
+
 mock_controller.createMetadataEndpoint();
 
 middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {

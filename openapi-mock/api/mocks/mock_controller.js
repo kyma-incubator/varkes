@@ -8,7 +8,8 @@ const util = require('util');
 const config = require('../config')
 var app = require('express')();
 var openApi_doc = {};
-var Oauth_endpoint_key = "/authorizationserver/oauth/token"
+var Oauth_endpoint_key = "/authorizationserver/oauth/token";
+var morgan = require('morgan');
 module.exports = {
     app,
     init: function () {
@@ -62,19 +63,24 @@ module.exports = {
     },
     recordRequest: function () {
 
-        app.use(function (req, res, next) {
-            console.log("logging");
-            var requestslog = "URL:\n" + req.url + "\n" + utility.getCurrentDateTime() + "\nHEADER: \n";
-            requestslog += req.rawHeaders;
-            if (Object.keys(req.body).length != 0) {
-                console.log("body")
-                requestslog += "\nBODY: \n" + JSON.stringify(req.body);
-            }
-            requestslog += "\n============================================\n";
-            utility.writeToFile(config.request_log_path, requestslog);
-            next();
-        });
+        // app.use(function (req, res, next) {
+        //     console.log("logging");
+        //     var requestslog = "URL:\n" + req.url + "\n" + utility.getCurrentDateTime() + "\nHEADER: \n";
+        //     requestslog += req.rawHeaders;
+        //     if (Object.keys(req.body).length != 0) {
+        //         console.log("body")
+        //         requestslog += "\nBODY: \n" + JSON.stringify(req.body);
+        //     }
+        //     requestslog += "\n============================================\n";
+        //     utility.writeToFile(config.request_log_path, requestslog);
+        //     next();
+        // });
 
+        morgan.token('header', function (req, res) { return req.rawHeaders })
+        morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+        var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
+        var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
+        app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
     },
 
 
