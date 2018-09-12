@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var parser = require('../common/utility/parser')
 var app = module.exports = loopback();
 app.use(bodyParser.json());
-
+let server;
 
 
 
@@ -25,6 +25,10 @@ app.start = function () {
 
   });
 };
+
+app.stop = () => {
+  server.close();
+}
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 parser.parser();
@@ -34,6 +38,6 @@ parser.parseEdmx("common/EDMX_MODEL_SPECIFICATION.xml").then(function (result) {
 
     // start the server if `$ node server.js`
     if (require.main === module)
-      app.start();
+      server = app.start();
   });
 });

@@ -15,7 +15,7 @@ def execute(){
     }
     
     stage("build"){
-        sh "cd ODataMock && docker build -t $application ."
+        sh "cd odata-mock && docker build -t $application ."
     }
     
     

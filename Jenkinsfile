@@ -21,10 +21,10 @@ podTemplate(label: label) {
                                     load('app-connector/Jenkinsfile.groovy').execute()
                                 },
                                 "openapi-mock": {
-                                    load('OpenAPIMock/Jenkinsfile.groovy').execute()
+                                    load('openapi-mock/Jenkinsfile.groovy').execute()
                                 },
                                 "odata-mock": {
-                                    load('ODataMock/Jenkinsfile.groovy').execute()
+                                    load('odata-mock/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }

@@ -1,8 +1,8 @@
 {
-  "name": "simple-api",
+  "name": "openapi-mock",
   "version": "0.0.1",
   "private": true,
-  "description": "New Swagger API Project",
+  "description": "OpenAPI Mock Project",
   "keywords": [],
   "author": "",
   "license": "",

@@ -6,7 +6,8 @@
     "RoleMapping": 1,
     "Role": 1,
     "person": 39,
-    "AssignedInterestsType": 2
+    "AssignedInterestsType": 2,
+    "TeamMembersType": 2
   },
   "models": {
     "User": {},
@@ -16,6 +17,9 @@
     "Role": {},
     "AssignedInterestsType": {
       "1": "{\"ItemOfInterest\":\"Item1\",\"CampaignTemplate\":\"Item2\",\"id\":1}"
+    },
+    "TeamMembersType": {
+      "1": "{\"CampaignTemplate\":\"CampaignTemplate 1\",\"CampaignTemplateTeamMemberName\":\"CampaignTemplateTeamMemberName 1\",\"IsOwner\":true,\"FullName\":\"Name 1\",\"id\":1}"
     }
   }
 }

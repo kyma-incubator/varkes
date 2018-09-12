@@ -1,5 +1,5 @@
 {
-  "name": "tutorial_01",
+  "name": "odata-mock",
   "version": "1.0.0",
   "main": "server/server.js",
   "engines": {
@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
-    "posttest": "npm run lint && nsp check"
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -22,7 +22,8 @@
     "n-odata-server": "^0.4.1",
     "odata2openapi": "^1.3.0",
     "serve-favicon": "^2.0.1",
-    "strong-error-handler": "^2.0.0"
+    "strong-error-handler": "^2.0.0",
+    "supertest": "^3.3.0"
   },
   "devDependencies": {
     "eslint": "^3.17.1",
@@ -35,5 +36,5 @@
     "url": ""
   },
   "license": "UNLICENSED",
-  "description": "tutorial_01"
+  "description": "OData Mock"
 }

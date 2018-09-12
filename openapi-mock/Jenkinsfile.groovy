@@ -15,7 +15,7 @@ def execute(){
     }
     
     stage("build"){
-        sh "cd OpenAPIMock && docker build -t $application ."
+        sh "cd openapi-mock && docker build -t $application ."
     }
     
     
