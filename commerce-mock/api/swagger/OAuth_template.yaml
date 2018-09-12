@@ -1,0 +1,45 @@
+get:
+    summary: "Get OAuth2 access token"
+    description: "Returns the acess token for Kyma"
+    consumes: 
+        - "application/json"
+    produces: 
+        - "application/xml"
+        - "application/json"
+    parameters:
+        - name: "response_type"
+          in: "query"
+          description: "grant type"
+          required: true
+          default: "token"
+          type: "string"
+        - name: "client_id"
+          in: "query"
+          description: "Clinet secret Id"
+          required: false
+          default: "1"
+          type: "string"
+        - name: "redirect_uri"
+          in: "query"
+          description: "url which will contain the token"
+          required: false
+          default: "http://localhost:10000/"
+          type: "string"
+        - name: "scope"
+          in: "query"
+          description: "permission scope"
+          required: true
+          default: "read"
+          type: "string"
+    responses: 
+        200: 
+            description: "OK"
+            schema:
+                type: "object"
+                properties: 
+                    access_token_url:
+                        type: "string"
+                default:
+                    access_token_url: "http://localhost:10000/#token=3333"
+        404: 
+            description: "Not Found"

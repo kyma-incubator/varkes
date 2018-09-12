@@ -25,6 +25,12 @@ podTemplate(label: label) {
                                 },
                                 "odata-mock": {
                                     load('odata-mock/Jenkinsfile.groovy').execute()
+                                },
+                                "commerce-mock": {
+                                    load('commerce-mock/Jenkinsfile.groovy').execute()
+                                },
+                                "marketing-mock": {
+                                    load('marketing-mock/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }
