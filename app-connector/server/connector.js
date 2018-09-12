@@ -12,8 +12,8 @@ module.exports =
             request.get( //Step 4
                 url,
                 function (error, response, body) {
-                    if (error) throw new error(error)
-                    else if (response.statusCode !== 200) throw new error(response.statusCode)
+                    if (error) throw error
+                    else if (response.statusCode !== 200) throw response.statusCode
                     else if (response.statusCode == 200) {
 
 
