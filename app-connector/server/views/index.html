@@ -21,7 +21,8 @@
         <label class="mdl-textfield__label" for="sample3">Token URL</label>
 
     </div>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service" onclick="giveToken()">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service"
+        onclick="giveToken()">
         Send
     </button>
     <div id="services">
@@ -33,7 +34,8 @@
 
         <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
 
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service" onclick="createService()">Create
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service"
+            onclick="createService()">Create
             Service
         </button>
     </div>
@@ -127,6 +129,7 @@
                 type: "get",
                 url: `/services/${serviceID}`,
                 success: function (data) {
+                    data.id = serviceID
                     $("#serviceJSON").val(JSON.stringify(data))
                     editor.set(data)
                 }
@@ -177,8 +180,6 @@
         };
         editor.set(json);
 
-        // get json
-        var json = editor.get();
     </script>
 </body>
 
