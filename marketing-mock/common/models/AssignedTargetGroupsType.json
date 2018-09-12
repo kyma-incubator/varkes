@@ -1,0 +1,1 @@
+{"name":"AssignedTargetGroupsType","plural":"AssignedTargetGroupsTypes","base":"PersistedModel","idInjection":true,"options":{"validateUpsert":true},"properties":{"TargetGroupUUID":{"required":true,"type":"guid"},"CampaignTemplate":{"required":true,"type":"string"},"TargetGroup":{"type":"string"}},"validations":[],"relations":{},"acls":[],"methods":{}}

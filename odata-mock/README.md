@@ -18,6 +18,9 @@ By calling '/odata/$metadata' user can see the OData edmx specification being us
 - **Returns a dummy OAuth2 token** <br>
 By calling the base url '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
 
+- **Based on the n-odata package** <br>
+the odata-mock application is based on the [n-odata-server](https://github.com/htammen/n-odata-server) project
+
 Installation and Use
 --------------------------
 Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
@@ -25,80 +28,100 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 ````bash
 npm install
 ````
-Then you need to copy your OData edmx into the common directory as [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/OData/common/EDMX_MODEL_SPECIFICATION.xml)<br>
-OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js) file specified by the "specification_file" element
-
-You need to remove the host, schemes and basePath keys in order for swagger-express-middleware to do it's magic
+Then you need to copy your OData edmx into the common directory as [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/common/EDMX_MODEL_SPECIFICATION.xml)<br>
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/server/config.js) file specified by the "specification_file" element
 <br>
-You don't need to write a custom response in your javascript code for every endpoint in the file,
-for the endpoints that your are satisfied with a default response you add the default key with the response object to your response of the endpoint in the file as shown
+When you run the mock application for the first time it creates a javascript file and a json file for every entity defined in the edmx specifiaction using the templates [modelTemplate.json](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/common/models/modelTemplate.json) as the json template ( for every model the name is the entity name and the plural is the entity name and adding an 's' at the end so if the entity name is 'user' the plural used in the get endpoint is 'users') and [jsModel.txt](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/common/models/jsModel.txt) as the js template replacing the 'placeholder' substring with the entity name.
+<br>
+The following is an example to an entity definition in the edmx file
 
-````yaml
-responses: 
-    200: 
-        description: "OK"
-        schema: 
-            type: object
-            properties: 
-                persons:
-                    type: array
-                    items: 
-                        type: "object"
-                        properties: 
-                        code: 
-                            type: "string"
-                        name: 
-                            type: "string"
-            default:
-            cardTypes:
-            - 
-                code: code1
-                name: card1
-                    
-            - 
-                code: code2
-                name: card2
+````xml
+<EntityType Name="AssignedInterestsType" sap:label="Marketing: Campaign Template-Interest" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="ItemOfInterest"/>
+     <PropertyRef Name="CampaignTemplate"/>
+    </Key>
+    <Property Name="ItemOfInterest" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Item of Interest"/>
+    <Property Name="CampaignTemplate" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Campaign ID"/>
+   </EntityType>
 ````
+<br>
+You can add data to an Entity using the [data.json](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/storage/data.json) file. So for the above entity the file will look like this
+
+````json
+{
+  "ids": {
+    "User": 1,
+    "AccessToken": 1,
+    "ACL": 1,
+    "RoleMapping": 1,
+    "Role": 1,
+    "person": 39,
+    "AssignedInterestsType": 2,
+    "TeamMembersType": 2
+  },
+  "models": {
+    "User": {},
+    "AccessToken": {},
+    "ACL": {},
+    "RoleMapping": {},
+    "Role": {},
+    "AssignedInterestsType": {
+      "1": "{\"ItemOfInterest\":\"Item1\",\"CampaignTemplate\":\"Item2\",\"id\":1}"
+    }
+  }
+}
+````
+
 
 Node js code
 --------------------------
 
-The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/mocks/mock_controller.js) where the user  
+The entry point for the application is the server/server.js file which reads the edmx file [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/common/EDMX_MODEL_SPECIFICATION.xml) using [parser.js](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/common/utility/parser.js)
+<br>
+The mock application offers the following
 
-- **Write his/her custom code for handling some of the responses and registering them to the express app in the registerCustomResponses function.** <br>
-        The following is an example of listening to the post endpoint "/:baseSiteId/cms/components" and replacing the body with a user defined idList
+- **Writing custom code for handling some of the responses and registering them to the express app [routes.js](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/server/boot/routes.js).** <br>
+        The following is an example of listening to the get endpoint "'/authorizationserver/oauth/" checking if the required parameters are submitted, then returning the redirect_uri enetred as a query parameter and adding to it the token
 ````javascript
-app.post('/:baseSiteId/cms/components', function (req, res, next) {
-
-            console.log("entered post");
-            res.body = {
-                "idList": [
-                    "4",
-                    "5"
-                ]
+app.get('/authorizationserver/oauth/*', function (req, res, next) {
+        if (req.query.response_type && req.query.scope) {
+            if (req.query.redirect_uri) {
+                res.status(200)
+                res.send(req.query.redirect_uri + "#token=7777");
             }
-            next();
-        });
+            else
+                res.send('Please, enter redirected_uri');
+        }
+        else {
+            res.status(404)
+            res.send('Wrong parameters');
+        }
+
+    });
 ````
 - **Add a some extra items to the default response** <br>
-        The following is an example of listening to the get endpoint "/:baseSiteId/cardtypes" which returns two items as response, "card1" and "card2", then adding a third item to the array by overwriting the send function for the response object "res"
+        The following is an example of changing the error message in the response depending on the status code
 ````javascript
- app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+ function modifyResponseBody(req, res, next) {
+        var oldSend = res.send;
 
-            console.log("entered cardtypes");
-            var oldSend = res.send;
-            res.send = function (data) {
-                // arguments[0] (or `data`) contains the response body
-                data = JSON.parse(data);
-                data.cardTypes.push({ code: "code3", name: "card3" })
-                arguments[0] = JSON.stringify(data);
-                oldSend.apply(res, arguments);
+        res.send = function (data) {
+            // arguments[0] (or `data`) contains the response body
+            if (arguments[0].statusCode == 401) {
+                arguments[0] = "401 Entity does not exist";
             }
-            next();
-        });
+            else if (arguments[0].statusCode == 404) {
+                arguments[0] = "404 Bad URL";
+            }
+            oldSend.apply(res, arguments);
+        }
+        next();
+    }
 ````
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
-        the following example checks if the error status is not known or if it's 400 then sends a custom error message accordingly
+        Since this application is based on [n-odata-server](https://github.com/htammen/n-odata-server); we need to handle custom errors for the 'api' based REST calls and for the 'odata' based REST calls.
+        For the api based calls we use the follwing function in the [config-local.js](https://github.com/kyma-incubator/varkes/blob/master/odata-mock/server/config-local.js) file.
 
 ````javascript
 app.use(function (err, req, res, next) {
@@ -116,22 +139,6 @@ app.use(function (err, req, res, next) {
             }
         });
 ````
-[Config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js)
---------------------------
-In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
-
-````javascript
-module.exports = {
-    specification_file: 'api/swagger/swagger.yaml',
-    request_log_path: 'requests.log',
-    OAuth_template_path: 'api/swagger/OAuth_template.yaml',
-    error_messages: {
-        500: '{error:\"Something went Wrong\"}',
-        400: '{error:\"Errorrrr\"}',
-        404: '{error:\"End Point not found\"}'
-    }
-}
-````
 
  Starting the application
 --------------------------
@@ -148,5 +155,5 @@ npm start
 Go to the directory of the application and write in the terminal
 ````bash
 docker build -t <tag_name> .
-docker run -p <chosen_ip>:10000 <tag_name>
+docker run -p <chosen_ip>:3000 <tag_name>
 ````

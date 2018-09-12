@@ -4,10 +4,6 @@
     "description": "testing... 1.2.3.",
     "api": {
         "targetUrl": "https://jsonplaceholder.typicode.com/todos",
-
-        "spec": {}
-    },
-    "events": {
         "spec": {}
     },
     "documentation": {
