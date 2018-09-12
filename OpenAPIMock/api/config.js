@@ -3,8 +3,8 @@ module.exports = {
     request_log_path: 'requests.log',
     OAuth_template_path: 'api/swagger/OAuth_template.yaml',
     error_messages: {
-        500: '{error:\"Something went Wrong\"}',
-        400: '{error:\"Errorrrr\"}',
-        404: '{error:\"End Point not found\"}'
+        500: '{"error":\"Something went Wrong\"}',
+        400: '{"error":\"Errorrrr\"}',
+        404: '{"error":\"End Point not found\"}'
     }
 }
