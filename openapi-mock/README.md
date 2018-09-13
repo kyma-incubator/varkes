@@ -10,7 +10,7 @@ Features
 OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference Swagger files.  You can also create your custom implementation for a response and for errors.
 
 - **Records Every Request made to the node** <br>
-Creates a request.log file that contains the urls being called, the header of the request and the body of the request if exists
+Creates a requests.log file that contains the urls being called, the header of the request and the body of the request if exists using the [morgan](https://www.npmjs.com/package/morgan) logging framework.
 
 - **Returns the OpenAPI specification as metadata** <br>
 By calling '/metadata' user can see the OpenAPI specification being use in text/x-yaml format
@@ -25,8 +25,8 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 ````bash
 npm install
 ````
-Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml)<br>
-OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js) file specified by the "specification_file" element
+Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/swagger/swagger.yaml)<br>
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/config.js) file specified by the "specification_file" element
 
 You need to remove the host, schemes and basePath keys in order for swagger-express-middleware to do it's magic
 <br>
@@ -63,7 +63,7 @@ responses:
 Node js code
 --------------------------
 
-The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/mocks/mock_controller.js) where the user  
+The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/swagger/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/mocks/mock_controller.js) where the user  
 
 - **Write their custom code for handling some of the responses and registering them to the express app in the registerCustomResponses function.** <br>
         The following is an example of listening to the post endpoint "/:baseSiteId/cms/components" and replacing the body with a user defined idList
@@ -116,9 +116,9 @@ app.use(function (err, req, res, next) {
             }
         });
 ````
-[Config.js](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/config.js)
+[Config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/config.js)
 --------------------------
-In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/OpenAPIMock/api/swagger/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
+In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/api/swagger/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
 
 ````javascript
 module.exports = {
