@@ -1,24 +1,8 @@
 var bodyParser = require('body-parser');
-var morgan = require('morgan')
-var fs = require('fs')
+var utility = require('../../common/utility/utility')
 module.exports = function (app) {
 
-    morgan.token('header', function (req, res) {
-        if (Object.keys(req.rawHeaders).length != 0)
-            return req.rawHeaders;
-        else
-            return "-";
-    });
-    morgan.token('body', function (req, res) {
-        if (Object.keys(req.body).length != 0)
-            return JSON.stringify(req.body);
-        else
-            return "-";
-    });
-    var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
-    var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
-    app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
-
+    utility.registerLogger(app);
     app.get('/authorizationserver/oauth/*', function (req, res, next) {
         if (req.query.response_type && req.query.scope) {
             if (req.query.redirect_uri) {
