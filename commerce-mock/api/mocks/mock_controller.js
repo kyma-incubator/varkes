@@ -32,14 +32,22 @@ module.exports = {
             }
             next();
         });
-        app.get(Oauth_endpoint_key, function (req, res, next) {
+        app.post(Oauth_endpoint_key, function (req, res, next) {
 
             console.log("entered oauth");
+            console.log(req.body)
+            res.send({ token: 3333 })
+            next();
+        });
+
+        app.get('/:baseSiteId/cardtypes', function (req, res, next) {
+
+            console.log("entered cardtypes");
             var oldSend = res.send;
             res.send = function (data) {
                 // arguments[0] (or `data`) contains the response body
                 data = JSON.parse(data);
-                data.addedMessage = 'this is added to default response'
+                data.cardTypes.push({ code: "code3", name: "card3" })
                 arguments[0] = JSON.stringify(data);
                 oldSend.apply(res, arguments);
             }
@@ -86,9 +94,14 @@ module.exports = {
             if (!err.status) {
                 err.status = 500;
             }
-            res.status(err.status);
-            res.type('json');
-            res.send(util.format(config.error_messages[err.status]));
+            try {
+                res.status(err.status);
+                res.type('json');
+                res.send(util.format(config.error_messages[err.status]));
+            }
+            catch (err) {
+                console.error(err)
+            }
         });
 
     }

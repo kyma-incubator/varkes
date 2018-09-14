@@ -94,9 +94,14 @@ module.exports = {
             if (!err.status) {
                 err.status = 500;
             }
-            res.status(err.status);
-            res.type('json');
-            res.send(util.format(config.error_messages[err.status]));
+            try {
+                res.status(err.status);
+                res.type('json');
+                res.send(util.format(config.error_messages[err.status]));
+            }
+            catch (err) {
+                console.error(err)
+            }
         });
 
     }

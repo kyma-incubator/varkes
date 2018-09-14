@@ -3,20 +3,12 @@ var utility = require('../../common/utility/utility')
 module.exports = function (app) {
 
     utility.registerLogger(app);
-    app.get('/authorizationserver/oauth/*', function (req, res, next) {
-        if (req.query.response_type && req.query.scope) {
-            if (req.query.redirect_uri) {
-                res.status(200)
-                res.send(req.query.redirect_uri + "#token=7777");
-            }
-            else
-                res.send('Please, enter redirected_uri');
-        }
-        else {
-            res.status(404)
-            res.send('Wrong parameters');
-        }
+    app.post('/odata/authorizationserver/oauth/token', function (req, res, next) {
 
+        console.log("entered oauth");
+        console.log(req.body)
+        res.send({ token: 4444 })
+        next();
     });
     function modifyResponseBody(req, res, next) {
         var oldSend = res.send;
