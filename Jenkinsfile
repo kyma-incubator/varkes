@@ -27,10 +27,10 @@ podTemplate(label: label) {
                                     load('odata-mock/Jenkinsfile.groovy').execute()
                                 },
                                 "commerce-mock": {
-                                    load('commerce-mock/Jenkinsfile.groovy').execute()
+                                  //  load('commerce-mock/Jenkinsfile.groovy').execute() let's not build them for now until we fix the base repo.
                                 },
                                 "marketing-mock": {
-                                    load('marketing-mock/Jenkinsfile.groovy').execute()
+                                  //  load('marketing-mock/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }
