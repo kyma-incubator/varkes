@@ -1,4 +1,4 @@
-get:
+post:
     summary: "Get OAuth2 access token"
     description: "Returns the acess token for Kyma"
     consumes: 
@@ -7,30 +7,19 @@ get:
         - "application/xml"
         - "application/json"
     parameters:
-        - name: "response_type"
-          in: "query"
-          description: "grant type"
+        - in: "body"
+          name: "parameters"
+          description: "List of Component identifiers"
           required: true
-          default: "token"
-          type: "string"
-        - name: "client_id"
-          in: "query"
-          description: "Clinet secret Id"
-          required: false
-          default: "1"
-          type: "string"
-        - name: "redirect_uri"
-          in: "query"
-          description: "url which will contain the token"
-          required: false
-          default: "http://localhost:10000/"
-          type: "string"
-        - name: "scope"
-          in: "query"
-          description: "permission scope"
-          required: true
-          default: "read"
-          type: "string"
+          schema:
+            type: "object"
+            properties:
+              client_id:
+                type: "string"
+              client_secret:
+                type: "string"
+              grant_type:
+                type: "string"
     responses: 
         200: 
             description: "OK"
@@ -40,6 +29,6 @@ get:
                     access_token_url:
                         type: "string"
                 default:
-                    access_token_url: "http://localhost:10000/#token=3333"
+                    token: "3333"
         404: 
             description: "Not Found"
