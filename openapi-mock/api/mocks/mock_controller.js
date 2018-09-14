@@ -37,7 +37,6 @@ module.exports = {
             console.log("entered oauth");
             console.log(req.body)
             res.send({ token: 3333 })
-            next();
         });
 
         app.get('/:baseSiteId/cardtypes', function (req, res, next) {
