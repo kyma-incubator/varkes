@@ -15,7 +15,16 @@ app.use(bodyParser.json());
 mock_controller.recordRequest();
 
 mock_controller.createMetadataEndpoint();
-
+let server;
+app.start = function () {
+  server = app.listen(10000, function () {
+    console.log('OpenAPI Mock is now running at http://localhost:10000');
+  });
+}
+app.stop = function () {
+  server.close();
+}
+module.exports = app;
 middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {
 
   app.use(
@@ -31,13 +40,6 @@ middleware(path.join(__dirname, config.specification_file), app, function (err, 
 
   // creates user defined responses for certain error codes
   mock_controller.customErrorResponses(app);
-
-
-
+  app.start();
 });
 
-var server = app.listen(10000, function () {
-  console.log('OpenAPI Mock is now running at http://localhost:10000');
-
-});
-module.exports = server
