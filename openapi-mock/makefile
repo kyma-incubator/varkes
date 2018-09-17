@@ -1,0 +1,21 @@
+#This is currently similar to our jenkins build, install and build the docker image.
+.PHONY: ci
+ci: resolve build
+
+
+resolve:
+	npm install
+
+.PHONY: test
+test:
+	npm run-script test
+
+# To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .
+build:
+	npm run-script build 
+
+clean:
+	rm -rf ./node_modules && rm -f tslinter.json whitesource.config.json ws-IsJson.json .npmrc
+
+run:
+	npm start
