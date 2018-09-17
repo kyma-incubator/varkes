@@ -2,7 +2,9 @@ var request = require('supertest');
 var server = require('../app');
 var assert = require('assert');
 describe('controllers', function () {
-
+  before(() => {
+    server.parseSpecFile();
+  });
   describe('test_openapi', function () {
 
     describe('GET metadata', function () {
