@@ -7,7 +7,7 @@ resolve:
 	npm install
 
 #commenting out test, because there is a special case for this repo.
-#test:
+#validate:
 #	npm run-script test
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/app-connector .

@@ -1,13 +1,12 @@
 #This is currently similar to our jenkins build, install and build the docker image.
 .PHONY: ci
-ci: resolve build
+ci: resolve validate build
 
 
 resolve:
 	npm install
 
-.PHONY: test
-test:
+validate:
 	npm run-script test
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .

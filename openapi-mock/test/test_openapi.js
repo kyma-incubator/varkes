@@ -27,6 +27,8 @@ describe('controllers', function () {
           .set('Accept', 'application/json')
           .expect('Content-Type', 'application/json')
           .end(function (err, res) {
+            console.log("**********test************")
+            console.log(res.body)
             assert(res.body.cardTypes.length, 3);
             done();
           })
@@ -36,6 +38,6 @@ describe('controllers', function () {
     });
 
   });
-  after(() => { server.close() })
+  after(() => { server.stop() })
 
 });
