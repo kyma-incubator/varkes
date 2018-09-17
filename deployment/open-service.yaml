@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: open-api-service
+spec:
+  selector:
+    app: open-api-mock
+  ports:
+  - protocol: TCP
+    port: 5555
+    targetPort: 10000
