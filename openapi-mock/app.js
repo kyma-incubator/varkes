@@ -1,7 +1,5 @@
 'use strict';
 
-
-//process.env.DEBUG = 'swagger:middleware';
 var middleware = require('swagger-express-middleware');
 var path = require('path');
 const bodyParser = require('body-parser');
@@ -15,6 +13,7 @@ app.use(bodyParser.json());
 mock_controller.recordRequest();
 
 mock_controller.createMetadataEndpoint();
+
 let server;
 app.start = function () {
   server = app.listen(10000, function () {
@@ -24,22 +23,25 @@ app.start = function () {
 app.stop = function () {
   server.close();
 }
+
+app.before = function () {
+  middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {
+
+    app.use(
+      middleware.metadata(),
+      middleware.CORS(),
+      middleware.files(),
+      middleware.parseRequest(),
+      middleware.validateRequest(),
+    );
+    //this function is responsible for resgistering any user defined responses to our specification
+    mock_controller.registerCustomResponses(app);
+    app.use(middleware.mock())
+
+    // creates user defined responses for certain error codes
+    mock_controller.customErrorResponses(app);
+  });
+}
 module.exports = app;
-middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {
-
-  app.use(
-    middleware.metadata(),
-    middleware.CORS(),
-    middleware.files(),
-    middleware.parseRequest(),
-    middleware.validateRequest(),
-  );
-  //this function is responsible for resgistering any user defined responses to our specification
-  mock_controller.registerCustomResponses(app);
-  app.use(middleware.mock())
-
-  // creates user defined responses for certain error codes
-  mock_controller.customErrorResponses(app);
-  app.start();
-});
-
+app.before();
+app.start();
