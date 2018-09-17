@@ -24,7 +24,7 @@ app.stop = function () {
   server.close();
 }
 
-app.before = function () {
+app.parseSpecFile = function () {
   middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {
 
     app.use(
@@ -43,5 +43,5 @@ app.before = function () {
   });
 }
 module.exports = app;
-app.before();
+app.parseSpecFile();
 app.start();

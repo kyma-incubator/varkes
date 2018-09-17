@@ -3,7 +3,7 @@ var server = require('../app');
 var assert = require('assert');
 describe('controllers', function () {
   before(() => {
-    server.before();
+    server.parseSpecFile();
   });
   describe('test_openapi', function () {
 
