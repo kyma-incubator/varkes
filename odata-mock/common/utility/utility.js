@@ -38,13 +38,14 @@ module.exports = {
     registerLogger: function (app) {
 
         morgan.token('header', function (req, res) {
-            if (Object.keys(req.rawHeaders).length != 0)
+            if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
                 return req.rawHeaders;
             else
                 return "-";
         });
         morgan.token('body', function (req, res) {
-            if (Object.keys(req.body).length != 0)
+            console.log(req.body)
+            if (req.body && Object.keys(req.body).length != 0)
                 return JSON.stringify(req.body);
             else
                 return "-";
