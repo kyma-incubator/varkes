@@ -13,10 +13,10 @@ Copy the edmx specification to the [EDMX_MODEL_SPECIFICATION.xml]((https://githu
 Creates a requests.log file that contains the urls being called, the header of the request and the body of the request if exists using the [morgan](https://www.npmjs.com/package/morgan) logging framework.
 
 - **Returns the OData specification as metadata** <br>
-By calling '/odata/$metadata' user can see the OData edmx specification being use in xml format
+By calling `/odata/$metadata` user can see the OData edmx specification being use in xml format
 
 - **Returns a dummy OAuth2 token** <br>
-By calling the base url '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
+By posting to url `odata/authorizationserver/oauth/token` the OAuth2 requirements in the request body, user can get a dummy OAuth2 token
 
 - **Based on the n-odata package** <br>
 the odata-mock application is based on the [n-odata-server](https://github.com/htammen/n-odata-server) project, which is based on [loopback](https://loopback.io/) 
