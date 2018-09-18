@@ -815,6 +815,15 @@ definitions:
           $ref: "#/definitions/CategoryHierarchyWsDTO"
       url:
         type: "string"
+    default: 
+      id: "1"
+      name: "catalog 1"
+      url: "http://try1"
+      subcategories:
+        - 
+          id: "2"
+          name: "catalog 2"
+          url: "http://try2"
   CategoryWsDTO:
     type: "object"
     properties:

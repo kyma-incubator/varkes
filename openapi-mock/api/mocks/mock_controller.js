@@ -9,7 +9,6 @@ const config = require('../config')
 var app = require('express')();
 var openApi_doc = {};
 var Oauth_endpoint_key = "/authorizationserver/oauth/token";
-var morgan = require('morgan');
 module.exports = {
     app,
     init: function () {
@@ -54,13 +53,9 @@ module.exports = {
         });
 
     },
-    recordRequest: function () {
+    recordRequest: function (app_modified) {
 
-        morgan.token('header', function (req, res) { return req.rawHeaders })
-        morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
-        var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
-        var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
-        app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
+        utility.registerLogger(app_modified);
     },
 
 
@@ -80,9 +75,11 @@ module.exports = {
     },
     createOAuth2Endpoint: function () {
         var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(config.OAuth_template_path, 'utf8'));
-        openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
-        var yml_format = pretty_yaml.stringify(openApi_doc);
-        utility.writeToFile(config.specification_file, yml_format, true);
+        if (Object.keys(openApi_doc["paths"][Oauth_endpoint_key]).length == 0) {
+            openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
+            var yml_format = pretty_yaml.stringify(openApi_doc);
+            utility.writeToFile(config.specification_file, yml_format, true);
+        }
     },
     customErrorResponses: function (app_modified) {
 
