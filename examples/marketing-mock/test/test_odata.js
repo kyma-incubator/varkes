@@ -36,23 +36,6 @@ describe('controllers', function () {
 
         });
 
-        describe('GET TeamMembersTypes', function () {
-
-            it('should return response 200', function (done) {
-
-                request(server)
-                    .get('/odata/TeamMembersTypes(1)')
-                    .set('Accept', 'application/json')
-                    .expect('Content-Type', 'application/json; charset=utf-8')
-                    .end(function (err, res) {
-                        assert(res.body.d.CampaignTemplate, 'CampaignTemplate 1');
-                        done();
-                    })
-            });
-
-
-        });
-
     });
 
 });

@@ -8,7 +8,6 @@ module.exports = function (app) {
         console.log("entered oauth");
         console.log(req.body)
         res.send({ token: 4444 })
-        next();
     });
     function modifyResponseBody(req, res, next) {
         var oldSend = res.send;
