@@ -6,5 +6,5 @@ WORKDIR /app
 
 RUN npm install
 
-EXPOSE 3000
+EXPOSE 4444
 CMD ["npm","start"]

@@ -1,7 +1,7 @@
 module.exports = {
     keyDir: "keys",
     assetDir: "server/assets",
-    port: 3000,
+    port: 4444,
     startConnUrl: "/startConn/",
     URLs: {
         metadataUrl: "",

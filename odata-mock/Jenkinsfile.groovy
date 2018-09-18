@@ -17,7 +17,9 @@ def execute(){
     stage("build"){
         sh "cd odata-mock && docker build -t $application ."
     }
-    
+    stage("test"){
+        sh "docker run $application npm test"
+    }
     
     stage("push image"){
         sh "docker tag $application:latest $registry/$application:$appVersion"
