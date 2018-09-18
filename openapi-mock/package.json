@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "mocha": "^5.2.0",
-    "should": "^7.1.0",
     "supertest": "^3.1.0"
   },
   "scripts": {
