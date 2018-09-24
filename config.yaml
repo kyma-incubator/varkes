@@ -16,7 +16,7 @@ data:
         name: varkes-test
         spec:
           containers:
-          - image: alpine
+          - image: badrawi/varkes_image
             command: ["/varkes/test"]
 kind: ConfigMap
 metadata:
