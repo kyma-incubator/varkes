@@ -1,6 +1,0 @@
-plugins:
-  kyma-incubator/varkes:
-  - approve
-  - lgtm
-  - owners-label
-  - size
