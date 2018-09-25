@@ -8,24 +8,20 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl \
     jq \
+    vim \
+    make \
     socat \
     sudo \
-    vim \
-    zip \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 
-# Copying into the container all the necessary files like scripts and resources definition
-RUN mkdir /varkes
+RUN apt install -y nodejs
 
 COPY . /varkes
-WORKDIR /app
+WORKDIR /varkes/openapi-mock
 RUN npm install
-ENV IGNORE_TEST_FAIL="true"
-ENV RUN_TESTS="true"
-
-RUN echo 'alias kc="kubectl"' >> ~/.bashrc
-
-# minikube and docker start must be done on starting container to make it work
-ENTRYPOINT /varkes/test.sh
+CMD ["npm","test"]
+#ENTRYPOINT /varkes/test.sh \
+#&& exec bash
