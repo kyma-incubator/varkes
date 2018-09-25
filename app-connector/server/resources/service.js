@@ -22,7 +22,7 @@ exports.create = function (req, res) {
 
 exports.show = function (req, res) {
     showService(req.params.service, (data) => {
-        res.send(JSON.parse(data))
+        res.send(data)
     })
 };
 
