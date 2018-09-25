@@ -16,7 +16,7 @@ function getToken(cb) {
             (error, response, body) => {
                 try {
                     resp = JSON.parse(body)
-
+                    console.log("token received")
                     cb(resp.url)
                 } catch (e) {
                     console.log("couldn't get token")
