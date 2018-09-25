@@ -22,6 +22,5 @@ RUN apt install -y nodejs
 COPY . /varkes
 WORKDIR /varkes/openapi-mock
 RUN npm install
-CMD ["npm","test"]
-#ENTRYPOINT /varkes/test.sh \
-#&& exec bash
+ENTRYPOINT /varkes/test.sh \
+    && exec bash
