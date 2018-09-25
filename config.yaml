@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  config.yaml: |
+    periodics:
+    - interval: 10m
+      agent: kubernetes
+      name: echo-test
+      spec:
+        containers:
+        - image: alpine
+          command: ["/bin/date"]
+    postsubmits:
+      kyma-incubator/varkes:
+      - 
+        agent: kubernetes
+        name: varkes-test
+        spec:
+          containers:
+          - image: badrawi/varkes_image
+            command: ["/varkes/test"]
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"config.yaml":"periodics:\n- interval: 10m\n  agent: kubernetes\n  name: echo-test\n  spec:\n    containers:\n    - image: alpine\n      command: [\"/bin/date\"]\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"config","namespace":"default"}}
+  creationTimestamp: 2018-09-17T13:34:13Z
+  name: config
+  namespace: default
+  resourceVersion: "3269943"
+  selfLink: /api/v1/namespaces/default/configmaps/config
+  uid: 5df5469d-ba7e-11e8-8b63-42010a9c0146
