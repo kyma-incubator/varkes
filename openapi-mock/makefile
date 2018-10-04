@@ -1,6 +1,6 @@
 #This is currently similar to our jenkins build, install and build the docker image.
 .PHONY: ci
-ci: resolve validate build
+ci: resolve validate
 
 
 resolve:
