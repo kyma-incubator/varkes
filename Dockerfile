@@ -9,17 +9,17 @@ RUN apt-get update && apt-get install -y \
     make \
     git \
     socat \
-    nodejs \
     sudo \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-
-RUN git clone -b test_prow https://github.com/kyma-incubator/varkes.git
-
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
+RUN git checkout $PULL_BASE_REF
+RUN git pull
+RUN apt install -y nodejs
+
 RUN chmod -R 777 .
-RUN git config --add remote.origin.fetch +refs/pull/*/merge:refs/remotes/origin/pr/*/merge
-RUN git fetch
-#ENTRYPOINT  /varkes/test.sh \
-#   && exec bash
+ENTRYPOINT  /varkes/test.sh \
+    && exec bash
