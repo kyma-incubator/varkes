@@ -50,7 +50,7 @@ describe("Connect to kyma", function () {
                     !err ? done() : {}
                 })
         })
-    }).timeout(4000)
+    }).timeout(6000)
 
 })
 describe("service endpoints", () => {

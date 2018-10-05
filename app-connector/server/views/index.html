@@ -146,7 +146,8 @@
             url: "/services",
             data: JSON.stringify(editor.get()),
             success: function (data) {
-                showService(data)
+                getServices()
+                showService(data.id)
 
             },
             contentType: "application/json"

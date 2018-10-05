@@ -22,7 +22,12 @@ exports.create = function (req, res) {
 
 exports.show = function (req, res) {
     showService(req.params.service, (data) => {
-        res.send(data)
+        try {
+            res.send(JSON.parse(data)) //TODO: add try catch here
+        }
+        catch (error) {
+            res.send({ error: "There is an internal error" })
+        }
     })
 };
 

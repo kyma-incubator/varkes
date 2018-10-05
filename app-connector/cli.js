@@ -21,7 +21,10 @@ const rl = readline.createInterface({
 })
 
 let keyFile, certFile
-
+if (!fs.existsSync(path.resolve(CONFIG.keyDir, "ec-default.key"))) {
+    console.log("generating new key")
+    require("./prestart").generatePrivateKey(data => console.log(data))
+}
 getInputFile(rl, program).then(inputFile => {
 
     const serviceMetadata = path.resolve(inputFile)
@@ -39,24 +42,28 @@ getInputFile(rl, program).then(inputFile => {
         getTokenUrl(rl, program).then(tokenUrl => {
 
             createKeysFromToken(tokenUrl, urls => {
-                fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
-                res.send(data)
-                CONFIG.URLs = data
+                fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
 
+                CONFIG.URLs = urls
+                console.log(urls)
+                keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+                    , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
                 createServiceFromFile(JSON.parse(fs.readFileSync(serviceMetadata)))
 
             })
 
         })
     }
+
 })
-rl.close()
 
 function createKeysFromToken(tokenUrl, cb) {
     connector.exportKeys(tokenUrl, (data) => cb(data))
 }
 function createServiceFromFile(serviceMetadata) {
     console.log(serviceMetadata)
+    console.log(certFile)
+    console.log(keyFile)
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -69,6 +76,7 @@ function createServiceFromFile(serviceMetadata) {
         }
     }, function (error, httpResponse, body) {
         console.log(body)
+        rl.close()
     });
 }
 
@@ -78,6 +86,7 @@ function getTokenUrl(rl, program) {
         if (program.token === '') {
 
             rl.question("Please enter your connection token: ", (answer) => {
+
                 resolve(answer)
 
 
@@ -88,6 +97,7 @@ function getTokenUrl(rl, program) {
 
 
 function getInputFile(rl, program) {
+
     return new Promise((resolve, reject) => {
         if (program.input == '') {
             rl.question("Please enter your input file: ", (answer) => {
