@@ -16,12 +16,10 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
-RUN echo $PULL_BASE_REF 
 RUN apt install -y nodejs
 
 RUN chmod -R 777 .
 ENTRYPOINT git checkout $PULL_BASE_REF \
     && git pull \
     && echo $PULL_BASE_REF \
-    && /varkes/test.sh \
     && exec bash
