@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-echo $PULL_BASE_REF
-echo $REPO_NAME
+cd "openapi-mock"
+make ci
+cd "/varkes/odata-mock"
+make ci
