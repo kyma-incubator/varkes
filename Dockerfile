@@ -18,8 +18,9 @@ RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
 
-RUN chmod -R 777 .
-ENTRYPOINT git checkout $PULL_BASE_REF \
+ENTRYPOINT echo $REPO_NAME \
+    && git checkout $REPO_NAME \
     && git pull \
-    && echo $PULL_BASE_REF \
+    && chmod -R 777 . \
+    && /varkes/test.sh \
     && exec bash
