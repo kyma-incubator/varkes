@@ -7,7 +7,7 @@ resolve:
 	npm install
 
 validate:
-	npm run-script test
+	npm test
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .
 build:
