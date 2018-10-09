@@ -18,10 +18,9 @@ RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
 
-ENTRYPOINT git fetch origin pull/31/head:pr-31 \
-    && $path = git diff pr-31 --name-only \
-    && echo $path \
-    && git checkout pr-31 \
+ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
+    && git checkout pr-$PULL_NUMBER \
+    && export changedDir=$(git diff pr-$PULL_NUMBER master --dirstat  | cut -d' ' -f3-) \
     && chmod -R 777 . \
     && /varkes/test.sh \
     && exec bash
