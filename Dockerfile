@@ -18,9 +18,10 @@ RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
 
-ENTRYPOINT echo $PULL_BASE_REF \
-    && git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
-    && git checkout pr-$PULL_NUMBER \
+ENTRYPOINT git fetch origin pull/31/head:pr-31 \
+    && $path = git diff pr-31 --name-only \
+    && echo $path \
+    && git checkout pr-31 \
     && chmod -R 777 . \
     && /varkes/test.sh \
     && exec bash
