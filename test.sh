@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo $PULL_NUMBER
 git status
-git diff pr-$PULL_NUMBER master --dirstat | cut -d' ' -f3-
+$(git diff pr-$PULL_NUMBER master --dirstat | cut -d' ' -f3-)
 changedDir=$(git diff pr-$PULL_NUMBER master --dirstat | cut -d' ' -f3-)
 echo $changedDir
 arr=$(echo $changedDir | tr " " "\n")
