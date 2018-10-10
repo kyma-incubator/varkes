@@ -11,7 +11,8 @@ validate:
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .
 build:
-	docker build -t badrawi/varkes-odata-mock:latest .
+	#docker build -t badrawi/varkes-odata-mock:latest .
+	npm run-script build
 
 push:
 	docker push badrawi/varkes-odata-mock:latest
