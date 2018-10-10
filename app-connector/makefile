@@ -1,14 +1,14 @@
 #This is currently similar to our jenkins build, install and build the docker image.
 .PHONY: ci
-ci: resolve build
+ci: resolve validate
 
 
 resolve:
 	npm install
 
 #commenting out test, because there is a special case for this repo.
-#validate:
-#	npm run-script test
+validate:
+	npm run-script test
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/app-connector .
 build:
