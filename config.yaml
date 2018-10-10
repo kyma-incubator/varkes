@@ -60,7 +60,7 @@ presubmits:
     skip_report: false
     spec:
       containers:
-      - image: badrawi/varkes_image:v10
+      - image: badrawi/varkes_image:v13
   suleymanakbas91/kyma:
   - name: test-prow
     trigger: "(?m)^/test prow"

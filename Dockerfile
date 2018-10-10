@@ -20,7 +20,7 @@ RUN apt install -y nodejs
 
 ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
     && git checkout pr-$PULL_NUMBER \
-    && export changedDir=$(git diff pr-$PULL_NUMBER master --dirstat  | cut -d' ' -f3-) \
+    && export PULL_NUMBER \
     && chmod -R 777 . \
     && /varkes/test.sh \
     && exec bash
