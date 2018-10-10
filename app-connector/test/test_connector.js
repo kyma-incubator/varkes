@@ -5,7 +5,7 @@ var server = require("../server/server");
 var CONFIG = require("../config")
 const fs = require("fs")
 const path = require("path")
-const serviceMetadata = path.resolve(CONFIG.assetDir, "basic-service-metadata.json")
+const serviceMetadata = path.resolve("test/integration/basic-service-metadata.json")
 deleteNonEmptyFolder(CONFIG.keyDir)
 require("../prestart").generatePrivateKey(data => console.log(data))
 
@@ -50,7 +50,7 @@ describe("Connect to kyma", function () {
                     !err ? done() : {}
                 })
         })
-    }).timeout(4000)
+    }).timeout(6000)
 
 })
 describe("service endpoints", () => {
