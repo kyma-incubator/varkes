@@ -12,5 +12,6 @@ do
 	 echo "\"$x\""
 	 cd "$x"
 	 make ci
+     cd ".."
    fi
 done
