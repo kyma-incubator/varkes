@@ -1,6 +1,6 @@
 #This is currently similar to our jenkins build, install and build the docker image.
 .PHONY: ci docker_build
-ci: resolve validate
+ci: resolve validate build
 docker_build: build push
 
 resolve:
@@ -9,13 +9,14 @@ resolve:
 validate:
 	npm test
 
+setup:
+	docker login -u $uname -p $pwd $registry
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .
 build:
-	#docker build -t badrawi/varkes-odata-mock:latest .
-	npm run-script build
+	docker build -t eu.gcr.io/kyma-project/varkes-odata-mock:latest .
 
 push:
-	docker push badrawi/varkes-odata-mock:latest
+	docker push eu.gcr.io/kyma-project/varkes-odata-mock:latest
 
 
 clean:

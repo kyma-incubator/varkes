@@ -11,7 +11,7 @@ do
    then
 	 echo "\"$x\""
 	 cd "$x"
-	 make docker_build
+	 make ci
      cd ".."
    fi
 done
