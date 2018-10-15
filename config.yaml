@@ -61,11 +61,6 @@ presubmits:
     spec:
       containers:
       - image: badrawi/varkes_image:v14
-        volumeMounts:
-        - mountPath: /var/run/docker.sock
-          name: docker-socket-volume
-        securityContext:
-          privileged: true
   suleymanakbas91/kyma:
   - name: test-prow
     trigger: "(?m)^/test prow"
