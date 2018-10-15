@@ -1,0 +1,60 @@
+[15/Oct/2018:15:36:14 +0000], User: -, "GET /api/Courses, Status: 200"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Accept,application/json,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Referer,http://localhost:3000/explorer/,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:38:57 +0000], User: -, "PUT /api/Courses, Status: 200"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Content-Length,39,Accept,application/json,Origin,http://localhost:3000,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Content-Type,application/json,Referer,http://localhost:3000/explorer/,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ {"code":"C2","name":"course2"}
+[15/Oct/2018:15:39:10 +0000], User: -, "GET /api/Courses, Status: 200"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Accept,application/json,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Referer,http://localhost:3000/explorer/,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:54:23 +0000], User: -, "GET /odata/$metadata, Status: 200"
+ Header:
+ Host,127.0.0.1:63389,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.3,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:54:23 +0000], User: -, "GET /odata/courses(1), Status: 401"
+ Header:
+ Host,127.0.0.1:63391,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.3,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:55:00 +0000], User: -, "GET /api/Courses, Status: 304"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Accept,application/json,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Referer,http://localhost:3000/explorer/,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"4d-ZKOkRN1NnHPWdJurSOqnt4F2Dmg"
+ Body:
+ -
+[15/Oct/2018:15:55:27 +0000], User: -, "GET /odata/courses(1), Status: 401"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:55:32 +0000], User: -, "GET /odata/course(1), Status: 401"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:55:39 +0000], User: -, "GET /odata/Courses(1), Status: 200"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:55:55 +0000], User: -, "GET /odata/$metadata, Status: 200"
+ Header:
+ Host,127.0.0.1:63437,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.3,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:55:55 +0000], User: -, "GET /odata/Courses(1), Status: 200"
+ Header:
+ Host,127.0.0.1:63439,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.3,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:16:12:43 +0000], User: -, "POST /odata/authorizationserver/oauth/token, Status: 200"
+ Header:
+ Host,localhost:3000,Connection,keep-alive,Content-Length,15,Accept,application/xml,Origin,http://127.0.0.1:63469,Accept-Language,en-US,en;q=0.8,fa;q=0.6,sv;q=0.4,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Content-Type,application/x-www-form-urlencoded; charset=UTF-8,Referer,http://127.0.0.1:63469/,Accept-Encoding,gzip, deflate, br
+ Body:
+ -

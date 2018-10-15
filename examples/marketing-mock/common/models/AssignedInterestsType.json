@@ -1,1 +1,0 @@
-{"name":"AssignedInterestsType","plural":"AssignedInterestsTypes","base":"PersistedModel","idInjection":true,"options":{"validateUpsert":true},"properties":{"ItemOfInterest":{"required":true,"type":"string"},"CampaignTemplate":{"required":true,"type":"string"}},"validations":[],"relations":{},"acls":[],"methods":{}}

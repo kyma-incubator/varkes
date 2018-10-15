@@ -4748,3 +4748,73 @@ Error: ENOENT: no such file or directory, open 'C:\Users\D074188\Desktop\varkes\
 [2018-09-17 09:01:39.249] [ERROR] odata - Something went wrong with retrieving requestModelClass for request authorizationserver/oauth/token
 [2018-09-17 09:03:09.117] [INFO] console - entered oauth
 [2018-09-17 09:03:09.118] [INFO] console - { client_id: '2', client_secret: '3', grant_type: '33' }
+[2018-10-15 17:36:14.087] [INFO] console - {}
+[2018-10-15 17:36:14.090] [INFO] console - {}
+[2018-10-15 17:38:57.188] [INFO] console - { code: 'C2', name: 'course2' }
+[2018-10-15 17:38:57.190] [INFO] console - { code: 'C2', name: 'course2' }
+[2018-10-15 17:39:10.004] [INFO] console - {}
+[2018-10-15 17:39:10.005] [INFO] console - {}
+[2018-10-15 17:54:23.113] [INFO] console - {}
+[2018-10-15 17:54:23.114] [INFO] console - {}
+[2018-10-15 17:54:23.122] [INFO] console -       [32m  √[0m[90m should return response 200[0m[31m (756ms)[0m
+[2018-10-15 17:54:23.124] [INFO] console - [0m      GET Courses[0m
+[2018-10-15 17:54:23.129] [INFO] odata - processing OData V2 request of type GET
+[2018-10-15 17:54:23.129] [DEBUG] odata - baseUrl = /odata/courses(1)
+[2018-10-15 17:54:23.131] [ERROR] odata - Something went wrong with retrieving requestModelClass for request courses(1)
+[2018-10-15 17:54:23.133] [INFO] console - {}
+[2018-10-15 17:54:23.133] [INFO] console - {}
+[2018-10-15 17:54:23.137] [INFO] console -       [31m  1) should return response 200[0m
+[2018-10-15 17:54:23.141] [INFO] console - 
+[2018-10-15 17:54:23.142] [INFO] console - 
+[2018-10-15 17:54:23.142] [INFO] console - [92m [0m[32m 1 passing[0m[90m (781ms)[0m
+[2018-10-15 17:54:23.143] [INFO] console - [31m  1 failing[0m
+[2018-10-15 17:54:23.143] [INFO] console - 
+[2018-10-15 17:54:23.144] [INFO] console - [0m  1) controllers
+       test_odata
+         GET Courses
+           should return response 200:
+[0m[31m     Uncaught TypeError: Cannot read property 'id' of undefined[0m[90m
+      at Test.<anonymous> (test\test_odata-mock-app.js:31:43)
+      at Test.assert (node_modules\supertest\lib\test.js:181:6)
+      at Server.localAssert (node_modules\supertest\lib\test.js:131:12)
+      at emitCloseNT (net.js:1659:8)
+      at _combinedTickCallback (internal/process/next_tick.js:135:11)
+      at process._tickDomainCallback (internal/process/next_tick.js:218:9)
+[0m
+[2018-10-15 17:54:23.144] [INFO] console - 
+[2018-10-15 17:54:23.145] [INFO] console - 
+[2018-10-15 17:55:00.969] [INFO] console - {}
+[2018-10-15 17:55:00.971] [INFO] console - {}
+[2018-10-15 17:55:27.176] [INFO] odata - processing OData V2 request of type GET
+[2018-10-15 17:55:27.177] [DEBUG] odata - baseUrl = /odata/courses(1)
+[2018-10-15 17:55:27.180] [ERROR] odata - Something went wrong with retrieving requestModelClass for request courses(1)
+[2018-10-15 17:55:27.183] [INFO] console - {}
+[2018-10-15 17:55:27.184] [INFO] console - {}
+[2018-10-15 17:55:32.240] [INFO] odata - processing OData V2 request of type GET
+[2018-10-15 17:55:32.241] [DEBUG] odata - baseUrl = /odata/course(1)
+[2018-10-15 17:55:32.243] [ERROR] odata - Something went wrong with retrieving requestModelClass for request course(1)
+[2018-10-15 17:55:32.244] [INFO] console - {}
+[2018-10-15 17:55:32.245] [INFO] console - {}
+[2018-10-15 17:55:39.358] [INFO] odata - processing OData V2 request of type GET
+[2018-10-15 17:55:39.359] [DEBUG] odata - baseUrl = /odata/Courses(1)
+[2018-10-15 17:55:39.360] [DEBUG] odata - checkAccess passed successfully
+[2018-10-15 17:55:39.366] [INFO] console - {}
+[2018-10-15 17:55:39.367] [INFO] console - {}
+[2018-10-15 17:55:55.050] [INFO] console - {}
+[2018-10-15 17:55:55.051] [INFO] console - {}
+[2018-10-15 17:55:55.057] [INFO] console -       [32m  √[0m[90m should return response 200[0m[31m (871ms)[0m
+[2018-10-15 17:55:55.058] [INFO] console - [0m      GET Courses[0m
+[2018-10-15 17:55:55.063] [INFO] odata - processing OData V2 request of type GET
+[2018-10-15 17:55:55.064] [DEBUG] odata - baseUrl = /odata/Courses(1)
+[2018-10-15 17:55:55.070] [DEBUG] odata - checkAccess passed successfully
+[2018-10-15 17:55:55.075] [INFO] console - {}
+[2018-10-15 17:55:55.076] [INFO] console - {}
+[2018-10-15 17:55:55.079] [INFO] console -       [32m  √[0m[90m should return response 200[0m
+[2018-10-15 17:55:55.080] [INFO] console - 
+[2018-10-15 17:55:55.081] [INFO] console - 
+[2018-10-15 17:55:55.084] [INFO] console - [92m [0m[32m 2 passing[0m[90m (900ms)[0m
+[2018-10-15 17:55:55.085] [INFO] console - 
+[2018-10-15 18:12:43.872] [INFO] console - entered oauth
+[2018-10-15 18:12:43.875] [INFO] console - {}
+[2018-10-15 18:12:43.883] [INFO] console - {}
+[2018-10-15 18:12:43.884] [INFO] console - {}

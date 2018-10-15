@@ -17,7 +17,7 @@ module.exports = {
     },
     registerCustomResponses: function (app_modified) {
         app = app_modified;
-        app.post(Oauth_endpoint_key, function (req, res, next) {
+        app.post("*" + Oauth_endpoint_key, function (req, res, next) {
 
             console.log(req.body)
             res.send({ token: 3333 })

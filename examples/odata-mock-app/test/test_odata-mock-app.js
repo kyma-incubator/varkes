@@ -19,12 +19,12 @@ describe('controllers', function () {
 
         });
 
-        describe('GET AssignedInterestsTypes', function () {
+        describe('GET Courses', function () {
 
             it('should return response 200', function (done) {
 
                 request(server)
-                    .get('/odata/AssignedInterestsTypes(1)')
+                    .get('/odata/Courses(1)')
                     .set('Accept', 'application/json')
                     .expect('Content-Type', 'application/json; charset=utf-8')
                     .end(function (err, res) {

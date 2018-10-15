@@ -12,68 +12,14 @@
  </edmx:Reference>
  <edmx:DataServices m:DataServiceVersion="2.0">
   <Schema Namespace="API_MKT_CAMPAIGN_TEMPLATE_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
-   <EntityType Name="CampaignTemplatesType" sap:label="Marketing: Campaign Template" sap:content-version="1">
+   
+   <EntityType Name="Course" sap:label="courses" sap:content-version="1">
     <Key>
-     <PropertyRef Name="CampaignTemplate"/>
+     <PropertyRef Name="code"/>
+     <PropertyRef Name="name"/>
     </Key>
-    <Property Name="CampaignTemplate" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Campaign ID"/>
-    <Property Name="CampaignTemplateName" Type="Edm.String" MaxLength="40" sap:label="Campaign Name"/>
-    <Property Name="CampaignTemplateDescription" Type="Edm.String" MaxLength="1000" sap:label="Description"/>
-    <Property Name="MediaType" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Media Type ID"/>
-    <Property Name="MediaTypeName" Type="Edm.String" MaxLength="120" sap:label="Media Type"/>
-    <Property Name="MarketingArea" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Marketing Area ID">
-     <Documentation>
-      <Summary>Identifies an area of responsibility, or an organizational unit.</Summary>
-      <LongDescription>You use a marketing area to restrict the access to instances of an object, such as campaign, campaign content, content template, or target group.</LongDescription>
-     </Documentation>
-    </Property>
-    <Property Name="MarketingAreaName" Type="Edm.String" MaxLength="120" sap:label="Marketing Area" sap:quickinfo="Description for Marketing Area"/>
-    <Property Name="CommunicationCategoryName" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Comm Category Name" sap:quickinfo="Communication Category Name"/>
-    <Property Name="CampaignTemplatePriority" Type="Edm.String" MaxLength="1" sap:display-format="NonNegative" sap:label="Priority"/>
-    <Property Name="CampaignTemplatePriorityName" Type="Edm.String" MaxLength="60" sap:label="Short Descript." sap:quickinfo="Short Text for Fixed Values">
-     <Documentation>
-      <Summary>This text appears when fixed values are displayed in the F4 help. It explains the possible input values.</Summary>
-      <LongDescription>SeeTask-Oriented InstructionsReference Documentation for Semantic Properties of Domains</LongDescription>
-     </Documentation>
-    </Property>
-    <Property Name="CampaignCategoryType" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Category ID" sap:quickinfo="Campaign Category ID"/>
-    <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
-    <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="User Name"/>
-    <NavigationProperty Name="to_AssignedInterests" Relationship="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_52D3948940AA9E2D0BAC659FE10CB8AB" FromRole="FromRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB" ToRole="ToRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
-    <NavigationProperty Name="to_AssignedTargetGroups" Relationship="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_C533660DBF5F7BCB8D87BA6124C30AA4" FromRole="FromRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4" ToRole="ToRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>
-    <NavigationProperty Name="to_AssignedTeamMembers" Relationship="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_03E799559F261C8211B921EEE3579DB0" FromRole="FromRole_assoc_03E799559F261C8211B921EEE3579DB0" ToRole="ToRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
-   </EntityType>
-   <EntityType Name="AssignedInterestsType" sap:label="Marketing: Campaign Template-Interest" sap:content-version="1">
-    <Key>
-     <PropertyRef Name="ItemOfInterest"/>
-     <PropertyRef Name="CampaignTemplate"/>
-    </Key>
-    <Property Name="ItemOfInterest" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Item of Interest"/>
-    <Property Name="CampaignTemplate" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Campaign ID"/>
-   </EntityType>
-   <EntityType Name="AssignedTargetGroupsType" sap:label="Marketing:Campaign Template-Target Group" sap:content-version="1">
-    <Key>
-     <PropertyRef Name="TargetGroupUUID"/>
-     <PropertyRef Name="CampaignTemplate"/>
-    </Key>
-    <Property Name="TargetGroupUUID" Type="Edm.Guid" Nullable="false" sap:label="" sap:quickinfo="NodeID"/>
-    <Property Name="CampaignTemplate" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Campaign ID"/>
-    <Property Name="TargetGroup" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase"/>
-   </EntityType>
-   <EntityType Name="TeamMembersType" sap:label="Marketing: Campaign Template-Team Member" sap:content-version="1">
-    <Key>
-     <PropertyRef Name="CampaignTemplate"/>
-     <PropertyRef Name="CampaignTemplateTeamMemberName"/>
-    </Key>
-    <Property Name="CampaignTemplate" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Campaign ID"/>
-    <Property Name="CampaignTemplateTeamMemberName" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:label="User" sap:quickinfo="User Name in User Master Record"/>
-    <Property Name="IsOwner" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="TRUE" sap:quickinfo="Data element for domain BOOLE: TRUE (='X') and FALSE (=' ')"/>
-    <Property Name="FullName" Type="Edm.String" MaxLength="80" sap:label="Full Name" sap:quickinfo="Full Name of Person">
-     <Documentation>
-      <Summary>This field contains the complete personal name. It is usually generated from the various name components (without title).</Summary>
-      <LongDescription/>
-     </Documentation>
-    </Property>
+    <Property Name="code" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="code"/>
+    <Property Name="name" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="name"/>
    </EntityType>
    <Association Name="assoc_C533660DBF5F7BCB8D87BA6124C30AA4" sap:content-version="1">
     <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.CampaignTemplatesType" Multiplicity="1" Role="FromRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>

@@ -303,3 +303,48 @@
  Host,localhost:10000,Connection,keep-alive,Cache-Control,max-age=0,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"4b-w51GOLaBcGjEiwGp4xV8gyEgboQ"
  Body:
  -
+[15/Oct/2018:15:56:09 +0000], User: -, "GET /metadata, Status: 200"
+ Header:
+ Host,127.0.0.1:63443,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.2,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:56:09 +0000], User: -, "GET /entity/courses, Status: 200"
+ Header:
+ Host,127.0.0.1:63445,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.2,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:58:23 +0000], User: -, "GET /metadata, Status: 200"
+ Header:
+ Host,127.0.0.1:63455,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.2,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:58:23 +0000], User: -, "GET /entity/courses, Status: 200"
+ Header:
+ Host,127.0.0.1:63457,Accept-Encoding,gzip, deflate,User-Agent,node-superagent/3.8.2,Accept,application/json,Connection,close
+ Body:
+ -
+[15/Oct/2018:15:59:07 +0000], User: -, "GET /entity/metadata, Status: 404"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:15:59:11 +0000], User: -, "GET /metadata, Status: 200"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22
+ Body:
+ -
+[15/Oct/2018:16:00:42 +0000], User: -, "POST /rest/v2/authorizationserver/oauth/token, Status: 404"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Content-Length,43,Accept,application/xml,Origin,http://127.0.0.1:63469,Accept-Language,en-US,en;q=0.8,fa;q=0.6,sv;q=0.4,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Content-Type,application/x-www-form-urlencoded,Referer,http://127.0.0.1:63469/,Accept-Encoding,gzip, deflate, br
+ Body:
+ {"client_id":"22","client_secret":"33","grant_type":"44"}
+[15/Oct/2018:16:01:33 +0000], User: -, "POST /entity/authorizationserver/oauth/token, Status: 200"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Content-Length,15,Accept,application/xml,Origin,http://127.0.0.1:63469,Accept-Language,en-US,en;q=0.8,fa;q=0.6,sv;q=0.4,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Content-Type,application/x-www-form-urlencoded; charset=UTF-8,Referer,http://127.0.0.1:63469/,Accept-Encoding,gzip, deflate, br
+ Body:
+ {"object Object":""}
+[15/Oct/2018:16:08:11 +0000], User: -, "POST /entity/authorizationserver/oauth/token, Status: 200"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Content-Length,15,Accept,application/xml,Origin,http://127.0.0.1:63469,Accept-Language,en-US,en;q=0.8,fa;q=0.6,sv;q=0.4,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36,Content-Type,application/x-www-form-urlencoded; charset=UTF-8,Referer,http://127.0.0.1:63469/,Accept-Encoding,gzip, deflate, br
+ Body:
+ {"object Object":""}
