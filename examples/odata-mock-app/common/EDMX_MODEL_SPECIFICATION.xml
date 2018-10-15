@@ -11,7 +11,7 @@
   <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
  </edmx:Reference>
  <edmx:DataServices m:DataServiceVersion="2.0">
-  <Schema Namespace="API_MKT_CAMPAIGN_TEMPLATE_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <Schema Namespace="EXAMPLE" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
    
    <EntityType Name="Course" sap:label="courses" sap:content-version="1">
     <Key>
@@ -21,37 +21,16 @@
     <Property Name="code" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="code"/>
     <Property Name="name" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="name"/>
    </EntityType>
-   <Association Name="assoc_C533660DBF5F7BCB8D87BA6124C30AA4" sap:content-version="1">
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.CampaignTemplatesType" Multiplicity="1" Role="FromRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.AssignedTargetGroupsType" Multiplicity="*" Role="ToRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>
-   </Association>
    <Association Name="assoc_03E799559F261C8211B921EEE3579DB0" sap:content-version="1">
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.CampaignTemplatesType" Multiplicity="1" Role="FromRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.TeamMembersType" Multiplicity="*" Role="ToRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
+    <End Type="EXAMPLE.Course" Multiplicity="1" Role="FromRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
    </Association>
-   <Association Name="assoc_52D3948940AA9E2D0BAC659FE10CB8AB" sap:content-version="1">
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.CampaignTemplatesType" Multiplicity="1" Role="FromRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
-    <End Type="API_MKT_CAMPAIGN_TEMPLATE_SRV.AssignedInterestsType" Multiplicity="*" Role="ToRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
-   </Association>
-   <EntityContainer Name="API_MKT_CAMPAIGN_TEMPLATE_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
-    <EntitySet Name="CampaignTemplates" EntityType="API_MKT_CAMPAIGN_TEMPLATE_SRV.CampaignTemplatesType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-    <EntitySet Name="AssignedInterests" EntityType="API_MKT_CAMPAIGN_TEMPLATE_SRV.AssignedInterestsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-    <EntitySet Name="AssignedTargetGroups" EntityType="API_MKT_CAMPAIGN_TEMPLATE_SRV.AssignedTargetGroupsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-    <EntitySet Name="TeamMembers" EntityType="API_MKT_CAMPAIGN_TEMPLATE_SRV.TeamMembersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
-    <AssociationSet Name="assoc_52D3948940AA9E2D0BAC659FE10CB8AB" Association="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_52D3948940AA9E2D0BAC659FE10CB8AB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
-     <End EntitySet="CampaignTemplates" Role="FromRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
-     <End EntitySet="AssignedInterests" Role="ToRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
-    </AssociationSet>
-    <AssociationSet Name="assoc_03E799559F261C8211B921EEE3579DB0" Association="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_03E799559F261C8211B921EEE3579DB0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
-     <End EntitySet="CampaignTemplates" Role="FromRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
-     <End EntitySet="TeamMembers" Role="ToRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
-    </AssociationSet>
-    <AssociationSet Name="assoc_C533660DBF5F7BCB8D87BA6124C30AA4" Association="API_MKT_CAMPAIGN_TEMPLATE_SRV.assoc_C533660DBF5F7BCB8D87BA6124C30AA4" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
-     <End EntitySet="CampaignTemplates" Role="FromRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>
-     <End EntitySet="AssignedTargetGroups" Role="ToRole_assoc_C533660DBF5F7BCB8D87BA6124C30AA4"/>
+   <EntityContainer Name="EXAMPLE_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="Course" EntityType="EXAMPLE.Course" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_52D3948940AA9E2D0BAC659FE10CB8AB" Association="EXAMPLE.assoc_52D3948940AA9E2D0BAC659FE10CB8AB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="Course" Role="FromRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
     </AssociationSet>
    </EntityContainer>
-   <Annotations Target="API_MKT_CAMPAIGN_TEMPLATE_SRV.API_MKT_CAMPAIGN_TEMPLATE_SRV_Entities/CampaignTemplates" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+   <Annotations Target="EXAMPLE.EXAMPLE_Entities/Course" xmlns="http://docs.oasis-open.org/odata/ns/edm">
     <Annotation Term="Capabilities.FilterRestrictions">
      <Record>
       <PropertyValue Property="FilterExpressionRestrictions">
@@ -65,8 +44,8 @@
      </Record>
     </Annotation>
    </Annotations>
-   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/API_MKT_CAMPAIGN_TEMPLATE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
-   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/API_MKT_CAMPAIGN_TEMPLATE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/EXAMPLE/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/EXAMPLE/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
   </Schema>
  </edmx:DataServices>
 </edmx:Edmx>
