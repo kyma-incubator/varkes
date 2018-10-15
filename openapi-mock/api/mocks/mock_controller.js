@@ -75,7 +75,7 @@ module.exports = {
     },
     createOAuth2Endpoint: function () {
         var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(config.OAuth_template_path, 'utf8'));
-        if (Object.keys(openApi_doc["paths"][Oauth_endpoint_key]).length == 0) {
+        if (!openApi_doc["paths"].hasOwnProperty(Oauth_endpoint_key)) {
             openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
             var yml_format = pretty_yaml.stringify(openApi_doc);
             utility.writeToFile(config.specification_file, yml_format, true);
