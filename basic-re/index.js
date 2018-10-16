@@ -14,6 +14,12 @@ app.get('/myapi', (req, res) => {
 
 })
 
+app.get('/metadata', (req, res) => {
+    console.log(req)
+    res.setHeader("Content-Type", "application/json")
+    res.send(JSON.stringify({ "metadata": "some metadata" }))
+})
+
 app.post("/oauth/token", (req, res) => {
     console.log(req)
     res.setHeader("Content-Type", "application/json")

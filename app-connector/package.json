@@ -17,6 +17,7 @@
     "express": "^4.16.3",
     "express-resource": "^1.0.0",
     "express-winston": "^3.0.0",
+    "node-forge": "^0.7.6",
     "request": "^2.88.0",
     "winston": "^3.0.0"
   },
@@ -27,5 +28,9 @@
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
+  },
+  "bin": {
+    "varkes-connector-cli": "./cli.js",
+    "varkes-connector-server": "./server/server.js"
   }
 }

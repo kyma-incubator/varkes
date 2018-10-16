@@ -1,0 +1,15 @@
+{
+    "name": "my-service",
+    "apis": [
+        {
+            "baseurl": "/rest/v2",
+            "metadata": "/metadata",
+            "oauth": "/authorizationserver/oauth/token"
+        },
+        {
+            "baseurl": "/rest/v3",
+            "metadata": "/metadata",
+            "oauth": "/authorizationserver/oauth/token"
+        }
+    ]
+}

@@ -1,9 +1,19 @@
 {
-    "provider": "SAP Hybris",
+    "provider": "aY",
     "name": "ec-mock-service-4",
     "description": "testing... 1.2.3.",
     "api": {
-        "targetUrl": "https://jsonplaceholder.typicode.com/todos",
+        "targetUrl": "http://localhost/target",
+        "credentials": {
+            "oauth": {
+                "url": "http://localhost/oauth/validate",
+                "clientId": "string",
+                "clientSecret": "string"
+            }
+        },
+        "spec": {}
+    },
+    "events": {
         "spec": {}
     },
     "documentation": {

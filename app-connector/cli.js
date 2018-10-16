@@ -1,6 +1,7 @@
+#!/usr/bin/env node
+
 const program = require("commander")
 const request = require("request")
-const readline = require("readline")
 const connector = require("./server/connector")
 const fs = require("fs")
 var CONFIG = require("./config")
@@ -10,60 +11,66 @@ console.log("CLI for Varkes App Connector")
 
 program
     .version("0.0.1")
-    .option('-token, --token [tokenUrl]', "connect token for RE", '')
-    .option('--input [inputFile]', "file to register with app-connector", '')
+    .option('--token [tokenUrl]', "connect token for RE", '')
+    .option('--input [inputFile]', "file to register with app-connector", 'varkes.config.json')
+    .option("--hostname [hostname]", "public address of the running container", 'http://localhost')
     .parse(process.argv)
 
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
-
 let keyFile, certFile
-if (!fs.existsSync(path.resolve(CONFIG.keyDir, "ec-default.key"))) {
-    console.log("generating new key")
-    require("./prestart").generatePrivateKey(data => console.log(data))
+
+require("./prestart").generatePrivateKey() //openssl genrsa -out keys/ec-default.key 2048
+
+
+const programToken = program.token;
+const endpointConfig = path.resolve(program.input)
+const hostname = program.hostname
+var serviceMetadata = defineServiceMetadata()
+
+if (fs.existsSync(CONFIG.keyDir)) { //no need for token
+    urls = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), "utf-8"))
+
+    CONFIG.URLs = urls
+    console.log(urls)
+    keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+        , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+
+    createServicesFromConfig(hostname, JSON.parse(fs.readFileSync(endpointConfig)))
+
 }
-getInputFile(rl, program).then(inputFile => {
+else {
+    createKeysFromToken(programToken, urls => {
+        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
 
-    const serviceMetadata = path.resolve(inputFile)
-    console.log(serviceMetadata)
-
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
-        CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
-        console.log("keys exist")
+        CONFIG.URLs = urls
+        console.log(urls)
         keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
             , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 
-        createServiceFromFile(JSON.parse(fs.readFileSync(serviceMetadata)))
+        createServicesFromConfig(hostname, JSON.parse(fs.readFileSync(endpointConfig)))
 
-    } else {
-        getTokenUrl(rl, program).then(tokenUrl => {
-
-            createKeysFromToken(tokenUrl, urls => {
-                fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
-
-                CONFIG.URLs = urls
-                console.log(urls)
-                keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
-                    , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
-                createServiceFromFile(JSON.parse(fs.readFileSync(serviceMetadata)))
-
-            })
-
-        })
-    }
-
-})
+    })
+}
 
 function createKeysFromToken(tokenUrl, cb) {
+
     connector.exportKeys(tokenUrl, (data) => cb(data))
 }
-function createServiceFromFile(serviceMetadata) {
-    console.log(serviceMetadata)
-    console.log(certFile)
-    console.log(keyFile)
+
+function createServicesFromConfig(hostname, endpoints) {
+
+    createSingleService(hostname, endpoints, 0)
+}
+
+
+function createSingleService(hostname, endpoints, endpointCount) {
+
+    var element = endpoints.apis[endpointCount]
+    serviceMetadata.name = endpoints.name + "-" + Math.random().toString(36).substring(2, 5);
+    serviceMetadata.api.targetUrl = hostname + element.baseurl
+    serviceMetadata.api.credentials.oauth.url = hostname + element.oauth
+
+
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -76,36 +83,47 @@ function createServiceFromFile(serviceMetadata) {
         }
     }, function (error, httpResponse, body) {
         console.log(body)
-        rl.close()
+
+        if (endpointCount + 1 < endpoints.apis.length) {
+            createSingleService(hostname, endpoints, endpointCount + 1)
+        }
     });
 }
 
-function getTokenUrl(rl, program) {
 
-    return new Promise((resolve, reject) => {
-        if (program.token === '') {
-
-            rl.question("Please enter your connection token: ", (answer) => {
-
-                resolve(answer)
-
-
-            })
-        } else { resolve(program.token) }
-    })
-}
-
-
-function getInputFile(rl, program) {
-
-    return new Promise((resolve, reject) => {
-        if (program.input == '') {
-            rl.question("Please enter your input file: ", (answer) => {
-
-                resolve(answer)
-
-            })
-        } else { resolve(program.input) }
-    })
-
+function defineServiceMetadata() {
+    return {
+        "provider": "aY",
+        "name": "ec-mock-service-4",
+        "description": "testing... 1.2.3.",
+        "api": {
+            "targetUrl": "http://localhost/target",
+            "credentials": {
+                "oauth": {
+                    "url": "http://localhost/oauth/validate",
+                    "clientId": "string",
+                    "clientSecret": "string"
+                }
+            },
+            "spec": {}
+        },
+        "events": {
+            "spec": {}
+        },
+        "documentation": {
+            "displayName": "string",
+            "description": "string",
+            "type": "string",
+            "tags": [
+                "string"
+            ],
+            "docs": [
+                {
+                    "title": "string",
+                    "type": "string",
+                    "source": "string"
+                }
+            ]
+        }
+    }
 }
