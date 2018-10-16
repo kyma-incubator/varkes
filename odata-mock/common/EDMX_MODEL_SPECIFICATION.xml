@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
-
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="https://host:port/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="EXAMPLE" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   
+   <EntityType Name="Course" sap:label="courses" sap:content-version="1">
+    <Key>
+     <PropertyRef Name="code"/>
+     <PropertyRef Name="name"/>
+    </Key>
+    <Property Name="code" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="code"/>
+    <Property Name="name" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="name"/>
+   </EntityType>
+   <Association Name="assoc_03E799559F261C8211B921EEE3579DB0" sap:content-version="1">
+    <End Type="EXAMPLE.Course" Multiplicity="1" Role="FromRole_assoc_03E799559F261C8211B921EEE3579DB0"/>
+   </Association>
+   <EntityContainer Name="EXAMPLE_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+    <EntitySet Name="Course" EntityType="EXAMPLE.Course" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+    <AssociationSet Name="assoc_52D3948940AA9E2D0BAC659FE10CB8AB" Association="EXAMPLE.assoc_52D3948940AA9E2D0BAC659FE10CB8AB" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+     <End EntitySet="Course" Role="FromRole_assoc_52D3948940AA9E2D0BAC659FE10CB8AB"/>
+    </AssociationSet>
+   </EntityContainer>
+   <Annotations Target="EXAMPLE.EXAMPLE_Entities/Course" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Annotation Term="Capabilities.FilterRestrictions">
+     <Record>
+      <PropertyValue Property="FilterExpressionRestrictions">
+       <Collection>
+        <Record>
+         <PropertyValue Property="Property" PropertyPath="CampaignTemplateDescription"/>
+         <PropertyValue Property="AllowedExpressions" String="SearchExpression"/>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+   </Annotations>
+   <atom:link rel="self" href="https://host:port/sap/opu/odata/sap/EXAMPLE/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+   <atom:link rel="latest-version" href="https://host:port/sap/opu/odata/sap/EXAMPLE/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+  </Schema>
+ </edmx:DataServices>
 </edmx:Edmx>
