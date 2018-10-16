@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var express = require("express")
 var Resource = require("express-resource")
 var connector = require("./connector")

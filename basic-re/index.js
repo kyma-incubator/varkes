@@ -14,6 +14,12 @@ app.get('/myapi', (req, res) => {
 
 })
 
+app.get('/metadata', (req, res) => {
+    console.log(req)
+    res.setHeader("Content-Type", "application/json")
+    res.send(JSON.stringify({ "metadata": "some metadata" }))
+})
+
 app.post("/oauth/token", (req, res) => {
     console.log(req)
     res.setHeader("Content-Type", "application/json")
@@ -23,7 +29,7 @@ var server = app.listen(4000, function () {
     var host = server.address().address
     var port = server.address().port
 
-    console.log("App connector listening at http://%s:%s", host, port)
+    console.log("Basic remote env listening at http://%s:%s", host, port)
 
 });
 module.exports = server

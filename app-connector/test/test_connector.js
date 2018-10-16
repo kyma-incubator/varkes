@@ -112,7 +112,7 @@ describe("service endpoints", () => {
 
     after(() => {
         fs.unlinkSync("test.log")
-        deleteNonEmptyFolder(CONFIG.keyDir)
+        //deleteNonEmptyFolder(CONFIG.keyDir)
         server.close()
     })
 })
