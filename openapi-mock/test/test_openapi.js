@@ -1,6 +1,5 @@
 var request = require('supertest');
 var server = require('../app');
-var assert = require('assert');
 describe('controllers', function () {
   before(() => {
     server.parseSpecFile();
@@ -16,24 +15,6 @@ describe('controllers', function () {
           .set('Accept', 'application/json')
           .expect('Content-Type', 'text/x-yaml; charset=utf-8')
           .expect(200, done)
-      });
-
-
-    });
-    describe('GET card types', function () {
-
-      it('should return an array with three items', function (done) {
-
-        request(server)
-          .get('/1/cardtypes')
-          .set('Accept', 'application/json')
-          .expect('Content-Type', 'application/json')
-          .end(function (err, res) {
-            console.log("**********test************")
-            console.log(res.body)
-            assert(res.body.cardTypes.length, 3);
-            done();
-          })
       });
 
 

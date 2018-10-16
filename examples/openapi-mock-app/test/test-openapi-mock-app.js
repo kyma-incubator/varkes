@@ -18,34 +18,16 @@ describe('controllers', function () {
 
 
     });
-    describe('GET card types', function () {
+    describe('GET courses', function () {
 
       it('should return an array with three items', function (done) {
 
         request(server)
-          .get('/1/cardtypes')
+          .get('/entity/courses')
           .set('Accept', 'application/json')
           .expect('Content-Type', 'application/json')
           .end(function (err, res) {
-            assert(res.body.cardTypes.length, 2);
-            done();
-          })
-      });
-
-
-    });
-
-    describe('GET catalogs', function () {
-
-      it('should return an array with three items', function (done) {
-
-        request(server)
-          .get('/1/catalogs/1/2/categories/1')
-          .set('Accept', 'application/json')
-          .expect('Content-Type', 'application/json')
-          .end(function (err, res) {
-            assert(res.body.categories.length, 2);
-            assert(res.body.categories[0].subCategories.length, 1);
+            assert(res.body.courses.length, 2);
             done();
           })
       });
@@ -54,6 +36,6 @@ describe('controllers', function () {
     });
 
   });
-  after(() => { server.close() })
+  after(() => { server.stop() })
 
 });
