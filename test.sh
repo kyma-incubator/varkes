@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 changedDir=$(git diff pr-$PULL_NUMBER master --dirstat | cut -d' ' -f3-)
 changedDirArray=$(echo $changedDir | tr " " "\n")
-makeDirs=$(find . -type f -name '*make*' | sed -r 's|/[^/]+$||' |sort |uniq)
-makeDirsArray=$(echo $makeDir | tr " " "\n")
-echo ${myArray[@]/green//} | cut -d/ -f1 | wc -w | tr -d ' '
+makeDirs=$(find . -type f -name '*make*' | sed -r 's|/[^/]+$||' |sort |uniq | cut -d' ' -f3-)
+makeDirs=$(echo "${makeDirs//.}")
+makeDirsArray=( $makeDirs )
 for x in $changedDirArray
 do
-   for y in $makeDirsArray
+  for i in `seq 0 ${#makeDirsArray[@]}`
    do
-        if [[ "$x" == *"$y"* ]];
+        echo x "/$x"
+        echo y "${makeDirsArray[$i-1]}"
+        if [[ "/$x" == *"${makeDirsArray[$i-1]}"* ]];
         then
-            echo "\"$y\""
-            cd "$y"
+            echo "\"${makeDirsArray[$i-1]}\""
+            cd "/varkes${makeDirsArray[$i-1]}"
             make ci
+            cd "/varkes"
         fi
     done
 done
