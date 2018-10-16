@@ -25,9 +25,16 @@ require("./prestart").generatePrivateKey() //openssl genrsa -out keys/ec-default
 const programToken = program.token;
 const endpointConfig = path.resolve(program.input)
 const hostname = program.hostname
+console.log(
+    {
+        token: programToken,
+        endpointConfig: endpointConfig,
+        hostname: hostname
+    }
+)
 var serviceMetadata = defineServiceMetadata()
 
-if (fs.existsSync(CONFIG.keyDir)) { //no need for token
+if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) { //no need for token
     urls = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), "utf-8"))
 
     CONFIG.URLs = urls

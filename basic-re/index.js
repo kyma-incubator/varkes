@@ -29,7 +29,7 @@ var server = app.listen(4000, function () {
     var host = server.address().address
     var port = server.address().port
 
-    console.log("App connector listening at http://%s:%s", host, port)
+    console.log("Basic remote env listening at http://%s:%s", host, port)
 
 });
 module.exports = server
