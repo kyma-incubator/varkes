@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN DEBIAN_FRONTEND=noninteractive curl -sSL https://get.docker.com/ | sh
-
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
