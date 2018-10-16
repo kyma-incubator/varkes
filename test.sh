@@ -8,8 +8,6 @@ for x in $changedDirArray
 do
   for i in `seq 0 ${#makeDirsArray[@]}`
    do
-        echo x "/$x"
-        echo y "${makeDirsArray[$i-1]}"
         if [[ "/$x" == *"${makeDirsArray[$i-1]}"* ]];
         then
             echo "\"${makeDirsArray[$i-1]}\""
