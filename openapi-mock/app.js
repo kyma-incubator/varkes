@@ -3,7 +3,7 @@
 var middleware = require('swagger-express-middleware');
 var path = require('path');
 const bodyParser = require('body-parser');
-const config = require('./api/config')
+const config = require('./config')
 var mock_controller = require("./api/mocks/mock_controller");
 //pass the express app to the mock controller
 var app = mock_controller.init();

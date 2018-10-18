@@ -5,7 +5,8 @@ var yaml = require('js-yaml');
 const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
-const config = require('../config')
+const config = require('../../config')
+const customResponse = require(config.customResponsePath)
 var app = require('express')();
 var openApi_doc = {};
 var Oauth_endpoint_key = "/authorizationserver/oauth/token";
@@ -19,38 +20,7 @@ module.exports = {
     registerCustomResponses: function (app_modified) {
         app = app_modified;
         console.log("starting custom function");
-        app.post('/:baseSiteId/cms/components', function (req, res, next) {
-
-            console.log("entered post");
-            res.body.idList.push("4")
-            res.body = {
-                "idList": [
-                    "4",
-                    "5"
-                ]
-            }
-            next();
-        });
-        app.post(Oauth_endpoint_key, function (req, res, next) {
-
-            console.log("entered oauth");
-            console.log(req.body)
-            res.send({ token: 3333 })
-        });
-
-        app.get('/:baseSiteId/cardtypes', function (req, res, next) {
-
-            console.log("entered cardtypes");
-            var oldSend = res.send;
-            res.send = function (data) {
-                // arguments[0] (or `data`) contains the response body
-                data = JSON.parse(data);
-                data.cardTypes.push({ code: "code3", name: "card3" })
-                arguments[0] = JSON.stringify(data);
-                oldSend.apply(res, arguments);
-            }
-            next();
-        });
+        customResponse.customResponses(app);
 
     },
     recordRequest: function (app_modified) {
