@@ -1,0 +1,60 @@
+<!-- The drawer is always open in large screens. The header is always shown,
+  even in small screens. -->
+<html>
+
+<head>
+    <title>Varkes App Connector</title>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+
+<body>
+
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="tokenInput">
+                <label class="mdl-textfield__label" for="sample1">Token</label>
+            </div>
+
+
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="hostnameInput">
+                <label class="mdl-textfield__label" for="sample1">Hostname</label>
+            </div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="create_service"
+                onclick="register()">Register to Kyma
+            </button>
+
+        </div>
+        <br>
+        <a href="ui/services">All services</a>
+    </main>
+
+</body>
+
+<script>
+    function register() {
+        var sendData = {
+            token: $("#tokenInput").val(),
+            hostname: $("#hostnameInput").val()
+        }
+        console.log(sendData)
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            data: JSON.stringify(sendData),
+            contentType: "application/json",
+            success: function (data) {
+                console.log(data)
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,5 +1,4 @@
 var request = require("request")
-const { exec } = require('child_process')
 const fs = require("fs")
 const path = require("path")
 var LOGGER = require("./logger")
@@ -47,7 +46,8 @@ module.exports =
 function runOpenSSL(subject) {
 
     console.log(subject)
-    var privateKey = fs.readFileSync(`${keysDirectory}/ec-default.key`, 'utf8')
+    keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+    var privateKey = fs.readFileSync(keyFile, 'utf8')
 
 
     var pk = forge.pki.privateKeyFromPem(privateKey)
