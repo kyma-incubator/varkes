@@ -9,11 +9,14 @@ const path = require("path")
 
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
+
 var app = express();
 app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
 if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
     CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
+} else {
+    require("../prestart").generatePrivateKey()
 }
 app.use(express.static(path.resolve(__dirname, 'views/')))
 require("./middleware").defineMW(app)
@@ -44,7 +47,7 @@ app.get("/connector", function (req, res) {
 })
 app.post("/register", (req, res) => {
     if (!req.body) res.sendStatus(400)
-    require("../prestart").generatePrivateKey() //openssl genrsa -out keys/ec-default.key 2048
+    //openssl genrsa -out keys/ec-default.key 2048
 
     endpointConfig = path.resolve("varkes.config.json")
     var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
@@ -91,7 +94,6 @@ function createSingleService(hostname, endpoints, endpointCount) {
     var element = endpoints.apis[endpointCount]
     serviceMetadata.name = endpoints.name + "-" + Math.random().toString(36).substring(2, 5);
     serviceMetadata.api.targetUrl = hostname + element.baseurl
-    serviceMetadata.api.credentials.oauth.url = hostname + element.oauth
 
 
     request.post({
@@ -121,18 +123,9 @@ function defineServiceMetadata() {
         "description": "testing... 1.2.3.",
         "api": {
             "targetUrl": "http://localhost/target",
-            "credentials": {
-                "oauth": {
-                    "url": "http://localhost/oauth/validate",
-                    "clientId": "string",
-                    "clientSecret": "string"
-                }
-            },
             "spec": {}
         },
-        "events": {
-            "spec": {}
-        },
+
         "documentation": {
             "displayName": "string",
             "description": "string",
