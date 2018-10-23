@@ -6,10 +6,11 @@ const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const config = require('../../config')
-const customResponse = require(config.customResponsePath)
+var customResponse;
+if (config.hasOwnProperty("customResponsePath"))
+    customResponse = require(config.customResponsePath)
 var app = require('express')();
 var openApi_doc = {};
-var Oauth_endpoint_key = "/authorizationserver/oauth/token";
 module.exports = {
     app,
     init: function () {
@@ -43,12 +44,18 @@ module.exports = {
         }
 
     },
-    createOAuth2Endpoint: function () {
-        var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(config.OAuth_template_path, 'utf8'));
-        if (!openApi_doc["paths"].hasOwnProperty(Oauth_endpoint_key)) {
-            openApi_doc["paths"][Oauth_endpoint_key] = Oauth_endpoint;
-            var yml_format = pretty_yaml.stringify(openApi_doc);
-            utility.writeToFile(config.specification_file, yml_format, true);
+    createEndpoints: function () {
+        if (config.hasOwnProperty("added_endpoints")) {
+            config.added_endpoints.forEach(function (point) {
+                console.log("point ");
+                console.log(point)
+                var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
+                if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
+                    openApi_doc["paths"][point.url] = Oauth_endpoint;
+                    var yml_format = pretty_yaml.stringify(openApi_doc);
+                    utility.writeToFile(config.specification_file, yml_format, true);
+                }
+            });
         }
     },
     customErrorResponses: function (app_modified) {
