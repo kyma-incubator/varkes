@@ -9,11 +9,14 @@ const path = require("path")
 
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
+
 var app = express();
 app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
 if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
     CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
+} else {
+    require("../prestart").generatePrivateKey()
 }
 app.use(express.static(path.resolve(__dirname, 'views/')))
 require("./middleware").defineMW(app)
@@ -44,7 +47,7 @@ app.get("/connector", function (req, res) {
 })
 app.post("/register", (req, res) => {
     if (!req.body) res.sendStatus(400)
-    require("../prestart").generatePrivateKey() //openssl genrsa -out keys/ec-default.key 2048
+    //openssl genrsa -out keys/ec-default.key 2048
 
     endpointConfig = path.resolve("varkes.config.json")
     var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
@@ -130,9 +133,7 @@ function defineServiceMetadata() {
             },
             "spec": {}
         },
-        "events": {
-            "spec": {}
-        },
+
         "documentation": {
             "displayName": "string",
             "description": "string",
