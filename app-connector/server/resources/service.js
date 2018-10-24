@@ -8,7 +8,7 @@ const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
     , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 
 exports.index = function (req, res) {
-    getServices(data => {
+    module.exports.getServices(data => {
         res.send(JSON.parse(data))
     })
 };
@@ -38,12 +38,12 @@ exports.update = function (req, res) {
 };
 
 exports.destroy = function (req, res) {
-    deleteService(req.params.service, (data) => {
+    module.exports.deleteService(req.params.service, (data) => {
         res.send(data)
     })
 };
 
-function getServices(cb) {
+exports.getServices = function getServices(cb) {
     request.get({
         url: CONFIG.URLs.metadataUrl,
         agentOptions: {
@@ -78,7 +78,7 @@ function createService(serviceJSON, cb) {
 
 
 
-function deleteService(serviceID, cb) {
+exports.deleteService = function deleteService(serviceID, cb) {
     request.delete(
         {
             url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
