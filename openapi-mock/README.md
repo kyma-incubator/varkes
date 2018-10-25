@@ -120,11 +120,12 @@ module.exports = {
  Starting the application
 --------------------------
 There are two ways to start the application.
-
+<br/>
 - **start it as a node using npm command as follows:** <br>
-Go to the directory of the application and write in the terminal
+Go to the directory of the examples application [openapi-mock-app](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app)
+and Run the MakeLists.txt
 ````bash
-npm start
+make build -f MakeLists.txt
 ````
 
 - **start it as a docker image as follows:** <br>

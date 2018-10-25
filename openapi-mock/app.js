@@ -3,11 +3,11 @@
 var middleware = require('swagger-express-middleware');
 var path = require('path');
 const bodyParser = require('body-parser');
-const config = require('./api/config')
+const config = require('./config')
 var mock_controller = require("./api/mocks/mock_controller");
 //pass the express app to the mock controller
 var app = mock_controller.init();
-mock_controller.createOAuth2Endpoint();
+mock_controller.createEndpoints();
 app.use(bodyParser.json());
 //register the function that records the requests to our application to the express app
 mock_controller.recordRequest(app);
@@ -16,8 +16,8 @@ mock_controller.createMetadataEndpoint();
 
 let server;
 app.start = function () {
-  server = app.listen(10000, function () {
-    console.log('OpenAPI Mock is now running at http://localhost:10000');
+  server = app.listen(config.port, function () {
+    console.log('OpenAPI Mock is now running at http://localhost' + config.port);
   });
 }
 app.stop = function () {
@@ -35,7 +35,8 @@ app.parseSpecFile = function () {
       middleware.validateRequest(),
     );
     //this function is responsible for resgistering any user defined responses to our specification
-    mock_controller.registerCustomResponses(app);
+    if (config.hasOwnProperty("customResponsePath"))
+      mock_controller.registerCustomResponses(app);
     app.use(middleware.mock())
 
     // creates user defined responses for certain error codes
