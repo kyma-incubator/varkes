@@ -5,6 +5,7 @@ var Resource = require("express-resource")
 var connector = require("./connector")
 var request = require("request")
 var fs = require("fs")
+var LOGGER = require("./logger")
 const path = require("path")
 
 const bodyParser = require('body-parser');
@@ -25,13 +26,19 @@ app.resource('services', require("./resources/service"))
 
 app.post(CONFIG.startConnUrl, function (req, res) {
     if (!req.body) res.sendStatus(400);
+    connector.exportKeys(req.body.url, (err, data) => {
 
-    connector.exportKeys(req.body.url, (data) => {
-
-        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
-        res.send(data)
-        CONFIG.URLs = data
+        if (err) {
+            LOGGER.logger.info(err)
+            res.send("There is an error while registering. Please make sure that your token is unique")
+        } else {
+            fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
+            res.send(data)
+            CONFIG.URLs = data
+        }
     })
+
+
 });
 
 app.get("/ui/services", function (req, res) {

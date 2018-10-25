@@ -13,7 +13,7 @@ module.exports =
                 url,
                 function (error, response, body) {
                     if (error) throw error
-                    else if (response.statusCode !== 200) throw response.statusCode
+                    else if (response.statusCode !== 200) cb(new Error(response.statusCode))
                     else if (response.statusCode == 200) {
 
 
@@ -30,7 +30,7 @@ module.exports =
                                     //Step 11
                                     fs.writeFileSync(`${keysDirectory}/kyma.crt`, CRT_base64_decoded)
 
-                                    cb(URLs)
+                                    cb(null, URLs)
                                 }
                             }
                         )

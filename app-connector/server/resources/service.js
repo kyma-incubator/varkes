@@ -23,10 +23,10 @@ exports.create = function (req, res) {
 exports.show = function (req, res) {
     showService(req.params.service, (data) => {
         try {
-            res.send(JSON.parse(data)) //TODO: add try catch here
+            res.send(JSON.parse(data))
         }
         catch (error) {
-            res.send({ error: "There is an internal error" })
+            res.send({ error: "There is an error on Kyma side" })
         }
     })
 };
@@ -51,6 +51,9 @@ exports.getServices = function getServices(cb) {
             key: fs.readFileSync(keyFile)
         },
     }, function (error, httpResponse, body) {
+        LOGGER.logger.info("inside get services")
+        LOGGER.logger.info("kyma returned: ")
+        LOGGER.logger.info(body)
         cb(body)
     })
 }
@@ -72,6 +75,9 @@ function createService(serviceJSON, cb) {
                 key: fs.readFileSync(keyFile)
             }
         }, function (error, httpResponse, body) {
+            LOGGER.logger.info("inside create service")
+            LOGGER.logger.info("kyma returned: ")
+            LOGGER.logger.info(body)
             cb(body)
         });
 }
@@ -87,6 +93,10 @@ exports.deleteService = function deleteService(serviceID, cb) {
                 key: fs.readFileSync(keyFile)
             },
         }, function (error, httpResponse, body) {
+
+            LOGGER.logger.info("inside delete service")
+            LOGGER.logger.info("kyma returned: ")
+            LOGGER.logger.info(body)
             cb(body)
         }
     )
@@ -100,6 +110,10 @@ function showService(serviceID, cb) {
             key: fs.readFileSync(keyFile)
         },
     }, function (error, httpResponse, body) {
+
+        LOGGER.logger.info("inside show service")
+        LOGGER.logger.info("kyma returned: ")
+        LOGGER.logger.info(body)
         cb(body)
     })
 }
@@ -120,6 +134,9 @@ function updateService(serviceID, serviceJSON, cb) {
         }
     }, function (error, httpResponse, body) {
 
+        LOGGER.logger.info("inside update service")
+        LOGGER.logger.info("kyma returned: ")
+        LOGGER.logger.info(body)
         cb(body)
     });
 }

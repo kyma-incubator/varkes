@@ -76,6 +76,7 @@
             <div class="mdl-textfield mdl-js-textfield">
                 <input class="mdl-textfield__input" type="text" id="input">
                 <label class="mdl-textfield__label" for="sample1">Text...</label>
+                <p id="help"></p>
             </div>
         </div>
         <div class="mdl-dialog__actions">
@@ -179,6 +180,9 @@
 
                 getServices()
                 document.getElementById('dialog').close();
+            },
+            error: function (data) {
+                $("#help").val(data)
             },
             contentType: "application/json"
         }
