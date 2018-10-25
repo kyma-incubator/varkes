@@ -1,6 +1,4 @@
 jenkinsfile.groovy
 Dockerfile
-makefile
-file.tgz
 node_modules
 swagger.yaml

@@ -123,6 +123,13 @@ function defineServiceMetadata() {
         "description": "testing... 1.2.3.",
         "api": {
             "targetUrl": "http://localhost/target",
+            "credentials": {
+                "oauth": {
+                    "url": "http://localhost/oauth/validate",
+                    "clientId": "string",
+                    "clientSecret": "string"
+                }
+            },
             "spec": {}
         },
 

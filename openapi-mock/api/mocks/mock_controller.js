@@ -7,8 +7,14 @@ const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const config = require('../../config')
 var customResponse;
-if (config.hasOwnProperty("customResponsePath"))
-    customResponse = require(config.customResponsePath)
+if (config.hasOwnProperty("customResponsePath") && fs.existsSync(config.customResponsesPath)) {
+    try {
+        customResponse = require(config.customResponsePath)
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
 var app = require('express')();
 var openApi_doc = {};
 module.exports = {
@@ -21,7 +27,8 @@ module.exports = {
     registerCustomResponses: function (app_modified) {
         app = app_modified;
         console.log("starting custom function");
-        customResponse.customResponses(app);
+        if (customResponse)
+            customResponse.customResponses(app);
 
     },
     recordRequest: function (app_modified) {
@@ -68,9 +75,11 @@ module.exports = {
                 err.status = 500;
             }
             try {
-                res.status(err.status);
-                res.type('json');
-                res.send(util.format(config.error_messages[err.status]));
+                if (config.error_messages.hasOwnProperty(err.status)) {
+                    res.status(err.status);
+                    res.type('json');
+                    res.send(util.format(config.error_messages[err.status]));
+                }
             }
             catch (err) {
                 console.error(err)
