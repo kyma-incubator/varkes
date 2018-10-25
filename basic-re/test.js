@@ -25,6 +25,12 @@ describe("basic routes", function () {
             .expect(200, done)
     })
 
+    it("responds to metadata call", (done) => {
+        request(server)
+            .get("/metadata")
+            .expect(200, done)
+    })
+
     after(() => server.close())
 
 })
