@@ -22,7 +22,7 @@
       "1": "{\"CampaignTemplate\":\"CampaignTemplate 1\",\"CampaignTemplateTeamMemberName\":\"CampaignTemplateTeamMemberName 1\",\"IsOwner\":true,\"FullName\":\"Name 1\",\"id\":1}"
     },
     "Courses": {
-      "1": "{\"name\":\"courses1\",\"code\":\"c1\",\"id\":1}"
+      "1": "{\"name\":\"courses1\",\"code\":\"c1\",\"id\":2}"
     }
   }
 }
