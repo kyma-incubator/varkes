@@ -19,18 +19,6 @@ podTemplate(label: label) {
                             parallel(
                                 "app-connector": {
                                     load('app-connector/Jenkinsfile.groovy').execute()
-                                },
-                                "openapi-mock": {
-                                    load('openapi-mock/Jenkinsfile.groovy').execute()
-                                },
-                                "odata-mock": {
-                                    load('odata-mock/Jenkinsfile.groovy').execute()
-                                },
-                                "commerce-mock": {
-                                  //  load('commerce-mock/Jenkinsfile.groovy').execute() let's not build them for now until we fix the base repo.
-                                },
-                                "marketing-mock": {
-                                  //  load('marketing-mock/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }

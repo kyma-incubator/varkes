@@ -15,7 +15,7 @@ exports.index = function (req, res) {
 
 exports.create = function (req, res) {
     const serviceJSON = req.body
-    createService(serviceJSON, data => {
+    module.exports.createService(serviceJSON, data => {
         res.send(data)
     })
 };
@@ -61,7 +61,7 @@ exports.getServices = function getServices(cb) {
 
 
 
-function createService(serviceJSON, cb) {
+exports.createService = function createService(serviceJSON, cb) {
 
     console.log(serviceJSON),
         request.post({
