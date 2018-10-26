@@ -6,7 +6,7 @@ var CONFIG = require("../config")
 const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve("test/integration/basic-service-metadata.json")
-deleteNonEmptyFolder(CONFIG.keyDir)
+//deleteNonEmptyFolder(CONFIG.keyDir)
 require("../prestart").generatePrivateKey(data => console.log(data))
 
 describe('basic routes', function () {
@@ -40,7 +40,7 @@ describe("Connect to kyma", function () {
         require("./get_token").getToken(data => {
             confURL = data
             request(server)
-                .post(CONFIG.startConnUrl).send(
+                .post("/connection").send(
 
                     { "url": confURL }
 

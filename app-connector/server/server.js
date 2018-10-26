@@ -24,7 +24,7 @@ require("./middleware").defineMW(app)
 
 app.resource('services', require("./resources/service"))
 
-app.post(CONFIG.startConnUrl, function (req, res) {
+app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
     connector.exportKeys(req.body.url, (err, data) => {
 
