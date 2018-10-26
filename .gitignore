@@ -1,3 +1,4 @@
 **/node_modules
 keys/
 *.log
+kyma-responses
