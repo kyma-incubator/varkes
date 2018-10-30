@@ -1,6 +1,0 @@
-**/node_modules
-keys/
-*.log
-kyma-responses
-deployments
-index.js

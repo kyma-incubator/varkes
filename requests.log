@@ -1,0 +1,30 @@
+[30/Oct/2018:12:52:52 +0000], User: -, "GET /entity/courses, Status: 404"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Cache-Control,max-age=0,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"4b-uMQfGB5/VndWtblBALPlwiO3bPg"
+ Body:
+ -
+[30/Oct/2018:12:52:56 +0000], User: -, "POST /entity/courses, Status: 200"
+ Header:
+ Host,localhost:10000,User-Agent,insomnia/6.0.2,Content-Type,application/json,Accept,*/*,Content-Length,75
+ Body:
+ {"courses":[{"code":"C4","name":"course4"},{"code":"C2","name":"course2"}]}
+[30/Oct/2018:12:52:59 +0000], User: -, "GET /entity/courses, Status: 200"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Cache-Control,max-age=0,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+ Body:
+ -
+[30/Oct/2018:13:13:50 +0000], User: -, "GET /entity/courses, Status: 404"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Cache-Control,max-age=0,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"4b-uMQfGB5/VndWtblBALPlwiO3bPg"
+ Body:
+ -
+[30/Oct/2018:13:13:55 +0000], User: -, "POST /entity/courses, Status: 200"
+ Header:
+ Host,localhost:10000,User-Agent,insomnia/6.0.2,Content-Type,application/json,Accept,*/*,Content-Length,75
+ Body:
+ {"courses":[{"code":"C4","name":"course4"},{"code":"C2","name":"course2"}]}
+[30/Oct/2018:13:13:59 +0000], User: -, "GET /entity/courses, Status: 200"
+ Header:
+ Host,localhost:10000,Connection,keep-alive,Cache-Control,max-age=0,Upgrade-Insecure-Requests,1,User-Agent,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36,Accept,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,Accept-Encoding,gzip, deflate, br,Accept-Language,en-US,en;q=0.9,ar;q=0.8,Cookie,ajs_user_id=null; ajs_group_id=null; ajs_anonymous_id=%22895d57ce-4548-4028-8f08-599d9947fa6b%22,If-None-Match,W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+ Body:
+ -
