@@ -75,14 +75,12 @@ module.exports = {
                 err.status = 500;
             }
             try {
-                console.log("req url");
-                console.log(req.url);
                 if (err.status == 404 && openApi_doc["paths"].hasOwnProperty(req.url.replace(openApi_doc.basePath, ""))) {
                     res.status(200);
                     res.type('json');
                     res.send({});
                 }
-                if (config.error_messages.hasOwnProperty(err.status)) {
+                else if (config.error_messages.hasOwnProperty(err.status)) {
                     res.status(err.status);
                     res.type('json');
                     res.send(util.format(config.error_messages[err.status]));

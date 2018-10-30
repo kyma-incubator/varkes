@@ -2,3 +2,4 @@ jenkinsfile.groovy
 Dockerfile
 node_modules
 swagger.yaml
+index.js
