@@ -24,12 +24,6 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/CoursesDTO"
-            default:
-              courses:
-                - code: "C1"
-                  name: "course1"
-                - code: "C2"
-                  name: "course2"
         401:
           description: "Unauthorized"
         403:

@@ -1,6 +1,7 @@
 'use strict';
 
 var middleware = require('swagger-express-middleware');
+const MemoryDataStore = middleware.MemoryDataStore;
 var path = require('path');
 const bodyParser = require('body-parser');
 const config = require('./config')
@@ -26,7 +27,7 @@ app.stop = function () {
 
 app.parseSpecFile = function () {
   middleware(path.join(__dirname, config.specification_file), app, function (err, middleware) {
-
+    let myDB = new MemoryDataStore();
     app.use(
       middleware.metadata(),
       middleware.CORS(),
@@ -37,7 +38,7 @@ app.parseSpecFile = function () {
     //this function is responsible for resgistering any user defined responses to our specification
     if (config.hasOwnProperty("customResponsePath"))
       mock_controller.registerCustomResponses(app);
-    app.use(middleware.mock())
+    app.use(middleware.mock(myDB));
 
     // creates user defined responses for certain error codes
     mock_controller.customErrorResponses(app);
