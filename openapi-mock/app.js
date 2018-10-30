@@ -23,7 +23,7 @@ module.exports = function (configPath) {
       let server;
       app.start = function () {
         server = app.listen(config.port, function () {
-          console.log('OpenAPI Mock is now running at http://localhost' + config.port);
+          console.log('OpenAPI Mock is now running on http://localhost' + config.port);
         });
       }
       app.stop = function () {
