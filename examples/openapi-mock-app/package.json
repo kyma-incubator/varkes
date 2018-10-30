@@ -1,9 +1,8 @@
 {
-  "name": "varkes-openapi-mock",
-  "version": "0.1.17",
+  "name": "openapi-mock",
+  "version": "0.1.15",
   "private": false,
   "description": "Trial",
-  "repository": "github:kyma-incubator/varkes",
   "keywords": [],
   "author": "",
   "license": "",
@@ -17,8 +16,9 @@
     "path": "^0.12.7",
     "swagger-express-middleware": "^1.0.0-alpha.12",
     "swagger-express-mw": "^0.7.0",
+    "tar": "^4.4.6",
     "util": "^0.11.0",
-    "tar": "^4.4.6"
+    "varkes-openapi-mock": "^0.1.17"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
