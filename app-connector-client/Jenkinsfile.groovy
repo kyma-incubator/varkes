@@ -2,7 +2,7 @@
 
 def execute(){
     def registry="eu.gcr.io/kyma-project"
-    def application="varkes-app-connector"
+    def application="varkes-app-connector-client"
     def dockerCredentials="gcr-rw"
     def isMaster = env.BRANCH_NAME == 'master'	
     def appVersion = env.TAG_NAME?env.TAG_NAME:"develop-${env.BRANCH_NAME}"	
@@ -15,7 +15,7 @@ def execute(){
     }
     
     stage("build"){
-        sh "cd app-connector && docker build -t $application ."
+        sh "cd app-connector-client && docker build -t $application ."
     }
     
     

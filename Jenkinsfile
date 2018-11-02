@@ -17,8 +17,8 @@ podTemplate(label: label) {
 
                         stage("build image") {
                             parallel(
-                                "app-connector": {
-                                    load('app-connector/Jenkinsfile.groovy').execute()
+                                "app-connector-client": {
+                                    load('app-connector-client/Jenkinsfile.groovy').execute()
                                 }
                             )
                         }

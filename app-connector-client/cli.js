@@ -12,7 +12,7 @@ console.log("CLI for Varkes App Connector")
 program
     .version("0.0.1")
     .option('--token [tokenUrl]', "connect token for RE", '')
-    .option('--input [inputFile]', "file to register with app-connector", 'varkes.config.json')
+    .option('--input [inputFile]', "file to register with app-connector-client", 'varkes.config.json')
     .option("--hostname [hostname]", "public address of the running container", 'http://localhost')
     .parse(process.argv)
 
