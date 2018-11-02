@@ -7,7 +7,7 @@ var request = require("request")
 var fs = require("fs")
 var LOGGER = require("./logger")
 const path = require("path")
-
+const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
 
@@ -40,6 +40,8 @@ app.post("/connection", function (req, res) {
 
 
 });
+app.get("/connectioninfo", returnConnectionInfo)
+app.post("/connectioninfo", returnConnectionInfo)
 
 app.get("/ui/apis", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/index.html"))
@@ -95,7 +97,26 @@ function createServicesFromConfig(hostname, endpoints) {
     createSingleService(hostname, endpoints, 0)
 }
 
+function returnConnectionInfo(req, res) {
+    if (CONFIG.URLs.metadataUrl !== "") {
+        const myURL = new url.URL(CONFIG.URLs.metadataUrl)
+        response = {
+            "cluster_domain": "",
+            "re_name": "",
+            "gateway_url": ""
+        }
+        response.cluster_domain = myURL.hostname.split(".")[1]
+        response.re_name = myURL.pathname.split("/")[1]
+        response.gateway_url = "" //FIXME: what is this?
 
+        res.send(response)
+
+    } else {
+        res.statusCode = 404
+        res.send("not connected to any cluster")
+    }
+
+}
 function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
