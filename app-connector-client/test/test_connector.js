@@ -99,6 +99,8 @@ describe("service endpoints", () => {
             .get("/apis/abc-def")
             .expect(200, done)
     })
+
+
     it("updates a specific service", done => {
         request(server)
             .put(`/apis/${serviceId}`).
@@ -107,6 +109,18 @@ describe("service endpoints", () => {
             ).set("Accept", "application/json").expect(200, done)
     })
 
+    it("can download private key ", done => {
+        request(server)
+            .get("/certificates/private-key")
+            .expect(200, done)
+    })
+
+
+    it("can download kyma certificate ", done => {
+        request(server)
+            .get("/certificates/kyma-cert")
+            .expect(200, done)
+    })
 
 
 

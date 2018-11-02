@@ -51,6 +51,16 @@ app.get("/metadata", function (req, res) {
     res.sendfile("swagger.yaml")
 })
 
+app.get("/certificates/private-key", (req, res) => {
+    const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+    res.download(keyFile)
+
+
+})
+app.get("/certificates/kyma-cert", (req, res) => {
+    const certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+    res.download(certFile)
+})
 app.get("/connector", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/connector.html"))
 })
