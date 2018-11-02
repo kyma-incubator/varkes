@@ -37,9 +37,9 @@
             </div>
         </header>
         <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Services</span>
+            <span class="mdl-layout-title">APIs</span>
             <nav class="mdl-navigation">
-                <div id="services">
+                <div id="apis">
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="margin-left: 50"
                         onclick="newServiceView()">
                         New Service
@@ -95,7 +95,7 @@
 <script>
     $(document).ready(function () {
         newServiceView()
-        getServices()
+        getAPIs()
     })
 
     function newServiceView() {
@@ -106,25 +106,25 @@
     }
     function deleteService(serviceID) {
         $.ajax({
-            url: `/services/${serviceID}`,
+            url: `/apis/${serviceID}`,
             type: "DELETE",
             success: function (data) {
-                getServices()
+                getAPIs()
                 newServiceView()
             }
         })
     }
-    function getServices() {
+    function getAPIs() {
 
-        $("#services ul").empty()
-        console.log("get Services called")
+        $("#apis ul").empty()
+        console.log("get apis called")
         $.ajax(
             {
                 type: "get",
-                url: "/services",
+                url: "/apis",
                 success: function (data) {
                     data.forEach(element => {
-                        $("#services ul").append
+                        $("#apis ul").append
                             (`
                                         <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
                         
@@ -137,7 +137,7 @@
 
             }
         ).fail(function (xhr, options, error) {
-            $("#services ul").text("No certificate defined, please provide a token url")
+            $("#apis ul").text("No certificate defined, please provide a token url")
         })
     }
 
@@ -149,10 +149,10 @@
     function createService() {
         $.ajax({
             type: "POST",
-            url: "/services",
+            url: "/apis",
             data: JSON.stringify(editor.get()),
             success: function (data) {
-                getServices()
+                getAPIs()
                 showService(data.id)
 
             },
@@ -165,11 +165,11 @@
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
-            url: `/services/${serviceId}`,
+            url: `/apis/${serviceId}`,
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 console.log(data)
-                getServices()
+                getAPIs()
             },
             contentType: "application/json"
         })
@@ -183,7 +183,7 @@
             data: sendData,
             success: function (data) {
 
-                getServices()
+                getAPIs()
                 document.getElementById('dialog').close();
             },
             error: function (data) {
@@ -198,7 +198,7 @@
     function showService(serviceID) {
         $.ajax({
             type: "get",
-            url: `/services/${serviceID}`,
+            url: `/apis/${serviceID}`,
             success: function (data) {
                 data.id = serviceID
                 $("#serviceJSON").val(JSON.stringify(data))

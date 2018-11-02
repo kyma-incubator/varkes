@@ -1,4 +1,4 @@
-var serviceResource = require("../../server/resources/service");
+var serviceResource = require("../../server/resources/api");
 var CONFIG = require("../../config")
 const fs = require("fs")
 const path = require("path")

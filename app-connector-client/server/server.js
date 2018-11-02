@@ -22,7 +22,7 @@ if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
 app.use(express.static(path.resolve(__dirname, 'views/')))
 require("./middleware").defineMW(app)
 
-app.resource('services', require("./resources/service"))
+app.resource('apis', require("./resources/api"))
 
 app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
@@ -41,7 +41,7 @@ app.post("/connection", function (req, res) {
 
 });
 
-app.get("/ui/services", function (req, res) {
+app.get("/ui/apis", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/index.html"))
 })
 
@@ -72,7 +72,7 @@ app.post("/register", (req, res) => {
 
 
         createServicesFromConfig(hostname, endpointsJson)
-        res.send(`${endpointsJson.apis.length} services registered.`)
+        res.send(`${endpointsJson.apis.length} apis registered.`)
     })
 
 

@@ -4,12 +4,12 @@ info:
   title: 'Kyma Metadata API'
 tags:
 - name: 'Metadata Service'
-  description: 'API for registering services in Kyma.'
+  description: 'API for registering APIs in Kyma.'
 paths:
-  /services:
+  /apis:
     post:
       tags:
-      - 'services'
+      - 'apis'
       summary: 'Registers a new service'
       operationId: 'registerService'
       requestBody:
@@ -40,9 +40,9 @@ paths:
                 $ref: '#/components/schemas/MetadataErrorResponse'
     get:
       tags:
-      - 'services'
-      summary: 'Gets all registered services'
-      operationId: 'getServices'
+      - 'apis'
+      summary: 'Gets all registered apis'
+      operationId: 'getAPIs'
       responses:
         '200':
           description: 'Successful operation'
@@ -58,10 +58,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-  /services/{serviceId}:
+  /apis/{serviceId}:
     get:
       tags:
-      - 'services'
+      - 'apis'
       summary: 'Gets a service by service ID'
       operationId: 'getServiceByServiceId'
       parameters:
@@ -93,7 +93,7 @@ paths:
                 $ref: '#/components/schemas/MetadataErrorResponse'
     put:
       tags:
-      - 'services'
+      - 'apis'
       summary: 'Updates a service by service ID'
       operationId: 'updateService'
       requestBody:
@@ -128,7 +128,7 @@ paths:
                 $ref: '#/components/schemas/MetadataErrorResponse'
     delete:
       tags:
-      - 'services'
+      - 'apis'
       summary: 'Deletes a service by service ID'
       operationId: 'deleteServiceByServiceId'
       parameters:

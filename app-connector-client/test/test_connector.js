@@ -57,14 +57,14 @@ describe("service endpoints", () => {
 
 
     var serviceId;
-    it("shows all services at /services", (done) => {
+    it("shows all services at /apis", (done) => {
         request(server)
             .get("/")
             .expect(200, done)
     })
     it("handles error when service doesn't exists", (done) => {
         request(server)
-            .get("/services/abc-def")
+            .get("/apis/abc-def")
             .expect(200).end(
                 (err, response) => {
                     response.body.error == 404 ? {} : done()
@@ -74,7 +74,7 @@ describe("service endpoints", () => {
 
     it("creates a new service", (done) => {
         request(server)
-            .post("/services/")
+            .post("/apis/")
             .send(
                 fs.readFileSync(serviceMetadata)
             ).set("Accept", "application/json")
@@ -84,7 +84,7 @@ describe("service endpoints", () => {
 
                 it("deletes a specific service", done => {
                     request(server)
-                        .delete(`/services/${serviceId}`)
+                        .delete(`/apis/${serviceId}`)
                         .expect(200).end((err, res) => {
                             console.log(res)
                             !err ? done() : console.log(err)
@@ -96,12 +96,12 @@ describe("service endpoints", () => {
 
     it("shows a specific service", (done) => {
         request(server)
-            .get("/services/abc-def")
+            .get("/apis/abc-def")
             .expect(200, done)
     })
     it("updates a specific service", done => {
         request(server)
-            .put(`/services/${serviceId}`).
+            .put(`/apis/${serviceId}`).
             send(
                 fs.readFileSync(serviceMetadata)
             ).set("Accept", "application/json").expect(200, done)
