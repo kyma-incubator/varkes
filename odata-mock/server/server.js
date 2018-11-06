@@ -3,9 +3,9 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var bodyParser = require('body-parser');
-var config = require('./config.json')
-var parser = require(config.parserPath)
-var app = module.exports = loopback();
+var loopbackConfig = require('./config.json');
+var parser = require(loopbackConfig.parserPath)
+var app = loopback();
 app.use(bodyParser.json());
 let server;
 
@@ -32,13 +32,23 @@ app.stop = () => {
 }
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
-parser.parser();
-parser.parseEdmx(config.specification_file).then(function (result) {
-  boot(app, __dirname, function (err) {
-    if (err) throw err;
 
-    // start the server if `$ node server.js`
-    if (require.main === module)
-      server = app.start();
+parser.parser();
+
+module.exports = function (configFilePath) {
+  var config = require(configFilePath);
+  app.config = config;
+  loopbackConfig.port = config.port;
+  parser.parseEdmx(config.specification_file).then(function (result) {
+    boot(app, __dirname, function (err) {
+      if (err) throw err;
+
+      // start the server if `$ node server.js`
+      if (require.main === module)
+        server = app.start();
+    });
   });
-});
+  return app;
+}
+if (process.argv.length > 2)
+  module.exports(process.argv[2]);

@@ -1,7 +1,6 @@
 {
   "restApiRoot": "/api",
   "host": "0.0.0.0",
-  "port": 3000,
   "remoting": {
     "context": false,
     "rest": {
@@ -21,6 +20,5 @@
   },
   "legacyExplorer": false,
   "logoutSessionsOnSensitiveChanges": true,
-  "specification_file": "common/EDMX_MODEL_SPECIFICATION.xml",
   "parserPath": "../common/utility/parser"
 }
