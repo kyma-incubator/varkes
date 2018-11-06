@@ -28,14 +28,18 @@ presubmits:
     trigger: "(?m)^/test varkes"
     rerun_command: "/test varkes"
     context: varkes-test
-    always_run: false
-    run_if_changed: "odata-mock/.*"
+    always_run: true
+ #   run_if_changed: "odata-mock/.*"
     skip_report: false
     spec:
       containers:
       - image: badrawi/varkes_image:v15
-        args:
-        - --dir=odata-mock/
+        name: mainD
+        command: ['docker', 'run', '-p', '10000:10000', 'badrawi/varkes-openapi:v1']
+        env: 
+          - name: DOCKER_HOST 
+            value: tcp://localhost:10000
+      -image: badrawi/varkes-openapi:v1
   suleymanakbas91/kyma:
   - name: kyma-integration
     trigger: "(?m)^/test kyma-integration"

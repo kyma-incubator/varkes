@@ -21,8 +21,10 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
-RUN echo directory is $dir
+
 ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
     && git checkout pr-$PULL_NUMBER \
     && export PULL_NUMBER \
+    && chmod -R 777 . \
+    && /varkes/test.sh \
     && exec bash
