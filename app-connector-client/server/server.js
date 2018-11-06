@@ -30,6 +30,7 @@ app.post("/connection", function (req, res) {
 
         if (err) {
             LOGGER.logger.info(err)
+            res.statusCode = 401
             res.send("There is an error while registering. Please make sure that your token is unique")
         } else {
             fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")

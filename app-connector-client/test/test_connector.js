@@ -53,7 +53,7 @@ describe("Connect to kyma", function () {
     }).timeout(6000)
 
 })
-describe("service endpoints", () => {
+describe("api endpoints", () => {
 
 
     var serviceId;

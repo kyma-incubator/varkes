@@ -6,6 +6,147 @@ tags:
 - name: 'Metadata Service'
   description: 'API for registering APIs in Kyma.'
 paths:
+  /connectioninfo:
+    get:
+      tags:
+        - "connection"
+      summary: Returns active connection info
+      responses:
+        '200':
+          description: "Currently connected remote env & cluster"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cluster_domain:
+                    type: string
+                  re_name:
+                    type: string
+                  gateway_url:
+                    type: string
+
+    post:
+      tags:
+        - "connection"
+      summary: Returns active connection info
+      responses:
+        '200':
+          description: "Currently connected remote env & cluster"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cluster_domain:
+                    type: string
+                  re_name:
+                    type: string
+                  gateway_url:
+                    type: string
+
+  /ui/apis:
+    get:
+      tags:
+        - 'ui'
+      summary: UI to CRUD apis in Kyma
+      responses:
+        '200':
+          description: 'Successful'
+          content:
+            text/html:
+                type: 'html'
+                example: <html><body>Your HTML text</body></html>
+
+  /metadata:
+    get:
+      tags:
+        - 'metadata'
+      summary: 'Returns this swagger definition'
+      responses:
+        '200':
+          description: "Successful"
+          content:
+            application/yaml:
+              type: yaml
+
+  /register:
+    post:
+      tags:
+        - 'connection'
+      summary: "reads varkes.config.json and registers the endpoints to kyma"
+      responses:
+        '200':
+          description: All apis registered successfully.
+          content:
+            text/plain:
+              type: 'text'
+              example: 3 apis registered
+  /connector:
+    get:
+      tags:
+        - 'ui'
+      summary: More straight forward registration of apis to kyma 
+      responses:
+        '200':
+          description: 'Successful'
+          content:
+            text/html:
+                type: 'html'
+                example: <html><body>Your HTML text</body></html>            
+  /connection:
+    post:
+      tags:
+        - 'connection'
+      summary: "Sends your token and connects you to Kyma"
+      responses:
+       '200':
+        description: 'Successful connection to Kyma'
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                metadataUrl:
+                  type: 'string'
+                eventsUrl:
+                  type: 'string'
+                certificatesUrl:
+                  type: 'string'
+       '401':
+          description: 'Connection is not authorized'
+          content:
+            text/plain:
+              schema:
+                type: 'string'
+                example: There is an error while registering. Please make sure that your token is unique
+  /certificates/private-key:
+    get:
+      tags:
+        - 'certificates'
+      summary: 'Get your private key'
+      responses:
+        '200':
+          description: your private key
+          content:
+            application/file:
+             schema:
+               type: 'string'
+               format: binary
+  /certificates/kyma-cert:
+    get:
+      tags:
+        - 'certificates'
+      summary: Get certificate returned by kyma
+      responses:
+        '200':
+          description: your kyma certificate
+          content:
+            application/file:
+             schema:
+               type: 'string'
+               format: binary
+      
   /apis:
     post:
       tags:
