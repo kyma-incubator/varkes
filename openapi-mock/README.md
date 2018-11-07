@@ -80,7 +80,7 @@ The entry point for the application is the app.js file which reads the swagger f
         });
 ````
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
-        the following example checks if the error status is not known or if it's one of the status that are defined in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/config.js) file and in response sends the corresponding error message
+        the following example checks if the error status is not known or if it's one of the status that are defined in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/config.js) file and in response sends the corresponding error message
 
 ````javascript
  app = app_modified;
@@ -100,20 +100,27 @@ app.use(function (err, req, res, next) {
     }
 });
 ````
-[Config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/config.js)
+[Config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/config.js)
 --------------------------
-In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/swagger/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
+In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
 
 ````javascript
 module.exports = {
-    specification_file: 'api/swagger/swagger.yaml',
+    specification_file: 'swagger.yaml',
     request_log_path: 'requests.log',
-    OAuth_template_path: 'api/swagger/OAuth_template.yaml',
+    added_endpoints: [
+        {
+            filePath: "OAuth_template.yaml",
+            url: '/authorizationserver/oauth/token'
+        }
+    ],
+    customResponsePath: '../../custom_responses',
     error_messages: {
-        500: '{error:\"Something went Wrong\"}',
-        400: '{error:\"Errorrrr\"}',
-        404: '{error:\"End Point not found\"}'
-    }
+        500: '{"error":\"Something went Wrong\"}',
+        400: '{"error":\"Errorrrr\"}',
+        404: '{"error":\"End Point not found\"}'
+    },
+    port: 10000
 }
 ````
 
@@ -122,10 +129,9 @@ module.exports = {
 There are two ways to start the application.
 <br/>
 - **start it as a node using npm command as follows:** <br>
-Go to the directory of the examples application [openapi-mock-app](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app)
-and Run the MakeLists.txt
+Go to the openapi-mock directory and Run the following command specifying the path to the config.js file.
 ````bash
-make build -f MakeLists.txt
+node app.js <configFilePath>
 ````
 
 - **start it as a docker image as follows:** <br>
