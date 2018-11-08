@@ -6,13 +6,13 @@ var jsonTemplate = {};
 var jsTemplate = "";
 var modelConfigTemplate = { dataSource: "db", public: true }
 var model_config = {}
-var model_config_path = './server/model-config.json';
+var model_config_path = __dirname + '/../../server/model-config.json';
 module.exports =
 	{
 		parser: function () {
 			console.log("entered parser")
-			jsonTemplate = JSON.parse(fs.readFileSync("./common/models/modelTemplate.json", "utf8"));
-			jsTemplate = fs.readFileSync("./common/models/jsModel.txt", "utf8");
+			jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/../models/modelTemplate.json", "utf8"));
+			jsTemplate = fs.readFileSync(__dirname + "/../models/jsModel.txt", "utf8");
 			model_config = JSON.parse(fs.readFileSync(model_config_path, "utf8"));
 		},
 		parseEdmx: function (path) {
@@ -45,8 +45,8 @@ function createEntities(service) {
 		jsonTemplate.name = entityName;
 		jsonTemplate.plural = entityName + "s";
 		jsonTemplate = createEntityProperties(entityType, jsonTemplate);
-		fs.writeFileSync("./common/models/" + entityName + ".json", JSON.stringify(jsonTemplate));
-		fs.writeFileSync("./common/models/" + entityName + ".js", jsTemplate.replace('placeHolder', entityName));
+		fs.writeFileSync(__dirname + "/../models/" + entityName + ".json", JSON.stringify(jsonTemplate));
+		fs.writeFileSync(__dirname + "/../models/" + entityName + ".js", jsTemplate.replace('placeHolder', entityName));
 	});
 }
 
