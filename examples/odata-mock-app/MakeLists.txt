@@ -1,4 +1,0 @@
-build:
-	npm install -g varkes-odata-mock
-	create varkes-odata-mock
-	npm install

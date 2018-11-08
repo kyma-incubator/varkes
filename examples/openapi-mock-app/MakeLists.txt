@@ -1,4 +1,0 @@
-build:
-	npm install -g varkes-openapi-mock
-	create varkes-openapi-mock
-	npm install
