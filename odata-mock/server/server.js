@@ -44,8 +44,7 @@ module.exports = function (configFilePath) {
       if (err) throw err;
 
       // start the server if `$ node server.js`
-      if (require.main === module)
-        server = app.start();
+      server = app.start();
     });
   });
   return app;
