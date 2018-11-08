@@ -1,9 +1,8 @@
 {
   "name": "varkes-openapi-mock",
-  "version": "0.1.22",
+  "version": "0.1.25",
   "private": false,
   "description": "Trial",
-  "repository": "github:kyma-incubator/varkes",
   "keywords": [],
   "author": "",
   "license": "",
@@ -26,8 +25,7 @@
     "supertest": "^3.1.0"
   },
   "scripts": {
-    "start": "node app.js",
-    "postinstall": "mkdir varkes; cd varkes; git init; git remote add -f origin https://github.com/kyma-incubator/varkes.git; git config core.sparseCheckout true; echo openapi-mock/* >> .git/info/sparse-checkout; git pull --depth=2 origin openIssues_badrawi; npm i ./openapi-mock/ ",
+    "start": "node app.js ./config.js",
     "build": "docker build -t varkes/openapi .",
     "test": "mocha"
   }
