@@ -50,6 +50,7 @@ module.exports = function (configPath) {
   }
   app.parseSpecFile();
   app.start();
+  console.log("start");
   return app;
   //}
   //};
