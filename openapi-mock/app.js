@@ -16,14 +16,11 @@ mock_controller.createMetadataEndpoint();
 
 
 module.exports = function (configPath) {
-  //return {
-  //init: function () {
-  console.log(configPath);
   var config = require(configPath);
   let server;
   app.start = function () {
     server = app.listen(config.port, function () {
-      console.log('OpenAPI Mock is now running on http://localhost' + config.port);
+      console.log('OpenAPI Mock is now running on http://localhost:' + config.port);
     });
   }
   app.stop = function () {
@@ -40,8 +37,6 @@ module.exports = function (configPath) {
         middleware.validateRequest(),
       );
       //this function is responsible for resgistering any user defined responses to our specification
-      if (config.hasOwnProperty("customResponsePath"))
-        mock_controller.registerCustomResponses(app);
       app.use(middleware.mock(myDB));
 
       // creates user defined responses for certain error codes
@@ -50,10 +45,7 @@ module.exports = function (configPath) {
   }
   app.parseSpecFile();
   app.start();
-  console.log("start");
   return app;
-  //}
-  //};
 }
 
 if (process.argv.length > 2)
