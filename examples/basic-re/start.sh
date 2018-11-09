@@ -1,6 +1,6 @@
 
 #this line is for cli
-#node /varkes/app-connector/cli.js --token $TOKEN --hostname $HOSTNAME 
+#node /varkes/app-connector-client/cli.js --token $TOKEN --hostname $HOSTNAME 
 
 #this line is for server
 node /varkes/app-connector-client/server/server.js &
