@@ -218,7 +218,7 @@
         console.log("query connection info")
         $.ajax({
             type: "get",
-            url: "/connectioninfo",
+            url: "/connection",
             success: function (data) {
 
                 $("#api-title").html(`APIs \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)

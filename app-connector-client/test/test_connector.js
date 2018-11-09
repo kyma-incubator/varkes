@@ -121,7 +121,11 @@ describe("api endpoints", () => {
             .get("/certificates/kyma-cert")
             .expect(200, done)
     })
-
+    it("can get connection info", done => {
+        request(server)
+            .get("/connection")
+            .expect(200, done)
+    })
 
 
     after(() => {

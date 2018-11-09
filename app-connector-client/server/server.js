@@ -24,6 +24,9 @@ require("./middleware").defineMW(app)
 
 app.resource('apis', require("./resources/api"))
 
+app.get("/connection", function (req, res) {
+    res.send(returnConnectionInfo())
+})
 app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
     connector.exportKeys(req.body.url, (err, data) => {
@@ -34,15 +37,14 @@ app.post("/connection", function (req, res) {
             res.send("There is an error while registering. Please make sure that your token is unique")
         } else {
             fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
-            res.send(data)
             CONFIG.URLs = data
+            res.send(returnConnectionInfo())
+
         }
     })
 
 
 });
-app.get("/connectioninfo", returnConnectionInfo)
-app.post("/connectioninfo", returnConnectionInfo)
 
 app.get("/ui/apis", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/index.html"))
@@ -108,7 +110,7 @@ function createServicesFromConfig(hostname, endpoints) {
     createSingleService(hostname, endpoints, 0)
 }
 
-function returnConnectionInfo(req, res) {
+function returnConnectionInfo() {
     if (CONFIG.URLs.metadataUrl !== "") {
         const myURL = new url.URL(CONFIG.URLs.metadataUrl)
         response = {
@@ -120,7 +122,7 @@ function returnConnectionInfo(req, res) {
         response.re_name = myURL.pathname.split("/")[1]
         response.gateway_url = "" //FIXME: what is this?
 
-        res.send(response)
+        return response
 
     } else {
         res.statusCode = 404

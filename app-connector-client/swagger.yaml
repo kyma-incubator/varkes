@@ -6,45 +6,6 @@ tags:
 - name: 'Metadata Service'
   description: 'API for registering APIs in Kyma.'
 paths:
-  /connectioninfo:
-    get:
-      tags:
-        - "connection"
-      summary: Returns active connection info
-      responses:
-        '200':
-          description: "Currently connected remote env & cluster"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  cluster_domain:
-                    type: string
-                  re_name:
-                    type: string
-                  gateway_url:
-                    type: string
-
-    post:
-      tags:
-        - "connection"
-      summary: Returns active connection info
-      responses:
-        '200':
-          description: "Currently connected remote env & cluster"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  cluster_domain:
-                    type: string
-                  re_name:
-                    type: string
-                  gateway_url:
-                    type: string
-
   /ui/apis:
     get:
       tags:
@@ -120,6 +81,24 @@ paths:
               schema:
                 type: 'string'
                 example: There is an error while registering. Please make sure that your token is unique
+    get:
+      tags:
+        - "connection"
+      summary: Returns active connection info
+      responses:
+        '200':
+          description: "Currently connected remote env & cluster"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cluster_domain:
+                    type: string
+                  re_name:
+                    type: string
+                  gateway_url:
+                    type: string
   /certificates/private-key:
     get:
       tags:
