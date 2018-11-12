@@ -21,8 +21,7 @@ RUN git clone https://github.com/kyma-incubator/varkes.git
 WORKDIR /varkes
 RUN apt install -y nodejs
 
-ENTRYPOINT echo $SECRET_PASSWORD \
-    && git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
+ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
     && git checkout pr-$PULL_NUMBER \
     && export PULL_NUMBER \
     && chmod -R 777 . \
