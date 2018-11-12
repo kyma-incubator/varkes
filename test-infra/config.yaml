@@ -1,56 +1,79 @@
-periodics:
-- interval: 10m
-  agent: kubernetes
-  name: echo-test
-  spec:
-    containers:
-    - image: alpine
-      command: ["/bin/date"]
-postsubmits:
-  kyma-project/test-infra:
-  - name: test-postsubmit
-    agent: kubernetes
-    spec:
-      containers:
-      - image: alpine
-        command: ["/bin/printenv"]
+presets:
+  - labels:
+      preset-gc-compute-envs: "true"
+    env:
+      - name: CLOUDSDK_COMPUTE_ZONE
+        value: "europe-west3-a"
+      - name: CLOUDSDK_COMPUTE_REGION
+        value: "europe-west3"
+  - labels:
+      preset-gc-project-env: "true"
+    env:
+      - name: CLOUDSDK_CORE_PROJECT
+        value: "kyma-project"
+  - labels:
+      preset-sa-vm-kyma-integration: "true" # Service account with "Compute Admin" and "Compute OS Admin Login" roles
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/credentials/sa-vm-kyma-integration/service-account.json
+    volumes:
+      - name: sa-vm-kyma-integration
+        secret:
+          secretName: sa-vm-kyma-integration
+    volumeMounts:
+      - name: sa-vm-kyma-integration
+        mountPath: /etc/credentials/sa-vm-kyma-integration
+        readOnly: true
+  - labels:
+      preset-sa-gcr-push: "true" # Service account with "Storage Admin" role
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/credentials/sa-gcr-push/service-account.json
+    volumes:
+      - name: sa-gcr-push
+        secret:
+          secretName: sa-gcr-push
+    volumeMounts:
+      - name: sa-gcr-push
+        mountPath: /etc/credentials/sa-gcr-push
+        readOnly: true
+  - labels:
+      preset-dind-enabled: "true"
+    env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+    volumes:
+      - name: docker-graph
+        emptyDir: {}
+    volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+  - labels:
+      preset-docker-push-repository: "true"
+    env:
+      - name: DOCKER_PUSH_REPOSITORY
+        value: "eu.gcr.io/kyma-project/prow/test" # TODO: change to eu.gcr.io/kyma-project
+  - labels:
+      preset-build-pr: "true"
+    env:
+      - name: BUILD_TYPE
+        value: pr
+      - name: DOCKER_PUSH_DIRECTORY
+        value: "/pr"
+  - labels:
+      preset-build-master: "true"
+    env:
+      - name: BUILD_TYPE
+        value: master
+      - name: DOCKER_PUSH_DIRECTORY
+        value: "/develop"
+  - labels:
+      preset-build-release: "true"
+    env:
+      - name: BUILD_TYPE
+        value: release
+presubmits: # runs on PRs
   kyma-incubator/varkes:
-  - name: test-presubmit
-    trigger: "(?m)^/test this"
-    rerun_command: "/test this"
-    context: test-presubmit
-    always_run: true
-    skip_report: false
-    agent: kubernetes
-    spec:
-      containers:
-      - image: alpine
-        command: ["/bin/printenv"]
-presubmits:
-  kyma-project/test-infra:
-  - name: test-presubmit
-    trigger: "(?m)^/test this"
-    rerun_command: "/test this"
-    context: test-presubmit
-    always_run: true
-    skip_report: false
-    agent: kubernetes
-    spec:
-      containers:
-      - image: alpine
-        command: ["/bin/printenv"]
-  kyma-incubator/varkes:
-  - name: test-presubmit
-    trigger: "(?m)^/test this"
-    rerun_command: "/test this"
-    context: test-presubmit
-    always_run: true
-    skip_report: false
-    agent: kubernetes
-    spec:
-      containers:
-      - image: alpine
-        command: ["/bin/printenv"]
   - agent: kubernetes
     name: varkes-test
     trigger: "(?m)^/test varkes"
@@ -60,26 +83,56 @@ presubmits:
     skip_report: false
     spec:
       containers:
-      - image: badrawi/varkes_image:v13
+      - image: badrawi/varkes_image:v17
+        env:
+          - name: SECRET_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: username
+          - name: SECRET_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysecret
+                key: password
+      restartPolicy: Never
   suleymanakbas91/kyma:
-  - name: test-prow
-    trigger: "(?m)^/test prow"
-    rerun_command: "/test prow"
-    context: test-prow
-    always_run: true
-    skip_report: false
-    agent: kubernetes
-    spec:
-      containers:
-      - image: eu.gcr.io/kyma-project/snapshot/test/prow:test2
-        name: test-prow
-        volumeMounts:
-        - mountPath: /var/run/docker.sock
-          name: docker-socket-volume
-        securityContext:
-          privileged: true
-      volumes:
-        - name: docker-socket-volume
-          hostPath:
-            path: /var/run/docker.sock
-            type: File
+    - name: prow/kyma/kyma-integration
+      optional: true
+      trigger: "(?m)^/test kyma-integration"
+      rerun_command: "/test kyma-integration"
+      context: prow/kyma/kyma-integration
+      always_run: true
+      skip_report: false # from documentation: SkipReport skips commenting and setting status on GitHub.
+      max_concurrency: 10
+      labels:
+        preset-sa-vm-kyma-integration: "true"
+        preset-gc-compute-envs: "true"
+        preset-gc-project-env: "true"
+      decorate: true
+      path_alias: github.com/kyma-project/kyma
+      extra_refs:
+        - org: kyma-project
+          repo: test-infra
+          base_ref: master
+          path_alias: github.com/kyma-project/test-infra
+      spec:
+        containers:
+          - image: eu.gcr.io/kyma-project/prow/bootstrap:0.0.1
+            command: 
+              - "/home/prow/go/src/github.com/kyma-project/test-infra/prow/scripts/provision-vm-and-start-kyma.sh"
+plank:
+  allow_cancellations: true # AllowCancellations enables aborting presubmit jobs for commits that have been superseded by newer commits in Github pull requests.
+  pod_pending_timeout: 60m
+  default_decoration_config:
+    timeout: 7200000000000 # 2h
+    grace_period: 15000000000 # 15s
+    utility_images:
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20181019-08e9d55c9"
+      initupload: "gcr.io/k8s-prow/initupload:v20181019-08e9d55c9"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20181019-08e9d55c9"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20181019-08e9d55c9"
+    gcs_configuration:
+      bucket: prow-suakbas
+      path_strategy: "explicit"
+    gcs_credentials_secret: "sa-gcs-plank" # Service account with "Object Admin" role
