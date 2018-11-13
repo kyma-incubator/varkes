@@ -1,0 +1,147 @@
+<!-- The drawer is always open in large screens. The header is always shown,
+  even in small screens. -->
+<html>
+
+<head>
+    <title>Varkes App Connector</title>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="/css/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="/js/json.editor.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+              mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">Varkes App Connector</span>
+                <div class="mdl-layout-spacer"></div>
+
+
+                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/">APIs
+                    Page</a>
+
+                </button>
+
+
+
+
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title" id="api-title">APIs</span>
+            <nav class="mdl-navigation">
+                <div id="apis">
+                    <ul class="demo-list-item mdl-list">
+
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <!-- Your content goes here -->
+                <div id="ed" style="text-align: -webkit-center">
+                    <br><textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                        id="send_event" onclick="sendEvent()">Send Event</button>
+
+                </div>
+            </div>
+    </div>
+    </main>
+    </div>
+
+</body>
+
+
+<script>
+    $(document).ready(function () {
+        getAPIs()
+    })
+
+
+    function getAPIs() {
+
+        $("#apis ul").empty()
+        console.log("get apis called")
+        $.ajax(
+            {
+                type: "get",
+                url: "/apis",
+                success: function (data) {
+                    data.forEach(element => {
+                        $("#apis ul").append
+                            (`
+                                            <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">${element.name}</a>`)
+                    });
+                    getConnectionInfo()
+                }
+
+            }
+        ).fail(function (xhr, options, error) {
+            $("#apis ul").text("No certificate defined, please provide a token url")
+        })
+    }
+
+
+
+    function sendEvent() {
+        console.log(JSON.parse($("#payload").val()))
+        $.ajax({
+            type: "POST",
+            url: "/sendevent",
+            data: $("#payload").val(),
+            success: function (data) {
+                console.log(data)
+
+            },
+            contentType: "application/json"
+        }
+
+        )
+    }
+
+
+    function showService(serviceID) {
+        $.ajax({
+            type: "get",
+            url: `/apis/${serviceID}`,
+            success: function (data) {
+                data.id = serviceID
+                $("#serviceJSON").val(JSON.stringify(data))
+                editor.set(data)
+                $("#create_service").hide()
+                $("#update_service").show()
+                $("#update_service").attr("onclick", `updateService("${serviceID}")`)
+
+                $("#delete_service").show()
+                $("#delete_service").attr("onclick", `deleteService("${serviceID}")`)
+
+            }
+        })
+    }
+
+    function getConnectionInfo() {
+        console.log("query connection info")
+        $.ajax({
+            type: "get",
+            url: "/connection",
+            success: function (data) {
+
+                $("#api-title").html(`APIs \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
+            }
+        })
+    }
+
+
+</script>
+
+</html>

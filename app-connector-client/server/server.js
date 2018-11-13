@@ -49,7 +49,9 @@ app.post("/connection", function (req, res) {
 app.get("/ui/apis", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/index.html"))
 })
-
+app.get("/ui/events", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "views/events.html"))
+})
 app.get("/metadata", function (req, res) {
     res.sendfile("swagger.yaml")
 })
@@ -59,6 +61,13 @@ app.get("/certificates/private-key", (req, res) => {
     res.download(keyFile)
 
 
+})
+
+app.post("/sendevent", (req, res) => {
+    console.log(req.body)
+    sendEvent(req.body, (data) => {
+        res.send(data)
+    })
 })
 app.get("/certificates/kyma-cert", (req, res) => {
     const certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
@@ -93,11 +102,13 @@ function returnConnectionInfo() {
         response = {
             "cluster_domain": "",
             "re_name": "",
-            "gateway_url": ""
+            "eventsUrl": "",
+            "metadataUrl": ""
         }
         response.cluster_domain = myURL.hostname.split(".")[1]
         response.re_name = myURL.pathname.split("/")[1]
-        response.gateway_url = "" //FIXME: what is this?
+        response.eventsUrl = CONFIG.URLs.eventsUrl;
+        response.metadataUrl = CONFIG.URLs.eventsUrl;
 
         return response
 
@@ -200,4 +211,7 @@ module.exports = function (varkesConfigPath) {
 if (process.argv.length > 2) {
     var app = module.exports(process.argv[2]);
     app.start();
+}
+else { // FIXME: I need this for local testing -Atakan
+    app.start()
 }
