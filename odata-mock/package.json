@@ -10,6 +10,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "nodemailer": "^4.0.1",
     "body-parser": "^1.18.3",
     "compression": "^1.0.3",
     "cors": "^2.5.2",
