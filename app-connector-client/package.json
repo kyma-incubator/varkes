@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "varkes-app-connector-client",
   "version": "0.0.6",
+=======
+  "name": "app-connector-client",
+  "version": "1.0.1",
+>>>>>>> add npmrc to gitignore
   "description": "request certificates to connect with kyma",
   "main": "server/server.js",
   "scripts": {
