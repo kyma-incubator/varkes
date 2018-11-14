@@ -21,7 +21,8 @@ exports.create = function (req, res) {
 };
 
 exports.show = function (req, res) {
-    showService(req.params.service, (data) => {
+    LOGGER.logger.info(JSON.stringify(req.params))
+    showService(req.params.api, (data) => {
         try {
             res.send(JSON.parse(data))
         }
@@ -32,13 +33,13 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    updateService(req.params.service, req.body, (data) => {
+    updateService(req.params.api, req.body, (data) => {
         res.send(data)
     })
 };
 
 exports.destroy = function (req, res) {
-    module.exports.deleteService(req.params.service, (data) => {
+    module.exports.deleteService(req.params.api, (data) => {
         res.send(data)
     })
 };
@@ -103,6 +104,7 @@ exports.deleteService = function deleteService(serviceID, cb) {
 }
 
 function showService(serviceID, cb) {
+    LOGGER.logger.info(`Requesting ID: ${serviceID}`)
     request.get({
         url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
         agentOptions: {

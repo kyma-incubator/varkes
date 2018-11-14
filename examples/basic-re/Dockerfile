@@ -4,7 +4,7 @@ RUN apk add --no-cache git
 RUN git clone -b connector https://github.com/kyma-incubator/varkes.git
 
 
-RUN npm --prefix ./varkes/app-connector install ./varkes/app-connector
+RUN npm --prefix ./varkes/app-connector-client install ./varkes/app-connector-client
 
 
 COPY . /app

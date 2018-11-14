@@ -10,7 +10,7 @@ resolve:
 validate:
 	npm run-script test
 
-# To see docker build command refer to package.json/scripts build. => docker build -t varkes/app-connector .
+# To see docker build command refer to package.json/scripts build. => docker build -t varkes/app-connector-client .
 build:
 	npm run-script build 
 

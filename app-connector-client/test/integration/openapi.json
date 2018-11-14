@@ -7,7 +7,7 @@
   "tags": [
     {
       "name": "Metadata Service",
-      "description": "API for registering services in Kyma."
+      "description": "API for registering apis in Kyma."
     }
   ],
   "paths": {
@@ -25,10 +25,10 @@
         }
       }
     },
-    "/services": {
+    "/apis": {
       "post": {
         "tags": [
-          "services"
+          "apis"
         ],
         "summary": "Registers a new service",
         "operationId": "registerService",
@@ -78,10 +78,10 @@
       },
       "get": {
         "tags": [
-          "services"
+          "apis"
         ],
-        "summary": "Gets all registered services",
-        "operationId": "getServices",
+        "summary": "Gets all registered apis",
+        "operationId": "getAPIs",
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -109,10 +109,10 @@
         }
       }
     },
-    "/services/{serviceId}": {
+    "/apis/{serviceId}": {
       "get": {
         "tags": [
-          "services"
+          "apis"
         ],
         "summary": "Gets a service by service ID",
         "operationId": "getServiceByServiceId",
@@ -163,7 +163,7 @@
       },
       "put": {
         "tags": [
-          "services"
+          "apis"
         ],
         "summary": "Updates a service by service ID",
         "operationId": "updateService",
@@ -218,7 +218,7 @@
       },
       "delete": {
         "tags": [
-          "services"
+          "apis"
         ],
         "summary": "Deletes a service by service ID",
         "operationId": "deleteServiceByServiceId",

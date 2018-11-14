@@ -7,7 +7,7 @@ var request = require("request")
 var fs = require("fs")
 var LOGGER = require("./logger")
 const path = require("path")
-
+const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
 
@@ -22,26 +22,31 @@ if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
 app.use(express.static(path.resolve(__dirname, 'views/')))
 require("./middleware").defineMW(app)
 
-app.resource('services', require("./resources/service"))
+app.resource('apis', require("./resources/api"))
 
+app.get("/connection", function (req, res) {
+    res.send(returnConnectionInfo())
+})
 app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
     connector.exportKeys(req.body.url, (err, data) => {
 
         if (err) {
             LOGGER.logger.info(err)
+            res.statusCode = 401
             res.send("There is an error while registering. Please make sure that your token is unique")
         } else {
             fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
-            res.send(data)
             CONFIG.URLs = data
+            res.send(returnConnectionInfo())
+
         }
     })
 
 
 });
 
-app.get("/ui/services", function (req, res) {
+app.get("/ui/apis", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/index.html"))
 })
 
@@ -49,6 +54,16 @@ app.get("/metadata", function (req, res) {
     res.sendfile("swagger.yaml")
 })
 
+app.get("/certificates/private-key", (req, res) => {
+    const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+    res.download(keyFile)
+
+
+})
+app.get("/certificates/kyma-cert", (req, res) => {
+    const certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+    res.download(certFile)
+})
 app.get("/connector", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/connector.html"))
 })
@@ -72,7 +87,7 @@ app.post("/register", (req, res) => {
 
 
         createServicesFromConfig(hostname, endpointsJson)
-        res.send(`${endpointsJson.apis.length} services registered.`)
+        res.send(`${endpointsJson.apis.length} apis registered.`)
     })
 
 
@@ -95,7 +110,26 @@ function createServicesFromConfig(hostname, endpoints) {
     createSingleService(hostname, endpoints, 0)
 }
 
+function returnConnectionInfo() {
+    if (CONFIG.URLs.metadataUrl !== "") {
+        const myURL = new url.URL(CONFIG.URLs.metadataUrl)
+        response = {
+            "cluster_domain": "",
+            "re_name": "",
+            "gateway_url": ""
+        }
+        response.cluster_domain = myURL.hostname.split(".")[1]
+        response.re_name = myURL.pathname.split("/")[1]
+        response.gateway_url = "" //FIXME: what is this?
 
+        return response
+
+    } else {
+        res.statusCode = 404
+        res.send("not connected to any cluster")
+    }
+
+}
 function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
