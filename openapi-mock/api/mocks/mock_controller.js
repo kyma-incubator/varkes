@@ -6,15 +6,6 @@ const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const config = require('../../config')
-var customResponse;
-if (config.hasOwnProperty("customResponsePath") && fs.existsSync(config.customResponsesPath)) {
-    try {
-        customResponse = require(config.customResponsePath)
-    }
-    catch (err) {
-        console.error(err);
-    }
-}
 var app = require('express')();
 var openApi_doc = {};
 module.exports = {
@@ -22,13 +13,6 @@ module.exports = {
     init: function () {
         openApi_doc = yaml.safeLoad(fs.readFileSync(config.specification_file, 'utf8'));
         return app;
-
-    },
-    registerCustomResponses: function (app_modified) {
-        app = app_modified;
-        console.log("starting custom function");
-        if (customResponse)
-            customResponse.customResponses(app);
 
     },
     recordRequest: function (app_modified) {

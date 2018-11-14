@@ -16,7 +16,7 @@ Creates a requests.log file that contains the urls being called, the header of t
 By calling '/metadata' user can see the OpenAPI specification being use in text/x-yaml format
 
 - **Returns a dummy OAuth2 token** <br>
-By calling the base url '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
+By calling the endpoint '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
 
 Installation and Use
 --------------------------
@@ -25,10 +25,10 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 ````bash
 npm install
 ````
-Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/swagger/swagger.yaml)<br>
-OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/config.js) file specified by the "specification_file" element
+Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/swagger.yaml)<br>
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/config.js) file specified by the "specification_file" element
 
-You need to remove the host, schemes and basePath keys in order for swagger-express-middleware to do it's magic
+You need to remove the host in order for swagger-express-middleware to do it's magic
 <br>
 You don't need to write a custom response in your javascript code for every endpoint in the file,
 for the endpoints that your are satisfied with a default response you add the default key with the response object to your response of the endpoint in the file as shown
@@ -51,34 +51,8 @@ responses:
 
 Node js code
 --------------------------
+The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/mocks/mock_controller.js) where the user  
 
-The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/swagger/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/mocks/mock_controller.js) where the user  
-
-- **Write their custom code for handling some of the responses and registering them to the express app in the registerCustomResponses function.** <br>
-        The following is an example of listening to the oauth post endpoint and replacing the body with a user defined token
-````javascript
- app.post(Oauth_endpoint_key, function (req, res, next) {
-
-            console.log("entered oauth");
-            console.log(req.body)
-            res.send({ token: 3333 })
-        });
-````
-- **Add a some extra items to the default response** <br>
-        The following is an example of listening to the get endpoint "/courses" which returns two items as response, "course1" and "course2", then adding a third item to the array by overwriting the send function for the response object "res"
-````javascript
- app.get('/courses', function (req, res, next) {
-
-            var oldSend = res.send;
-            res.send = function (data) {
-                data = JSON.parse(data);
-                data.cardTypes.push({ code: "C3", name: "course3" })
-                arguments[0] = JSON.stringify(data);
-                oldSend.apply(res, arguments);
-            }
-            next();
-        });
-````
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
         the following example checks if the error status is not known or if it's one of the status that are defined in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/config.js) file and in response sends the corresponding error message
 

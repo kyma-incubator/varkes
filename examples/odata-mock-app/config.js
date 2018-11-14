@@ -1,5 +1,6 @@
 module.exports = {
-    specification_file: "EDMX_MODEL_SPECIFICATION.xml",
+    specification_file: "../../../EDMX_MODEL_SPECIFICATION.xml",
+    customResponses: "../../custom_responses.js",
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',
         401: '{"error":\"401 Entity does not exist\"}',

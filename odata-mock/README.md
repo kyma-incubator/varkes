@@ -7,7 +7,7 @@ Features
 ---------------------------
 
 - **Supports OData edmx specification** <br>
-Copy the edmx specification to the [EDMX_MODEL_SPECIFICATION.xml]((https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/EDMX_MODEL_SPECIFICATION.xml) file and the Engine will automatically create data model files for the entities specified in the specification
+Copy the edmx specification to the [EDMX_MODEL_SPECIFICATION.xml]((https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/EDMX_MODEL_SPECIFICATION.xml) file and the Engine will automatically create data model files for the entities specified in the specification
 
 - **Records Every Request made to the node** <br>
 Creates a requests.log file that contains the urls being called, the header of the request and the body of the request if exists using the [morgan](https://www.npmjs.com/package/morgan) logging framework.
@@ -28,8 +28,8 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 ````bash
 npm install
 ````
-Then you need to copy your OData edmx into the common directory as [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/EDMX_MODEL_SPECIFICATION.xml)<br>
-OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/config.js) file specified by the "specification_file" element
+Then you need to copy your OData edmx into the common directory as [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/EDMX_MODEL_SPECIFICATION.xml)<br>
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/config.js) file specified by the "specification_file" element
 <br>
 When you run the mock application for the first time the [parser.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/utility/parser.js) module creates a javascript file and a json file for every entity defined in the edmx specifiaction using the templates [modelTemplate.json](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/models/modelTemplate.json) as the json template ( for every model the name is the entity name and the plural is the entity name and adding an 's' at the end so if the entity name is 'user' the plural used in the get endpoint is 'users') and [jsModel.txt](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/models/jsModel.txt) as the js template replacing the 'placeholder' substring with the entity name.
 Also the  [parser.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/utility/parser.js) module creates the definition of these entities in the [model-config.json](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/model-config.json) file.You can think of this file as a catalog for our database defining User Roles, security permission along side the entity definitions.
@@ -78,90 +78,44 @@ You can add data to an Entity using the [data.json](https://github.com/kyma-incu
 Node js code
 --------------------------
 
-The entry point for the application is the server/server.js file which reads the edmx file [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/EDMX_MODEL_SPECIFICATION.xml) using [parser.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/utility/parser.js)
+The entry point for the application is the server/server.js file which reads the edmx file [EDMX_MODEL_SPECIFICATION.xml](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/EDMX_MODEL_SPECIFICATION.xml) using [parser.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/common/utility/parser.js)
 <br>
 The mock application offers the following
+- **Parse the edmx specification file and creates entity files that represent databases** <br>
 
-- **Writing custom code for handling some of the responses and registering them to the express app [routes.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/boot/routes.js).** <br>
-        The following is an example of listening to the get endpoint "'/authorizationserver/oauth/" checking if the required parameters are submitted, then returning the redirect_uri enetred as a query parameter and adding to it the token
+- **Provide custom Error messages for given status codes given in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/config.js):** <br>
+The error messages are written in the config file as a json key called error_messages as follows:<br>
+
 ````javascript
-app.get('/authorizationserver/oauth/*', function (req, res, next) {
-        if (req.query.response_type && req.query.scope) {
-            if (req.query.redirect_uri) {
-                res.status(200)
-                res.send(req.query.redirect_uri + "#token=7777");
-            }
-            else
-                res.send('Please, enter redirected_uri');
-        }
-        else {
-            res.status(404)
-            res.send('Wrong parameters');
-        }
-
-    });
+error_messages: {
+        500: '{"error":\"Something went Wrong\"}',
+        401: '{"error":\"401 Entity does not exist\"}',
+        404: '{"error":\"404 Bad URL\"}'
+    }
 ````
-- **Add a some extra items to the default response** <br>
-        The following is an example of changing the error message in the response depending on the status code
+<br>
+This json object is processed by the [routes.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/boot/routes.js) which checks if the error code exists in the config file and if so it sends it's corresponding message as response as follows.
 ````javascript
  function modifyResponseBody(req, res, next) {
         var oldSend = res.send;
 
         res.send = function (data) {
-            // arguments[0] (or `data`) contains the response body
-            if (arguments[0].statusCode == 401) {
-                arguments[0] = "401 Entity does not exist";
+
+            if (!arguments[0] || !arguments[0].statusCode) {
+                arguments[0] = {};
+                arguments[0].statusCode = 500;
             }
-            else if (arguments[0].statusCode == 404) {
-                arguments[0] = "404 Bad URL";
+            if (app.config.error_messages.hasOwnProperty(arguments[0].statusCode)) {
+                arguments[0] = app.config.error_messages[arguments[0].statusCode];
             }
             oldSend.apply(res, arguments);
         }
         next();
     }
-````
-- **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
-        Since this application is based on [n-odata-server](https://github.com/htammen/n-odata-server); we need to handle custom errors for the 'api' based uris and for the 'odata' based uris.
-        For the api-based calls we use the follwing function in the [config-local.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/config-local.js) file.
 
-````javascript
-module.exports = {
-    remoting: {
-        errorHandler: {
-            handler: function (err, req, res, next) {
-                // custom error handling logic
-                console.log("error status")
-                console.log(err.status)
-                if (!err.status) {
-                    res.status(500);
-                    res.type('json');
-                    res.send(util.format('{error:\"Something went Wrong\"}'));
-                }
-                else if (err.status == 404) {
-                    res.status(err.status);
-                    res.type('json');
-                    var util = require('util');
-                    res.send(util.format('{error:\"This is not a valid endpoint\"}', err.status, err.message));
-                }
-            }
-        }
-    }
-};
+    app.use(modifyResponseBody);
 ````
-<br>
-Yo also need to add the handler key 'errorHandler' given above to the [middleware.json](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/server/middleware.json) file as follows
-
-````json
-"files": {},
-  "final": {
-    "loopback#urlNotFound": {}
-  },
-  "final:after": {
-    "loopback#errorHandler": {}
-  }
-````
-For the odata-based calls we need to modify the message given by the response depending on the error status as mentioned in the previous point.
-
+Note: The messages (ex. '{"error":\"Something went Wrong\"}') could be any string doesn't have to be a json-like string<br>
  Starting the application
 --------------------------
 There are two ways to start the application.
@@ -169,7 +123,7 @@ There are two ways to start the application.
 - **start it as a node using npm command as follows:** <br>
 Go to the directory of the application and write in the terminal
 ````bash
-npm start
+node server/server.js <config.js path>
 ````
 
 - **start it as a docker image as follows:** <br>
@@ -186,5 +140,4 @@ Go to the directory of the application and write in the terminal
  ````bash
 npm test
 ````
-Note: You should run the application once before running your api tests in order to create the entities.
 

@@ -1,9 +1,8 @@
 {
   "name": "varkes-openapi-mock",
-  "version": "0.1.18",
+  "version": "0.1.25",
   "private": false,
   "description": "Trial",
-  "repository": "github:kyma-incubator/varkes",
   "keywords": [],
   "author": "",
   "license": "",
@@ -14,18 +13,19 @@
     "fs-extra": "^7.0.0",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
+    "npm": "^6.4.1",
     "path": "^0.12.7",
-    "swagger-express-middleware": "^1.0.0-alpha.12",
+    "swagger-express-middleware": "^1.1.1",
     "swagger-express-mw": "^0.7.0",
-    "util": "^0.11.0",
-    "tar": "^4.4.6"
+    "tar": "^4.4.6",
+    "util": "^0.11.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
     "supertest": "^3.1.0"
   },
   "scripts": {
-    "start": "node app.js C:\\Users\\D074188\\Desktop\\varkes\\openapi-mock\\config.js",
+    "start": "node app.js ./config.js",
     "build": "docker build -t varkes/openapi .",
     "test": "mocha"
   }
