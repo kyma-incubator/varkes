@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN git clone https://github.com/kyma-incubator/varkes.git
-WORKDIR /varkes
+WORKDIR /varkes/prow
 RUN apt install -y nodejs
 
 ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \

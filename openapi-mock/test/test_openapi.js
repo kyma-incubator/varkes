@@ -1,5 +1,5 @@
 var request = require('supertest');
-var server = require('../app')('C:\\Users\\D074188\\Desktop\\varkes\\openapi-mock\\config.js');
+var server = require('../app')('./config.js');
 describe('controllers', function () {
   before(() => {
     server.parseSpecFile();
