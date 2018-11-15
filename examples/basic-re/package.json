@@ -11,7 +11,7 @@
   "dependencies": {
     "app-connector-client": "^1.0.1",
     "npm": "^6.4.1",
-    "varkes-odata-mock": "0.0.12",
+    "varkes-odata-mock": "^0.1.0",
     "varkes-openapi-mock": "^0.1.25"
   }
 }

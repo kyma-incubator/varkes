@@ -3,6 +3,12 @@ var utility = require('../../common/utility/utility')
 
 module.exports = function (app) {
     utility.registerLogger(app);
+    app.get("/odata/metadata", function (req, res, next) {
+        var spec = utility.readFile(app.config.specification_file);
+        res.status(200);
+        res.type("text/xml");
+        res.send(spec);
+    });
     function modifyResponseBody(req, res, next) {
         var oldSend = res.send;
 
