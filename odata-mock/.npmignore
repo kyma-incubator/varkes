@@ -1,0 +1,9 @@
+jenkinsfile.groovy
+Dockerfile
+node_modules
+EDMX_MODEL_SPECIFICATION.xml
+index.js
+config.js
+makefile
+*.log
+data.json

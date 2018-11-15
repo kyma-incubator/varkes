@@ -1,0 +1,34 @@
+post:
+    summary: "Get OAuth2 access token"
+    description: "Returns the acess token for Kyma"
+    consumes: 
+        - "application/x-www-form-urlencoded"
+    produces: 
+        - "application/xml"
+        - "application/json"
+    parameters:
+        - in: "body"
+          name: "parameters"
+          description: "List of Component identifiers"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              client_id:
+                type: "string"
+              client_secret:
+                type: "string"
+              grant_type:
+                type: "string"
+    responses: 
+        200: 
+            description: "OK"
+            schema:
+                type: "object"
+                properties: 
+                    access_token_url:
+                        type: "string"
+                default:
+                    token: "3333"
+        404: 
+            description: "Not Found"

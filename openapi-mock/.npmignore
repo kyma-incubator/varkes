@@ -2,6 +2,5 @@ jenkinsfile.groovy
 Dockerfile
 node_modules
 swagger.yaml
-index.js
 config.js
-custom_responses.js
+*.log

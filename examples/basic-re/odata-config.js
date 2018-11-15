@@ -1,5 +1,5 @@
 module.exports = {
-    specification_file: "EDMX_MODEL_SPECIFICATION.xml",
+    specification_file: "C:\\Users\\D074188\\Desktop\\varkes\\examples\\basic-re\\EDMX_MODEL_SPECIFICATION.xml",
     storage_file_path: "C:\\Users\\D074188\\Desktop\\varkes\\data.json",
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',
