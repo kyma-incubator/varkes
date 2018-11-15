@@ -5,12 +5,13 @@ var yaml = require('js-yaml');
 const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
-const config = require('../../config')
+var config;
 var app = require('express')();
 var openApi_doc = {};
 module.exports = {
     app,
-    init: function () {
+    init: function (configObj) {
+        config = configObj;
         openApi_doc = yaml.safeLoad(fs.readFileSync(config.specification_file, 'utf8'));
         return app;
 
@@ -54,12 +55,13 @@ module.exports = {
         app = app_modified;
         app.use(function (err, req, res, next) {
             console.log("error status")
-            console.log(err.status)
+            console.log(err.message);
             if (!err.status) {
                 err.status = 500;
             }
             try {
-                if (err.status == 404 && openApi_doc["paths"].hasOwnProperty(req.url.replace(openApi_doc.basePath, ""))) {
+
+                if (err.status == 404 && err.message.indexOf("Resource not found") == -1) {
                     res.status(200);
                     res.type('json');
                     res.send({});

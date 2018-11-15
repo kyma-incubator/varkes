@@ -61,7 +61,7 @@ paths:
     security:
       - oauth2_Password: []
       - oauth2_client_credentials: []
-  /coursesbyId/{id}:
+  /coursesbyCode/{code}:
     get:
       summary: "Get a list of available courses."
       description: "Lists supported payment card types."
@@ -71,12 +71,12 @@ paths:
         - "application/xml"
         - "application/json"
       parameters:
-        - name: "id"
+        - name: "code"
           in: "path"
           description: "course identifier"
           required: true
           type: "string"
-          default: "1"
+          default: "c1"
       responses:
         200:
           description: "OK"
@@ -86,10 +86,6 @@ paths:
                 type: "string"
               name:
                 type: "string"
-            default:
-              course:
-                code: "C1"
-                name: "course1"
         401:
           description: "Unauthorized"
         403:

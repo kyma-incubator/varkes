@@ -6,17 +6,17 @@ var path = require('path');
 const bodyParser = require('body-parser');
 var mock_controller = require("./api/mocks/mock_controller");
 //pass the express app to the mock controller
-var app = mock_controller.init();
-mock_controller.createEndpoints();
-app.use(bodyParser.json());
-//register the function that records the requests to our application to the express app
-mock_controller.recordRequest(app);
-
-mock_controller.createMetadataEndpoint();
 
 
 module.exports = function (configPath) {
   var config = require(configPath);
+  var app = mock_controller.init(config);
+  mock_controller.createEndpoints();
+  app.use(bodyParser.json());
+  //register the function that records the requests to our application to the express app
+  mock_controller.recordRequest(app);
+
+  mock_controller.createMetadataEndpoint();
   let server;
   app.start = function () {
     server = app.listen(config.port, function () {
