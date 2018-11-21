@@ -43,7 +43,12 @@ module.exports = function (configFilePath) {
   datasourceJson.db.file = config.storage_file_path;
   utility.writeFileSync(__dirname + "/datasources.json", JSON.stringify(datasourceJson));
   loopbackConfig.port = config.port;
-  parser.parseEdmx(config.specification_file).then(function (result) {
+  var filePaths = [];
+  for (var i = 0; i < config.specification_files.length; i++) {
+    filePaths.push(parser.parseEdmx(config.specification_files[i].file));
+
+  }
+  Promise.all(filePaths).then(function (result) {
     boot(app, __dirname, function (err) {
       if (err) throw err;
 
