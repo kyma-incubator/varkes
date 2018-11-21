@@ -6,14 +6,19 @@ const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 var config;
-var app = require('express')();
-var openApi_doc = {};
+var app;
+var openApi_docs = [];
 module.exports = {
-    app,
-    init: function (configObj) {
+    init: function (appObj, configObj) {
+        app = appObj;
         config = configObj;
-        openApi_doc = yaml.safeLoad(fs.readFileSync(config.specification_file, 'utf8'));
-        return app;
+        for (var i = 0; i < config.apis.length; i++) {
+            var api = config.apis[i];
+            var openApi_doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
+            openApi_docs.push(openApi_doc);
+            createMetadataEndpoint(openApi_doc, api);
+            createEndpoints(openApi_doc, api);
+        }
 
     },
     recordRequest: function (app_modified) {
@@ -21,35 +26,6 @@ module.exports = {
         utility.registerLogger(app_modified);
     },
 
-
-    createMetadataEndpoint: function () {
-        try {
-
-            app.get('/metadata', function (req, res) {
-                res.type('text/x-yaml')
-                res.status(200)
-                res.send(openApi_doc)
-            });
-
-        } catch (e) {
-            console.log(e);
-        }
-
-    },
-    createEndpoints: function () {
-        if (config.hasOwnProperty("added_endpoints")) {
-            config.added_endpoints.forEach(function (point) {
-                console.log("point ");
-                console.log(point)
-                var Oauth_endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
-                if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
-                    openApi_doc["paths"][point.url] = Oauth_endpoint;
-                    var yml_format = pretty_yaml.stringify(openApi_doc);
-                    utility.writeToFile(config.specification_file, yml_format, true);
-                }
-            });
-        }
-    },
     customErrorResponses: function (app_modified) {
 
         app = app_modified;
@@ -84,3 +60,39 @@ module.exports = {
 
 };
 
+function createEndpoints(openApi_doc, api) {
+    if (api.hasOwnProperty("added_endpoints")) {
+        if (openApi_doc.basePath == api.baseurl) {
+            api.added_endpoints.forEach(function (point) {
+                console.log("point ");
+                console.log(point)
+                var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
+                if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
+                    openApi_doc["paths"][point.url] = endpoint;
+                    var yml_format = pretty_yaml.stringify(openApi_doc);
+                    utility.writeToFile(api.specification_file, yml_format, true);
+                }
+            });
+        }
+
+    }
+
+}
+function createMetadataEndpoint(openApi_doc, api) {
+    try {
+        app.get(openApi_doc.basePath + api.metadata, function (req, res) {
+            res.type('text/x-yaml')
+            res.status(200)
+            res.send(openApi_doc)
+        });
+        var endpoint = yaml.safeLoad(fs.readFileSync(__dirname + "/../resources/OAuth_template.yaml", 'utf8'));
+        if (!openApi_doc["paths"].hasOwnProperty(api.oauth)) {
+            openApi_doc["paths"][api.oauth] = endpoint;
+            var yml_format = pretty_yaml.stringify(openApi_doc);
+            utility.writeToFile(api.specification_file, yml_format, true);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+}

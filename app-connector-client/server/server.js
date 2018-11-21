@@ -67,38 +67,15 @@ app.get("/certificates/kyma-cert", (req, res) => {
 app.get("/connector", function (req, res) {
     res.sendfile(path.resolve(__dirname, "views/connector.html"))
 })
-app.post("/register", (req, res) => {
-    if (!req.body) res.sendStatus(400)
-    //openssl genrsa -out keys/ec-default.key 2048
+app.start = function () {
+    var server = app.listen(CONFIG.port | 4444, function () {
+        var host = server.address().address
+        var port = server.address().port
 
-    endpointConfig = path.resolve("varkes.config.json")
-    var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
-    console.log(endpointsJson)
-    var token = req.body.token
-    var hostname = req.body.hostname || "http://localhost"
+        console.log("App connector listening at http://%s:%s", host, port)
 
-    createKeysFromToken(token, urls => {
-        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
-
-        CONFIG.URLs = urls
-        console.log(urls)
-        keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
-            , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
-
-
-        createServicesFromConfig(hostname, endpointsJson)
-        res.send(`${endpointsJson.apis.length} apis registered.`)
-    })
-
-
-})
-var server = app.listen(CONFIG.port, function () {
-    var host = server.address().address
-    var port = server.address().port
-
-    console.log("App connector listening at http://%s:%s", host, port)
-
-});
+    });
+}
 
 function createKeysFromToken(tokenUrl, cb) {
 
@@ -191,4 +168,36 @@ function defineServiceMetadata() {
         }
     }
 }
-module.exports = server
+module.exports = function (varkesConfigPath) {
+    app.post("/register", (req, res) => {
+        if (!req.body) res.sendStatus(400)
+        //openssl genrsa -out keys/ec-default.key 2048
+
+        endpointConfig = path.resolve(varkesConfigPath)
+        var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
+        console.log(endpointsJson)
+        var token = req.body.token
+        var hostname = req.body.hostname || "http://localhost"
+
+        createKeysFromToken(token, urls => {
+            fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
+
+            CONFIG.URLs = urls
+            console.log(urls)
+            keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+                , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+
+
+            createServicesFromConfig(hostname, endpointsJson)
+            res.send(`${endpointsJson.apis.length} apis registered.`)
+        })
+
+
+    })
+    return app;
+}
+
+if (process.argv.length > 2) {
+    var app = module.exports(process.argv[2]);
+    app.start();
+}
