@@ -12,6 +12,7 @@ var mock_controller = require("./api/mocks/mock_controller");
 module.exports = function (app, configPath) {
   var config = require(configPath);
   mock_controller.init(app, config);
+  app.config = config;
   app.use(bodyParser.json());
   //register the function that records the requests to our application to the express app
   mock_controller.recordRequest(app);
@@ -22,9 +23,9 @@ module.exports = function (app, configPath) {
       console.log('OpenAPI Mock is now running on http://localhost:' + config.port | 10000);
     });
   }
-  app.stop = function () {
-    server.close();
-  }
+  // app.stop = function () {
+  //   server.close();
+  // }
   let myDB = new MemoryDataStore();
 
   app.parseSpecFile = function () {

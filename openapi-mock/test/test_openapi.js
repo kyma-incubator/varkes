@@ -1,17 +1,30 @@
 var request = require('supertest');
-var server = require('../app')('./config.js');
+var app = require("express")();
+var server = require('../app')(app, './config.js');
 describe('controllers', function () {
   before(() => {
     server.parseSpecFile();
   });
   describe('test_openapi', function () {
 
-    describe('GET metadata', function () {
-
+    describe('GET metadata for schools', function () {
       it('should return response 200', function (done) {
 
         request(server)
-          .get('/metadata')
+          .get("/entity/metadata")
+          .set('Accept', 'application/json')
+          .expect('Content-Type', 'text/x-yaml; charset=utf-8')
+          .expect(200, done)
+      });
+
+
+    });
+
+    describe('GET metadata for courses', function () {
+      it('should return response 200', function (done) {
+
+        request(server)
+          .get("/entity/v1/metadata")
           .set('Accept', 'application/json')
           .expect('Content-Type', 'text/x-yaml; charset=utf-8')
           .expect(200, done)
@@ -21,6 +34,6 @@ describe('controllers', function () {
     });
 
   });
-  after(() => { server.stop() })
+  //after(() => { server.stop() })
 
 });

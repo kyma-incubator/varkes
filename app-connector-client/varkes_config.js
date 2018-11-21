@@ -1,24 +1,28 @@
 module.exports = {
+    request_log_path: 'requests.log',
+    error_messages: {
+        500: '{"error":\"Something went Wrong\"}',
+        400: '{"error":\"Errorrrr\"}',
+        404: '{"error":\"End Point not found\"}'
+    },
     name: "commerce-mock",
     apis: [
         {
-            baseurl: "/rest/v2",
+            baseurl: "/entity",
             metadata: "/metadata",
-            oauth: "/authorizationserver/oauth/token"
+            oauth: "/authorizationserver/oauth/token",
+            specification_file: 'swagger.yaml',
+            added_endpoints: [ //endpoints
+                {
+                    filePath: "Endpoint_template.yaml",
+                    url: '/trial_endpoint'
+                }
+            ]
         },
         {
-            baseurl: "/warehousingwebservices",
+            baseurl: "/entity/v1",
             metadata: "/metadata",
-            oauth: "/authorizationserver/oauth/token"
-        },
-        {
-            baseurl: "/ordermanagementwebservices",
-            metadata: "/metadata",
-            oauth: "/authorizationserver/oauth/token"
-        },
-        {
-            baseurl: "/assistedservicewebservices",
-            metadata: "/metadata",
+            specification_file: 'swagger2.yaml',
             oauth: "/authorizationserver/oauth/token"
         }
     ]
