@@ -48,20 +48,29 @@
         <main class="mdl-layout__content">
             <div class="page-content">
                 <!-- Your content goes here -->
-                <select id="event-types" onchange="updateEventType(this.value)">
-                </select>
-                <div id="ed" style="text-align: -webkit-center">
-                    <br><textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
+                <div id="user-input" style="float:left">
+                    <label>Event Type:</label><br>
+                    <select id="event-types">
+                    </select>
+                    <br>
+                    <label>Event Time:</label><br>
+                    <input type="datetime-local" id="event-time">
+
+                    <br>
+
+                    <label>Event Data:</label><br>
+                    <textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                         id="send_event" onclick="sendEvent()">Send Event</button>
-
                 </div>
                 <div id="events">
                     <ul class="demo-list-item mdl-list">
 
                     </ul>
+
                 </div>
             </div>
+
     </div>
 
     </main>
@@ -73,7 +82,7 @@
 <script>
     $(document).ready(function () {
         getAPIs()
-        showExampleEvent()
+
     })
 
 
@@ -104,10 +113,25 @@
 
     function sendEvent() {
         console.log(JSON.parse($("#payload").val()))
+        //collect event data from user input
+
+        eventType = $("#event-types").val()
+        eventTime = new Date($("#event-time").val()).toISOString()
+        eventData = JSON.parse($("#payload").val())
+
+        event = {
+            "event-type": eventType,
+            "event-type-version": eventType.split(".").pop(), //event types normally end with .v1
+            "event-time": eventTime,
+            "data": eventData
+        }
+        console.log(event)
+
+        //send event to kyma
         $.ajax({
             type: "POST",
             url: "/sendevent",
-            data: $("#payload").val(),
+            data: JSON.stringify(event),
             success: function (data) {
                 console.log(data)
                 $("#events ul").append(`${data["event-id"]}`)
@@ -143,14 +167,7 @@
         })
     }
 
-    function showExampleEvent() {
-        $("#payload").val(JSON.stringify({
-            "event-type": "example-type",
-            "event-type-version": "v1",
-            "event-time": "2012-11-01T22:08:41+00:00",
-            "data": "example"
-        }))
-    }
+
 
     function parseAPIEventsToComboBox(api) {
         console.log(api)
@@ -167,14 +184,7 @@
 
     }
 
-    function updateEventType(eventType) {
-        $("#payload").val(JSON.stringify({
-            "event-type": eventType,
-            "event-type-version": eventType.split(".").pop(),
-            "event-time": "2012-11-01T22:08:41+00:00",
-            "data": "example"
-        }))
-    }
+
 </script>
 
 </html>
