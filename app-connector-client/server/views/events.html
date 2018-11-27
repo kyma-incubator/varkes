@@ -54,8 +54,14 @@
                         id="send_event" onclick="sendEvent()">Send Event</button>
 
                 </div>
+                <div id="events">
+                    <ul class="demo-list-item mdl-list">
+
+                    </ul>
+                </div>
             </div>
     </div>
+
     </main>
     </div>
 
@@ -65,6 +71,7 @@
 <script>
     $(document).ready(function () {
         getAPIs()
+        showExampleEvent()
     })
 
 
@@ -101,6 +108,7 @@
             data: $("#payload").val(),
             success: function (data) {
                 console.log(data)
+                $("#events ul").append(`${data["event-id"]}`)
 
             },
             contentType: "application/json"
@@ -141,7 +149,15 @@
         })
     }
 
-
+    function showExampleEvent() {
+        $("#payload").val(JSON.stringify({
+            "event-type": "order.created",
+            "event-type-version": "v1",
+            "event-id": "31109198-4d69-4ae0-972d-76117f3748c8",
+            "event-time": "2012-11-01T22:08:41+00:00",
+            "data": "example"
+        }))
+    }
 </script>
 
 </html>
