@@ -1,6 +1,6 @@
 'use strict';
-
 var loopback = require('loopback');
+var utility = require("../common/utility/utility");
 var boot = require('loopback-boot');
 var bodyParser = require('body-parser');
 var loopbackConfig = require('./config.json');
@@ -38,12 +38,20 @@ parser.parser();
 module.exports = function (configFilePath) {
   var config = require(configFilePath);
   app.config = config;
+  var datasource = utility.readFile(__dirname + "/datasources.json");
+  var datasourceJson = JSON.parse(datasource);
+  datasourceJson.db.file = config.storage_file_path;
+  utility.writeFileSync(__dirname + "/datasources.json", JSON.stringify(datasourceJson));
   loopbackConfig.port = config.port;
-  parser.parseEdmx(config.specification_file).then(function (result) {
+  var filePaths = [];
+  for (var i = 0; i < config.specification_files.length; i++) {
+    filePaths.push(parser.parseEdmx(config.specification_files[i].file));
+
+  }
+  Promise.all(filePaths).then(function (result) {
     boot(app, __dirname, function (err) {
       if (err) throw err;
 
-      // start the server if `$ node server.js`
       server = app.start();
     });
   });

@@ -1,5 +1,5 @@
 var request = require('supertest');
-var server = require('../server/server');
+var server = require('../server/server')("../config.js");
 var assert = require('assert');
 describe('controllers', function () {
 
@@ -10,9 +10,9 @@ describe('controllers', function () {
             it('should return response 200', function (done) {
 
                 request(server)
-                    .get('/odata/$metadata')
+                    .get('/odata/metadata')
                     .set('Accept', 'application/json')
-                    .expect('Content-Type', 'application/xml; charset=utf-8')
+                    .expect('Content-Type', 'text/xml; charset=utf-8')
                     .expect(200, done)
             });
 
@@ -20,5 +20,5 @@ describe('controllers', function () {
         });
 
     });
-
+    after(() => { server.stop() })
 });

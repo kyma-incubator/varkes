@@ -11,10 +11,10 @@ validate:
 
 # To see docker build command refer to package.json/scripts build. => docker build -t varkes/openapi-mock .
 build:
-	dcoker build -t badrawi/odata-mock .
+	dcoker build -t badrawi/openapi-mock .
 
 push:
-	docker push badrawi/odata-mock
+	docker push badrawi/openapi-mock
 
 clean:
 	rm -rf ./node_modules && rm -f tslinter.json whitesource.config.json ws-IsJson.json .npmrc

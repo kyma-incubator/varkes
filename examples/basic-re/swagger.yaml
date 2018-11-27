@@ -10,10 +10,10 @@ produces:
   - "application/json"
   - "application/xml"
 paths:
-  /schools:
+  /courses:
     get:
-      summary: "Get a list of available schools."
-      description: "Lists all available schools."
+      summary: "Get a list of available courses."
+      description: "Lists all available courses."
       consumes:
         - "application/json"
       produces:
@@ -23,7 +23,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/CoursesDTO"
         401:
           description: "Unauthorized"
         403:
@@ -31,7 +31,7 @@ paths:
         404:
           description: "Not Found"
     post:
-      summary: "insert school"
+      summary: "insert courses"
       description: "Given a list of course in body, insert data."
       consumes:
         - "application/json"
@@ -44,12 +44,12 @@ paths:
           description: "List of Component identifiers"
           required: true
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/CoursesDTO"
       responses:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/CoursesDTO"
         201:
           description: "Created"
         401:
@@ -61,27 +61,44 @@ paths:
     security:
       - oauth2_Password: []
       - oauth2_client_credentials: []
-  /trial_endpoint:
+  /coursesbyId/{id}:
     get:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
+      summary: "Get a list of available courses."
+      description: "Lists supported payment card types."
       consumes:
         - "application/json"
       produces:
         - "application/xml"
         - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "course identifier"
+          required: true
+          type: "string"
+          default: "1"
       responses:
         200:
           description: "OK"
           schema:
-            type: "object"
-            properties:
-              token:
+            course:
+              code:
+                type: "string"
+              name:
                 type: "string"
             default:
-              token: "3333"
+              course:
+                code: "C1"
+                name: "course1"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
         404:
           description: "Not Found"
+    security:
+      - oauth2_Password: []
+      - oauth2_client_credentials: []
   /authorizationserver/oauth/token:
     post:
       summary: "Get OAuth2 access token"
@@ -118,13 +135,13 @@ paths:
         404:
           description: "Not Found"
 definitions:
-  SchoolDTO:
+  CoursesDTO:
     type: "object"
     properties:
-      schools:
+      courses:
         type: "array"
         items:
-          areacode:
+          code:
             type: "string"
           name:
             type: "string"

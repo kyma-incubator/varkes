@@ -25,6 +25,12 @@ module.exports = {
             });
         }
     },
+    writeFileSync: function (path, textString) {
+        fs.writeFileSync(path, textString);
+    },
+    readFile: function (path) {
+        return fs.readFileSync(path, "utf8");
+    },
     getCurrentDateTime: function () {
         var currentdate = new Date();
         var datetime = "Reached on " + currentdate.getDate() + "/"

@@ -1,20 +1,17 @@
 {
-    "name": "basic-re",
-    "version": "1.0.0",
-    "description": "a very basic mock re to deploy, just with oauth and an endpoint",
-    "main": "index.js",
-    "scripts": {
-        "start": "node .",
-        "build": "docker build -t varkes/server .",
-        "test": "mocha"
-    },
-    "author": "Atakan Yenel",
-    "license": "ISC",
-    "dependencies": {
-        "express": "^4.16.3"
-    },
-    "devDependencies": {
-        "mocha": "^5.2.0",
-        "supertest": "^3.1.0"
-    }
+  "name": "basic-re",
+  "version": "1.0.0",
+  "description": "combined example of odata and openapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "app-connector-client": "^1.0.1",
+    "npm": "^6.4.1",
+    "varkes-odata-mock": "^0.1.0",
+    "varkes-openapi-mock": "^0.1.26"
+  }
 }

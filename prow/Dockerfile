@@ -22,5 +22,5 @@ ENTRYPOINT git fetch origin pull/$PULL_NUMBER/head:pr-$PULL_NUMBER \
     && git checkout pr-$PULL_NUMBER \
     && export PULL_NUMBER \
     && chmod -R 777 . \
-    && /varkes/test.sh \
+    && /varkes/prow/test.sh \
     && exec bash

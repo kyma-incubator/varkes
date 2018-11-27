@@ -1,5 +1,4 @@
 module.exports = {
-    port: 10000,
     request_log_path: 'requests.log',
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',

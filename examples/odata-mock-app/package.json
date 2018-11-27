@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "varkes-odata-mock": "0.0.7"
+    "varkes-odata-mock": "0.0.8"
   }
 }

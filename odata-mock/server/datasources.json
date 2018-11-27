@@ -1,8 +1,1 @@
-{
-  "db": {
-    "name": "db",
-    "localStorage": "",
-    "file": "storage/data.json",
-    "connector": "memory"
-  }
-}
+{"db":{"name":"db","localStorage":"","file":"C:\\Users\\D074188\\Desktop\\varkes\\data.json","connector":"memory"}}

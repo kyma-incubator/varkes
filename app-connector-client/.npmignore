@@ -1,7 +1,5 @@
 jenkinsfile.groovy
 Dockerfile
 node_modules
-swagger*.yaml
-makefile
-config.js
+varkes.config.js
 *.log
