@@ -48,6 +48,8 @@
         <main class="mdl-layout__content">
             <div class="page-content">
                 <!-- Your content goes here -->
+                <select id="event-types" onchange="updateEventType(this.value)">
+                </select>
                 <div id="ed" style="text-align: -webkit-center">
                     <br><textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
@@ -124,15 +126,7 @@
             url: `/apis/${serviceID}`,
             success: function (data) {
                 data.id = serviceID
-                $("#serviceJSON").val(JSON.stringify(data))
-                editor.set(data)
-                $("#create_service").hide()
-                $("#update_service").show()
-                $("#update_service").attr("onclick", `updateService("${serviceID}")`)
-
-                $("#delete_service").show()
-                $("#delete_service").attr("onclick", `deleteService("${serviceID}")`)
-
+                parseAPIEventsToComboBox(data)
             }
         })
     }
@@ -151,9 +145,32 @@
 
     function showExampleEvent() {
         $("#payload").val(JSON.stringify({
-            "event-type": "order.created",
+            "event-type": "example-type",
             "event-type-version": "v1",
-            "event-id": "31109198-4d69-4ae0-972d-76117f3748c8",
+            "event-time": "2012-11-01T22:08:41+00:00",
+            "data": "example"
+        }))
+    }
+
+    function parseAPIEventsToComboBox(api) {
+        console.log(api)
+        console.log(api.events.spec.topics)
+        const topics = api.events.spec.topics //object, topics are keys
+        $("#event-types").empty()
+        Object.keys(topics).forEach(t => {
+
+            var o = new Option(t, t); //name , value
+            $(o).html(t);
+            $("#event-types").append(o);
+
+        });
+
+    }
+
+    function updateEventType(eventType) {
+        $("#payload").val(JSON.stringify({
+            "event-type": eventType,
+            "event-type-version": eventType.split(".").pop(),
             "event-time": "2012-11-01T22:08:41+00:00",
             "data": "example"
         }))
