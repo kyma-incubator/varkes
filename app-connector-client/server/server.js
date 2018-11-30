@@ -29,12 +29,14 @@ app.get("/connection", function (req, res) {
 })
 app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
+
     connector.exportKeys(req.body.url, (err, data) => {
 
         if (err) {
-            LOGGER.logger.info(err)
+            message = "There is an error while registering.\n Please make sure that your token is unique and that you are not using Local Kyma Installation"
+            LOGGER.logger.info(message)
             res.statusCode = 401
-            res.send("There is an error while registering. Please make sure that your token is unique")
+            res.send(message)
         } else {
             fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
             CONFIG.URLs = data
@@ -42,6 +44,8 @@ app.post("/connection", function (req, res) {
 
         }
     })
+
+
 
 
 });
@@ -87,8 +91,13 @@ app.start = function () {
 }
 
 function createKeysFromToken(tokenUrl, cb) {
+    try {
+        connector.exportKeys(tokenUrl, (data) => cb(data))
+    } catch (error) {
+        console.log(error.message)
+    }
 
-    connector.exportKeys(tokenUrl, (data) => cb(data))
+
 }
 
 function createServicesFromConfig(hostname, endpoints) {

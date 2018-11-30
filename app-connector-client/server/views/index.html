@@ -26,12 +26,12 @@
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
                     Page</a>
 
-                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/connector">Register
-                    Mock App</a>
+                <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/connector">Register
+                    Mock App</a> -->
 
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                <!-- <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                     onclick="opendialog()">Insert Token
-                </button>
+                </button> -->
 
 
 
@@ -39,11 +39,45 @@
             </div>
         </header>
         <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title" id="api-title">Connect to Kyma</span>
+            <nav class="mdl-navigation">
+                <div id="kymaConnect">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="tokenInput">
+                        <label class="mdl-textfield__label" for="sample1">Token</label>
+                    </div>
+                    <div>
+                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Register
+                        Mock App<br>
+                    </div>
+
+                    <div id="registerApis" style="display:none">
+                        <br />
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="hostnameInput">
+                            <label class="mdl-textfield__label" for="sample1">Hostname</label>
+                        </div>
+                        <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                            href="/ui/apis">All
+                            APIs</a> -->
+
+                    </div>
+                    <br />
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
+                        onclick="giveToken()">Connect to Kyma
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="create_service"
+                        onclick="register()">Register to Kyma
+                    </button>
+                </div>
+                <br>
+
+            </nav>
+            <hr style="height: 12px; border: 0; box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);">
             <span class="mdl-layout-title" id="api-title">APIs</span>
             <nav class="mdl-navigation">
                 <div id="apis">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="margin-left: 50"
-                        onclick="newServiceView()">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="newServiceView()">
                         New Service
                     </button>
                     <ul class="demo-list-item mdl-list">
@@ -98,8 +132,19 @@
     $(document).ready(function () {
         newServiceView()
         getAPIs()
+        $("#create_service").hide();
     })
-
+    $('#registerMockApp').click(function () {
+        if ($(this).is(':checked')) {
+            $("#registerApis").show();
+            $("#get_certificates").hide();
+            $("#create_service").show();
+        } else {
+            $("#registerApis").hide();
+            $("#get_certificates").show();
+            $("#create_service").hide();
+        }
+    });
     function newServiceView() {
         editor.set(json);
         $("#create_service").show()
@@ -177,7 +222,7 @@
         })
     }
     function giveToken() {
-        var sendData = `{ "url": "${$("#input").val()}" }`
+        var sendData = `{ "url": "${$("#tokenInput").val()}" }`
         console.log(sendData)
         $.ajax({
             type: "POST",
@@ -186,10 +231,13 @@
             success: function (data) {
 
                 getAPIs()
-                document.getElementById('dialog').close();
+                $("#tokenInput").val('');
+                window.alert("Connection Successful")
+                //document.getElementById('dialog').close();
             },
             error: function (data) {
                 $("#help").val(data)
+                $("#tokenInput").Clear();
             },
             contentType: "application/json"
         }
@@ -223,12 +271,27 @@
             url: "/connection",
             success: function (data) {
 
-                $("#api-title").html(`APIs \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
+                $("#api-title").html(`Register to Kyma \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
             }
         })
     }
 
-
+    function register() {
+        var sendData = {
+            token: $("#tokenInput").val(),
+            hostname: $("#hostnameInput").val()
+        }
+        console.log(sendData)
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            data: JSON.stringify(sendData),
+            contentType: "application/json",
+            success: function (data) {
+                console.log(data)
+            }
+        })
+    }
     var container = document.getElementById("jsoneditor");
     var options = {};
     var editor = new JSONEditor(container, options);

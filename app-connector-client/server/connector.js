@@ -12,7 +12,10 @@ module.exports =
             request.get( //Step 4
                 url,
                 function (error, response, body) {
-                    if (error) throw error
+                    if (error) {
+
+                        cb(error)
+                    }
                     else if (response.statusCode !== 200) cb(new Error(response.statusCode))
                     else if (response.statusCode == 200) {
 
