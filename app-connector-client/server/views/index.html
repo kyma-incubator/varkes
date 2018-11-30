@@ -23,8 +23,8 @@
                 <span class="mdl-layout-title">Varkes App Connector</span>
                 <div class="mdl-layout-spacer"></div>
 
-                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
-                    Page</a>
+                <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
+                    Page</a> -->
 
                 <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/connector">Register
                     Mock App</a> -->
@@ -77,38 +77,78 @@
             <span class="mdl-layout-title" id="api-title">APIs</span>
             <nav class="mdl-navigation">
                 <div id="apis">
+                    <ul class="demo-list-item mdl-list">
+
+                    </ul>
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="newServiceView()">
                         New Service
                     </button>
-                    <ul class="demo-list-item mdl-list">
-
-
-                    </ul>
                 </div>
             </nav>
         </div>
         <main class="mdl-layout__content">
             <div class="page-content">
                 <!-- Your content goes here -->
-                <div id="ed" style="text-align: -webkit-center">
-                    <div id="jsoneditor" style="width: 700px; height: 600px;"></div>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                        id="create_service" onclick="createService()">Create
-                        Service
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                        id="update_service">Update
-                        Service
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                        id="delete_service">Delete
-                        Service
-                    </button>
+                <table style="width:100%">
+                    <tr>
+                        <th>
+                            Service
+                        </th>
+                        <th>
+                            Event
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="ed" style="text-align: -webkit-center">
+                                <div id="jsoneditor" style="width: 700px; height: 600px;"></div>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                    id="create_service" onclick="createService()">Create
+                                    Service
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                    id="update_service">Update
+                                    Service
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                    id="delete_service">Delete
+                                    Service
+                                </button>
 
-                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="page-content">
+                                <!-- Your content goes here -->
+                                <div id="user-input" style="float:left">
+                                    <label>Event Type:</label><br>
+                                    <select id="event-types">
+                                    </select>
+                                    <br>
+                                    <label>Event Time:</label><br>
+                                    <input type="datetime-local" id="event-time">
+
+                                    <br>
+
+                                    <label>Event Data:</label><br>
+                                    <textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
+                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                        id="send_event" onclick="sendEvent()">Send Event</button>
+                                </div>
+                                <div id="events">
+                                    <ul class="demo-list-item mdl-list">
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
+        </main>
     </div>
-    </main>
+
     </div>
 
     <dialog class="mdl-dialog" id="dialog">
@@ -171,14 +211,17 @@
                 url: "/apis",
                 success: function (data) {
                     data.forEach(element => {
-                        $("#apis ul").append
-                            (`
+                        if (element.id && element.id != "") {
+                            $("#apis ul").append
+                                (`
                                         <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
                         
                            ${element.name}
                         
                                         </a>`)
+                        }
                     });
+
                     getConnectionInfo()
                 }
 
@@ -275,7 +318,63 @@
             }
         })
     }
+    function sendEvent() {
+        console.log(JSON.parse($("#payload").val()))
+        //collect event data from user input
 
+        eventType = $("#event-types").val()
+        eventTime = new Date($("#event-time").val()).toISOString()
+        eventData = JSON.parse($("#payload").val())
+
+        event = {
+            "event-type": eventType,
+            "event-type-version": eventType.split(".").pop(), //event types normally end with .v1
+            "event-time": eventTime,
+            "data": eventData
+        }
+        console.log(event)
+
+        //send event to kyma
+        $.ajax({
+            type: "POST",
+            url: "/sendevent",
+            data: JSON.stringify(event),
+            success: function (data) {
+                console.log(data)
+                $("#events ul").append(`${data["event-id"]}`)
+
+            },
+            contentType: "application/json"
+        }
+
+        )
+    }
+
+
+    function showService(serviceID) {
+        $.ajax({
+            type: "get",
+            url: `/apis/${serviceID}`,
+            success: function (data) {
+                data.id = serviceID
+                parseAPIEventsToComboBox(data)
+            }
+        })
+    }
+    function parseAPIEventsToComboBox(api) {
+        console.log(api)
+        console.log(api.events.spec.topics)
+        const topics = api.events.spec.topics //object, topics are keys
+        $("#event-types").empty()
+        Object.keys(topics).forEach(t => {
+
+            var o = new Option(t, t); //name , value
+            $(o).html(t);
+            $("#event-types").append(o);
+
+        });
+
+    }
     function register() {
         var sendData = {
             token: $("#tokenInput").val(),
