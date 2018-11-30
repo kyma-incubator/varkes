@@ -30,7 +30,7 @@ module.exports = {
 
         app = app_modified;
         app.use(function (err, req, res, next) {
-            console.log("error status")
+            console.log("error status " + err.status)
             console.log(err.message);
             if (!err.status) {
                 err.status = 500;
@@ -38,6 +38,7 @@ module.exports = {
             try {
 
                 if (err.status == 404 && err.message.indexOf("Resource not found") == -1) {
+                    console.log("entered");
                     res.status(200);
                     res.type('json');
                     res.send({});

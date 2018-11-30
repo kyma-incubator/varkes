@@ -6,14 +6,14 @@ module.exports = {
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
     },
-    name: "openapi-mock",
+    name: "basic-re",
     apis: [
         {
             baseurl: "/entity",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
             specification_file: 'schools.yaml',
-            added_endpoints: [ //endpoints
+            added_endpoints: [
                 {
                     filePath: "Endpoint_template.yaml",
                     url: '/trial_endpoint'

@@ -5,3 +5,4 @@ swagger*.yaml
 makefile
 config.js
 *.log
+Endpoint_template.yaml

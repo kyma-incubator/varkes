@@ -31,7 +31,8 @@ module.exports = function (app, configPath) {
   app.parseSpecFile = function () {
     for (var i = 0; i < config.apis.length; i++) {
       middlewares.push(require('swagger-express-middleware'));
-      memoryStores.push(middlewares[i].MemoryDataStore);
+      //memoryStores.push(middlewares[i].MemoryDataStore);
+
       middlewares[i](config.apis[i].specification_file, app, function (err, middleware) {
         app.use(
           middleware.metadata(),
