@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
 if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
     CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
+    keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
+        , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 } else {
     require("../prestart").generatePrivateKey()
 }
@@ -153,7 +155,22 @@ function createSingleService(hostname, endpoints, endpointCount) {
     });
 }
 
-
+function sendEvent(event, cb) {
+    request.post({
+        url: CONFIG.URLs.eventsUrl,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        json: event,
+        agentOptions: {
+            cert: fs.readFileSync(certFile),
+            key: fs.readFileSync(keyFile)
+        }
+    }, (error, httpResponse, body) => {
+        console.log(body)
+        cb(body)
+    })
+}
 function defineServiceMetadata() {
     return {
         "provider": "aY",
