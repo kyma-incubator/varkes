@@ -4,10 +4,10 @@ IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 TAG = $(DOCKER_TAG)
 
 .PHONY: ci-pr
-ci-pr: resolve validate docker-build docker-push
+ci-pr: resolve docker-build docker-push
 
 .PHONY: ci-master
-ci-master: resolve validate docker-build docker-push npm-publish
+ci-master: resolve docker-build docker-push npm-publish
 
 resolve:
 	npm install
