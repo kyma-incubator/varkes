@@ -36,6 +36,13 @@ paths:
       tags:
         - 'connection'
       summary: "reads varkes.config.json and registers the endpoints to kyma"
+      parameters:
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '200':
           description: All apis registered successfully.
@@ -48,6 +55,13 @@ paths:
       tags:
         - 'ui'
       summary: More straight forward registration of apis to kyma 
+      parameters:
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '200':
           description: 'Successful'
@@ -60,6 +74,13 @@ paths:
       tags:
         - 'connection'
       summary: "Sends your token and connects you to Kyma"
+      parameters:
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
        '200':
         description: 'Successful connection to Kyma'
@@ -139,6 +160,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ServiceDetails'
+      parameters:
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '200':
           description: 'Successful operation'
@@ -163,6 +191,13 @@ paths:
       - 'apis'
       summary: 'Gets all registered apis'
       operationId: 'getAPIs'
+      parameters:
+      - in: 'query'
+      name: 'localKyma'
+      description: 'deployment to local kyma'
+      required: true
+      schema:
+        type: 'boolean'
       responses:
         '200':
           description: 'Successful operation'
@@ -192,6 +227,12 @@ paths:
         schema:
           type: 'string'
           format: 'uuid'
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '200':
           description: 'Successful operation'
@@ -231,6 +272,12 @@ paths:
         schema:
           type: 'string'
           format: 'uuid'
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '200':
           description: 'Successful operation'
@@ -259,6 +306,12 @@ paths:
         schema:
           type: 'string'
           format: 'uuid'
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
       responses:
         '204':
           description: 'Successful operation'

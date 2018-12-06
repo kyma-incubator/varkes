@@ -10,7 +10,7 @@ const path = require("path")
 const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
-
+var node_port = 31441;
 var app = express();
 app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
@@ -32,16 +32,21 @@ app.get("/connection", function (req, res) {
 app.post("/connection", function (req, res) {
     if (!req.body) res.sendStatus(400);
 
-    connector.exportKeys(req.body.url, (err, data) => {
+    connector.exportKeys(req.query.localKyma, req.body.url, (err, data) => {
 
         if (err) {
             message = "There is an error while registering.\n Please make sure that your token is unique and that you are not using Local Kyma Installation"
-            LOGGER.logger.info(message)
+            LOGGER.logger.error(message)
             res.statusCode = 401
             res.send(message)
         } else {
-            fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
+
+            if (req.query.localKyma) {
+                var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
+                data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + node_port);
+            }
             CONFIG.URLs = data
+            fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
             res.send(returnConnectionInfo())
 
         }
@@ -92,9 +97,9 @@ app.start = function () {
     });
 }
 
-function createKeysFromToken(tokenUrl, cb) {
+function createKeysFromToken(localKyma, tokenUrl, cb) {
     try {
-        connector.exportKeys(tokenUrl, (data) => cb(data))
+        connector.exportKeys(localKyma, tokenUrl, (data) => cb(data))
     } catch (error) {
         console.log(error.message)
     }
@@ -119,7 +124,7 @@ function returnConnectionInfo() {
         response.cluster_domain = myURL.hostname.split(".")[1]
         response.re_name = myURL.pathname.split("/")[1]
         response.eventsUrl = CONFIG.URLs.eventsUrl;
-        response.metadataUrl = CONFIG.URLs.eventsUrl;
+        response.metadataUrl = CONFIG.URLs.metadataUrl;
 
         return response
 
@@ -145,7 +150,8 @@ function createSingleService(hostname, endpoints, endpointCount) {
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
-        }
+        },
+        rejectUnauthorized: !CONFIG.local_kyma
     }, function (error, httpResponse, body) {
         console.log(body)
 
@@ -165,7 +171,8 @@ function sendEvent(event, cb) {
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
-        }
+        },
+        rejectUnauthorized: !CONFIG.local_kyma
     }, (error, httpResponse, body) => {
         console.log(body)
         cb(body)
@@ -206,17 +213,18 @@ function defineServiceMetadata() {
     }
 }
 module.exports = function (varkesConfigPath) {
+    endpointConfig = path.resolve(varkesConfigPath)
+    var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
     app.post("/register", (req, res) => {
         if (!req.body) res.sendStatus(400)
         //openssl genrsa -out keys/ec-default.key 2048
 
-        endpointConfig = path.resolve(varkesConfigPath)
-        var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
+
         console.log(endpointsJson)
         var token = req.body.token
         var hostname = req.body.hostname || "http://localhost"
 
-        createKeysFromToken(token, urls => {
+        createKeysFromToken(req.query.localKyma, token, urls => {
             fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
 
             CONFIG.URLs = urls

@@ -47,8 +47,11 @@
                         <label class="mdl-textfield__label" for="sample1">Token</label>
                     </div>
                     <div>
-                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Register
-                        Mock App<br>
+                        <input id="insecureConnection" type="checkbox" name="insecureConnection">Insecure Connection<br>
+                    </div>
+                    <div>
+                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto Register
+                        APIs<br>
                     </div>
 
                     <div id="registerApis" style="display:none">
@@ -81,7 +84,7 @@
 
                     </ul>
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="newServiceView()">
-                        New Service
+                        New API
                     </button>
                 </div>
             </nav>
@@ -92,7 +95,7 @@
                 <table style="width:100%">
                     <tr>
                         <th>
-                            Service
+                            API
                         </th>
                         <th>
                             Event
@@ -104,15 +107,15 @@
                                 <div id="jsoneditor" style="width: 700px; height: 600px;"></div>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="create_service" onclick="createService()">Create
-                                    Service
+                                    API
                                 </button>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="update_service">Update
-                                    Service
+                                    API
                                 </button>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="delete_service">Delete
-                                    Service
+                                    API
                                 </button>
 
                             </div>
@@ -208,7 +211,7 @@
         $.ajax(
             {
                 type: "get",
-                url: "/apis",
+                url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
                 success: function (data) {
                     data.forEach(element => {
                         if (element.id && element.id != "") {
@@ -239,7 +242,7 @@
     function createService() {
         $.ajax({
             type: "POST",
-            url: "/apis",
+            url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -255,7 +258,7 @@
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
-            url: `/apis/${serviceId}`,
+            url: "/apis/" + `${serviceId}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 console.log(data)
@@ -269,7 +272,7 @@
         console.log(sendData)
         $.ajax({
             type: "POST",
-            url: "/connection",
+            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: sendData,
             success: function (data) {
 
@@ -289,9 +292,19 @@
     }
 
     function showService(serviceID) {
+        console.log("show service")
+        console.log(serviceID);
         $.ajax({
             type: "get",
-            url: `/apis/${serviceID}`,
+            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
+            success: function (data) {
+                data.id = serviceID
+                parseAPIEventsToComboBox(data)
+            }
+        })
+        $.ajax({
+            type: "get",
+            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
                 data.id = serviceID
                 $("#serviceJSON").val(JSON.stringify(data))
@@ -311,7 +324,7 @@
         console.log("query connection info")
         $.ajax({
             type: "get",
-            url: "/connection",
+            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
 
                 $("#api-title").html(`Register to Kyma \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
@@ -337,7 +350,7 @@
         //send event to kyma
         $.ajax({
             type: "POST",
-            url: "/sendevent",
+            url: "/sendevent/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(event),
             success: function (data) {
                 console.log(data)
@@ -351,28 +364,22 @@
     }
 
 
-    function showService(serviceID) {
-        $.ajax({
-            type: "get",
-            url: `/apis/${serviceID}`,
-            success: function (data) {
-                data.id = serviceID
-                parseAPIEventsToComboBox(data)
-            }
-        })
-    }
+
     function parseAPIEventsToComboBox(api) {
         console.log(api)
-        console.log(api.events.spec.topics)
-        const topics = api.events.spec.topics //object, topics are keys
-        $("#event-types").empty()
-        Object.keys(topics).forEach(t => {
+        if (api.events && api.events.spec) {
+            console.log(api.events.spec.topics)
+            const topics = api.events.spec.topics //object, topics are keys
+            $("#event-types").empty()
+            Object.keys(topics).forEach(t => {
 
-            var o = new Option(t, t); //name , value
-            $(o).html(t);
-            $("#event-types").append(o);
+                var o = new Option(t, t); //name , value
+                $(o).html(t);
+                $("#event-types").append(o);
 
-        });
+            });
+        }
+
 
     }
     function register() {
@@ -383,7 +390,7 @@
         console.log(sendData)
         $.ajax({
             type: "POST",
-            url: "/register",
+            url: "/register/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(sendData),
             contentType: "application/json",
             success: function (data) {

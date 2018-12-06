@@ -15,7 +15,7 @@ require.main === module ? generatePrivateKey() : console.log("required")
 function generatePrivateKey() {
 
     if (!fs.existsSync(path.resolve(CONFIG.keyDir, "ec-default.key"))) {
-        var keys = forge.pki.rsa.generateKeyPair(2048);
+        var keys = forge.pki.rsa.generateKeyPair(4096);
         const privateKey =
             forge.pki.privateKeyToPem(keys.privateKey)
 
