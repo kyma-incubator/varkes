@@ -214,7 +214,7 @@ function defineServiceMetadata() {
 }
 module.exports = function (varkesConfigPath) {
     endpointConfig = path.resolve(varkesConfigPath)
-    var endpointsJson = JSON.parse(fs.readFileSync(endpointConfig))
+    var endpointsJson = fs.readFileSync(endpointConfig)
     app.post("/register", (req, res) => {
         if (!req.body) res.sendStatus(400)
         //openssl genrsa -out keys/ec-default.key 2048
@@ -246,6 +246,6 @@ if (process.argv.length > 2) {
     var app = module.exports(process.argv[2]);
     app.start();
 }
-else { // FIXME: I need this for local testing -Atakan
-    app.start()
-}
+// else { // FIXME: I need this for local testing -Atakan
+//     app.start()
+// }

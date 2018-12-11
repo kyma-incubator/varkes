@@ -69,8 +69,8 @@
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
                         onclick="giveToken()">Connect to Kyma
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="create_service"
-                        onclick="register()">Register to Kyma
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="register_to_kyma"
+                        onclick="register()" style="display:none">Register to Kyma
                     </button>
                 </div>
                 <br>
@@ -181,11 +181,11 @@
         if ($(this).is(':checked')) {
             $("#registerApis").show();
             $("#get_certificates").hide();
-            $("#create_service").show();
+            $("#register_to_kyma").show();
         } else {
             $("#registerApis").hide();
             $("#get_certificates").show();
-            $("#create_service").hide();
+            $("#register_to_kyma").hide();
         }
     });
     function newServiceView() {
