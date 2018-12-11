@@ -9,7 +9,10 @@ const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
 
 exports.index = function (req, res) {
     console.log("local kyma")
-    module.exports.getServices(req.query.localKyma, function (data) {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.getServices(localKyma, function (data) {
         if (!data)
             res.send({})
         else {
@@ -23,7 +26,10 @@ exports.index = function (req, res) {
 exports.create = function (req, res) {
     console.log("create");
     const serviceJSON = req.body
-    module.exports.createService(req.query.localKyma, serviceJSON, data => {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.createService(localKyma, serviceJSON, data => {
         res.send(data)
     })
 };
@@ -31,7 +37,10 @@ exports.create = function (req, res) {
 exports.show = function (req, res) {
     console.log("show");
     LOGGER.logger.info(req.params.api)
-    showService(req.query.localKyma, req.params.api, (data) => {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    showService(localKyma, req.params.api, (data) => {
         try {
             res.send(JSON.parse(data))
         }
@@ -43,14 +52,20 @@ exports.show = function (req, res) {
 
 exports.update = function (req, res) {
     console.log("update");
-    updateService(req.query.localKyma, req.params.api, req.body, (data) => {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    updateService(localKyma, req.params.api, req.body, (data) => {
         res.send(data)
     })
 };
 
 exports.destroy = function (req, res) {
     console.log("destroy");
-    module.exports.deleteService(req.query.localKyma, req.params.api, (data) => {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.deleteService(localKyma, req.params.api, (data) => {
         res.send(data)
     })
 };

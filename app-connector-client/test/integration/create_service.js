@@ -14,7 +14,7 @@ CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiF
 
 serviceJSON = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../kyma-responses/ec-events.json")))
 console.log(serviceJSON)
-serviceResource.createService(serviceJSON, (data) => console.log(data))
+serviceResource.createService(false, serviceJSON, (data) => console.log(data))
 
 
 

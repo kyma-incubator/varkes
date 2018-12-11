@@ -206,6 +206,7 @@
     }
     function getAPIs() {
 
+        $("#tokenInput").val('')
         $("#apis ul").empty()
         console.log("get apis called")
         $.ajax(
@@ -277,13 +278,13 @@
             success: function (data) {
 
                 getAPIs()
-                $("#tokenInput").val('');
+                $('#create_service').show();
                 window.alert("Connection Successful")
                 //document.getElementById('dialog').close();
             },
             error: function (data) {
                 $("#help").val(data)
-                $("#tokenInput").Clear();
+                $("#tokenInput").val('');
             },
             contentType: "application/json"
         }
@@ -394,6 +395,8 @@
             data: JSON.stringify(sendData),
             contentType: "application/json",
             success: function (data) {
+                getAPIs()
+                console.log("data")
                 console.log(data)
             }
         })

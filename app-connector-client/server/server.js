@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const CONFIG = require("../config")
 var node_port = 31441;
 var app = express();
+var localKyma = false;
 app.use(bodyParser.json());
 //Get APi data from api.json if exists. We can move this code to somewhere else.
 if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
@@ -40,8 +41,9 @@ app.post("/connection", function (req, res) {
             res.statusCode = 401
             res.send(message)
         } else {
-
-            if (req.query.localKyma) {
+            if (req.query.localKyma == true) {
+                console.log("local kyma is true")
+                localKyma = true;
                 var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
                 data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + node_port);
             }
@@ -151,7 +153,7 @@ function createSingleService(hostname, endpoints, endpointCount) {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
         },
-        rejectUnauthorized: !CONFIG.local_kyma
+        rejectUnauthorized: !localKyma
     }, function (error, httpResponse, body) {
         console.log(body)
 
@@ -172,7 +174,7 @@ function sendEvent(event, cb) {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
         },
-        rejectUnauthorized: !CONFIG.local_kyma
+        rejectUnauthorized: !localKyma
     }, (error, httpResponse, body) => {
         console.log(body)
         cb(body)
@@ -214,7 +216,7 @@ function defineServiceMetadata() {
 }
 module.exports = function (varkesConfigPath) {
     endpointConfig = path.resolve(varkesConfigPath)
-    var endpointsJson = fs.readFileSync(endpointConfig)
+    var endpointsJson = require(endpointConfig)
     app.post("/register", (req, res) => {
         if (!req.body) res.sendStatus(400)
         //openssl genrsa -out keys/ec-default.key 2048
@@ -222,13 +224,20 @@ module.exports = function (varkesConfigPath) {
 
         console.log(endpointsJson)
         var token = req.body.token
+        console.log("token")
+        console.log(token)
         var hostname = req.body.hostname || "http://localhost"
+        if (req.query.localKyma == true)
+            localKyma = true;
+        createKeysFromToken(localKyma, token, urls => {
+            console.log("createKeysFromToken")
 
-        createKeysFromToken(req.query.localKyma, token, urls => {
-            fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
-
-            CONFIG.URLs = urls
-            console.log(urls)
+            if (urls) {
+                fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(urls), "utf8")
+                CONFIG.URLs = urls
+                console.log("urls")
+                console.log(urls)
+            }
             keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
                 , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 
