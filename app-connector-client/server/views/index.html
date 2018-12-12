@@ -20,7 +20,7 @@
           mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
-                <span class="mdl-layout-title">Varkes App Connector</span>
+                <span id="app-title" class="mdl-layout-title">Varkes App Connector</span>
                 <div class="mdl-layout-spacer"></div>
 
                 <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
@@ -87,6 +87,16 @@
                         New API
                     </button>
                 </div>
+                <br />
+                <div id="downloadLinks" style="display: none;padding-bottom: 5px">
+                    <a href="/download/cert" download="kyma">
+                        Download Certificate
+                    </a>
+                    <br />
+                    <a href="/download/key" download="ec-default">
+                        Download Key
+                    </a>
+                </div>
             </nav>
         </div>
         <main class="mdl-layout__content">
@@ -125,7 +135,7 @@
                                 <!-- Your content goes here -->
                                 <div id="user-input" style="float:left">
                                     <label>Event Type:</label><br>
-                                    <select id="event-types">
+                                    <select onchange="fillEventEditor()" id="event-types">
                                     </select>
                                     <br>
                                     <label>Event Time:</label><br>
@@ -173,6 +183,13 @@
 
 <script>
     $(document).ready(function () {
+        $.ajax({
+            url: `/title`,
+            type: "get",
+            success: function (data) {
+                $('#app-title').html(data)
+            }
+        })
         newServiceView()
         getAPIs()
         $("#create_service").hide();
@@ -203,6 +220,20 @@
                 newServiceView()
             }
         })
+    }
+    function fillEventEditor(e) {
+        debugger;
+        var select = $('#event-types').select()[0];
+        var opt = JSON.parse(select.options[select.selectedIndex].value);
+        var json = {}
+        var properties = opt.subscribe.payload.properties;
+        Object.keys(properties).forEach(function (property) {
+            var example = properties[property].example;
+            for (name in example) {
+                json[name] = example[name];
+            }
+        })
+        $("#payload").val(JSON.stringify(json))
     }
     function getAPIs() {
 
@@ -280,6 +311,7 @@
                 getAPIs()
                 $('#create_service').show();
                 window.alert("Connection Successful")
+                $('#downloadLinks').show();
                 //document.getElementById('dialog').close();
             },
             error: function (data) {
@@ -335,8 +367,9 @@
     function sendEvent() {
         console.log(JSON.parse($("#payload").val()))
         //collect event data from user input
-
-        eventType = $("#event-types").val()
+        var sel = $("#event-types").select()[0];
+        sel[sel.selectedIndex].innerHTML
+        eventType = sel[sel.selectedIndex].innerHTML
         eventTime = new Date($("#event-time").val()).toISOString()
         eventData = JSON.parse($("#payload").val())
 
@@ -370,12 +403,12 @@
         console.log(api)
         if (api.events && api.events.spec) {
             console.log(api.events.spec.topics)
-            const topics = api.events.spec.topics //object, topics are keys
+            var topics = api.events.spec.topics //object, topics are keys
             $("#event-types").empty()
             Object.keys(topics).forEach(t => {
 
-                var o = new Option(t, t); //name , value
-                $(o).html(t);
+                var o = new Option(t, JSON.stringify(topics[t])); //name , value
+                //$(o).html(t);
                 $("#event-types").append(o);
 
             });

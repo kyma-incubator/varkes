@@ -19,8 +19,8 @@ module.exports = function (app, configPath) {
 
   let server;
   app.start = function () {
-    server = app.listen(config.port, function () {
-      console.log('OpenAPI Mock is now running on http://localhost:' + config.port | 10000);
+    server = app.listen(config.port | 4000, function () {
+      console.log('OpenAPI Mock is now running on http://localhost:' + config.port | 4000);
     });
   }
   // app.stop = function () {

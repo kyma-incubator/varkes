@@ -139,7 +139,7 @@ function returnConnectionInfo() {
 function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
-    serviceMetadata.name = endpoints.name + "-" + Math.random().toString(36).substring(2, 5);
+    serviceMetadata.name = element.name;
     serviceMetadata.api.targetUrl = hostname + element.baseurl
 
 
@@ -214,9 +214,44 @@ function defineServiceMetadata() {
         }
     }
 }
+function configValidation(configJson) {
+    var error_message = "";
+    if (configJson.hasOwnProperty("apis")) {
+        var apis = configJson.apis;
+        var matchRegex = /^(\/[a-zA-Z0-9]+)+$/
+        for (var i = 1; i <= apis.length; i++) {
+            var api = apis[i - 1];
+            if (!api.baseurl || !api.baseurl.match(matchRegex)) {
+                error_message += "api number " + i + ": baseurl does not exist or is in the wrong format\n";
+            }
+            if (!api.metadata || !api.metadata.match(matchRegex)) {
+                error_message += "api number " + i + ": metadata does not exist or is in the wrong format\n";
+            }
+            if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
+                error_message += "api number " + i + ": name does not exist or is in the wrong format\n";
+            }
+            if (!api.oauth || !api.oauth.match(matchRegex)) {
+                error_message += "api number " + i + ": oauth does not exist or is in the wrong format\n";
+            }
+            if (!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) {
+                error_message += "api number " + i + ": specification_file does not exist or is not a yaml file\n";
+            }
+        }
+    }
+    if (error_message != "") {
+        console.log("=======Config Error========");
+        LOGGER.logger.error(error_message);
+        return false;
+    }
+
+    return true;
+}
 module.exports = function (varkesConfigPath) {
     endpointConfig = path.resolve(varkesConfigPath)
     var endpointsJson = require(endpointConfig)
+    if (!configValidation(endpointsJson)) {
+        return;
+    }
     app.post("/register", (req, res) => {
         if (!req.body) res.sendStatus(400)
         //openssl genrsa -out keys/ec-default.key 2048
@@ -248,12 +283,27 @@ module.exports = function (varkesConfigPath) {
 
 
     })
+    app.get('/title', function (req, res, next) {
+        res.statusCode = 200
+        res.send(endpointsJson.name);
+    })
+    app.get('/download/cert', function (req, res, next) {
+        var file = path.resolve(CONFIG.keyDir, 'kyma.crt')
+        res.download(file);
+    });
+    app.get('/download/key', function (req, res, next) {
+        var file = path.resolve(CONFIG.keyDir, 'ec-default.key')
+        res.download(file);
+    });
     return app;
 }
 
 if (process.argv.length > 2) {
     var app = module.exports(process.argv[2]);
-    app.start();
+    if (app) {
+        app.start();
+    }
+
 }
 // else { // FIXME: I need this for local testing -Atakan
 //     app.start()
