@@ -96,6 +96,14 @@
                     <a href="/download/key" download="ec-default">
                         Download Key
                     </a>
+                    <br />
+                    <label>Metadata URL:</label><br>
+                    <input type="text" id="metadata_url" readonly><br>
+                    <label>Event URL:</label><br>
+                    <input type="text" id="event_url" readonly><br>
+                    <button onclick="copyToClipboard('#metadata_url')">Copy Metadata Url</button>
+                    <button onclick="copyToClipboard('#event_url')">Copy
+                        Event Url</button>
                 </div>
             </nav>
         </div>
@@ -187,7 +195,17 @@
             url: `/title`,
             type: "get",
             success: function (data) {
-                $('#app-title').html(data)
+                $('#app-title').html(data.name)
+                if (data.cert_exist) {
+                    $('#downloadLinks').show();
+                }
+                else {
+                    $('#downloadLinks').hide();
+                }
+                if (data.metadataUrl)
+                    $('#metadata_url').val(data.metadataUrl)
+                if (data.eventsUrl)
+                    $('#event_url').val(data.eventsUrl)
             }
         })
         newServiceView()
@@ -210,6 +228,10 @@
         $("#create_service").show()
         $("#update_service").hide()
         $("#delete_service").hide()
+    }
+    function copyToClipboard(element) {
+        $(element).select()
+        document.execCommand("copy");
     }
     function deleteService(serviceID) {
         $.ajax({
@@ -313,6 +335,10 @@
                 window.alert("Connection Successful")
                 $('#downloadLinks').show();
                 //document.getElementById('dialog').close();
+                if (data.metadataUrl)
+                    $('#metadata_url').val(data.metadataUrl)
+                if (data.eventsUrl)
+                    $('#event_url').val(data.eventsUrl)
             },
             error: function (data) {
                 $("#help").val(data)

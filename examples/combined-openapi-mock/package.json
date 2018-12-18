@@ -1,8 +1,8 @@
 {
   "name": "basic-re",
   "version": "1.0.0",
-  "description": "combined example of odata and openapi",
-  "main": "index.js",
+  "description": "combined example of openapi and app-connector-client",
+  "main": "app.js",
   "scripts": {
     "test": "test"
   },
@@ -12,6 +12,5 @@
     "npm": "^6.4.1",
     "varkes-app-connector-client": "0.0.6",
     "varkes-odata-mock": "^0.1.0",
-    "varkes-openapi-mock": "^0.2.3"
   }
 }

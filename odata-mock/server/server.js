@@ -8,10 +8,10 @@ var parser = require(loopbackConfig.parserPath)
 var app = loopback();
 app.use(bodyParser.json());
 let server;
+let port;
 
-
-app.start = function () {
-  server = app.listen(function () {
+app.startApp = function () {
+  server = app.listen(port, function () {
     app.startLoopback();
   })
 }
@@ -24,7 +24,6 @@ app.startLoopback = function () {
     console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
   }
 
-
 };
 
 app.stop = () => {
@@ -35,9 +34,10 @@ app.stop = () => {
 
 parser.parser();
 
-module.exports = function (configFilePath) {
+module.exports = function (configFilePath, portLocal) {
   var config = require(configFilePath);
   app.config = config;
+  port = portLocal;
   var datasource = utility.readFile(__dirname + "/datasources.json");
   var datasourceJson = JSON.parse(datasource);
   datasourceJson.db.file = config.storage_file_path;
@@ -46,13 +46,12 @@ module.exports = function (configFilePath) {
   var filePaths = [];
   for (var i = 0; i < config.apis.length; i++) {
     filePaths.push(parser.parseEdmx(config.apis[i].specification_file));
-
   }
   Promise.all(filePaths).then(function (result) {
     boot(app, __dirname, function (err) {
       if (err) throw err;
 
-      app.start();
+      app.startApp();
     });
   });
   return app;

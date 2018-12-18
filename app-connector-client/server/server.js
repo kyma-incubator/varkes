@@ -13,13 +13,13 @@ const bodyParser = require('body-parser');
 const CONFIG = require("../config")
 var node_port;
 var localKyma = false;
-module.exports = function (appStart, varkesConfigPath, node_port_var) {
+module.exports = function (appStart, varkesConfigPath, odata = false, node_port_var) {
     node_port = node_port_var;
     app = appStart;
     app.use(bodyParser.json());
     endpointConfig = path.resolve(varkesConfigPath)
     var endpointsJson = require(endpointConfig)
-    if (!configValidation(endpointsJson)) {
+    if (!configValidation(endpointsJson, odata)) {
         return;
     }
     app.post("/register", (req, res) => {
@@ -52,7 +52,14 @@ module.exports = function (appStart, varkesConfigPath, node_port_var) {
     })
     app.get('/title', function (req, res, next) {
         res.statusCode = 200
-        res.send(endpointsJson.name);
+        certificates_exist = false;
+
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, "kyma.crt")) &&
+            fs.existsSync(path.resolve(CONFIG.keyDir, "test.csr"))) {
+            certificates_exist = true;
+        }
+
+        res.send({ name: endpointsJson.name, cert_exist: certificates_exist, eventsUrl: CONFIG.URLs.eventsUrl, metadataUrl: CONFIG.URLs.metadataUrl });
     })
     app.get('/download/cert', function (req, res, next) {
         var file = path.resolve(CONFIG.keyDir, 'kyma.crt')
@@ -258,14 +265,14 @@ function defineServiceMetadata() {
         }
     }
 }
-function configValidation(configJson) {
+function configValidation(configJson, odata) {
     var error_message = "";
     if (configJson.hasOwnProperty("apis")) {
         var apis = configJson.apis;
         var matchRegex = /^(\/[a-zA-Z0-9]+)+$/
         for (var i = 1; i <= apis.length; i++) {
             var api = apis[i - 1];
-            if (!api.baseurl || !api.baseurl.match(matchRegex)) {
+            if ((!api.baseurl || !api.baseurl.match(matchRegex)) && !odata) {
                 error_message += "\napi number " + i + ": baseurl does not exist or is in the wrong format";
             }
             if (!api.metadata || !api.metadata.match(matchRegex)) {
@@ -274,13 +281,19 @@ function configValidation(configJson) {
             if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
                 error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
             }
-            if (!api.oauth || !api.oauth.match(matchRegex)) {
+            if ((!api.oauth || !api.oauth.match(matchRegex)) && !odata) {
                 error_message += "\napi number " + i + ": oauth does not exist or is in the wrong format";
             }
-            if (!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) {
+            if ((!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) && !odata) {
                 error_message += "\napi number " + i + ": specification_file does not exist or is not a yaml file";
             }
+            if ((!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.xml/)) && odata) {
+                error_message += "\napi number " + i + ": specification_file does not exist or is not a xml file";
+            }
         }
+    }
+    else {
+        error_message = "no apis array exist";
     }
     if (error_message != "") {
         console.log("=======Config Error========");
