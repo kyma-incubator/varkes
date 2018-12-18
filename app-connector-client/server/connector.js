@@ -14,7 +14,7 @@ module.exports =
     {
 
         exportKeys: function (localKyma, url, cb) {
-            console.log("exportsKeys")
+            LOGGER.logger.info("exportsKeys")
             var URLs = {}
             request({ //Step 4
                 url: url,
@@ -22,7 +22,6 @@ module.exports =
                 rejectUnauthorized: !localKyma
             },
                 function (error, response, body) {
-                    console.log("entered")
                     if (error) {
 
                         cb(error)

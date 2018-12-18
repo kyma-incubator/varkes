@@ -3,7 +3,6 @@ const path = require("path")
 var request = require("request")
 var LOGGER = require("../logger")
 const fs = require("fs")
-
 const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
     , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 
@@ -16,9 +15,14 @@ exports.index = function (req, res) {
         if (!data)
             res.send({})
         else {
-            console.log("services data")
-            console.log(data)
-            res.send(JSON.parse(data))
+            try {
+                console.log("services data")
+                console.log(data)
+                res.send(JSON.parse(data))
+            }
+            catch (err) {
+                res.send(data)
+            }
         }
     })
 };

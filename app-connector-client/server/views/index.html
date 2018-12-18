@@ -428,9 +428,10 @@
             data: JSON.stringify(sendData),
             contentType: "application/json",
             success: function (data) {
-                getAPIs()
                 console.log("data")
                 console.log(data)
+                window.alert("Registeration is successful!");
+                getAPIs()
             }
         })
     }
@@ -440,7 +441,7 @@
 
     // set json
     var json = {
-        "provider": "aY",
+        "provider": "SAP Hybris",
         "name": "ec-mock-service-4",
         "description": "testing... 1.2.3.",
         "api": {

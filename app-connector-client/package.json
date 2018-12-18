@@ -1,6 +1,6 @@
 {
   "name": "varkes-app-connector-client",
-  "version": "1.1.7",
+  "version": "1.2.5",
   "description": "request certificates to connect with kyma",
   "main": "server/server.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "express": "^4.16.4",
     "express-resource": "^1.0.0",
     "express-winston": "^3.0.1",
+    "js-yaml": "^3.12.0",
     "node-forge": "^0.7.6",
     "request": "^2.88.0",
     "winston": "^3.0.0"

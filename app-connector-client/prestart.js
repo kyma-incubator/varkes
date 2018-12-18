@@ -8,7 +8,9 @@ console.log(keyFile)
 !fs.existsSync(path.resolve(CONFIG.keyDir)) ? fs.mkdirSync(path.resolve(CONFIG.keyDir)) : {}
 
 
-require.main === module ? generatePrivateKey() : console.log("required")
+if (require.main === module) {
+    generatePrivateKey()
+}
 
 
 //Generate Key if not exists
