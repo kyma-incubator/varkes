@@ -2,9 +2,7 @@ var request = require('supertest');
 var app = require("express")();
 var server = require('../app')(app, './config.js');
 describe('controllers', function () {
-  before(() => {
-    server.parseSpecFile();
-  });
+
   describe('test_openapi', function () {
 
     describe('GET metadata for schools', function () {
@@ -34,6 +32,5 @@ describe('controllers', function () {
     });
 
   });
-  //after(() => { server.stop() })
 
 });
