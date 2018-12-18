@@ -3,26 +3,48 @@ const path = require("path")
 var request = require("request")
 var LOGGER = require("../logger")
 const fs = require("fs")
-
 const keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
     , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
 
 exports.index = function (req, res) {
-    module.exports.getServices(data => {
-        res.send(JSON.parse(data))
+    console.log("local kyma")
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.getServices(localKyma, function (data) {
+        if (!data)
+            res.send({})
+        else {
+            try {
+                console.log("services data")
+                console.log(data)
+                res.send(JSON.parse(data))
+            }
+            catch (err) {
+                res.send(data)
+            }
+        }
     })
 };
 
 exports.create = function (req, res) {
+    console.log("create");
     const serviceJSON = req.body
-    module.exports.createService(serviceJSON, data => {
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.createService(localKyma, serviceJSON, data => {
         res.send(data)
     })
 };
 
 exports.show = function (req, res) {
-    LOGGER.logger.info(JSON.stringify(req.params))
-    showService(req.params.api, (data) => {
+    console.log("show");
+    LOGGER.logger.info(req.params.api)
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    showService(localKyma, req.params.api, (data) => {
         try {
             res.send(JSON.parse(data))
         }
@@ -33,25 +55,39 @@ exports.show = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    updateService(req.params.api, req.body, (data) => {
+    console.log("update");
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    updateService(localKyma, req.params.api, req.body, (data) => {
         res.send(data)
     })
 };
 
 exports.destroy = function (req, res) {
-    module.exports.deleteService(req.params.api, (data) => {
+    console.log("destroy");
+    var localKyma = false;
+    if (req.query.localKyma == true)
+        localKyma = true;
+    module.exports.deleteService(localKyma, req.params.api, (data) => {
         res.send(data)
     })
 };
 
-exports.getServices = function getServices(cb) {
-    request.get({
+exports.getServices = function getServices(localKyma, cb) {
+    console
+    request({
         url: CONFIG.URLs.metadataUrl,
+        method: "GET",
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
         },
+        rejectUnauthorized: !localKyma
     }, function (error, httpResponse, body) {
+        if (error) {
+            cb(error)
+        }
         LOGGER.logger.info("inside get services")
         LOGGER.logger.info("kyma returned: ")
         LOGGER.logger.info(body)
@@ -62,7 +98,7 @@ exports.getServices = function getServices(cb) {
 
 
 
-exports.createService = function createService(serviceJSON, cb) {
+exports.createService = function createService(localKyma, serviceJSON, cb) {
 
     console.log(serviceJSON),
         request.post({
@@ -74,7 +110,8 @@ exports.createService = function createService(serviceJSON, cb) {
             agentOptions: {
                 cert: fs.readFileSync(certFile),
                 key: fs.readFileSync(keyFile)
-            }
+            },
+            rejectUnauthorized: !localKyma
         }, function (error, httpResponse, body) {
             LOGGER.logger.info("inside create service")
             LOGGER.logger.info("kyma returned: ")
@@ -85,7 +122,7 @@ exports.createService = function createService(serviceJSON, cb) {
 
 
 
-exports.deleteService = function deleteService(serviceID, cb) {
+exports.deleteService = function deleteService(localKyma, serviceID, cb) {
     request.delete(
         {
             url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
@@ -93,6 +130,7 @@ exports.deleteService = function deleteService(serviceID, cb) {
                 cert: fs.readFileSync(certFile),
                 key: fs.readFileSync(keyFile)
             },
+            rejectUnauthorized: !localKyma
         }, function (error, httpResponse, body) {
 
             LOGGER.logger.info("inside delete service")
@@ -103,7 +141,7 @@ exports.deleteService = function deleteService(serviceID, cb) {
     )
 }
 
-function showService(serviceID, cb) {
+function showService(localKyma, serviceID, cb) {
     LOGGER.logger.info(`Requesting ID: ${serviceID}`)
     request.get({
         url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
@@ -111,6 +149,7 @@ function showService(serviceID, cb) {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
         },
+        rejectUnauthorized: !localKyma
     }, function (error, httpResponse, body) {
 
         LOGGER.logger.info("inside show service")
@@ -123,7 +162,7 @@ function showService(serviceID, cb) {
  * @param {string} serviceID ID of the service to be deleted.
  * @param {function} cb The callback that handles the response.
  */
-function updateService(serviceID, serviceJSON, cb) {
+function updateService(localKyma, serviceID, serviceJSON, cb) {
     request.put({
         url: `${CONFIG.URLs.metadataUrl}/${serviceID}`,
         headers: {
@@ -133,7 +172,8 @@ function updateService(serviceID, serviceJSON, cb) {
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
-        }
+        },
+        rejectUnauthorized: !localKyma
     }, function (error, httpResponse, body) {
 
         LOGGER.logger.info("inside update service")

@@ -7,7 +7,7 @@ const path = require("path")
 
 
 CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
-serviceResource.getServices((services) => {
+serviceResource.getServices(false, (services) => {
 
     JSON.parse(services).forEach(element => {
 

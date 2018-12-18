@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 var request = require('supertest');
-var server = require("../server/server")("../varkes_config.js");
+var server = require("../server/server")("./varkes_config.js");
 var CONFIG = require("../config")
 const fs = require("fs")
 const path = require("path")

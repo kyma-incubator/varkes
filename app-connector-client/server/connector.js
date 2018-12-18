@@ -4,13 +4,23 @@ const path = require("path")
 var LOGGER = require("./logger")
 var CONFIG = require("../config")
 var forge = require("node-forge")
+var https = require("https")
 const keysDirectory = path.resolve(CONFIG.keyDir)
+var agentOptions = {
+    rejectUnauthorized: false
+};
+var agent = new https.Agent(agentOptions);
 module.exports =
     {
-        exportKeys: function (url, cb) {
+
+        exportKeys: function (localKyma, url, cb) {
+            LOGGER.logger.info("exportsKeys")
             var URLs = {}
-            request.get( //Step 4
-                url,
+            request({ //Step 4
+                url: url,
+                method: "GET",
+                rejectUnauthorized: !localKyma
+            },
                 function (error, response, body) {
                     if (error) {
 
@@ -23,12 +33,16 @@ module.exports =
                         LOGGER.logger.log("info", "Connector received: ", body)
                         URLs = JSON.parse(body).api
                         runOpenSSL(JSON.parse(body).certificate.subject)
-                        request.post( //Step 9
-                            JSON.parse(body).csrUrl,
-
-                            { json: { csr: fs.readFileSync(`${keysDirectory}/test.csr`, "base64") } },
+                        request.post({ //Step 9
+                            url: JSON.parse(body).csrUrl,
+                            json: { csr: fs.readFileSync(`${keysDirectory}/test.csr`, "base64") },
+                            rejectUnauthorized: !localKyma
+                        },
                             function (error, response, body) {
-                                if (response.statusCode == 201) {
+                                if (error) {
+                                    cb(error)
+                                }
+                                else if (response.statusCode == 201) {
                                     CRT_base64_decoded = (new Buffer(body.crt, 'base64').toString("ascii"))
                                     //Step 11
                                     fs.writeFileSync(`${keysDirectory}/kyma.crt`, CRT_base64_decoded)
@@ -37,6 +51,7 @@ module.exports =
                                 }
                             }
                         )
+
 
 
 

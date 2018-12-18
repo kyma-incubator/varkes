@@ -10,21 +10,21 @@ app.use(bodyParser.json());
 let server;
 
 
-
 app.start = function () {
+  server = app.listen(function () {
+    app.startLoopback();
+  })
+}
+app.startLoopback = function () {
   // start the web server
+  var baseUrl = app.get('url').replace(/\/$/, '');
+  console.log('Web server listening at: %s', baseUrl);
+  if (app.get('loopback-component-explorer')) {
+    var explorerPath = app.get('loopback-component-explorer').mountPath;
+    console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
+  }
 
-  return app.listen(function () {
-    app.emit('started');
 
-    var baseUrl = app.get('url').replace(/\/$/, '');
-    console.log('Web server listening at: %s', baseUrl);
-    if (app.get('loopback-component-explorer')) {
-      var explorerPath = app.get('loopback-component-explorer').mountPath;
-      console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
-    }
-
-  });
 };
 
 app.stop = () => {
@@ -44,18 +44,20 @@ module.exports = function (configFilePath) {
   utility.writeFileSync(__dirname + "/datasources.json", JSON.stringify(datasourceJson));
   loopbackConfig.port = config.port;
   var filePaths = [];
-  for (var i = 0; i < config.specification_files.length; i++) {
-    filePaths.push(parser.parseEdmx(config.specification_files[i].file));
+  for (var i = 0; i < config.apis.length; i++) {
+    filePaths.push(parser.parseEdmx(config.apis[i].specification_file));
 
   }
   Promise.all(filePaths).then(function (result) {
     boot(app, __dirname, function (err) {
       if (err) throw err;
 
-      server = app.start();
+      app.start();
     });
   });
   return app;
 }
-if (process.argv.length > 2)
-  module.exports(process.argv[2]);
+if (process.argv.length > 2) {
+  app = module.exports(process.argv[2]);
+  //app.start();
+}

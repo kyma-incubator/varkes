@@ -3,3 +3,4 @@ Dockerfile
 node_modules
 varkes.config.js
 *.log
+*.yaml

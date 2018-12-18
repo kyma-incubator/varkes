@@ -20,7 +20,7 @@
           mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
-                <span class="mdl-layout-title">Varkes App Connector</span>
+                <span id="app-title" class="mdl-layout-title">Varkes App Connector</span>
                 <div class="mdl-layout-spacer"></div>
 
                 <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
@@ -47,8 +47,11 @@
                         <label class="mdl-textfield__label" for="sample1">Token</label>
                     </div>
                     <div>
-                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Register
-                        Mock App<br>
+                        <input id="insecureConnection" type="checkbox" name="insecureConnection">Insecure Connection<br>
+                    </div>
+                    <div>
+                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto Register
+                        APIs<br>
                     </div>
 
                     <div id="registerApis" style="display:none">
@@ -66,8 +69,8 @@
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
                         onclick="giveToken()">Connect to Kyma
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="create_service"
-                        onclick="register()">Register to Kyma
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="register_to_kyma"
+                        onclick="register()" style="display:none">Register to Kyma
                     </button>
                 </div>
                 <br>
@@ -81,8 +84,18 @@
 
                     </ul>
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="newServiceView()">
-                        New Service
+                        New API
                     </button>
+                </div>
+                <br />
+                <div id="downloadLinks" style="display: none;padding-bottom: 5px">
+                    <a href="/download/cert" download="kyma">
+                        Download Certificate
+                    </a>
+                    <br />
+                    <a href="/download/key" download="ec-default">
+                        Download Key
+                    </a>
                 </div>
             </nav>
         </div>
@@ -92,7 +105,7 @@
                 <table style="width:100%">
                     <tr>
                         <th>
-                            Service
+                            API
                         </th>
                         <th>
                             Event
@@ -104,15 +117,15 @@
                                 <div id="jsoneditor" style="width: 700px; height: 600px;"></div>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="create_service" onclick="createService()">Create
-                                    Service
+                                    API
                                 </button>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="update_service">Update
-                                    Service
+                                    API
                                 </button>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="delete_service">Delete
-                                    Service
+                                    API
                                 </button>
 
                             </div>
@@ -122,7 +135,7 @@
                                 <!-- Your content goes here -->
                                 <div id="user-input" style="float:left">
                                     <label>Event Type:</label><br>
-                                    <select id="event-types">
+                                    <select onchange="fillEventEditor()" id="event-types">
                                     </select>
                                     <br>
                                     <label>Event Time:</label><br>
@@ -170,6 +183,13 @@
 
 <script>
     $(document).ready(function () {
+        $.ajax({
+            url: `/title`,
+            type: "get",
+            success: function (data) {
+                $('#app-title').html(data)
+            }
+        })
         newServiceView()
         getAPIs()
         $("#create_service").hide();
@@ -178,11 +198,11 @@
         if ($(this).is(':checked')) {
             $("#registerApis").show();
             $("#get_certificates").hide();
-            $("#create_service").show();
+            $("#register_to_kyma").show();
         } else {
             $("#registerApis").hide();
             $("#get_certificates").show();
-            $("#create_service").hide();
+            $("#register_to_kyma").hide();
         }
     });
     function newServiceView() {
@@ -201,14 +221,29 @@
             }
         })
     }
+    function fillEventEditor(e) {
+        debugger;
+        var select = $('#event-types').select()[0];
+        var opt = JSON.parse(select.options[select.selectedIndex].value);
+        var json = {}
+        var properties = opt.subscribe.payload.properties;
+        Object.keys(properties).forEach(function (property) {
+            var example = properties[property].example;
+            for (name in example) {
+                json[name] = example[name];
+            }
+        })
+        $("#payload").val(JSON.stringify(json))
+    }
     function getAPIs() {
 
+        $("#tokenInput").val('')
         $("#apis ul").empty()
         console.log("get apis called")
         $.ajax(
             {
                 type: "get",
-                url: "/apis",
+                url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
                 success: function (data) {
                     data.forEach(element => {
                         if (element.id && element.id != "") {
@@ -239,7 +274,7 @@
     function createService() {
         $.ajax({
             type: "POST",
-            url: "/apis",
+            url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -255,7 +290,7 @@
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
-            url: `/apis/${serviceId}`,
+            url: "/apis/" + `${serviceId}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 console.log(data)
@@ -269,18 +304,19 @@
         console.log(sendData)
         $.ajax({
             type: "POST",
-            url: "/connection",
+            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: sendData,
             success: function (data) {
 
                 getAPIs()
-                $("#tokenInput").val('');
+                $('#create_service').show();
                 window.alert("Connection Successful")
+                $('#downloadLinks').show();
                 //document.getElementById('dialog').close();
             },
             error: function (data) {
                 $("#help").val(data)
-                $("#tokenInput").Clear();
+                $("#tokenInput").val('');
             },
             contentType: "application/json"
         }
@@ -289,9 +325,19 @@
     }
 
     function showService(serviceID) {
+        console.log("show service")
+        console.log(serviceID);
         $.ajax({
             type: "get",
-            url: `/apis/${serviceID}`,
+            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
+            success: function (data) {
+                data.id = serviceID
+                parseAPIEventsToComboBox(data)
+            }
+        })
+        $.ajax({
+            type: "get",
+            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
                 data.id = serviceID
                 $("#serviceJSON").val(JSON.stringify(data))
@@ -311,7 +357,7 @@
         console.log("query connection info")
         $.ajax({
             type: "get",
-            url: "/connection",
+            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
 
                 $("#api-title").html(`Register to Kyma \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
@@ -321,8 +367,9 @@
     function sendEvent() {
         console.log(JSON.parse($("#payload").val()))
         //collect event data from user input
-
-        eventType = $("#event-types").val()
+        var sel = $("#event-types").select()[0];
+        sel[sel.selectedIndex].innerHTML
+        eventType = sel[sel.selectedIndex].innerHTML
         eventTime = new Date($("#event-time").val()).toISOString()
         eventData = JSON.parse($("#payload").val())
 
@@ -337,7 +384,7 @@
         //send event to kyma
         $.ajax({
             type: "POST",
-            url: "/sendevent",
+            url: "/sendevent/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(event),
             success: function (data) {
                 console.log(data)
@@ -351,28 +398,22 @@
     }
 
 
-    function showService(serviceID) {
-        $.ajax({
-            type: "get",
-            url: `/apis/${serviceID}`,
-            success: function (data) {
-                data.id = serviceID
-                parseAPIEventsToComboBox(data)
-            }
-        })
-    }
+
     function parseAPIEventsToComboBox(api) {
         console.log(api)
-        console.log(api.events.spec.topics)
-        const topics = api.events.spec.topics //object, topics are keys
-        $("#event-types").empty()
-        Object.keys(topics).forEach(t => {
+        if (api.events && api.events.spec) {
+            console.log(api.events.spec.topics)
+            var topics = api.events.spec.topics //object, topics are keys
+            $("#event-types").empty()
+            Object.keys(topics).forEach(t => {
 
-            var o = new Option(t, t); //name , value
-            $(o).html(t);
-            $("#event-types").append(o);
+                var o = new Option(t, JSON.stringify(topics[t])); //name , value
+                //$(o).html(t);
+                $("#event-types").append(o);
 
-        });
+            });
+        }
+
 
     }
     function register() {
@@ -383,11 +424,14 @@
         console.log(sendData)
         $.ajax({
             type: "POST",
-            url: "/register",
+            url: "/register/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(sendData),
             contentType: "application/json",
             success: function (data) {
+                console.log("data")
                 console.log(data)
+                window.alert("Registeration is successful!");
+                getAPIs()
             }
         })
     }
@@ -397,7 +441,7 @@
 
     // set json
     var json = {
-        "provider": "aY",
+        "provider": "SAP Hybris",
         "name": "ec-mock-service-4",
         "description": "testing... 1.2.3.",
         "api": {

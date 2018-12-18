@@ -52,5 +52,11 @@ module.exports = {
         var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
         var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
         app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
+        app.get('/requests', function (req, res, done) {
+
+            var text = fs.readFileSync("requests.log", "utf8");
+            res.status(200);
+            res.send(text);
+        });
     }
 }

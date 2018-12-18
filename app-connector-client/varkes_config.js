@@ -1,17 +1,17 @@
 module.exports = {
-    request_log_path: 'requests.log',
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
     },
-    name: "commerce-mock",
+    name: "app-connector-mock",
     apis: [
         {
             baseurl: "/entity",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
-            specification_file: 'swagger.yaml',
+            specification_file: 'schools.yaml',
+            name: "schools",
             added_endpoints: [ //endpoints
                 {
                     filePath: "Endpoint_template.yaml",
@@ -22,7 +22,8 @@ module.exports = {
         {
             baseurl: "/entity/v1",
             metadata: "/metadata",
-            specification_file: 'swagger2.yaml',
+            name: "courses",
+            specification_file: 'courses.yaml',
             oauth: "/authorizationserver/oauth/token"
         }
     ]

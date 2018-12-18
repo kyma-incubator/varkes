@@ -8,14 +8,16 @@ console.log(keyFile)
 !fs.existsSync(path.resolve(CONFIG.keyDir)) ? fs.mkdirSync(path.resolve(CONFIG.keyDir)) : {}
 
 
-require.main === module ? generatePrivateKey() : console.log("required")
+if (require.main === module) {
+    generatePrivateKey()
+}
 
 
 //Generate Key if not exists
 function generatePrivateKey() {
 
     if (!fs.existsSync(path.resolve(CONFIG.keyDir, "ec-default.key"))) {
-        var keys = forge.pki.rsa.generateKeyPair(2048);
+        var keys = forge.pki.rsa.generateKeyPair(4096);
         const privateKey =
             forge.pki.privateKeyToPem(keys.privateKey)
 

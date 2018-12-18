@@ -7,9 +7,9 @@ var path = require('path');
 const bodyParser = require('body-parser');
 var mock_controller = require("./api/mocks/mock_controller");
 //pass the express app to the mock controller
-
-
-module.exports = function (app, configPath) {
+var Resource = require("express-resource")
+var app = require("express")();
+module.exports = function (configPath) {
   var config = require(configPath);
   mock_controller.init(app, config);
   app.config = config;
@@ -19,8 +19,8 @@ module.exports = function (app, configPath) {
 
   let server;
   app.start = function () {
-    server = app.listen(config.port, function () {
-      console.log('OpenAPI Mock is now running on http://localhost:' + config.port | 10000);
+    server = app.listen(config.port | 4000, function () {
+      console.log('OpenAPI Mock is now running on http://localhost:' + config.port | 4000);
     });
   }
   // app.stop = function () {
@@ -55,7 +55,7 @@ module.exports = function (app, configPath) {
 }
 
 if (process.argv.length > 2) {
-  var app = require("express")();
-  app = module.exports(app, process.argv[2]);
+
+  app = module.exports(process.argv[2]);
   app.start();
 }
