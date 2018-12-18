@@ -1,6 +1,6 @@
 var request = require('supertest');
 var app = require("express")();
-var server = require('../app')(app, './config.js');
+var server = require('../app')('./config.js');
 describe('controllers', function () {
 
   describe('test_openapi', function () {
