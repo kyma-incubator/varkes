@@ -1,5 +1,5 @@
 {
-  "name": "basic-re",
+  "name": "combined-odata-mock",
   "version": "1.0.0",
   "description": "combined example of odata and app-connector-client",
   "main": "app.js",
@@ -11,7 +11,8 @@
   "dependencies": {
     "npm": "^6.4.1",
     "varkes-app-connector-client": "^1.2.7",
-    "varkes-odata-mock": "^0.2.0",
+    "lodash": "^4.17.11",
+    "varkes-odata-mock": "^0.2.2",
     "varkes-openapi-mock": "^0.2.3"
   }
 }

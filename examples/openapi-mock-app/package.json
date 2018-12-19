@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "varkes-openapi-mock": "^0.1.25"
+    "lodash": ">=4.17.11",
+    "deep-extend": ">=0.5.1",
+    "varkes-openapi-mock": "^0.2.10"
   }
 }

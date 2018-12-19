@@ -1,5 +1,5 @@
 {
-  "name": "basic-re",
+  "name": "combined-openapi-mock",
   "version": "1.0.0",
   "description": "combined example of openapi and app-connector-client",
   "main": "app.js",
@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "npm": "^6.4.1",
-    "varkes-app-connector-client": "0.0.6",
-    "varkes-odata-mock": "^0.1.0",
+    "lodash": "^4.17.11",
+    "deep-extend": ">=0.5.1",
+    "npm": "^6.5.0",
+    "varkes-app-connector-client": "^1.2.7",
+    "varkes-openapi-mock": "^0.2.10"
   }
 }
