@@ -3,6 +3,7 @@
 var express = require("express")
 var Resource = require("express-resource")
 var connector = require("./connector")
+//const { parse, convert } = require('odata2openapi');
 var request = require("request")
 var fs = require("fs")
 var LOGGER = require("./logger")
@@ -11,10 +12,12 @@ const path = require("path")
 const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("../config")
+var odata = false;
 var node_port;
 var localKyma = false;
-module.exports = function (appStart, varkesConfigPath, odata = false, node_port_var) {
+module.exports = function (appStart, varkesConfigPath, odata_param = false, node_port_var) {
     node_port = node_port_var;
+    odata = odata_param;
     app = appStart;
     app.use(bodyParser.json());
     endpointConfig = path.resolve(varkesConfigPath)
@@ -58,6 +61,7 @@ module.exports = function (appStart, varkesConfigPath, odata = false, node_port_
             fs.existsSync(path.resolve(CONFIG.keyDir, "test.csr"))) {
             certificates_exist = true;
         }
+
 
         res.send({ name: endpointsJson.name, cert_exist: certificates_exist, eventsUrl: CONFIG.URLs.eventsUrl, metadataUrl: CONFIG.URLs.metadataUrl });
     })
@@ -197,18 +201,30 @@ function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
     serviceMetadata.name = element.name;
-    serviceMetadata.api.targetUrl = hostname + element.baseurl
-    var doc = yaml.safeLoad(fs.readFileSync(element.specification_file, 'utf8'));
-    serviceMetadata.api.spec = doc;
-    if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
-        serviceMetadata.description = doc.info.description;
-    }
-    else if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("title")) {
-        serviceMetadata.description = doc.info.title;
+    serviceMetadata.api.targetUrl = hostname;
+    if (element.baseurl)
+        serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + element.baseurl;
+    if (!odata) {
+        var doc = yaml.safeLoad(fs.readFileSync(element.specification_file, 'utf8'));
+        serviceMetadata.api.spec = doc;
+        if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
+            serviceMetadata.description = doc.info.description;
+        }
+        else if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("title")) {
+            serviceMetadata.description = doc.info.title;
+        }
+        else {
+            serviceMetadata.description = element.name;
+        }
     }
     else {
+        //var data = fs.readFileSync(element.specification_file, "utf8");
         serviceMetadata.description = element.name;
+        //serviceMetadata.api.spec = data;
+        serviceMetadata.api.specificationUrl = element.metadata;
+        serviceMetadata.api.apiType = "odata";
     }
+
 
     request.post({
         url: CONFIG.URLs.metadataUrl,

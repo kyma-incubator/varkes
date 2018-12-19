@@ -190,6 +190,7 @@
 
 
 <script>
+    var remote_env_url = "";
     $(document).ready(function () {
         $.ajax({
             url: `/title`,
@@ -202,8 +203,10 @@
                 else {
                     $('#downloadLinks').hide();
                 }
-                if (data.metadataUrl)
+                if (data.metadataUrl) {
                     $('#metadata_url').val(data.metadataUrl)
+                }
+
                 if (data.eventsUrl)
                     $('#event_url').val(data.eventsUrl)
             }
@@ -385,8 +388,21 @@
             type: "get",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
-
-                $("#api-title").html(`Register to Kyma \n <p> Connected to <b>${data.re_name}</b> in <b>${data.cluster_domain}</b>`)
+                var insert_string = "/home/settings/remoteEnvs";
+                remote_env_url = data.metadataUrl.match(/https:\/\/[a-zA-Z0-9.\/]+.kyma.cx\/[a-zA-Z0-9.]+/)[0];
+                console.log("remote")
+                console.log(remote_env_url)
+                remote_env_url = remote_env_url.replace("gateway", "console");
+                console.log("remote2")
+                console.log(remote_env_url)
+                var index = remote_env_url.lastIndexOf("/");
+                String.prototype.splice = function (idx, rem, str) {
+                    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+                };
+                remote_env_url = remote_env_url.splice(index, 0, insert_string);
+                console.log("remote3")
+                console.log(remote_env_url)
+                $("#api-title").html(`Register to Kyma \n <p> Connected to <a href=` + remote_env_url + ` target="_blank" >${data.re_name}</a> in <b>${data.cluster_domain}</b>`)
             }
         })
     }
