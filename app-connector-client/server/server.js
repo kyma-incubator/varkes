@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+var serviceResource = require("./resources/api");
 var express = require("express")
 var Resource = require("express-resource")
 var connector = require("./connector")
@@ -48,6 +48,7 @@ module.exports = function (appStart, varkesConfigPath, odata_param = false, node
 
 
             createServicesFromConfig(hostname, endpointsJson)
+            registerServices(endpointsJson.event_spec_path)
             res.send(`${endpointsJson.apis.length} apis registered.`)
         })
 
@@ -148,7 +149,7 @@ module.exports = function (appStart, varkesConfigPath, odata_param = false, node
     })
     let server
     app.start = function () {
-        server = app.listen(CONFIG.port | 4444, function () {
+        server = app.listen(4440, function () {
             var host = server.address().address
             var port = server.address().port
 
@@ -168,6 +169,12 @@ function createKeysFromToken(localKyma, tokenUrl, cb) {
     }
 
 
+}
+
+function registerServices(jsonPath) {
+    serviceJSON = JSON.parse(fs.readFileSync(jsonPath))
+    console.log(serviceJSON)
+    serviceResource.createService(false, serviceJSON, (data) => console.log(data))
 }
 
 function createServicesFromConfig(hostname, endpoints) {
@@ -200,10 +207,14 @@ function returnConnectionInfo() {
 function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
+    console.log("***************** name *********************")
+    console.log(element.name);
     serviceMetadata.name = element.name;
     serviceMetadata.api.targetUrl = hostname;
     if (element.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + element.baseurl;
+
+    serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + element.oauth;
     if (!odata) {
         var doc = yaml.safeLoad(fs.readFileSync(element.specification_file, 'utf8'));
         serviceMetadata.api.spec = doc;

@@ -54,17 +54,6 @@
                         APIs<br>
                     </div>
 
-                    <div id="registerApis" style="display:none">
-                        <br />
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" id="hostnameInput">
-                            <label class="mdl-textfield__label" for="sample1">Hostname</label>
-                        </div>
-                        <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                            href="/ui/apis">All
-                            APIs</a> -->
-
-                    </div>
                     <br />
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
                         onclick="giveToken()">Connect to Kyma
@@ -191,6 +180,7 @@
 
 <script>
     var remote_env_url = "";
+    var hostname = "";
     $(document).ready(function () {
         $.ajax({
             url: `/title`,
@@ -214,6 +204,9 @@
         newServiceView()
         getAPIs()
         $("#create_service").hide();
+        hostname = window.location.origin;
+        console.log("hostname");
+        console.log(hostname);
     })
     $('#registerMockApp').click(function () {
         if ($(this).is(':checked')) {
@@ -414,10 +407,11 @@
         eventType = sel[sel.selectedIndex].innerHTML
         eventTime = new Date($("#event-time").val()).toISOString()
         eventData = JSON.parse($("#payload").val())
-
+        var version = eventType.substring(eventType.lastIndexOf(".") + 1)
+        eventType = eventType.substring(0, eventType.lastIndexOf("."))
         event = {
             "event-type": eventType,
-            "event-type-version": eventType.split(".").pop(), //event types normally end with .v1
+            "event-type-version": version, //event types normally end with .v1
             "event-time": eventTime,
             "data": eventData
         }
@@ -461,7 +455,7 @@
     function register() {
         var sendData = {
             token: $("#tokenInput").val(),
-            hostname: $("#hostnameInput").val()
+            hostname: hostname
         }
         console.log(sendData)
         $.ajax({

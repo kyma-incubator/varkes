@@ -1,0 +1,1 @@
+{"name":"Course","plural":"Courses","base":"PersistedModel","idInjection":true,"options":{"validateUpsert":true},"properties":{"code":{"required":true,"type":"string"},"name":{"required":true,"type":"string"}},"validations":[],"relations":{},"acls":[],"methods":{}}
