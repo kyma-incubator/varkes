@@ -227,8 +227,6 @@ function returnConnectionInfo() {
 function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata = defineServiceMetadata()
     var element = endpoints.apis[endpointCount]
-    console.log("***************** name *********************")
-    console.log(element.name);
     serviceMetadata.name = element.name;
     serviceMetadata.api.targetUrl = hostname;
     if (element.baseurl)
@@ -354,9 +352,22 @@ function configValidation(configJson, odata) {
     else {
         error_message = "no apis array exist";
     }
+    var events = configJson.events;
+    if (events) {
+        for (var i = 1; i <= events.length; i++) {
+            {
+                var event = events[i - 1];
+                if (!event.name || !event.name.match(/[a-zA-Z0-9]+/)) {
+                    error_message += "\nevent number " + i + ": name does not exist or is in the wrong format";
+                }
+                if ((!event.specification_file || !event.specification_file.match(/[a-zA-Z0-9]+.json/))) {
+                    error_message += "\nevent number " + i + ": specification_file does not exist or is not a json file";
+                }
+            }
+        }
+    }
     if (error_message != "") {
-        console.log("=======Config Error========");
-        LOGGER.logger.error(error_message);
+        console.log("=======Config Error========" + error_message);
         return false;
     }
 
