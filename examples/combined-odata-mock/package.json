@@ -9,10 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "npm": "^6.4.1",
-    "varkes-app-connector-client": "^1.2.7",
     "lodash": "^4.17.11",
-    "varkes-odata-mock": "^0.2.2",
-    "varkes-openapi-mock": "^0.2.3"
+    "npm": "^6.4.1",
+    "varkes-app-connector-client": "^1.2.15",
+    "varkes-odata-mock": "^0.2.3"
   }
 }

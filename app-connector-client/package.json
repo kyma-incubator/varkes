@@ -1,6 +1,6 @@
 {
   "name": "varkes-app-connector-client",
-  "version": "1.2.13",
+  "version": "1.2.15",
   "description": "request certificates to connect with kyma",
   "main": "server/server.js",
   "scripts": {

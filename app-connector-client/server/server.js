@@ -136,11 +136,8 @@ module.exports = function (appStart, varkesConfigPath, odata_param = false, node
 
     });
 
-    app.get("/ui/apis", function (req, res) {
+    app.get("/app", function (req, res) {
         res.sendfile(path.resolve(__dirname, "views/index.html"))
-    })
-    app.get("/ui/events", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "views/events.html"))
     })
     app.get("/metadata", function (req, res) {
         res.sendfile("swagger.yaml")
