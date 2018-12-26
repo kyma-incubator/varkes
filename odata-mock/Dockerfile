@@ -6,4 +6,4 @@ WORKDIR /odata-mock
 RUN npm install
 
 EXPOSE 3000
-CMD ["node","server/server.js","../config.js"]
+#CMD ["node","server/server.js","../config.js"]

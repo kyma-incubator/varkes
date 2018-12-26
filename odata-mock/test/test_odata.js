@@ -4,7 +4,7 @@ describe('controllers', function (done) {
 
     it('test_odata', function () {
         server.then(function (result) {
-
+            done = result.stop();
             describe('GET metadata', function () {
 
                 it('should return response 200', function () {
@@ -21,7 +21,5 @@ describe('controllers', function (done) {
         });
 
     });
-    // after(() => {
-    //     result.stop();
-    // })
+
 });
