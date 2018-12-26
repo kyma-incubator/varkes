@@ -1,8 +1,8 @@
 {
   "name": "varkes-openapi-mock",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "private": false,
-  "description": "Open API mock",
+  "description": "Open API Mock",
   "keywords": [],
   "author": "",
   "license": "",
