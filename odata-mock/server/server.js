@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 let server;
 let port;
 
-app.startApp = function () {
+app.start = function () {
   server = app.listen(port, function () {
     app.startLoopback();
   })
@@ -46,16 +46,19 @@ module.exports = function (configFilePath, portLocal) {
   for (var i = 0; i < config.apis.length; i++) {
     filePaths.push(parser.parseEdmx(config.apis[i].specification_file));
   }
-  Promise.all(filePaths).then(function (result) {
-    boot(app, __dirname, function (err) {
-      if (err) throw err;
+  return new Promise(function (resolve, reject) {
+    Promise.all(filePaths).then(function (result) {
+      boot(app, __dirname, function (err) {
+        if (err) reject(err);
 
-      app.startApp();
+        resolve(app);
+      });
     });
   });
-  return app;
 }
 if (process.argv.length > 2) {
-  app = module.exports(process.argv[2]);
+  module.exports(process.argv[2]).then(function (result) {
+    result.start();
+  })
   //app.start();
 }

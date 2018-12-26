@@ -1,6 +1,6 @@
 {
   "name": "varkes-odata-mock",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "server/server.js",
   "engines": {
     "node": ">=4"
