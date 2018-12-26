@@ -7,3 +7,5 @@ config.js
 makefile
 *.log
 data.json
+Course.js
+Course.json
