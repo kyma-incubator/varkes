@@ -23,18 +23,6 @@
                 <span id="app-title" class="mdl-layout-title">Varkes App Connector</span>
                 <div class="mdl-layout-spacer"></div>
 
-                <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/ui/events">Events
-                    Page</a> -->
-
-                <!-- <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="/connector">Register
-                    Mock App</a> -->
-
-                <!-- <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                    onclick="opendialog()">Insert Token
-                </button> -->
-
-
-
 
             </div>
         </header>
@@ -49,8 +37,9 @@
                     <div>
                         <input id="insecureConnection" type="checkbox" name="insecureConnection">Insecure Connection<br>
                     </div>
-                    <div>
-                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto Register
+                    <div id="registerMockAppDiv" style="display:none">
+                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto
+                        Register
                         APIs<br>
                     </div>
 
@@ -189,9 +178,12 @@
                 $('#app-title').html(data.name)
                 if (data.cert_exist) {
                     $('#downloadLinks').show();
+                    $('#registerMockAppDiv').show();
+
                 }
                 else {
                     $('#downloadLinks').hide();
+                    $('#registerMockAppDiv').hide();
                 }
                 if (data.metadataUrl) {
                     $('#metadata_url').val(data.metadataUrl)
@@ -330,6 +322,7 @@
                 $('#create_service').show();
                 window.alert("Connection Successful")
                 $('#downloadLinks').show();
+                $('#registerMockAppDiv').show();
                 //document.getElementById('dialog').close();
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
@@ -381,7 +374,7 @@
             type: "get",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
-                var insert_string = "/home/settings/remoteEnvs";
+                var insert_string = "/home/settings/apps";
                 remote_env_url = data.metadataUrl.match(/https:\/\/[a-zA-Z0-9.\/]+.kyma.cx\/[a-zA-Z0-9.]+/)[0];
                 console.log("remote")
                 console.log(remote_env_url)

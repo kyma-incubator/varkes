@@ -48,7 +48,26 @@ module.exports = function (appStart, varkesConfigPath, odata_param = false, node
 
 
             createServicesFromConfig(hostname, endpointsJson)
-            registerServices(endpointsJson.event_spec_path)
+            var events = endpointsJson.events;
+            if (events) {
+                events.forEach(function (event) {
+                    var eventMetadata = defineEventMetadata();
+                    eventMetadata.name = event.name;
+                    if (eventMetadata.description) {
+                        eventMetadata.description = event.description;
+                    }
+                    else {
+                        eventMetadata.description = event.name;
+                    }
+                    if (eventMetadata.labels) {
+                        eventMetadata.labels = event.labels;
+                    }
+                    registerServices(eventMetadata, event.specification_file)
+
+                })
+            }
+
+
             res.send(`${endpointsJson.apis.length} apis registered.`)
         })
 
@@ -171,10 +190,11 @@ function createKeysFromToken(localKyma, tokenUrl, cb) {
 
 }
 
-function registerServices(jsonPath) {
+function registerServices(metaData, jsonPath) {
     serviceJSON = JSON.parse(fs.readFileSync(jsonPath))
     console.log(serviceJSON)
-    serviceResource.createService(false, serviceJSON, (data) => console.log(data))
+    metaData.events = serviceJSON;
+    serviceResource.createService(false, metaData, (data) => console.log(data))
 }
 
 function createServicesFromConfig(hostname, endpoints) {
@@ -289,6 +309,18 @@ function defineServiceMetadata() {
                 }
             },
             "spec": {}
+        }
+    }
+}
+function defineEventMetadata() {
+    return {
+        "provider": "SAP Hybris",
+        "name": "",
+        "description": "",
+        "labels": {
+            "connected-app": "ec-default"
+        },
+        "events": {
         }
     }
 }

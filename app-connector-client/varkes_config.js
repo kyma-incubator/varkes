@@ -5,7 +5,16 @@ module.exports = {
         404: '{"error":\"End Point not found\"}'
     },
     name: "app-connector-mock",
-    event_spec_path: "ec-events.json",
+    events: [
+        {
+            specification_file: "ec-events.json",
+            name: "ec-all-events",
+            description: "EC Events v1",
+            labels: {
+                "connected-app": "ec-default"
+            }
+        }
+    ],
     apis: [
         {
             baseurl: "/entity",
