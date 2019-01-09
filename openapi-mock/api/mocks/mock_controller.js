@@ -22,7 +22,6 @@ module.exports = {
 
     },
     recordRequest: function (app_modified) {
-
         utility.registerLogger(app_modified);
     },
 
@@ -30,20 +29,19 @@ module.exports = {
 
         app = app_modified;
         app.use(function (err, req, res, next) {
-            console.log("error status " + err.status)
-            console.log(err.message);
+            console.log("error status:  " + err.status)
+            console.log("error message: " + err.message);
             if (!err.status) {
                 err.status = 500;
             }
             try {
 
                 if (err.status == 404 && err.message.indexOf("Resource not found") == -1) {
-                    console.log("entered");
                     res.status(200);
                     res.type('json');
                     res.send({});
                 }
-                else if (config.error_messages.hasOwnProperty(err.status)) {
+                else if (config.error_messages && config.error_messages.hasOwnProperty(err.status)) {
                     res.status(err.status);
                     res.type('json');
                     res.send(util.format(config.error_messages[err.status]));
