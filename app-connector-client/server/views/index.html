@@ -37,18 +37,13 @@
                     <div>
                         <input id="insecureConnection" type="checkbox" name="insecureConnection">Insecure Connection<br>
                     </div>
-                    <div id="registerMockAppDiv" style="display:none">
-                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto
-                        Register
-                        APIs<br>
+                    <div>
+                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto Register APIs<br>
                     </div>
 
                     <br />
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
                         onclick="giveToken()">Connect to Kyma
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="register_to_kyma"
-                        onclick="register()" style="display:none">Register to Kyma
                     </button>
                 </div>
                 <br>
@@ -67,11 +62,11 @@
                 </div>
                 <br />
                 <div id="downloadLinks" style="display: none;padding-bottom: 5px">
-                    <a href="/download/cert" download="kyma">
+                    <a href="/connection/cert" download="kyma">
                         Download Certificate
                     </a>
                     <br />
-                    <a href="/download/key" download="ec-default">
+                    <a href="/connection/key" download="app">
                         Download Key
                     </a>
                     <br />
@@ -178,12 +173,11 @@
                 $('#app-title').html(data.name)
                 if (data.cert_exist) {
                     $('#downloadLinks').show();
-                    $('#registerMockAppDiv').show();
+                    $('#').show();
 
                 }
                 else {
                     $('#downloadLinks').hide();
-                    $('#registerMockAppDiv').hide();
                 }
                 if (data.metadataUrl) {
                     $('#metadata_url').val(data.metadataUrl)
@@ -200,17 +194,6 @@
         console.log("hostname");
         console.log(hostname);
     })
-    $('#registerMockApp').click(function () {
-        if ($(this).is(':checked')) {
-            $("#registerApis").show();
-            $("#get_certificates").hide();
-            $("#register_to_kyma").show();
-        } else {
-            $("#registerApis").hide();
-            $("#get_certificates").show();
-            $("#register_to_kyma").hide();
-        }
-    });
     function newServiceView() {
         editor.set(json);
         $("#create_service").show()
@@ -309,20 +292,24 @@
             contentType: "application/json"
         })
     }
+
     function giveToken() {
-        var sendData = `{ "url": "${$("#tokenInput").val()}" }`
+        var sendData = {
+            url: $("#tokenInput").val(),
+            hostname: hostname,
+            register: $("#registerMockApp").is(':checked')
+        }
+
         console.log(sendData)
         $.ajax({
             type: "POST",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
-            data: sendData,
+            data: JSON.stringify(sendData),
             success: function (data) {
 
                 getAPIs()
                 $('#create_service').show();
-                window.alert("Connection Successful")
                 $('#downloadLinks').show();
-                $('#registerMockAppDiv').show();
                 //document.getElementById('dialog').close();
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
@@ -413,7 +400,7 @@
         //send event to kyma
         $.ajax({
             type: "POST",
-            url: "/sendevent/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/events/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(event),
             success: function (data) {
                 console.log(data)
@@ -445,25 +432,7 @@
 
 
     }
-    function register() {
-        var sendData = {
-            token: $("#tokenInput").val(),
-            hostname: hostname
-        }
-        console.log(sendData)
-        $.ajax({
-            type: "POST",
-            url: "/register/?localKyma=" + $("#insecureConnection").is(':checked'),
-            data: JSON.stringify(sendData),
-            contentType: "application/json",
-            success: function (data) {
-                console.log("data")
-                console.log(data)
-                window.alert("Registeration is successful!");
-                getAPIs()
-            }
-        })
-    }
+
     var container = document.getElementById("jsoneditor");
     var options = {};
     var editor = new JSONEditor(container, options);

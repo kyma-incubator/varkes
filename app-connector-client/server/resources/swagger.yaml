@@ -6,19 +6,6 @@ tags:
 - name: 'Metadata Service'
   description: 'API for registering APIs in Kyma.'
 paths:
-  /ui/apis:
-    get:
-      tags:
-        - 'ui'
-      summary: UI to CRUD apis in Kyma
-      responses:
-        '200':
-          description: 'Successful'
-          content:
-            text/html:
-                type: 'html'
-                example: <html><body>Your HTML text</body></html>
-
   /metadata:
     get:
       tags:
@@ -29,46 +16,7 @@ paths:
           description: "Successful"
           content:
             application/yaml:
-              type: yaml
-
-  /register:
-    post:
-      tags:
-        - 'connection'
-      summary: "reads varkes.config.json and registers the endpoints to kyma"
-      parameters:
-      - in: 'query'
-        name: 'localKyma'
-        description: 'deployment to local kyma'
-        required: true
-        schema:
-          type: 'boolean'
-      responses:
-        '200':
-          description: All apis registered successfully.
-          content:
-            text/plain:
-              type: 'text'
-              example: 3 apis registered
-  /connector:
-    get:
-      tags:
-        - 'ui'
-      summary: More straight forward registration of apis to kyma 
-      parameters:
-      - in: 'query'
-        name: 'localKyma'
-        description: 'deployment to local kyma'
-        required: true
-        schema:
-          type: 'boolean'
-      responses:
-        '200':
-          description: 'Successful'
-          content:
-            text/html:
-                type: 'html'
-                example: <html><body>Your HTML text</body></html>            
+              type: yaml         
   /connection:
     post:
       tags:
@@ -120,7 +68,7 @@ paths:
                     type: string
                   gateway_url:
                     type: string
-  /certificates/private-key:
+  /connection/key:
     get:
       tags:
         - 'certificates'
@@ -133,7 +81,7 @@ paths:
              schema:
                type: 'string'
                format: binary
-  /certificates/kyma-cert:
+  /connection/cert:
     get:
       tags:
         - 'certificates'
@@ -146,15 +94,53 @@ paths:
              schema:
                type: 'string'
                format: binary
-      
+  /events:
+    post:
+      tags:
+      - 'events'
+      summary: 'Sends a new event'
+      operationId: 'sendEvent'
+      requestBody:
+        description: 'Event payload'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDetails'
+      parameters:
+      - in: 'query'
+        name: 'localKyma'
+        description: 'deployment to local kyma'
+        required: true
+        schema:
+          type: 'boolean'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceId'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataErrorResponse'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataErrorResponse'
   /apis:
     post:
       tags:
       - 'apis'
-      summary: 'Registers a new service'
-      operationId: 'registerService'
+      summary: 'Registers a new API'
+      operationId: 'createAPI'
       requestBody:
-        description: 'Service object to be registered'
+        description: 'API to be registered'
         required: true
         content:
           application/json:
@@ -213,16 +199,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-  /apis/{serviceId}:
+  /apis/{Id}:
     get:
       tags:
       - 'apis'
-      summary: 'Gets a service by service ID'
-      operationId: 'getServiceByServiceId'
+      summary: 'Gets a API by ID'
+      operationId: 'getAPI'
       parameters:
       - in: 'path'
-        name: 'serviceId'
-        description: 'ID of a service'
+        name: 'id'
+        description: 'ID of a API'
         required: true
         schema:
           type: 'string'
@@ -241,7 +227,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServiceDetails'
         '404':
-          description: 'Service not found'
+          description: 'API not found'
           content:
             application/json:
               schema:
@@ -255,10 +241,10 @@ paths:
     put:
       tags:
       - 'apis'
-      summary: 'Updates a service by service ID'
-      operationId: 'updateService'
+      summary: 'Updates a API by ID'
+      operationId: 'updateAPI'
       requestBody:
-        description: 'Service object to be stored'
+        description: 'API to be stored'
         required: true
         content:
           application/json:
@@ -266,7 +252,7 @@ paths:
               $ref: '#/components/schemas/ServiceDetails'
       parameters:
       - in: 'path'
-        name: 'serviceId'
+        name: 'Id'
         description: 'ID of a service'
         required: true
         schema:
@@ -282,7 +268,7 @@ paths:
         '200':
           description: 'Successful operation'
         '404':
-          description: 'Service not found'
+          description: 'API not found'
           content:
             application/json:
               schema:
@@ -296,12 +282,12 @@ paths:
     delete:
       tags:
       - 'apis'
-      summary: 'Deletes a service by service ID'
-      operationId: 'deleteServiceByServiceId'
+      summary: 'Deletes a API by ID'
+      operationId: 'deleteAPI'
       parameters:
       - in: 'path'
-        name: 'serviceId'
-        description: 'ID of a service'
+        name: 'Id'
+        description: 'ID of a API'
         required: true
         schema:
           type: 'string'
@@ -316,7 +302,7 @@ paths:
         '204':
           description: 'Successful operation'
         '404':
-          description: 'Service not found'
+          description: 'API not found'
           content:
             application/json:
               schema:

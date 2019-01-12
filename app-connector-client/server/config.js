@@ -1,13 +1,15 @@
 module.exports = {
     keyDir: "keys",
     assetDir: "server/assets",
-    port: 4444,
+    port: 10000,
     URLs: {
         metadataUrl: "",
         eventsUrl: "",
         certificatesUrl: ""
     },
 
-    apiFile: "api.json"
-
+    apiFile: "api.json",
+    crtFile: "kyma.crt",
+    keyFile: "app.key",
+    csrFile: "test.csr"
 }

@@ -1,16 +1,15 @@
 process.env.NODE_ENV = 'test';
 
 var request = require('supertest');
-var server = require("../server/server")("./varkes_config.js");
-var CONFIG = require("../config")
+var server = require("../server/app")("test/varkes_config.js");
+var CONFIG = require("../server/config")
 const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve("test/integration/basic-service-metadata.json")
 //deleteNonEmptyFolder(CONFIG.keyDir)
-require("../prestart").generatePrivateKey(data => console.log(data))
+require("../tools/prestart").generatePrivateKey(data => console.log(data))
 
 describe('basic routes', function () {
-
     it('responds to /', function testSlash(done) {
         request(server)
             .get('/')
@@ -27,16 +26,10 @@ describe('basic routes', function () {
             .get('/foo/bar')
             .expect(404, done);
     });
-
-
-
 });
 
 describe("Connect to kyma", function () {
-
-
     it("kyma can create certs from token", done => {
-
         require("./get_token").getToken(data => {
             confURL = data
             request(server)
@@ -51,11 +44,9 @@ describe("Connect to kyma", function () {
                 })
         })
     }).timeout(6000)
-
 })
+
 describe("api endpoints", () => {
-
-
     var serviceId;
     it("shows all services at /apis", (done) => {
         request(server)
@@ -71,7 +62,6 @@ describe("api endpoints", () => {
                 }
             )
     })
-
     it("creates a new service", (done) => {
         request(server)
             .post("/apis/")
@@ -100,7 +90,6 @@ describe("api endpoints", () => {
             .expect(200, done)
     })
 
-
     it("updates a specific service", done => {
         request(server)
             .put(`/apis/${serviceId}`).
@@ -111,14 +100,13 @@ describe("api endpoints", () => {
 
     it("can download private key ", done => {
         request(server)
-            .get("/certificates/private-key")
+            .get("/connection/key")
             .expect(200, done)
     })
 
-
     it("can download kyma certificate ", done => {
         request(server)
-            .get("/certificates/kyma-cert")
+            .get("/connection/cert")
             .expect(200, done)
     })
     it("can get connection info", done => {

@@ -1,6 +1,6 @@
 var path = "C:\\Users\\D074188\\Desktop\\varkes\\examples\\combined-openapi-mock\\config.js"
 var app = require("varkes-openapi-mock")(path)
-app = require("varkes-app-connector-client")(app, path);
+app = require("varkes-app-connector-client")(path, app);
 //app = require("varkes-odata-mock")("../../../odata-config.js")
 
 

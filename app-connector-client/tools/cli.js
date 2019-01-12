@@ -2,9 +2,9 @@
 
 const program = require("commander")
 const request = require("request")
-const connector = require("./server/connector")
+const connector = require("../server/connector")
 const fs = require("fs")
-var CONFIG = require("./config")
+var CONFIG = require("../server/config")
 const path = require("path")
 console.log("CLI for Varkes App Connector")
 
@@ -19,7 +19,7 @@ program
 
 let keyFile, certFile
 
-require("./prestart").generatePrivateKey() //openssl genrsa -out keys/ec-default.key 2048
+require("./prestart").generatePrivateKey()
 
 
 const programToken = program.token;
@@ -39,8 +39,8 @@ if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) { //no need for 
 
     CONFIG.URLs = urls
     console.log(urls)
-    keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
-        , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+    keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+    certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
     createServicesFromConfig(hostname, JSON.parse(fs.readFileSync(endpointConfig)))
 
@@ -51,8 +51,8 @@ else {
 
         CONFIG.URLs = urls
         console.log(urls)
-        keyFile = path.resolve(CONFIG.keyDir, 'ec-default.key')
-            , certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+        keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+        certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
         createServicesFromConfig(hostname, JSON.parse(fs.readFileSync(endpointConfig)))
 
@@ -61,7 +61,7 @@ else {
 
 function createKeysFromToken(tokenUrl, cb) {
 
-    connector.exportKeys(tokenUrl, (data) => cb(data))
+    connector.(tokenUrl, (data) => cb(data))
 }
 
 function createServicesFromConfig(hostname, endpoints) {

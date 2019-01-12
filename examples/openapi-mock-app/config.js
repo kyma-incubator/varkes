@@ -13,5 +13,5 @@ module.exports = {
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
     },
-    port: 3000
+    port: 10000
 }

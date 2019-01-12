@@ -28,7 +28,7 @@ npm-publish:
 	npm publish
 
 clean:
-	rm -rf ./node_modules ./test.log ./server.log
+	rm -rf ./node_modules ./logs
 
 run:
 	npm start

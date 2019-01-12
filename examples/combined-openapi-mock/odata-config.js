@@ -6,5 +6,5 @@ module.exports = {
         401: '{"error":\"401 Entity does not exist\"}',
         404: '{"error":\"404 Bad URL\"}'
     },
-    port: 3000
+    port: 10000
 }

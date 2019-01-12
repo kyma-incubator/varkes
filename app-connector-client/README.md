@@ -1,5 +1,6 @@
-# App Connector
-App Connector provides an interface to add your service instance to Kyma's service catalog. After that , you can use remote environments to connect your service instances to Kyma resources.
+# App Connector Client
+App Connector Client provides an interface to pair your application with Kyma and register it's APIs.
+
 ## Running
 - **Prerequisite:** You should have `openssl` installed and accessible in path
 - navigate to this folder.
@@ -14,8 +15,10 @@ Use `node cli.js` to run command line utility.
 
 - To see help -> `node cli.js -h`
 - A test command looks something like this: `node cli.js --input test/integration/basic-service-metadata.json --token https://connector-service.<CLUSTER_NAME>.cluster.kyma.cx/v1/remoteenvironments/hmc-default/info?token=rngXbjLra4EEjwXcwayTohiv83jkxmvrC4bA49RcRKnC8_70ighPopcWUCq5IEwp51aHXKBW5NLRadjOzJAWrQ==`
+
 ## Docs
 You can access OpenAPI doc of this project either from *localhost:4444/metadata* or from *swagger.yaml* file.
+
 ## Developing
 
 If you have *kubeconfig* file of the kyma cluster, you can automatically acquire token without using the kyma console.
