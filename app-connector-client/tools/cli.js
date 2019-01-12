@@ -61,7 +61,7 @@ else {
 
 function createKeysFromToken(tokenUrl, cb) {
 
-    connector.(tokenUrl, (data) => cb(data))
+    connector.connect(tokenUrl, (data) => cb(data))
 }
 
 function createServicesFromConfig(hostname, endpoints) {
