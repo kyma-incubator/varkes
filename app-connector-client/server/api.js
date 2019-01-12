@@ -132,7 +132,7 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Creating API with payload: %s", payload)
+        LOGGER.logger.debug("Creating API: %s", payload.name)
 
         request.post({
             url: CONFIG.URLs.metadataUrl,
@@ -148,6 +148,9 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
         }, function (error, httpResponse, body) {
             if (error) {
                 cb(null, error)
+            }
+            if(httpResponse.statusCode!=201){
+                cb(null, body)
             }
             cb(body, null)
         });
