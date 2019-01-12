@@ -149,7 +149,7 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
             if (error) {
                 cb(null, error)
             }
-            if(httpResponse.statusCode!=201){
+            if(httpResponse.statusCode!=200){
                 cb(null, body)
             }
             cb(body, null)

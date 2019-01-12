@@ -212,7 +212,7 @@ async function createEventsFromConfig(eventsConfig) {
             await createEvent(eventMetadata, event)
             LOGGER.logger.debug("Registered Event API successful: %s", event.name)
         } catch (error) {
-            LOGGER.logger.error("Registration of Event API '%s' failed: %s", event.name, error)
+            LOGGER.logger.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
         }
     }
 }
