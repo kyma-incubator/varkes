@@ -3,6 +3,7 @@
 var express = require("express")
 var connector = require("./connector")
 var apis = require("./api")
+var keys = require("./keys")
 //const { parse, convert } = require('odata2openapi');
 var request = require("request")
 var fs = require("fs")
@@ -46,6 +47,8 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
         keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
         certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+    }else {
+        keys.generatePrivateKey()
     }
 
     require("./middleware").defineMW(app)

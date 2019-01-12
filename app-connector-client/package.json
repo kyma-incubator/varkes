@@ -4,7 +4,6 @@
   "description": "request certificates to connect with kyma",
   "main": "server/app.js",
   "scripts": {
-    "prestart": "node tools/prestart.js",
     "start": "node server/server",
     "build": "docker build -t varkes/server .",
     "test": "mocha"
