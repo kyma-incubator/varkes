@@ -7,7 +7,7 @@ const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve("test/integration/basic-service-metadata.json")
 //deleteNonEmptyFolder(CONFIG.keyDir)
-require("../tools/prestart").generatePrivateKey(data => console.log(data))
+require("../server/keys").generatePrivateKey(data => console.log(data))
 
 describe('basic routes', function () {
     it('responds to /', function testSlash(done) {

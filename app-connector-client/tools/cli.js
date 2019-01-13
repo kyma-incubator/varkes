@@ -19,7 +19,7 @@ program
 
 let keyFile, certFile
 
-require("./prestart").generatePrivateKey()
+require("../server/keys").generatePrivateKey()
 
 
 const programToken = program.token;

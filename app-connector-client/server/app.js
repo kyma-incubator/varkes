@@ -355,7 +355,7 @@ function configValidation(configJson, odata) {
         }
     }
     if (error_message != "") {
-        console.log("=======Config Error========" + error_message);
+        LOGGER.logger.error("Config Error: %s", error_message);
         return false;
     }
 

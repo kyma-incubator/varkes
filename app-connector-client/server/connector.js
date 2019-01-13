@@ -57,13 +57,10 @@ module.exports =
 
 function runOpenSSL(subject) {
 
-    console.log(subject)
+    LOGGER.logger.debug("Creating CSR usin subject %s", subject)
     keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
     var privateKey = fs.readFileSync(keyFile, 'utf8')
-
-
     var pk = forge.pki.privateKeyFromPem(privateKey)
-
     var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
 
     // create a certification request (CSR)
@@ -71,8 +68,6 @@ function runOpenSSL(subject) {
     csr.publicKey = publickey
 
     csr.setSubject(parseSubjectToJsonArray(subject))
-
-
     csr.sign(pk)
     fs.writeFileSync(`${keysDirectory}/${CONFIG.csrFile}`, forge.pki.certificationRequestToPem(csr))
 }
