@@ -4,8 +4,8 @@ var request = require("request")
 var LOGGER = require("./logger")
 const fs = require("fs")
 
-const keyFile = path.resolve(CONFIG.keyDir, 'app.key')
-const certFile = path.resolve(CONFIG.keyDir, 'kyma.crt')
+const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 exports.getAll = function (req, res) {
     LOGGER.logger.debug("Getting all APIs")

@@ -119,11 +119,6 @@
                                     <select onchange="fillEventEditor()" id="event-types">
                                     </select>
                                     <br>
-                                    <label>Event Time:</label><br>
-                                    <input type="datetime-local" id="event-time">
-
-                                    <br>
-
                                     <label>Event Data:</label><br>
                                     <textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
                                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
@@ -215,7 +210,6 @@
         })
     }
     function fillEventEditor(e) {
-        debugger;
         var select = $('#event-types').select()[0];
         var opt = JSON.parse(select.options[select.selectedIndex].value);
         var json = {}
@@ -385,7 +379,7 @@
         var sel = $("#event-types").select()[0];
         sel[sel.selectedIndex].innerHTML
         eventType = sel[sel.selectedIndex].innerHTML
-        eventTime = new Date($("#event-time").val()).toISOString()
+        eventTime = new Date().toISOString()
         eventData = JSON.parse($("#payload").val())
         var version = eventType.substring(eventType.lastIndexOf(".") + 1)
         eventType = eventType.substring(0, eventType.lastIndexOf("."))

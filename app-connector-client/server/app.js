@@ -18,6 +18,8 @@ var varkesConfig
 var odata = false;
 var nodePort;
 var localKyma = false;
+const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 module.exports = function (varkesConfigPath = null, appParam = null, odataParam = false, nodePortParam = null) {
     nodePort = nodePortParam;
@@ -45,8 +47,6 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
-        keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-        certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
     }else {
         keys.generatePrivateKey()
     }
@@ -86,12 +86,10 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     app.post("/connection", connect);
 
     app.get("/connection/key", (req, res) => {
-        const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
         res.download(keyFile)
     })
 
     app.get("/connection/cert", (req, res) => {
-        const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
         res.download(certFile)
     })
 
@@ -273,7 +271,7 @@ function sendEvent (req, res)  {
         headers: {
             "Content-Type": "application/json"
         },
-        json: evreq.body,
+        json: req.body,
         agentOptions: {
             cert: fs.readFileSync(certFile),
             key: fs.readFileSync(keyFile)
