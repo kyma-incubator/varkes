@@ -1,7 +1,6 @@
-jenkinsfile.groovy
 Dockerfile
+.dockerignore
 node_modules
-varkes.config.js
+Makefile
 *.log
-*.yaml
-ec-events.json
+keys/.*

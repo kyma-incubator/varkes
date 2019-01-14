@@ -7,24 +7,24 @@ module.exports = {
     name: "openapi-mock",
     apis: [
         {
-            baseurl: "/entity",
+            baseurl: "/api1",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
-            specification_file: 'schools.yaml',
-            name: "schools",
+            specification_file: 'test/pets.yaml',
+            name: "pets"
+        },
+        {
+            baseurl: "/api2",
+            metadata: "/metadata",
+            name: "courses",
+            specification_file: 'test/courses.yaml',
+            oauth: "/authorizationserver/oauth/token",
             added_endpoints: [ //endpoints
                 {
-                    filePath: "Endpoint_template.yaml",
+                    filePath: "test/Endpoint_template.yaml",
                     url: '/trial_endpoint'
                 }
             ]
-        },
-        {
-            baseurl: "/entity/v1",
-            metadata: "/metadata",
-            name: "courses",
-            specification_file: 'courses.yaml',
-            oauth: "/authorizationserver/oauth/token"
         }
     ]
 }

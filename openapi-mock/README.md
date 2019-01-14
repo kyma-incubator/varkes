@@ -54,13 +54,11 @@ Node js code
 The entry point for the application is the app.js file which reads the swagger file [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/swagger.yaml) and creates an instance of the [mock_controller](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/api/mocks/mock_controller.js) where the user  
 
 - **Return custom Error messages as response to certain error codes or messages in the customErrorResponses function** <br>
-        the following example checks if the error status is not known or if it's one of the status that are defined in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/config.js) file and in response sends the corresponding error message
+        the following example checks if the error status is not known or if it's one of the status that are defined in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/test/config.js) file and in response sends the corresponding error message
 
 ````javascript
  app = app_modified;
 app.use(function (err, req, res, next) {
-    console.log("error status")
-    console.log(err.status)
     if (!err.status) {
         err.status = 500;
     }
@@ -74,7 +72,7 @@ app.use(function (err, req, res, next) {
     }
 });
 ````
-[Config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/config.js)
+[Config.js](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/test/config.js)
 --------------------------
 In this file you define the paths of all the important files like the [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/swagger.yaml) file and the requests.log file.You can also add any kind of global element needed for the application. You also define all the custom error messages corresponding to their status code as following
 
@@ -105,7 +103,7 @@ There are two ways to start the application.
 - **start it as a node using npm command as follows:** <br>
 Go to the openapi-mock directory and Run the following command specifying the path to the config.js file.
 ````bash
-node app.js <configFilePath>
+node server/server <configFilePath>
 ````
 
 - **start it as a docker image as follows:** <br>

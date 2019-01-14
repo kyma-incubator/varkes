@@ -10,25 +10,45 @@ paths:
     get:
       tags:
         - 'metadata'
-      summary: 'Returns this swagger definition'
+      summary: 'Returns this OpenAPI definition'
       responses:
         '200':
           description: "Successful"
           content:
             application/yaml:
-              type: yaml         
+              type: yaml
   /connection:
     post:
       tags:
         - 'connection'
-      summary: "Sends your token and connects you to Kyma"
+      summary: "Connects the mock to a Kyma cluster"
       parameters:
       - in: 'query'
         name: 'localKyma'
-        description: 'deployment to local kyma'
-        required: true
+        description: 'Connected Kyma cluster is running in minikube?'
+        required: false
         schema:
           type: 'boolean'
+      - in: 'body'
+        name: 'url'
+        schema:
+          type: 'string'
+          example: 'https://kyma-cluster/v1/applications/sampleApp/info?token=xxx'
+        required: true
+        description: 'The token url provided by the Kyma cluster to connect to'
+      - in: 'body'
+        name: 'register'
+        schema:
+          type: 'boolean'
+        required: false
+        description: 'On connect, should the mock register all bundled APIs?'
+      - in: 'body'
+        name: 'hostname'
+        schema:
+          type: 'string'
+          example: 'http://localhost:10000'
+        required: true
+        description: 'The url to the mock so that a Kyma cluster can reach the mocked APIs'
       responses:
        '200':
         description: 'Successful connection to Kyma'
@@ -39,43 +59,56 @@ paths:
               properties:
                 metadataUrl:
                   type: 'string'
+                  description: 'URL on connected Kyma cluster to manage APIs'
                 eventsUrl:
                   type: 'string'
-                certificatesUrl:
+                  description: 'URL on connected Kyma cluster to send events'
+                cluster_domain:
                   type: 'string'
+                  description: 'Domain of the connected Kyma cluster'
+                re_name:
+                  type: 'string'
+                  description: 'Application on connected Kyma cluster'
        '401':
-          description: 'Connection is not authorized'
+          description: 'Connection is not authorized, usually the provided token is not valid'
           content:
             text/plain:
               schema:
                 type: 'string'
-                example: There is an error while registering. Please make sure that your token is unique
+                example: There is an error while registering. Please make sure that your token is unique and valid
     get:
-      tags:
-        - "connection"
       summary: Returns active connection info
       responses:
         '200':
-          description: "Currently connected remote env & cluster"
+          description: "Currently connected application and cluster"
           content:
             application/json:
               schema:
-                type: object
+                type: 'object'
                 properties:
+                  metadataUrl:
+                    type: 'string'
+                    description: 'URL on connected Kyma cluster to manage APIs'
+                  eventsUrl:
+                    type: 'string'
+                    description: 'URL on connected Kyma cluster to send events'
                   cluster_domain:
-                    type: string
+                    type: 'string'
+                    description: 'Domain of the connected Kyma cluster'
                   re_name:
-                    type: string
-                  gateway_url:
-                    type: string
+                    type: 'string'
+                    description: 'Application on connected Kyma cluster'
+    delete:
+      summary: Disconnects the mock from current kyma cluster
+      responses:
+        204:
+          description: Disconnection was successful
   /connection/key:
     get:
-      tags:
-        - 'certificates'
-      summary: 'Get your private key'
+      summary: 'Gets the private key used by the mock'
       responses:
         '200':
-          description: your private key
+          description: Private key of the mock
           content:
             application/file:
              schema:
@@ -83,12 +116,10 @@ paths:
                format: binary
   /connection/cert:
     get:
-      tags:
-        - 'certificates'
-      summary: Get certificate returned by kyma
+      summary: Get the client certificate for connected Kyma cluster
       responses:
         '200':
-          description: your kyma certificate
+          description: client certificate for connected Kyma cluster
           content:
             application/file:
              schema:
@@ -96,10 +127,7 @@ paths:
                format: binary
   /events:
     post:
-      tags:
-      - 'events'
-      summary: 'Sends a new event'
-      operationId: 'sendEvent'
+      summary: 'Sends a new event to the connected Kyma cluster'
       requestBody:
         description: 'Event payload'
         required: true
@@ -127,18 +155,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-        '500':
-          description: 'Internal server error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
   /apis:
     post:
-      tags:
-      - 'apis'
-      summary: 'Registers a new API'
-      operationId: 'createAPI'
+      summary: 'Registers a new API on the connected Kyma cluster'
       requestBody:
         description: 'API to be registered'
         required: true
@@ -166,17 +185,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-        '500':
-          description: 'Internal server error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
     get:
-      tags:
-      - 'apis'
-      summary: 'Gets all registered apis'
-      operationId: 'getAPIs'
+      summary: 'Gets all registered apis on connected Kyma cluster'
       parameters:
       - in: 'query'
       name: 'localKyma'
@@ -193,18 +203,9 @@ paths:
                 type: 'array'
                 items:
                   $ref: '#/components/schemas/Service'
-        '500':
-          description: 'Internal server error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
   /apis/{Id}:
     get:
-      tags:
-      - 'apis'
-      summary: 'Gets a API by ID'
-      operationId: 'getAPI'
+      summary: 'Gets a API by ID from connected Kyma cluster'
       parameters:
       - in: 'path'
         name: 'id'
@@ -232,17 +233,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-        '500':
-          description: 'Internal server error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
     put:
-      tags:
-      - 'apis'
-      summary: 'Updates a API by ID'
-      operationId: 'updateAPI'
+      summary: 'Updates a API by ID on connected Kyma cluster'
       requestBody:
         description: 'API to be stored'
         required: true
@@ -273,17 +265,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MetadataErrorResponse'
-        '500':
-          description: 'Internal server error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
     delete:
-      tags:
-      - 'apis'
-      summary: 'Deletes a API by ID'
-      operationId: 'deleteAPI'
+      summary: 'Deletes a API by ID on connected Kyma cluster'
       parameters:
       - in: 'path'
         name: 'Id'
@@ -303,12 +286,6 @@ paths:
           description: 'Successful operation'
         '404':
           description: 'API not found'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
-        '500':
-          description: 'Internal server error'
           content:
             application/json:
               schema:

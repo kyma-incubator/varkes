@@ -3,12 +3,12 @@ info:
   description: "Commerce Webservices Version 2"
   version: "2.0"
   title: "Commerce Webservices V2"
-basePath: "/entity/v1"
 consumes:
   - "application/json"
 produces:
   - "application/json"
   - "application/xml"
+basePath: "/api2"
 paths:
   /courses:
     get:
@@ -61,7 +61,7 @@ paths:
     security:
       - oauth2_Password: []
       - oauth2_client_credentials: []
-  /coursesbyCode/{code}:
+  /courses/{code}:
     get:
       summary: "Get a list of available courses."
       description: "Lists supported payment card types."
@@ -130,15 +130,33 @@ paths:
               token: "3333"
         404:
           description: "Not Found"
+  /trial_endpoint:
+    get:
+      summary: "Get OAuth2 access token"
+      description: "Returns the acess token for Kyma"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+            default:
+              token: "3333"
+        404:
+          description: "Not Found"
 definitions:
   CoursesDTO:
-    type: "object"
-    properties:
-      courses:
-        type: "array"
-        items:
-          code:
-            type: "string"
-          name:
-            type: "string"
+    type: "array"
+    items:
+      code:
+        type: "string"
+      name:
+        type: "string"
 

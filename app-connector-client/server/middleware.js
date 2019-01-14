@@ -1,9 +1,7 @@
 var CONFIG = require("./config")
-var LOGGER = require("./logger")
+var LOGGER = require("./logger").logger
 var expressWinston = require('express-winston');
 
 exports.defineMW = function (app) {
-    app.use(expressWinston.logger(
-        LOGGER.logger
-    ))
+    app.use(expressWinston.logger(LOGGER))
 }

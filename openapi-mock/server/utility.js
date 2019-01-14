@@ -1,20 +1,23 @@
 'use strict';
 const fs = require('fs');
 var morgan = require('morgan');
-module.exports = {
+const LOGGER = require("./logger").logger
 
+module.exports = {
     writeToFile: function (path, textString, overwrite) {
         if (!fs.existsSync(path) || overwrite) {
             fs.writeFile(path, textString + "\n", function (err) {
                 if (err) {
-                    return console.log(err);
+                    LOGGER.error("Error while writing new swagger file at %s:%s", path, err)
+                    return
                 }
             });
         }
         else {
             fs.appendFile(path, textString + "\n", function (err) {
                 if (err) {
-                    return console.log(err);
+                    LOGGER.error("Error while appending to swagger file at %s:%s", path, err)
+                    return
                 }
             });
         }
@@ -37,7 +40,6 @@ module.exports = {
                 return "-";
         });
         morgan.token('body', function (req, res) {
-            console.log(req.body)
             if (req.body && Object.keys(req.body).length != 0)
                 return JSON.stringify(req.body);
             else
@@ -47,7 +49,6 @@ module.exports = {
         var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
         app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
         app.get('/requests', function (req, res, done) {
-
             var text = fs.readFileSync("requests.log", "utf8");
             res.status(200);
             res.send(text);

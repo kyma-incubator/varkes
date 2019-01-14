@@ -1,8 +1,4 @@
-jenkinsfile.groovy
 Dockerfile
 node_modules
-swagger*.yaml
-makefile
-config.js
+Makefile
 *.log
-Endpoint_template.yaml

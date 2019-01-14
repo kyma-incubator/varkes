@@ -1,12 +1,12 @@
 {
   "name": "varkes-openapi-mock",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": false,
   "description": "Open API Mock",
   "keywords": [],
   "author": "",
-  "license": "",
-  "main": "app.js",
+  "license": "Apache-2.0",
+  "main": "server/app.js",
   "dependencies": {
     "lodash": "^4.17.11",
     "deep-extend": ">=0.5.1",
@@ -21,14 +21,19 @@
     "swagger-express-middleware": "^1.2.0",
     "swagger-express-mw": "^0.7.0",
     "tar": "^4.4.8",
-    "util": "^0.11.1"
+    "util": "^0.11.1",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
     "supertest": "^3.3.0"
   },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
+  },
   "scripts": {
-    "start": "node app.js ./config.js",
+    "start": "node server/server",
     "build": "docker build -t varkes/openapi .",
     "test": "mocha"
   }

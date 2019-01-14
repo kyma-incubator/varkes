@@ -7,7 +7,7 @@ var keys = require("./keys")
 //const { parse, convert } = require('odata2openapi');
 var request = require("request")
 var fs = require("fs")
-var LOGGER = require("./logger")
+var LOGGER = require("./logger").logger
 var yaml = require('js-yaml');
 const path = require("path")
 const url = require("url")
@@ -33,11 +33,11 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     if (varkesConfigPath) {
         endpointConfig = path.resolve(varkesConfigPath)
+        LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
-        if (!configValidation(varkesConfig, odata)) {
-            return;
-        }
+        configValidation(varkesConfig, odata)
     } else {
+        LOGGER.info("Using default configuration")
         varkesConfig = {
             name: 'Varkes',
             apis: [],
@@ -80,24 +80,18 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     app.put("/apis/:api", apis.update)
     app.delete("/apis/:api", apis.delete)
 
-    app.get("/connection", function (req, res) {
-        res.send(returnConnectionInfo())
-    })
+    app.get("/connection", connector.info)
     app.post("/connection", connect);
+    app.delete("/connection", connector.disconnect)
 
-    app.get("/connection/key", (req, res) => {
-        res.download(keyFile)
-    })
-
-    app.get("/connection/cert", (req, res) => {
-        res.download(certFile)
-    })
+    app.get("/connection/key", connector.key)
+    app.get("/connection/cert", connector.cert)
 
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
     })
     app.get("/metadata", function (req, res) {
-        res.sendFile(path.resolve(__dirname, "resources/swagger.yaml"))
+        res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
     })
 
     app.post("/events", sendEvent)
@@ -105,10 +99,9 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     let server
     app.start = function () {
         server = app.listen(CONFIG.port, function () {
-            var host = server.address().address
             var port = server.address().port
 
-            LOGGER.logger.info("App connector listening at http://%s:%s", host, port)
+            LOGGER.info("App connector listening at port %d", port)
 
         });
     }
@@ -129,17 +122,17 @@ async function connect(req, res) {
         fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
 
         if (req.body.register) {
-            LOGGER.logger.debug("Auto-register APIs")
+            LOGGER.debug("Auto-register APIs")
             var hostname = req.body.hostname || "http://localhost"
             await createServicesFromConfig(hostname, varkesConfig.apis)
             await createEventsFromConfig(varkesConfig.events)
-            LOGGER.logger.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
 
-        res.send(returnConnectionInfo())
+        connector.info(req, res)
     } catch (error) {
         message = "There is an error while registering.\n Please make sure that your token is unique"
-        LOGGER.logger.error(message)
+        LOGGER.error(message)
         res.statusCode = 401
         res.send(message)
     }
@@ -154,15 +147,15 @@ async function createServicesFromConfig(hostname, apisConfig) {
         api = apisConfig[i]
         try {
             await createService(serviceMetadata, api, hostname)
-            LOGGER.logger.debug("Registered API successful: %s", api.name)
+            LOGGER.debug("Registered API successful: %s", api.name)
         } catch (error) {
-            LOGGER.logger.error("Registration of API '%s' failed: %s", api.name, error)
+            LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
         }
     }
 }
 
 function createService(serviceMetadata, api, hostname) {
-    LOGGER.logger.debug("Auto-register API '%s'", api.name)
+    LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         serviceMetadata.name = api.name;
         serviceMetadata.api.targetUrl = hostname;
@@ -208,15 +201,15 @@ async function createEventsFromConfig(eventsConfig) {
         event = eventsConfig[i]
         try {
             await createEvent(eventMetadata, event)
-            LOGGER.logger.debug("Registered Event API successful: %s", event.name)
+            LOGGER.debug("Registered Event API successful: %s", event.name)
         } catch (error) {
-            LOGGER.logger.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
+            LOGGER.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
         }
     }
 }
 
 function createEvent(eventMetadata, event) {
-    LOGGER.logger.debug("Auto-register Event API '%s'", event.name)
+    LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         eventMetadata.name = event.name;
         if (eventMetadata.description) {
@@ -240,29 +233,6 @@ function createEvent(eventMetadata, event) {
             }
         })
     })
-}
-
-function returnConnectionInfo() {
-    if (CONFIG.URLs.metadataUrl !== "") {
-        const myURL = new url.URL(CONFIG.URLs.metadataUrl)
-        response = {
-            "cluster_domain": "",
-            "re_name": "",
-            "eventsUrl": "",
-            "metadataUrl": ""
-        }
-        response.cluster_domain = myURL.hostname.split(".")[1]
-        response.re_name = myURL.pathname.split("/")[1]
-        response.eventsUrl = CONFIG.URLs.eventsUrl;
-        response.metadataUrl = CONFIG.URLs.metadataUrl;
-
-        return response
-
-    } else {
-        res.statusCode = 404
-        res.send("not connected to any cluster")
-    }
-
 }
 
 function sendEvent (req, res)  {
@@ -355,9 +325,6 @@ function configValidation(configJson, odata) {
         }
     }
     if (error_message != "") {
-        LOGGER.logger.error("Config Error: %s", error_message);
-        return false;
+        throw new Error("Config Error: " + error_message);
     }
-
-    return true;
 }

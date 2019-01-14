@@ -1,28 +1,29 @@
+#!/usr/bin/env node
 var CONFIG = require("./config")
 const path = require("path")
 var request = require("request")
-var LOGGER = require("./logger")
+var LOGGER = require("./logger").logger
 const fs = require("fs")
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 exports.getAll = function (req, res) {
-    LOGGER.logger.debug("Getting all APIs")
+    LOGGER.debug("Getting all APIs")
 
     module.exports.getAPIs(req.query.localKyma == true, function (data, err) {
         if (err) {
-            LOGGER.logger.error("Error while getting all APIs: %s", err)
+            LOGGER.error("Error while getting all APIs: %s", err)
             res.status(500).send(err)
         } else if (!data) {
             res.status(200).send([])
         } else {
             try {
-                LOGGER.logger.debug("Received API data: %s", data)
+                LOGGER.debug("Received API data: %s", data)
                 res.status(200).send(JSON.parse(data))
             }
             catch (err2) {
-                LOGGER.logger.error("Error while parsing response payload: %s", err2)
+                LOGGER.error("Error while parsing response payload: %s", err2)
                 res.status(200).send(data)
             }
         }
@@ -30,21 +31,21 @@ exports.getAll = function (req, res) {
 };
 
 exports.create = function (req, res) {
-    LOGGER.logger.debug("Creating API")
+    LOGGER.debug("Creating API")
 
     module.exports.createAPI(req.query.localKyma == true, req.body, function (data, err) {
         if (err) {
-            LOGGER.logger.error("Error while creating API: %s", err)
+            LOGGER.error("Error while creating API: %s", err)
             res.status(500).send(err)
         } else if (!data) {
             res.status(200).send({})
         } else {
             try {
-                LOGGER.logger.debug("Received API data: %s", data)
+                LOGGER.debug("Received API data: %s", data)
                 res.status(200).send(JSON.parse(data))
             }
             catch (err2) {
-                LOGGER.logger.error("Error while parsing response payload: %s", err2)
+                LOGGER.error("Error while parsing response payload: %s", err2)
                 res.status(200).send(data)
             }
         }
@@ -52,21 +53,21 @@ exports.create = function (req, res) {
 };
 
 exports.get = function (req, res) {
-    LOGGER.logger.debug("Get API %s", req.params.api)
+    LOGGER.debug("Get API %s", req.params.api)
 
     module.exports.getAPI(req.query.localKyma == true, req.params.api, function (data, err) {
         if (err) {
-            LOGGER.logger.error("Error while getting API: %s", err)
+            LOGGER.error("Error while getting API: %s", err)
             res.status(500).send(err)
         } else if (!data) {
             res.status(200).send({})
         } else {
             try {
-                LOGGER.logger.debug("Received API data: %s", data)
+                LOGGER.debug("Received API data: %s", data)
                 res.status(200).send(JSON.parse(data))
             }
             catch (err2) {
-                LOGGER.logger.error("Error while parsing response payload: %s", err2)
+                LOGGER.error("Error while parsing response payload: %s", err2)
                 res.status(200).send(data)
             }
         }
@@ -74,21 +75,21 @@ exports.get = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    LOGGER.logger.debug("Update API %s", req.params.api)
+    LOGGER.debug("Update API %s", req.params.api)
 
     module.exports.updateAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
         if (err) {
-            LOGGER.logger.error("Error while updating API: %s", err)
+            LOGGER.error("Error while updating API: %s", err)
             res.status(500).send(err)
         } else if (!data) {
             res.status(200).send({})
         } else {
             try {
-                LOGGER.logger.debug("Received API data: %s", data)
+                LOGGER.debug("Received API data: %s", data)
                 res.status(200).send(JSON.parse(data))
             }
             catch (err2) {
-                LOGGER.logger.error("Error while parsing response payload: %s", err2)
+                LOGGER.error("Error while parsing response payload: %s", err2)
                 res.status(200).send(data)
             }
         }
@@ -96,14 +97,14 @@ exports.update = function (req, res) {
 };
 
 exports.delete = function (req, res) {
-    LOGGER.logger.debug("Delete API %s", req.params.api)
+    LOGGER.debug("Delete API %s", req.params.api)
 
     module.exports.deleteAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
         if (err) {
-            LOGGER.logger.error("Error while deleting API: %s", err)
+            LOGGER.error("Error while deleting API: %s", err)
             res.status(500).send(err)
         } else {
-            LOGGER.logger.debug("Received API data: %s", data)
+            LOGGER.debug("Received API data: %s", data)
             res.status(204).send()
         }
     })
@@ -114,11 +115,11 @@ exports.deleteAll = function (req, res) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Creating API with payload: %s", payload)
+        LOGGER.debug("Creating API with payload: %s", payload)
 
         module.exports.deleteAPIs(req.query.localKyma == true, req.params.api, function (data, err) {
             if (err) {
-                LOGGER.logger.error("Error while deleting APIs: %s", err)
+                LOGGER.error("Error while deleting APIs: %s", err)
                 res.status(500).send(err)
             } else {
                 res.status(204).send()
@@ -132,7 +133,7 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Creating API: %s", payload.name)
+        LOGGER.debug("Creating API: %s", payload.name)
 
         request.post({
             url: CONFIG.URLs.metadataUrl,
@@ -162,7 +163,7 @@ exports.deleteAPI = function deleteAPI(localKyma, id, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Deleting API: %s", id)
+        LOGGER.debug("Deleting API: %s", id)
         request.delete(
             {
                 url: `${CONFIG.URLs.metadataUrl}/${id}`,
@@ -186,7 +187,7 @@ exports.deleteAPIs = function deleteAPIs(localKyma, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Deleting all APIs")
+        LOGGER.debug("Deleting all APIs")
         request.delete(
             {
                 url: `${CONFIG.URLs.metadataUrl}`,
@@ -210,7 +211,7 @@ exports.getAPIs = function getAPIs(localKyma, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Retrieving all APIs")
+        LOGGER.debug("Retrieving all APIs")
         request({
             url: CONFIG.URLs.metadataUrl,
             method: "GET",
@@ -233,7 +234,7 @@ exports.getAPI = function getAPI(localKyma, id, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Retrieving API: %s", id)
+        LOGGER.debug("Retrieving API: %s", id)
         request.get({
             url: `${CONFIG.URLs.metadataUrl}/${id}`,
             agentOptions: {
@@ -255,7 +256,7 @@ exports.updateAPI = function updateAPI(localKyma, id, payload, cb) {
     if (err) {
         cb(null, err)
     } else {
-        LOGGER.logger.debug("Updating API: %s", id)
+        LOGGER.debug("Updating API: %s", id)
         request.put({
             url: `${CONFIG.URLs.metadataUrl}/${id}`,
             headers: {
