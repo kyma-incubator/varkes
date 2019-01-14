@@ -119,13 +119,10 @@ paths:
           description: "Not Found"
 definitions:
   SchoolDTO:
-    type: "object"
-    properties:
-      schools:
-        type: "array"
-        items:
-          areacode:
-            type: "string"
-          name:
-            type: "string"
+    type: "array"
+    items:
+      areacode:
+        type: "string"
+      name:
+        type: "string"
 

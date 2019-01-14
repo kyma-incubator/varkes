@@ -93,6 +93,9 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     app.get("/metadata", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
     })
+    app.get("/console", function (req, res) {
+        res.sendFile(path.resolve(__dirname, "resources/console.html"))
+    })
 
     app.post("/events", sendEvent)
 

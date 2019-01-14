@@ -1,14 +1,18 @@
 {
-  "name": "example",
-  "version": "1.0.0",
-  "description": "mocking example",
+  "name": "odata-mock-app",
+  "version": "0.1.0",
+  "description": "Standalone example of varkes openodataapi-mock",
   "main": "app.js",
   "scripts": {
     "test": "mocha"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
-    "varkes-odata-mock": "0.0.8"
+    "varkes-odata-mock": "0.3.3"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
   }
 }

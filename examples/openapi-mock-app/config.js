@@ -1,13 +1,15 @@
 module.exports = {
-    specification_file: 'swagger.yaml',
-    request_log_path: 'requests.log',
-    added_endpoints: [
+    name: "openapi-example",
+    apis: [
         {
-            filePath: "OAuth_template.yaml",
-            url: '/authorizationserver/oauth/token'
+            baseurl: "/api1",
+            metadata: "/metadata",
+            oauth: "/authorizationserver/oauth/token",
+            specification_file: 'swagger.yaml',
+            name: "courses"
         }
     ],
-    customResponsePath: '../../custom_responses',
+    request_log_path: 'requests.log',
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',
         400: '{"error":\"Errorrrr\"}',

@@ -136,13 +136,10 @@ paths:
           description: "Not Found"
 definitions:
   CoursesDTO:
-    type: "object"
-    properties:
-      courses:
-        type: "array"
-        items:
-          code:
-            type: "string"
-          name:
-            type: "string"
+    type: "array"
+    items:
+      code:
+        type: "string"
+      name:
+        type: "string"
 

@@ -1,10 +1,8 @@
 openapi: '3.0.0'
 info:
-  version: '1.0.0'
-  title: 'Kyma Metadata API'
-tags:
-- name: 'Metadata Service'
-  description: 'API for registering APIs in Kyma.'
+  version: '0.1.0'
+  title: 'Varkes Application Connector Client'
+  description: 'Client for connecting an application to a Kyma cluster'
 paths:
   /metadata:
     get:
@@ -348,6 +346,20 @@ components:
         spec:
           description: 'AsynApi file v1: https://github.com/asyncapi/asyncapi/blob/develop/schema/asyncapi.json'
           type: 'object'
+    EventDetails:
+      type: 'object'
+      properties:
+        event-type:
+          description: 'Type of event'
+          type: 'string'
+        event-type-version:
+          description: version of event type
+          type: 'string'
+        event-time:
+          description: 'time when event was send'
+        data:
+          description: 'event payload'
+          tyoe: 'object'
     Documentation:
       type: 'object'
       properties:

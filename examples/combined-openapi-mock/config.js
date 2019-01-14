@@ -5,13 +5,14 @@ module.exports = {
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
     },
-    name: "combined-api",
+    name: "combined-openapi-mock",
     apis: [
         {
             baseurl: "/entity",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
             specification_file: 'schools.yaml',
+            name: "schools",
             added_endpoints: [
                 {
                     filePath: "Endpoint_template.yaml",
@@ -21,6 +22,7 @@ module.exports = {
         },
         {
             baseurl: "/entity/v1",
+            name: "courses",
             metadata: "/metadata",
             specification_file: 'courses.yaml',
             oauth: "/authorizationserver/oauth/token"

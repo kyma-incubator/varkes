@@ -1,11 +1,8 @@
-jenkinsfile.groovy
+.dockerignore
 Dockerfile
 node_modules
-EDMX_MODEL_SPECIFICATION.xml
 index.js
-config.js
-makefile
+Makefile
 *.log
-data.json
 Course.js
 Course.json
