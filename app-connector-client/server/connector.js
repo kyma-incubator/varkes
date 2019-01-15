@@ -7,6 +7,9 @@ var forge = require("node-forge")
 var https = require("https")
 const url = require("url")
 
+const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
 const keysDirectory = path.resolve(CONFIG.keyDir)
 var agentOptions = {
     rejectUnauthorized: false
@@ -65,6 +68,12 @@ module.exports =
             if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
                 fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
             }
+            CONFIG.URLs = {
+                metadataUrl: "",
+                eventsUrl: "",
+                certificatesUrl: ""
+            }
+
             res.status(204).send()
         },
         info: function (req, res) {
