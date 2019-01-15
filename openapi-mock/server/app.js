@@ -23,9 +23,9 @@ module.exports = function (varkesConfigPath) {
   } else {
     LOGGER.info("Using default configuration")
     varkesConfig = {
-      name: 'Varkes',
+      name: 'Varkes OpenAPI-Mock',
       apis: [],
-      event_spec_path: ''
+      events: []
     }
   }
 
@@ -35,11 +35,9 @@ module.exports = function (varkesConfigPath) {
   mock_controller.init(app, varkesConfig);
   mock_controller.recordRequest(app);
   
-
-  let server;
   app.start = function () {
-    server = app.listen(varkesConfig.port | 10000, function () {
-      LOGGER.info('OpenAPI Mock is running on port: %d', varkesConfig.port | 10000);
+    app.listen(CONFIG.port, function () {
+        LOGGER.info("%s listening at port %d", CONFIG.name, CONFIG.port)
     });
   }
 

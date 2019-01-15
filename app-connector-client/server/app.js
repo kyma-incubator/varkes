@@ -39,9 +39,9 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = {
-            name: 'Varkes',
+            name: 'Varkes Application Connector',
             apis: [],
-            event_spec_path: ''
+            events: []
         }
     }
 
@@ -81,16 +81,11 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     app.get("/console", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/console.html"))
     })
-
     app.post("/events", sendEvent)
 
-    let server
     app.start = function () {
-        server = app.listen(CONFIG.port, function () {
-            var port = server.address().port
-
-            LOGGER.info("App connector listening at port %d", port)
-
+        app.listen(CONFIG.port, function () {
+            LOGGER.info("%s listening at port %d", CONFIG.name, CONFIG.port)
         });
     }
     return app;
@@ -120,7 +115,7 @@ async function connect(req, res) {
         connector.info(req, res)
     } catch (error) {
         message = "There is an error while registering.\n Please make sure that your token is unique"
-        LOGGER.error(message)
+        LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.statusCode = 401
         res.send(message)
     }
