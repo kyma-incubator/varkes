@@ -14,7 +14,7 @@ exports.generatePrivateKey = function generatePrivateKey() {
 
     if (!fs.existsSync(keyFile)) {
         LOGGER.info("Generating new key file: %s", keyFile)
-        var keys = forge.pki.rsa.generateKeyPair(4096);
+        var keys = forge.pki.rsa.generateKeyPair(2048);
         const privateKey = forge.pki.privateKeyToPem(keys.privateKey)
         fs.writeFileSync(keyFile, privateKey)
         LOGGER.info("Generated new key file: %s", keyFile)
