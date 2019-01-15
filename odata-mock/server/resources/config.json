@@ -19,6 +19,5 @@
     "cors": false
   },
   "legacyExplorer": false,
-  "logoutSessionsOnSensitiveChanges": true,
-  "parserPath": "../common/utility/parser"
+  "logoutSessionsOnSensitiveChanges": true
 }

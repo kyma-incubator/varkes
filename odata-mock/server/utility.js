@@ -2,7 +2,6 @@
 const fs = require('fs');
 var morgan = require('morgan')
 module.exports = {
-
     writeToFile: function (path, textString, overwrite) {
         if (!fs.existsSync(path) || overwrite) {
             fs.writeFile(path, textString + "\n", function (err) {
@@ -23,12 +22,6 @@ module.exports = {
             });
         }
     },
-    writeFileSync: function (path, textString) {
-        fs.writeFileSync(path, textString);
-    },
-    readFile: function (path) {
-        return fs.readFileSync(path, "utf8");
-    },
     getCurrentDateTime: function () {
         var currentdate = new Date();
         var datetime = "Reached on " + currentdate.getDate() + "/"
@@ -40,7 +33,6 @@ module.exports = {
         return datetime;
     },
     registerLogger: function (app) {
-
         morgan.token('header', function (req, res) {
             if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
                 return req.rawHeaders;

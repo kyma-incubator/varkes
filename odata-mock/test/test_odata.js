@@ -1,5 +1,5 @@
 var request = require('supertest');
-var server = require('../server/server')("../config.js");
+var server = require('../server/server')("./varkes_config.js");
 describe('controllers', function (done) {
 
     it('test_odata', function () {
@@ -10,7 +10,7 @@ describe('controllers', function (done) {
                 it('should return response 200', function () {
 
                     request(result)
-                        .get('/marketing/metadata')
+                        .get('/courses/metadata')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'text/xml; charset=utf-8')
                         .expect(200, done)
