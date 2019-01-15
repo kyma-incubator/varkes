@@ -5,13 +5,15 @@ var request = require("request")
 var LOGGER = require("./logger").logger
 const fs = require("fs")
 
+var apiRouter = require("express").Router()
+
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
-exports.getAll = function (req, res) {
+function getAll(req, res) {
     LOGGER.debug("Getting all APIs")
 
-    module.exports.getAPIs(req.query.localKyma == true, function (data, err) {
+    getAPIs(req.query.localKyma == true, function (data, err) {
         if (err) {
             LOGGER.error("Error while getting all APIs: %s", err)
             res.status(500).send(err)
@@ -30,10 +32,10 @@ exports.getAll = function (req, res) {
     })
 };
 
-exports.create = function (req, res) {
+function create(req, res) {
     LOGGER.debug("Creating API")
 
-    module.exports.createAPI(req.query.localKyma == true, req.body, function (data, err) {
+    createAPI(req.query.localKyma == true, req.body, function (data, err) {
         if (err) {
             LOGGER.error("Error while creating API: %s", err)
             res.status(500).send(err)
@@ -52,10 +54,10 @@ exports.create = function (req, res) {
     })
 };
 
-exports.get = function (req, res) {
+function get(req, res) {
     LOGGER.debug("Get API %s", req.params.api)
 
-    module.exports.getAPI(req.query.localKyma == true, req.params.api, function (data, err) {
+    getAPI(req.query.localKyma == true, req.params.api, function (data, err) {
         if (err) {
             LOGGER.error("Error while getting API: %s", err)
             res.status(500).send(err)
@@ -74,10 +76,10 @@ exports.get = function (req, res) {
     })
 };
 
-exports.update = function (req, res) {
+function update(req, res) {
     LOGGER.debug("Update API %s", req.params.api)
 
-    module.exports.updateAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
+    updateAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
         if (err) {
             LOGGER.error("Error while updating API: %s", err)
             res.status(500).send(err)
@@ -96,10 +98,10 @@ exports.update = function (req, res) {
     })
 };
 
-exports.delete = function (req, res) {
+function deleteFunc(req, res) {
     LOGGER.debug("Delete API %s", req.params.api)
 
-    module.exports.deleteAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
+    deleteAPI(req.query.localKyma == true, req.params.api, req.body, function (data, err) {
         if (err) {
             LOGGER.error("Error while deleting API: %s", err)
             res.status(500).send(err)
@@ -110,14 +112,14 @@ exports.delete = function (req, res) {
     })
 };
 
-exports.deleteAll = function (req, res) {
+function deleteAll(req, res) {
     err = assureConnected()
     if (err) {
         cb(null, err)
     } else {
         LOGGER.debug("Creating API with payload: %s", payload)
 
-        module.exports.deleteAPIs(req.query.localKyma == true, req.params.api, function (data, err) {
+        deleteAPIs(req.query.localKyma == true, req.params.api, function (data, err) {
             if (err) {
                 LOGGER.error("Error while deleting APIs: %s", err)
                 res.status(500).send(err)
@@ -128,7 +130,7 @@ exports.deleteAll = function (req, res) {
     }
 };
 
-exports.createAPI = function createAPI(localKyma, payload, cb) {
+function createAPI(localKyma, payload, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -150,7 +152,7 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
             if (error) {
                 cb(null, error)
             }
-            if(httpResponse.statusCode!=200){
+            if (httpResponse.statusCode != 200) {
                 cb(null, body)
             }
             cb(body, null)
@@ -158,7 +160,7 @@ exports.createAPI = function createAPI(localKyma, payload, cb) {
     }
 }
 
-exports.deleteAPI = function deleteAPI(localKyma, id, cb) {
+function deleteAPI(localKyma, id, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -182,7 +184,7 @@ exports.deleteAPI = function deleteAPI(localKyma, id, cb) {
     }
 }
 
-exports.deleteAPIs = function deleteAPIs(localKyma, cb) {
+function deleteAPIs(localKyma, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -206,7 +208,7 @@ exports.deleteAPIs = function deleteAPIs(localKyma, cb) {
     }
 }
 
-exports.getAPIs = function getAPIs(localKyma, cb) {
+function getAPIs(localKyma, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -229,7 +231,7 @@ exports.getAPIs = function getAPIs(localKyma, cb) {
     }
 }
 
-exports.getAPI = function getAPI(localKyma, id, cb) {
+function getAPI(localKyma, id, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -251,7 +253,7 @@ exports.getAPI = function getAPI(localKyma, id, cb) {
     }
 }
 
-exports.updateAPI = function updateAPI(localKyma, id, payload, cb) {
+function updateAPI(localKyma, id, payload, cb) {
     err = assureConnected()
     if (err) {
         cb(null, err)
@@ -283,3 +285,18 @@ function assureConnected() {
     }
     return null
 }
+
+apiRouter.get("/", getAll)
+apiRouter.post("/", create)
+apiRouter.delete("/", deleteAll)
+
+apiRouter.get("/:api", get)
+apiRouter.put("/:api", update)
+apiRouter.delete("/:api", deleteFunc)
+
+//Router specific logging middleware
+apiRouter.use(function (req, res, next) {
+    LOGGER.debug("In API Router: ", req)
+    next()
+})
+module.exports = apiRouter

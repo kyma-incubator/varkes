@@ -2,7 +2,7 @@
 
 var express = require("express")
 var connector = require("./connector")
-var apis = require("./api")
+var apis = require("./apis")
 var keys = require("./keys")
 //const { parse, convert } = require('odata2openapi');
 var request = require("request")
@@ -57,13 +57,7 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
-    app.get("/apis", apis.getAll)
-    app.post("/apis", apis.create)
-    app.delete("/apis", apis.deleteAll)
-
-    app.get("/apis/:api", apis.get)
-    app.put("/apis/:api", apis.update)
-    app.delete("/apis/:api", apis.delete)
+    app.use("/apis", apis)
 
     app.get("/connection", connector.info)
     app.post("/connection", connect);
