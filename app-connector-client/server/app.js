@@ -54,7 +54,6 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     require("./middleware").defineMW(app)
 
 
-
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
     app.get("/apis", apis.getAll)
@@ -85,7 +84,7 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     app.start = function () {
         app.listen(CONFIG.port, function () {
-            LOGGER.info("%s listening at port %d", CONFIG.name, CONFIG.port)
+            LOGGER.info("%s listening at port %d", varkesConfig.name, CONFIG.port)
         });
     }
     return app;

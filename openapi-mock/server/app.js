@@ -37,7 +37,7 @@ module.exports = function (varkesConfigPath) {
   
   app.start = function () {
     app.listen(CONFIG.port, function () {
-        LOGGER.info("%s listening at port %d", CONFIG.name, CONFIG.port)
+        LOGGER.info("%s listening at port %d", varkesConfig.name, CONFIG.port)
     });
   }
 

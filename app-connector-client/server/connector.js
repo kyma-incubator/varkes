@@ -30,7 +30,7 @@ module.exports =
                         if (error) {
                             reject(error)
                         }
-                        else if (response.statusCode !== 200) reject(new Error(response.statusCode))
+                        else if (response.statusCode !== 200) reject(new Error("Pairing failed with status '" + response.statusCode + "' and message: " + response.body))
                         else if (response.statusCode == 200) {
                             LOGGER.debug("Connector received: %s", body)
                             URLs = JSON.parse(body).api
