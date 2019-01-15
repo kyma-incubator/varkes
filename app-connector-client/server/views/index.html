@@ -140,20 +140,7 @@
 
     </div>
 
-    <dialog class="mdl-dialog" id="dialog">
-        <h4 class="mdl-dialog__title">Token Url</h4>
-        <div class="mdl-dialog__content">
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" id="input">
-                <label class="mdl-textfield__label" for="sample1">Text...</label>
-                <p id="help"></p>
-            </div>
-        </div>
-        <div class="mdl-dialog__actions">
-            <button type="button" class="mdl-button" onclick="giveToken()">Send</button>
 
-        </div>
-    </dialog>
 </body>
 
 
@@ -253,10 +240,6 @@
         })
     }
 
-    function opendialog() {
-        document.getElementById('dialog').showModal();
-
-    }
 
     function createService() {
         $.ajax({
@@ -304,7 +287,14 @@
                 getAPIs()
                 $('#create_service').show();
                 $('#downloadLinks').show();
-                //document.getElementById('dialog').close();
+
+                connectButton = $("#get_certificates")
+                connectButton.text("Disconnect")
+                connectButton.click(function () {
+                    disconnectKyma()
+                })
+                connectButton.removeClass('mdl-button--colored').addClass('mdl-button--accent');
+
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
                 if (data.eventsUrl)
@@ -320,6 +310,16 @@
         )
     }
 
+    function disconnectKyma() {
+        console.log("Disconnect")
+        $.ajax({
+            type: "DELETE",
+            url: "/connection",
+            success: function (data) {
+                location.reload()
+            }
+        })
+    }
     function showService(serviceID) {
         console.log("show service")
         console.log(serviceID);
@@ -370,6 +370,11 @@
                 console.log("remote3")
                 console.log(remote_env_url)
                 $("#api-title").html(`Register to Kyma \n <p> Connected to <a href=` + remote_env_url + ` target="_blank" >${data.re_name}</a> in <b>${data.cluster_domain}</b>`)
+                connectButton = $("#get_certificates")
+                connectButton.text("Disconnect")
+                connectButton.click(function () {
+                    disconnectKyma()
+                })
             }
         })
     }
