@@ -78,6 +78,7 @@ function createConsole(openApi_doc, api, app) {
     app.get(api.baseurl + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
         html = html.replace("OPENAPI", api.baseurl + api.metadata)
+        html = html.replace("NAME", api.baseurl + api.name)
         res.type("text/html")
         res.status(200)
         res.send(html)
