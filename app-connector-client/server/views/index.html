@@ -46,6 +46,10 @@
                         onclick="giveToken()">Connect to Kyma
                     </button>
                 </div>
+                <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" id="disconnect_button">
+                    Disconnect
+                </button>
+
                 <br>
 
             </nav>
@@ -148,27 +152,6 @@
     var remote_env_url = "";
     var hostname = "";
     $(document).ready(function () {
-        $.ajax({
-            url: `/title`,
-            type: "get",
-            success: function (data) {
-                $('#app-title').html(data.name)
-                if (data.cert_exist) {
-                    $('#downloadLinks').show();
-                    $('#').show();
-
-                }
-                else {
-                    $('#downloadLinks').hide();
-                }
-                if (data.metadataUrl) {
-                    $('#metadata_url').val(data.metadataUrl)
-                }
-
-                if (data.eventsUrl)
-                    $('#event_url').val(data.eventsUrl)
-            }
-        })
         newServiceView()
         getAPIs()
         $("#create_service").hide();
@@ -305,11 +288,12 @@
     }
 
     function changeButtonToDisconnectKyma() {
-        connectButton = $("#get_certificates")
-        connectButton.removeClass('mdl-button--colored').addClass('mdl-button--accent');
-        connectButton.text("Disconnect")
-
-        connectButton.click(function () {
+        connectDiv = $("#kymaConnect")
+        connectDiv.hide()
+        disconnectButton = $("#disconnect_button")
+        disconnectButton.removeAttr("hidden")
+        $('#downloadLinks').show();
+        disconnectButton.click(function () {
             console.log("Disconnect")
             $.ajax({
                 type: "DELETE",
@@ -371,6 +355,11 @@
                 console.log(remote_env_url)
                 $("#api-title").html(`Register to Kyma \n <p> Connected to <a href=` + remote_env_url + ` target="_blank" >${data.re_name}</a> in <b>${data.cluster_domain}</b>`)
                 changeButtonToDisconnectKyma()
+                if (data.metadataUrl)
+                    $('#metadata_url').val(data.metadataUrl)
+                if (data.eventsUrl)
+                    $('#event_url').val(data.eventsUrl)
+
             }
         })
     }

@@ -111,8 +111,7 @@ function createInfo() {
 
 function runOpenSSL(subject) {
 
-    LOGGER.debug("Creating CSR usin subject %s", subject)
-    keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
+    LOGGER.debug("Creating CSR using subject %s", subject)
     var privateKey = fs.readFileSync(keyFile, 'utf8')
     var pk = forge.pki.privateKeyFromPem(privateKey)
     var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)

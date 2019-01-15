@@ -47,28 +47,13 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
-    }else {
+    } else {
         keys.generatePrivateKey()
     }
 
     require("./middleware").defineMW(app)
 
-    app.get('/title', function (req, res, next) {
-        res.statusCode = 200
-        certificates_exist = false;
 
-        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile)) &&
-            fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
-            certificates_exist = true;
-        }
-
-        res.send({
-            name: varkesConfig.name,
-            cert_exist: certificates_exist,
-            eventsUrl: CONFIG.URLs.eventsUrl,
-            metadataUrl: CONFIG.URLs.metadataUrl
-        });
-    })
 
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
@@ -238,7 +223,7 @@ function createEvent(eventMetadata, event) {
     })
 }
 
-function sendEvent (req, res)  {
+function sendEvent(req, res) {
     request.post({
         url: CONFIG.URLs.eventsUrl,
         headers: {
