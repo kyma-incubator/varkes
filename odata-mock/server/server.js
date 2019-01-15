@@ -10,4 +10,4 @@ if (process.argv.length > 2) {
 }
 
 app = app(configPath)
-//app.start()
+app.start()

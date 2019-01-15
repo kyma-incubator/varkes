@@ -1,7 +1,7 @@
 'use strict';
 var loopback = require('loopback');
-var utility = require("./utility");
 var boot = require('loopback-boot');
+const fs = require('fs');
 var bodyParser = require('body-parser');
 var LOGGER = require("./logger").logger
 var parser = require("./parser")
@@ -10,10 +10,12 @@ const path = require("path")
 var varkesConfig
 
 module.exports = async function (varkesConfigPath) {
-  app = await configure(varkesConfigPath).catch((error) => {
-    LOGGER.error("%s", error)
-  })
-  return app
+  try {
+    return await configure(varkesConfigPath)
+  } catch (error) {
+    LOGGER.error("Error while configuring the mock: %s", error)
+    return null
+  }
 }
 
 function configure(varkesConfigPath) {
@@ -24,12 +26,13 @@ function configure(varkesConfigPath) {
     configValidation(varkesConfig)
   } else {
     LOGGER.info("Using default configuration")
-    varkesConfig = JSON.parse(fs.readFileSync("resources/defaultConfig.json", "utf-8"))
+    varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
   }
 
   var app = loopback();
   app.use(bodyParser.json());
-
+  parser.init()
+  app.varkesConfig = varkesConfig
 
   app.start = function () {
     app.listen(CONFIG.port, function () {
@@ -42,36 +45,35 @@ function configure(varkesConfigPath) {
     }
   }
 
-  var resource = JSON.parse(fs.readFileSync("resources/datasources.json", "utf-8"))
+  var resource = JSON.parse(fs.readFileSync(__dirname + "/resources/datasources.json", "utf-8"))
   if (varkesConfig.storage_file_path) {
     resource.db.file = varkesConfig.storage_file_path
   }
-  fs.writeFileSync("../generated/datasources.json", JSON.stringify(resource));
+  fs.writeFileSync(__dirname + "/../generated/datasources.json", JSON.stringify(resource));
 
-  resource= JSON.parse(fs.readFileSync("resources/config.json", "utf-8"))
-  fs.writeFileSync("../generated/config.json", JSON.stringify(resource));
+  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/config.json", "utf-8"))
+  fs.writeFileSync(__dirname + "/../generated/config.json", JSON.stringify(resource));
 
-  resource = JSON.parse(fs.readFileSync("resources/middleware.json", "utf-8"))
-  fs.writeFileSync("../generated/middleware.json", JSON.stringify(resource));
+  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/middleware.json", "utf-8"))
+  fs.writeFileSync(__dirname + "/../generated/middleware.json", JSON.stringify(resource));
 
-  resource = JSON.parse(fs.readFileSync("resources/component-config.json.json", "utf-8"))
-  fs.writeFileSync("../generated/component-config.json.json", JSON.stringify(resource));
+  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/component-config.json", "utf-8"))
+  fs.writeFileSync(__dirname + "/../generated/component-config.json.json", JSON.stringify(resource));
 
   var filePaths = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     filePaths.push(parser.parseEdmx(varkesConfig.apis[i].specification_file));
   }
-  LOGGER.info("Initializing apis")
+  LOGGER.info("Initializing APIs")
   return new Promise(function (resolve, reject) {
-
     Promise.all(filePaths).then(function (result) {
       boot(app, __dirname, function (err) {
         if (err) reject(err);
         resolve(app);
       });
-    }).catch((error) => {
-      reject(error)
     });
+  }).catch((error) => {
+    LOGGER.error("Error while initializing APIs: %s", error)
   })
 }
 
