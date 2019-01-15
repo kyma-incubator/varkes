@@ -288,13 +288,7 @@
                 $('#create_service').show();
                 $('#downloadLinks').show();
 
-                connectButton = $("#get_certificates")
-                connectButton.text("Disconnect")
-                connectButton.click(function () {
-                    disconnectKyma()
-                })
-                connectButton.removeClass('mdl-button--colored').addClass('mdl-button--accent');
-
+                changeButtonToDisconnectKyma()
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
                 if (data.eventsUrl)
@@ -310,14 +304,20 @@
         )
     }
 
-    function disconnectKyma() {
-        console.log("Disconnect")
-        $.ajax({
-            type: "DELETE",
-            url: "/connection",
-            success: function (data) {
-                location.reload()
-            }
+    function changeButtonToDisconnectKyma() {
+        connectButton = $("#get_certificates")
+        connectButton.removeClass('mdl-button--colored').addClass('mdl-button--accent');
+        connectButton.text("Disconnect")
+
+        connectButton.click(function () {
+            console.log("Disconnect")
+            $.ajax({
+                type: "DELETE",
+                url: "/connection",
+                success: function (data) {
+                    location.reload()
+                }
+            })
         })
     }
     function showService(serviceID) {
@@ -370,12 +370,7 @@
                 console.log("remote3")
                 console.log(remote_env_url)
                 $("#api-title").html(`Register to Kyma \n <p> Connected to <a href=` + remote_env_url + ` target="_blank" >${data.re_name}</a> in <b>${data.cluster_domain}</b>`)
-                connectButton = $("#get_certificates")
-                connectButton.text("Disconnect")
-                connectButton.click(function () {
-                    disconnectKyma()
-                })
-                connectButton.removeClass('mdl-button--colored').addClass('mdl-button--accent');
+                changeButtonToDisconnectKyma()
             }
         })
     }
