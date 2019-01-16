@@ -4,17 +4,12 @@ const path = require("path")
 var LOGGER = require("./logger").logger
 var CONFIG = require("./config")
 var forge = require("node-forge")
-var https = require("https")
 const url = require("url")
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 const keysDirectory = path.resolve(CONFIG.keyDir)
-var agentOptions = {
-    rejectUnauthorized: false
-};
-var agent = new https.Agent(agentOptions);
 
 function connect(localKyma, url) {
     return new Promise((resolve, reject) => {

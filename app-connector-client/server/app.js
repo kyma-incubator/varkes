@@ -58,12 +58,8 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     app.use("/apis", apis)
     app.use("/connection", connector.router)
-    // app.get("/connection", connector.info)
-    app.post("/connection", connect);
-    //app.delete("/connection", connector.disconnect)
 
-    //app.get("/connection/key", connector.key)
-    //app.get("/connection/cert", connector.cert)
+    app.post("/connection", connect); //* This is defined in this file, thus added explicitly.
 
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
