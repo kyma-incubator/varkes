@@ -1,8 +1,5 @@
 .dockerignore
 Dockerfile
 node_modules
-index.js
 Makefile
 *.log
-Course.js
-Course.json

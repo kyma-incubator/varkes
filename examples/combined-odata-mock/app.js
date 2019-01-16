@@ -1,9 +1,18 @@
-var path = "C:\\Users\\D074188\\Desktop\\varkes\\examples\\combined-odata-mock\\config.js"
-var Resource = require('express-resource')
-require("varkes-odata-mock")(path).then(function (app) {
-    app = require("varkes-app-connector-client")(path, app, true);
-    app.listen(10000, function () {
-        app.startLoopback()
-    });
-});
+var odataApp = require("varkes-odata-mock")
+var connectorApp = require("varkes-app-connector-client")
 
+var app = require('express')()
+
+runAsync = async () => {
+    try {
+        app.use(await odataApp("./varkes_config.js"))
+        app.use(await connectorApp("./varkes_config.js"))
+        app.listen(10000, function () {
+            console.info("Started application on port %d", 10000)
+        });
+    } catch (error) {
+        console.error("Problem while starting application: %s", error)
+    }
+}
+
+runAsync()

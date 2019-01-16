@@ -1,5 +1,4 @@
 module.exports = {
-    port: 10000,
     error_messages: {
         500: '{"error":\"Something went Wrong\"}',
         400: '{"error":\"Errorrrr\"}',
@@ -8,24 +7,28 @@ module.exports = {
     name: "combined-openapi-mock",
     apis: [
         {
-            baseurl: "/entity",
+            baseurl: "/api2",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
-            specification_file: 'schools.yaml',
-            name: "schools",
-            added_endpoints: [
-                {
-                    filePath: "Endpoint_template.yaml",
-                    url: '/trial_endpoint'
-                }
-            ]
+            specification_file: 'apis/schools.yaml',
+            name: "schools"
         },
         {
-            baseurl: "/entity/v1",
+            baseurl: "/api1",
             name: "courses",
             metadata: "/metadata",
-            specification_file: 'courses.yaml',
+            specification_file: 'apis/courses.yaml',
             oauth: "/authorizationserver/oauth/token"
+        }
+    ],
+    events: [
+        {
+            specification_file: "apis/events.json",
+            name: "events",
+            description: "All Events v1",
+            labels: {
+                "connected-app": "testApp"
+            }
         }
     ]
 }

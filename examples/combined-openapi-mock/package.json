@@ -13,8 +13,9 @@
     "lodash": "^4.17.11",
     "deep-extend": ">=0.5.1",
     "npm": "^6.5.0",
-    "varkes-app-connector-client": "^1.3.13",
-    "varkes-openapi-mock": "^0.3.6"
+    "varkes-app-connector-client": "^1.3.14",
+    "varkes-openapi-mock": "^0.3.7",
+    "express": "^4.16.4"
   },
   "repository": {
     "type": "ssh",

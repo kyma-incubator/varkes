@@ -1,25 +1,27 @@
 var request = require('supertest');
-var server = require('../server/server')("../config.js");
-describe('controllers', function (done) {
+var server = require('../server/app')("./test/varkes_config.js");
+describe('controllers', function () {
 
-    it('test_odata', function () {
-        server.then(function (result) {
-            done = result.stop();
-            describe('GET metadata', function () {
-
-                it('should return response 200', function () {
-
-                    request(result)
-                        .get('/marketing/metadata')
+    it('test_odata', function (done) {
+        server.then(function (app) {
+            describe('GET course 1 via API', function () {
+                it('should return response 200', function (done) {
+                    request(app)
+                        .get('/api/courses/1')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'text/xml; charset=utf-8')
-                        .expect(200, done)
+                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .expect(200,done)
                 });
-
-
             });
-        });
-
+            describe('GET course 1 via odata', function () {
+                it('should return response 200', function (done) {
+                    request(app)
+                        .get('/odata/Courses(\'1\')')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .expect(200,done)
+                });
+            });
+        }).finally(done);
     });
-
 });

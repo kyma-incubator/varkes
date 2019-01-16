@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-var app = require("./app")
+var connectorApp = require("./app")
+var app = require('express')()
+var LOGGER = require("./logger").logger
 var nodePort
-var odata
 var configPath //= "test/varkes_config.js"
 
 if (process.argv.length > 2) {
@@ -12,5 +13,15 @@ if (process.argv.length > 2) {
     }
 }
 
-app = app(configPath, null , odata, nodePort)
-app.start()
+runAsync = async () => {
+    try {
+        app.use(await connectorApp(configPath))
+        app.listen(10000, function () {
+            LOGGER.info("Started application on port %d", 10000)
+        });
+    } catch (error) {
+        LOGGER.error("Problem while starting application: %s", error)
+    }
+}
+
+runAsync()

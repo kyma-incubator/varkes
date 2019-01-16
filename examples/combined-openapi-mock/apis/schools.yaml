@@ -3,7 +3,7 @@ info:
   description: "Commerce Webservices Version 2"
   version: "2.0"
   title: "Commerce Webservices V2"
-basePath: "/entity"
+basePath: "/api2"
 consumes:
   - "application/json"
 produces:

@@ -5,7 +5,7 @@ module.exports = {
             baseurl: "/api1",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
-            specification_file: 'swagger.yaml',
+            specification_file: 'apis/courses.yaml',
             name: "courses"
         }
     ],
@@ -14,6 +14,5 @@ module.exports = {
         500: '{"error":\"Something went Wrong\"}',
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
-    },
-    port: 10000
+    }
 }

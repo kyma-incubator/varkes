@@ -1,11 +1,16 @@
-var app = require("varkes-odata-mock")("../config.js")
+var odataApp = require("varkes-odata-mock")
 
-app.post('/odata/authorizationserver/oauth/token', function (req, res, next) {
+var app = require('express')()
 
-    console.log("entered oauth");
-    console.log(req.body)
-    res.send({ token: 4444 })
-});
-app.get("/odata/Courses(*)", function (req, res, next) {
-    res.send("whaaaat")
-});
+runAsync = async () => {
+    try {
+        app.use(await odataApp("./varkes_config.js"))
+        app.listen(10000, function () {
+            console.info("Started application on port %d", 10000)
+        });
+    } catch (error) {
+        console.error("Problem while starting application: %s", error)
+    }
+}
+
+runAsync()

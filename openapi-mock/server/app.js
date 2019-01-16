@@ -1,6 +1,5 @@
 'use strict';
 
-
 var middleware = require('swagger-express-middleware');
 const LOGGER = require("./logger").logger
 const bodyParser = require('body-parser');
@@ -8,6 +7,7 @@ var mock_controller = require("./mock_controller");
 var Resource = require("express-resource")
 var app = require("express")();
 const path = require("path")
+const fs = require('fs');
 
 var middlewares = [];
 var memoryStores = [];
@@ -22,11 +22,7 @@ module.exports = function (varkesConfigPath) {
     configValidation(varkesConfig)
   } else {
     LOGGER.info("Using default configuration")
-    varkesConfig = {
-      name: 'Varkes OpenAPI-Mock',
-      apis: [],
-      events: []
-    }
+    varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
   }
 
   app.config = varkesConfig;
@@ -34,12 +30,6 @@ module.exports = function (varkesConfigPath) {
 
   mock_controller.init(app, varkesConfig);
   mock_controller.recordRequest(app);
-  
-  app.start = function () {
-    app.listen(CONFIG.port, function () {
-        LOGGER.info("%s listening at port %d", varkesConfig.name, CONFIG.port)
-    });
-  }
 
   let myDB = new MemoryDataStore();
 

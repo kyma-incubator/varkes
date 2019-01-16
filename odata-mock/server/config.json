@@ -1,10 +1,9 @@
 {
-  "restApiRoot": "/api",
   "host": "0.0.0.0",
   "remoting": {
     "context": false,
     "rest": {
-      "handleErrors": true,
+      "handleErrors": false,
       "normalizeHttpPath": false,
       "xml": false
     },
@@ -19,6 +18,5 @@
     "cors": false
   },
   "legacyExplorer": false,
-  "logoutSessionsOnSensitiveChanges": true,
-  "parserPath": "../common/utility/parser"
+  "logoutSessionsOnSensitiveChanges": true
 }
