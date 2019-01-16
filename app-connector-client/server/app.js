@@ -2,7 +2,7 @@
 
 var express = require("express")
 var connector = require("./connector")
-var apis = require("./api")
+var apis = require("./apis")
 var keys = require("./keys")
 //const { parse, convert } = require('odata2openapi');
 var request = require("request")
@@ -56,20 +56,14 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
-    app.get("/apis", apis.getAll)
-    app.post("/apis", apis.create)
-    app.delete("/apis", apis.deleteAll)
-
-    app.get("/apis/:api", apis.get)
-    app.put("/apis/:api", apis.update)
-    app.delete("/apis/:api", apis.delete)
-
-    app.get("/connection", connector.info)
+    app.use("/apis", apis)
+    app.use("/connection", connector.router)
+    // app.get("/connection", connector.info)
     app.post("/connection", connect);
-    app.delete("/connection", connector.disconnect)
+    //app.delete("/connection", connector.disconnect)
 
-    app.get("/connection/key", connector.key)
-    app.get("/connection/cert", connector.cert)
+    //app.get("/connection/key", connector.key)
+    //app.get("/connection/cert", connector.cert)
 
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
@@ -94,7 +88,7 @@ async function connect(req, res) {
     if (!req.body) res.sendStatus(400);
 
     try {
-        data = await connector.connect(req.query.localKyma, req.body.url)
+        data = await connector.connectFunc(req.query.localKyma, req.body.url)
 
         if (req.query.localKyma == true) {
             var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
@@ -112,6 +106,7 @@ async function connect(req, res) {
         }
 
         connector.info(req, res)
+
     } catch (error) {
         message = "There is an error while registering.\n Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
