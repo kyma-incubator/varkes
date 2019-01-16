@@ -14,6 +14,7 @@ const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("./config")
 
+var app = express()
 var varkesConfig
 var odata = false;
 var nodePort;
@@ -21,28 +22,19 @@ var localKyma = false;
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
-module.exports = function (varkesConfigPath = null, appParam = null, odataParam = false, nodePortParam = null) {
+module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
-    odata = odataParam;
-    if (appParam) {
-        app = appParam;
-    } else {
-        app = express()
-    }
+
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
         endpointConfig = path.resolve(varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
-        configValidation(varkesConfig, odata)
+        configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
-        varkesConfig = {
-            name: 'Varkes Application Connector',
-            apis: [],
-            events: []
-        }
+        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
     }
 
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
@@ -53,14 +45,13 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
 
     require("./middleware").defineMW(app)
 
-
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
     app.use("/apis", apis)
     app.use("/connection", connector.router)
 
-    app.post("/connection", connect); //* This is defined in this file, thus added explicitly.
-
+    app.post("/connection", connect);
+    
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
     })
@@ -72,12 +63,9 @@ module.exports = function (varkesConfigPath = null, appParam = null, odataParam 
     })
     app.post("/events", sendEvent)
 
-    app.start = function () {
-        app.listen(CONFIG.port, function () {
-            LOGGER.info("%s listening at port %d", varkesConfig.name, CONFIG.port)
-        });
-    }
-    return app;
+    return new Promise(function (resolve, reject) {
+        resolve(app)
+    });
 }
 
 async function connect(req, res) {
@@ -122,7 +110,7 @@ async function createServicesFromConfig(hostname, apisConfig) {
             await createService(serviceMetadata, api, hostname)
             LOGGER.debug("Registered API successful: %s", api.name)
         } catch (error) {
-            LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
+            LOGGER.error("Registration of API '%s' failed: %s", api.name, error.message)
         }
     }
 }
@@ -255,33 +243,8 @@ function defineEventMetadata() {
     }
 }
 
-function configValidation(configJson, odata) {
+function configValidation(configJson) {
     var error_message = "";
-    if (configJson.hasOwnProperty("apis")) {
-        var apis = configJson.apis;
-        var matchRegex = /^(\/[a-zA-Z0-9]+)+$/
-        for (var i = 1; i <= apis.length; i++) {
-            var api = apis[i - 1];
-            if ((!api.baseurl || !api.baseurl.match(matchRegex)) && !odata) {
-                error_message += "\napi number " + i + ": baseurl does not exist or is in the wrong format";
-            }
-            if (!api.metadata || !api.metadata.match(matchRegex)) {
-                error_message += "\napi number " + i + ": metadata does not exist or is in the wrong format";
-            }
-            if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
-                error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
-            }
-            if ((!api.oauth || !api.oauth.match(matchRegex)) && !odata) {
-                error_message += "\napi number " + i + ": oauth does not exist or is in the wrong format";
-            }
-            if ((!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) && !odata) {
-                error_message += "\napi number " + i + ": specification_file does not exist or is not a yaml file";
-            }
-            if ((!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.xml/)) && odata) {
-                error_message += "\napi number " + i + ": specification_file does not exist or is not a xml file";
-            }
-        }
-    }
 
     var events = configJson.events;
     if (events) {

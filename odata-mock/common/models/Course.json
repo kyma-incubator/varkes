@@ -1,1 +1,0 @@
-{"name":"Course","plural":"Courses","properties":{"code":{"required":true,"type":"string"},"name":{"required":true,"type":"string"}}}

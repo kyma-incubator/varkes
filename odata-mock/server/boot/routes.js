@@ -8,7 +8,7 @@ module.exports = function (app) {
     var apis = app.varkesConfig.apis;
     apis.forEach(function (api) {
         app.get(api.metadata, function (req, res, next) {
-            var spec = utility.readFile(api.specification_file);
+            var spec = fs.readFileSync(api.specification_file,'utf-8');
             res.status(200);
             res.type("text/xml");
             res.send(spec);
@@ -45,7 +45,6 @@ module.exports = function (app) {
                 return "-";
         });
         morgan.token('body', function (req, res) {
-            console.log(req.body)
             if (req.body && Object.keys(req.body).length != 0)
                 return JSON.stringify(req.body);
             else

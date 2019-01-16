@@ -4,9 +4,9 @@ module.exports = {
         {
             name: "courses",
             metadata: "/courses/metadata",
-            specification_file: "test/courses.xml"
+            specification_file: "apis/courses.xml"
         }
     ],
-    storage_file_path: "test/data.json",
+    storage_file_path: "data.json",
 
 }

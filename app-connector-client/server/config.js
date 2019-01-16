@@ -1,7 +1,6 @@
 module.exports = {
     keyDir: "keys",
     assetDir: "server/assets",
-    port: 10000,
     URLs: {
         metadataUrl: "",
         eventsUrl: "",

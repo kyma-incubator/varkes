@@ -9,16 +9,11 @@ const path = require("path")
 
 var varkesConfig
 
-module.exports = async function (varkesConfigPath) {
-  try {
-    return await configure(varkesConfigPath)
-  } catch (error) {
-    LOGGER.error("Error while configuring the mock: %s", error)
-    return null
-  }
+module.exports = function (varkesConfigPath) {
+  return configure(varkesConfigPath)
 }
 
-function configure(varkesConfigPath) {
+async function configure(varkesConfigPath) {
   if (varkesConfigPath) {
     var endpointConfig = path.resolve(varkesConfigPath)
     LOGGER.info("Using configuration %s", endpointConfig)
@@ -34,47 +29,38 @@ function configure(varkesConfigPath) {
   parser.init()
   app.varkesConfig = varkesConfig
 
-  app.start = function () {
-    app.listen(CONFIG.port, function () {
-      LOGGER.info("%s listening at port %d", CONFIG.name, CONFIG.port)
-    });
-    if (app.get('loopback-component-explorer')) {
-      var baseUrl = app.get('url').replace(/\/$/, '');
-      var explorerPath = app.get('loopback-component-explorer').mountPath;
-      LOGGER.info('Browse your REST API at %s%s', baseUrl, explorerPath);
-    }
-  }
-
-  var resource = JSON.parse(fs.readFileSync(__dirname + "/resources/datasources.json", "utf-8"))
-  if (varkesConfig.storage_file_path) {
-    resource.db.file = varkesConfig.storage_file_path
-  }
-  fs.writeFileSync(__dirname + "/../generated/datasources.json", JSON.stringify(resource));
-
-  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/config.json", "utf-8"))
-  fs.writeFileSync(__dirname + "/../generated/config.json", JSON.stringify(resource));
-
-  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/middleware.json", "utf-8"))
-  fs.writeFileSync(__dirname + "/../generated/middleware.json", JSON.stringify(resource));
-
-  resource = JSON.parse(fs.readFileSync(__dirname + "/resources/component-config.json", "utf-8"))
-  fs.writeFileSync(__dirname + "/../generated/component-config.json.json", JSON.stringify(resource));
-
-  var filePaths = [];
+  LOGGER.info("Parsing specifications and generating models")
+  var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
-    filePaths.push(parser.parseEdmx(varkesConfig.apis[i].specification_file));
+    parsedModels.push(parser.parseEdmx(varkesConfig.apis[i].specification_file));
   }
-  LOGGER.info("Initializing APIs")
-  return new Promise(function (resolve, reject) {
-    Promise.all(filePaths).then(function (result) {
-      boot(app, __dirname, function (err) {
-        if (err) reject(err);
-        resolve(app);
-      });
-    });
-  }).catch((error) => {
-    LOGGER.error("Error while initializing APIs: %s", error)
+  parsedModels = await Promise.all(parsedModels)
+
+  LOGGER.info("Booting loopback middleware")
+  //for configuration, see https://apidocs.strongloop.com/loopback-boot/
+  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/boot_config.json", "utf-8"))
+
+  parsedModels.forEach(function (parsedModel) {
+    parsedModel.modelConfigs.forEach(function (config) {
+      bootConfig.models[config.name]=config.value
+    })
+    parsedModel.modelDefs.forEach(function (definition) {
+      bootConfig.modelDefinitions.push(definition)
+    })
   })
+
+  if (varkesConfig.storage_file_path) {
+    bootConfig.dataSources.db.file = varkesConfig.storage_file_path
+  }
+
+  return new Promise(function (resolve, reject) {
+    boot(app, bootConfig, function (err) {
+      if (err) {
+        reject(err);
+      }
+      resolve(app);
+    });
+  });
 }
 
 function configValidation(configJson) {

@@ -1,6 +1,6 @@
 # openapi-mock example
 
-This example illustrate how to use the `varkes-openapi-mpck` standalone.
+This example illustrate how to use the `varkes-openapi-mock` standalone.
 
 ## Run local
 

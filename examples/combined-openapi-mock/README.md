@@ -10,5 +10,7 @@ npm install
 npm start
 ```
 
+Navigate to `http://localhost:10000` to see the UI of the `app-connector-client`.
 Navigate to `http://localhost:10000/console` to see the console of the `app-connector-client`.
-Navigate to `http://localhost:10000/entity/console` to see the console of the `schools` api.
+Navigate to `http://localhost:10000/api1/console` to see the console of the `courses` api.
+Navigate to `http://localhost:10000/api2/console` to see the console of the `schools` api.

@@ -12,7 +12,8 @@
   "dependencies": {
     "lodash": ">=4.17.11",
     "deep-extend": ">=0.5.1",
-    "varkes-openapi-mock": "^0.3.6"
+    "varkes-openapi-mock": "^0.3.5",
+    "express": "^4.16.4"
   },
   "repository": {
     "type": "ssh",

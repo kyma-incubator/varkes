@@ -1,7 +1,11 @@
 var winston = require("winston")
 
 const console_logger = new winston.transports.Console({
-  format: winston.format.simple()
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.label({ label: 'openapi-mock' }),
+    winston.format.printf(info => `${info.level} ${info.label}: ${info.message}`)
+  )
 })
 
 const file_logger = new winston.transports.File({ filename: process.env.NODE_ENV ? `logs/${process.env.NODE_ENV}.log` : 'logs/server.log' })

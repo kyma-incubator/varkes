@@ -6,6 +6,7 @@ const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const LOGGER = require("./logger").logger
+var morgan = require('morgan');
 
 var config;
 
@@ -21,7 +22,7 @@ module.exports = {
         }
     },
     recordRequest: function (app) {
-        utility.registerLogger(app);
+        registerLogger(app);
     },
     customErrorResponses: function (app) {
         app.use(function (err, req, res, next) {
@@ -42,6 +43,29 @@ module.exports = {
         });
     }
 };
+
+function registerLogger(app) {
+    morgan.token('header', function (req, res) {
+        if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
+            return req.rawHeaders;
+        else
+            return "-";
+    });
+    morgan.token('body', function (req, res) {
+        if (req.body && Object.keys(req.body).length != 0)
+            return JSON.stringify(req.body);
+        else
+            return "-";
+    });
+    var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
+    var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
+    app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
+    app.get('/requests', function (req, res, done) {
+        var text = fs.readFileSync("requests.log", "utf8");
+        res.status(200);
+        res.send(text);
+    });
+}
 
 function createEndpoints(openApi_doc, api) {
     if (api.hasOwnProperty("added_endpoints")) {
