@@ -12,7 +12,7 @@
   "dependencies": {
     "lodash": "^4.17.11",
     "npm": "^6.4.1",
-    "varkes-app-connector-client": "^1.3.12",
+    "varkes-app-connector-client": "^1.3.14",
     "varkes-odata-mock": "0.3.4",
     "compression": "^1.0.3",
     "express": "^4.16.4",
