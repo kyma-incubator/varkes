@@ -5,13 +5,9 @@ const fs = require("fs");
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const { parse, convert } = require('odata2openapi');
-var jsonTemplate = {};
 
 module.exports =
 {
-	init: function () {
-		jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/modelTemplate.json", "utf8"));
-	},
 	parseEdmx: function (path) {
 		return new Promise(function (resolve, reject) {
 			fs.readFile(path, "utf8", function (err, data) {
@@ -37,6 +33,7 @@ function createEntities(service) {
 	}
 
 	service.entityTypes.forEach(function (entityType) {
+		var jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/modelTemplate.json", "utf8"));
 		var entityName = entityType.name;
 
 		result.modelConfigs.push({ name: entityName, value:{dataSource: "db", public: true }})
@@ -45,6 +42,7 @@ function createEntities(service) {
 		jsonTemplate.definition.plural = entityName + "s";
 		jsonTemplate.definition = createEntityProperties(entityType, jsonTemplate.definition);
 		result.modelDefs.push(jsonTemplate)
+		LOGGER.debug("%s",JSON.stringify(jsonTemplate))
 	});
 
 	return result

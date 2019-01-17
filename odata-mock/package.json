@@ -1,12 +1,12 @@
 {
   "name": "varkes-odata-mock",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "server/app.js",
   "engines": {
     "node": ">=4"
   },
   "scripts": {
-    "start": "node .",
+    "start": "node server/server",
     "test": "mocha"
   },
   "dependencies": {

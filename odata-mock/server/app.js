@@ -26,7 +26,6 @@ async function configure(varkesConfigPath) {
 
   var app = loopback();
   app.use(bodyParser.json());
-  parser.init()
   app.varkesConfig = varkesConfig
 
   LOGGER.info("Parsing specifications and generating models")
@@ -41,6 +40,7 @@ async function configure(varkesConfigPath) {
   var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/boot_config.json", "utf-8"))
 
   parsedModels.forEach(function (parsedModel) {
+
     parsedModel.modelConfigs.forEach(function (config) {
       bootConfig.models[config.name]=config.value
     })
