@@ -6,7 +6,7 @@ TAG = $(DOCKER_TAG)
 ci-pr: resolve validate docker-build
 
 .PHONY: ci-master
-ci-master: resolve validate docker-build docker-latest
+ci-master: resolve validate docker-build docker-push
 
 resolve:
 	npm install
