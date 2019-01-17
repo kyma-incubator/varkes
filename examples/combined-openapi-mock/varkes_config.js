@@ -4,7 +4,7 @@ module.exports = {
         400: '{"error":\"Errorrrr\"}',
         404: '{"error":\"End Point not found\"}'
     },
-    name: "combined-openapi-mock",
+    name: "Combined OpenAPI-Mock",
     apis: [
         {
             baseurl: "/api2",

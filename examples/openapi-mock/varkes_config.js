@@ -1,5 +1,5 @@
 module.exports = {
-    name: "openapi-example",
+    name: "OpenAPI-Mock",
     apis: [
         {
             baseurl: "/api1",

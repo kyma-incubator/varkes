@@ -1,5 +1,5 @@
 {
-  "name": "combined-odata-mock",
+  "name": "varkes-example-combined-odata-mock",
   "version": "1.0.0",
   "description": "combined example of odata and app-connector-client",
   "main": "app.js",

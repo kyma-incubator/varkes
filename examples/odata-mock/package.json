@@ -1,5 +1,5 @@
 {
-  "name": "odata-mock-app",
+  "name": "varkes-example-odata-mock",
   "version": "0.1.0",
   "description": "Standalone example of varkes odataapi-mock",
   "main": "app.js",

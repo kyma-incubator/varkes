@@ -1,5 +1,5 @@
 {
-  "name": "openapi-mock-app",
+  "name": "varkes-example-openapi-mock",
   "version": "0.1.0",
   "description": "Standalone example of varkes openapi-mock",
   "main": "app.js",

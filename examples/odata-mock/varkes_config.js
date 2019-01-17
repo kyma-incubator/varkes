@@ -1,5 +1,5 @@
 module.exports = {
-    name: "Varkes OData-Mock",
+    name: "OData-Mock",
     apis: [
         {
             name: "courses",
