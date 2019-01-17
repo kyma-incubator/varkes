@@ -1,14 +1,44 @@
-OData Mock
-============================
-#### Mocks rest calls given an OData specification 
+# OData Mock
+
+Mocks rest calls given an OData specification 
 
 After startup, you have access to:
 - odata API - http://localhost:10000/odata/myResource
 - rest API - http://localhost:10000/api/myResource/metadata
 - console - http://localhost:10000/api/console
 
-Features
----------------------------
+## Starting the application
+
+### Run local
+
+To run it local, specify a config file (as located in the /test folder) like that:
+```
+npm install
+node server/server <varkes_config.js>
+```
+
+### Run local using docker
+
+To run it using docker, call:
+```
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/develop/varkes-odata-mock:latest
+```
+
+### Run in Kyma
+
+To run the mock using Kyma as runtime envrironment, run the following kubectl command to set up a namespace:
+
+```bash
+kubectl create namespace mocks
+kubectl label namespace mocks env=true
+```
+
+and to deploy the mock
+```bash
+kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/odata-mock/deployment/deployment.yaml
+```
+
+## Features
 
 - **Supports OData edmx specification** <br>
 Copy the edmx specification to the [EDMX_MODEL_SPECIFICATION.xml]((https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/EDMX_MODEL_SPECIFICATION.xml) file and the Engine will automatically create data model files for the entities specified in the specification
@@ -25,8 +55,8 @@ By posting to url `odata/authorizationserver/oauth/token` the OAuth2 requirement
 - **Based on the n-odata package** <br>
 the odata-mock application is based on the [n-odata-server](https://github.com/htammen/n-odata-server) project, which is based on [loopback](https://loopback.io/) 
 
-Installation and Use
---------------------------
+## Installation and Use
+
 Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 
 ````bash
@@ -120,28 +150,5 @@ This json object is processed by the [routes.js](https://github.com/kyma-incubat
     app.use(modifyResponseBody);
 ````
 Note: The messages (ex. '{"error":\"Something went Wrong\"}') could be any string doesn't have to be a json-like string<br>
- Starting the application
---------------------------
-There are two ways to start the application.
 
-- **start it as a node using npm command as follows:** <br>
-Go to the directory of the application and write in the terminal
-````bash
-node server/server.js <config.js path>
-````
-
-- **start it as a docker image as follows:** <br>
-
-Go to the directory of the application and write in the terminal
-````bash
-docker build -t <tag_name> .
-docker run -p <chosen_ip>:3000 <tag_name>
-````
-- **start the tests as follows:** <br>
-
-unit tests are written in the [test_odata.js](https://github.com/kyma-incubator/varkes/blob/master/examples/odata-mock-app/test/test_odata.js) file and the tests are run using the [mocha](https://mochajs.org/) framework.
-Go to the directory of the application and write in the terminal
- ````bash
-npm test
-````
 

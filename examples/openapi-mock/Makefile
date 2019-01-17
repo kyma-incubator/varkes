@@ -1,5 +1,5 @@
 
-APP_NAME = example-openapi-mock
+APP_NAME = varkes-example-openapi-mock
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 TAG = $(DOCKER_TAG)
 

@@ -1,10 +1,43 @@
-OpenAPI Mock
-============================
-#### Mocks res calls given an OpenAPI specification 
+# OpenAPI Mock
 
+Mocks res calls given an OpenAPI specification 
 
-Features
----------------------------
+After startup, you have access to:
+- rest API - http://localhost:10000/myApiBasePath/metadata
+- console - http://localhost:10000/myApiBasePath/console
+
+## Starting the application
+
+### Run local
+
+To run it local, specify a config file (as located in the /test folder) like that:
+```
+npm install
+node server/server <varkes_config.js>
+```
+
+### Run local using docker
+
+To run it using docker, call:
+```
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/develop/varkes-openapi-mock:latest
+```
+
+### Run in Kyma
+
+To run the mock using Kyma as runtime envrironment, run the following kubectl command to set up a namespace:
+
+```bash
+kubectl create namespace mocks
+kubectl label namespace mocks env=true
+```
+
+and to deploy the mock
+```bash
+kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/openapi-mock/deployment/deployment.yaml
+```
+
+## Features
 
 - **Supports OpenAPI 3.0 specs in JSON or YAML** <br>
 OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference OpenAPI files.  You can also create your custom implementation for a response and for errors.
@@ -18,8 +51,8 @@ By calling '/metadata' user can see the OpenAPI specification being use in text/
 - **Returns a dummy OAuth2 token** <br>
 By calling the endpoint '/authorizationserver/oauth/token' and adding the OAuth2 requirements as query params user can get a dummy OAuth2 token
 
-Installation and Use
---------------------------
+## Installation and Use
+
 Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 
 ````bash
@@ -94,22 +127,4 @@ module.exports = {
     },
     port: 10000
 }
-````
-
- Starting the application
---------------------------
-There are two ways to start the application.
-<br/>
-- **start it as a node using npm command as follows:** <br>
-Go to the openapi-mock directory and Run the following command specifying the path to the config.js file.
-````bash
-node server/server <configFilePath>
-````
-
-- **start it as a docker image as follows:** <br>
-
-Go to the directory of the application and write in the terminal
-````bash
-docker build -t <tag_name> .
-docker run -p <chosen_ip>:10000 <tag_name>
 ````

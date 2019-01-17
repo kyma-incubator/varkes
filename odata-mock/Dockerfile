@@ -5,5 +5,5 @@ WORKDIR /odata-mock
 
 RUN npm install
 
-EXPOSE 3000
-#CMD ["node","server/server.js","../config.js"]
+EXPOSE 10000
+CMD ["npm","start"]

@@ -1,4 +1,4 @@
-APP_NAME = example-combined-odata-mock
+APP_NAME = varkes-example-combined-odata-mock
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 TAG = $(DOCKER_TAG)
 
