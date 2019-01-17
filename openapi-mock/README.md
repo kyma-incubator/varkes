@@ -6,8 +6,8 @@ OpenAPI Mock
 Features
 ---------------------------
 
-- **Supports Swagger 2.0 specs in JSON or YAML** <br>
-OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference Swagger files.  You can also create your custom implementation for a response and for errors.
+- **Supports OpenAPI 3.0 specs in JSON or YAML** <br>
+OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference OpenAPI files.  You can also create your custom implementation for a response and for errors.
 
 - **Records Every Request made to the node** <br>
 Creates a requests.log file that contains the urls being called, the header of the request and the body of the request if exists using the [morgan](https://www.npmjs.com/package/morgan) logging framework.
