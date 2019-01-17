@@ -38,25 +38,30 @@ function getAll(req, res) {
         })
     }
 };
+apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
+    request.post({
+        url: CONFIG.URLs.metadataUrl,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        json: serviceMetadata,
+        agentOptions: {
+            cert: fs.readFileSync(certFile),
+            key: fs.readFileSync(keyFile)
+        },
+        rejectUnauthorized: !localKyma
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body);
+    });
 
+}
 function create(req, res) {
     LOGGER.debug("Creating API %s", req.body.name)
     err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        request.post({
-            url: CONFIG.URLs.metadataUrl,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            json: req.body,
-            agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
-            },
-            rejectUnauthorized: !req.query.localKyma
-        }, function (error, httpResponse, body) {
+        apiRouter.createAPI(req.query.localKyma, req.body, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
@@ -67,7 +72,7 @@ function create(req, res) {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             }
-        });
+        })
     }
 };
 

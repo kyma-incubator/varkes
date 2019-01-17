@@ -51,7 +51,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.use("/connection", connector.router)
 
     app.post("/connection", connect);
-    
+
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
     })
@@ -142,12 +142,11 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.specificationUrl = api.metadata;
             serviceMetadata.api.apiType = "odata";
         }
-
-        apis.createAPI(localKyma, serviceMetadata, function (data, err) {
-            if (err) {
-                reject(err)
+        apis.createAPI(localKyma, serviceMetadata, function (error, httpResponse, body) {
+            if (error) {
+                reject(error)
             } else {
-                resolve(data)
+                resolve(body)
             }
         })
     })
@@ -186,11 +185,11 @@ function createEvent(eventMetadata, event) {
         serviceJSON = JSON.parse(fs.readFileSync(event.specification_file))
         eventMetadata.events = serviceJSON;
 
-        apis.createAPI(localKyma, eventMetadata, function (data, err) {
-            if (err) {
-                reject(err)
+        apis.createAPI(localKyma, eventMetadata, function (error, httpResponse, body) {
+            if (error) {
+                reject(error)
             } else {
-                resolve(data)
+                resolve(body)
             }
         })
     })

@@ -278,7 +278,7 @@
                     $('#event_url').val(data.eventsUrl)
             },
             error: function (data) {
-                $("#help").val(data)
+                window.alert(data.responseText);
                 $("#tokenInput").val('');
             },
             contentType: "application/json"
