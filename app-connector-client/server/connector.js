@@ -75,7 +75,7 @@ function info(req, res) {
     if (info) {
         res.status(200).send(info)
     } else {
-        res.status(404).send("Not connected to a Kyma cluster")
+        res.status(400).send({error:"Not connected to a Kyma cluster"})
     }
 }
 function key(req, res) {

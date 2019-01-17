@@ -13,6 +13,7 @@ const path = require("path")
 const url = require("url")
 const bodyParser = require('body-parser');
 const CONFIG = require("./config")
+var expressWinston = require('express-winston');
 
 var app = express()
 var varkesConfig
@@ -43,8 +44,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         keys.generatePrivateKey()
     }
 
-    require("./middleware").defineMW(app)
-
+    app.use(expressWinston.logger(LOGGER))
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
     app.use("/apis", apis)

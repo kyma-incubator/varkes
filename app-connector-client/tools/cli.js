@@ -77,7 +77,6 @@ function createSingleService(hostname, endpoints, endpointCount) {
     serviceMetadata.api.targetUrl = hostname + element.baseurl
     serviceMetadata.api.credentials.oauth.url = hostname + element.oauth
 
-
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
