@@ -1,9 +1,9 @@
 var request = require('supertest');
-var openapiApp = require("varkes-openapi-mock")("./varkes_config.js")
+var exampleApp = require("./app.js")
 
 describe('tests openapi controllers', function () {
     it('should work', function () {
-        openapiApp.then(function (app) {
+        exampleApp.then(function (app) {
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)

@@ -7,7 +7,7 @@ runAsync = async () => {
     try {
         app.use(await openapiApp("./varkes_config.js"))
         app.use(await connectorApp("./varkes_config.js"))
-        app.listen(10000, function () {
+        return app.listen(10000, function () {
             console.info("Started application on port %d", 10000)
         });
     } catch (error) {
@@ -15,4 +15,4 @@ runAsync = async () => {
     }
 }
 
-runAsync()
+module.exports = runAsync()

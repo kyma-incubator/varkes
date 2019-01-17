@@ -1,10 +1,9 @@
 var request = require('supertest');
-var openapiApp = require("varkes-openapi-mock")("./varkes_config.js")
-var connectorApp = require("varkes-app-connector-client")("./varkes_config.js")
+var exampleApp = require("./app.js")
 
 describe('tests odata controllers', function () {
     it('should work', function () {
-        openapiApp.then(function (app) {
+        exampleApp.then(function (app) {
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
@@ -22,8 +21,6 @@ describe('tests odata controllers', function () {
                         .expect(200,done)
                 });
             });
-        })
-        connectorApp.then(function (app) {
             describe('GET metadata', function () {
                 it('should return 200', function (done) {
                     request(app)

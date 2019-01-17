@@ -17,7 +17,6 @@ runAsync = async () => {
         });
     } catch (error) {
         LOGGER.error("Problem while starting application: %s", error)
-        throw error
     }
 }
 
