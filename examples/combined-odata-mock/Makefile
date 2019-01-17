@@ -1,5 +1,6 @@
-#This is currently similar to our jenkins build, install and build the docker image.
 APP_NAME = example-combined-odata-mock
+IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
+TAG = $(DOCKER_TAG)
 
 .PHONY: ci-pr
 ci-pr: resolve validate docker-build
