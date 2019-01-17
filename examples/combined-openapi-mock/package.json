@@ -4,8 +4,8 @@
   "description": "combined example of varkes openapi-mock and varkes app-connector-client",
   "main": "app.js",
   "scripts": {
-    "test": "test",
-    "start": "node app.js ./config.js"
+    "test": "mocha",
+    "start": "node ."
   },
   "author": "",
   "license": "Apache-2.0",
@@ -16,6 +16,10 @@
     "varkes-app-connector-client": "^1.3.14",
     "varkes-openapi-mock": "^0.3.7",
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   },
   "repository": {
     "type": "ssh",
