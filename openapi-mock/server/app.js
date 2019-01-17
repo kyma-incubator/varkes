@@ -48,8 +48,9 @@ module.exports = function (varkesConfigPath) {
       })
     );
   }
-
-  return app;
+  return new Promise(function (resolve, reject) {
+    resolve(app)
+  });
 }
 
 function configValidation(configJson) {
