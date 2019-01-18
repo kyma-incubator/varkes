@@ -1,12 +1,12 @@
 module.exports = {
     name: "Combined OData-Mock",
-    odata: true,
     apis: [
         {
             name: "courses",
             metadata: "/courses/metadata",
             specification_file: "apis/courses.xml",
-            oauth: "/authorizationserver/oauth/token"
+            oauth: "/authorizationserver/oauth/token",
+            apiType: "odata"
         }
     ],
     events: [

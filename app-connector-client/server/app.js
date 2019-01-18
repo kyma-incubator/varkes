@@ -32,7 +32,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         endpointConfig = path.resolve(varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
-        apiType = varkesConfig.apiType;
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
@@ -125,7 +124,8 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
         serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
-        if (apiType == "openapi") {
+        apiType = api.apiType;
+        if (!apiType || apiType == "openapi") {
             var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
             serviceMetadata.api.spec = doc;
             if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
