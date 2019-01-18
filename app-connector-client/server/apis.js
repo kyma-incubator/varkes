@@ -28,7 +28,7 @@ function getAll(req, res) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode >= 400) {
                 LOGGER.error("Error while getting all API: %s", error)
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
@@ -93,7 +93,7 @@ function get(req, res) {
             if (error) {
                 LOGGER.error("Error while getting API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode >= 400) {
                 LOGGER.error("Error while getting API: %s", error)
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
@@ -125,7 +125,7 @@ function update(req, res) {
             if (error) {
                 LOGGER.error("Error while updating API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode >= 400) {
                 LOGGER.error("Error while updating API: %s", error)
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
@@ -153,7 +153,7 @@ function deleteApi(req, res) {
             if (error) {
                 LOGGER.error("Error while deleting API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode >= 400) {
                 LOGGER.error("Error while deleting API: %s", error)
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
