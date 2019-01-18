@@ -217,7 +217,16 @@ function sendEvent(req, res) {
         },
         rejectUnauthorized: !localKyma
     }, (error, httpResponse, body) => {
-        res.send(body)
+        if (error) {
+            LOGGER.error("Error while sending Event: %s", error)
+            res.status(500).send({ error: error.message })
+        } else if (httpResponse.statusCode >= 400) {
+            LOGGER.error("Error while sending Event: %s", JSON.stringify(body))
+            res.status(httpResponse.statusCode).type("json").send(body)
+        } else {
+            LOGGER.debug("Received API data: %s", JSON.stringify(body))
+            res.status(httpResponse.statusCode).type("json").send(body)
+        }
     })
 }
 function defineServiceMetadata() {
