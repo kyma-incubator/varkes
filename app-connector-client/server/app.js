@@ -32,6 +32,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         endpointConfig = path.resolve(varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
+        odata = varkesConfig.odata;
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
@@ -146,6 +147,10 @@ function createService(serviceMetadata, api, hostname) {
             if (error) {
                 reject(error)
             } else {
+                if (httpResponse.statusCode >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
+                }
                 resolve(body)
             }
         })
@@ -189,6 +194,10 @@ function createEvent(eventMetadata, event) {
             if (error) {
                 reject(error)
             } else {
+                if (body.hasOwnProperty("error")) {
+                    body.message = body.error;
+                    reject(body);
+                }
                 resolve(body)
             }
         })

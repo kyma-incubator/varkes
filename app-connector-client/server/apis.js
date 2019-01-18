@@ -65,7 +65,7 @@ function create(req, res) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode >= 400) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
