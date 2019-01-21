@@ -26,13 +26,15 @@ module.exports = {
             createMetadataEndpoint(openApi_doc, api, app);
             createConsole(openApi_doc, api, app);
             if (api.hasOwnProperty("added_endpoints")) {
-                if (!fs.existsSync(DIR_NAME + TMP_FILE)) {
+                var file_name = DIR_NAME + api.name + "_" + TMP_FILE;
+                if (!fs.existsSync(file_name)) {
                     if (!fs.existsSync(DIR_NAME))
                         fs.mkdirSync(DIR_NAME);
                     var yml_format = pretty_yaml.stringify(openApi_doc);
-                    utility.writeToFile(DIR_NAME + TMP_FILE, yml_format, true);
+                    utility.writeToFile(file_name, yml_format, true);
+                    api.specification_file = file_name;
                 }
-                createEndpoints(openApi_doc, api);
+                createEndpoints(openApi_doc, api, file_name);
             }
 
         }
@@ -83,7 +85,7 @@ function registerLogger(app) {
     });
 }
 
-function createEndpoints(openApi_doc, api) {
+function createEndpoints(openApi_doc, api, file_name) {
 
     api.added_endpoints.forEach(function (point) {
         var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
@@ -93,7 +95,7 @@ function createEndpoints(openApi_doc, api) {
         }
     });
     var yml_format = pretty_yaml.stringify(openApi_doc);
-    utility.writeToFile(DIR_NAME + TMP_FILE, yml_format, true);
+    utility.writeToFile(file_name, yml_format, true);
 }
 function createMetadataEndpoint(openApi_doc, api, app) {
     try {
