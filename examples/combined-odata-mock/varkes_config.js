@@ -6,7 +6,7 @@ module.exports = {
             metadata: "/courses/metadata",
             specification_file: "apis/courses.xml",
             oauth: "/authorizationserver/oauth/token",
-            apiType: "odata"
+            type: "odata"
         }
     ],
     events: [

@@ -124,7 +124,7 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
         serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
-        apiType = api.apiType;
+        apiType = api.type;
         if (!apiType || apiType == "openapi") {
             var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
             serviceMetadata.api.spec = doc;
