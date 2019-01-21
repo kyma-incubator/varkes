@@ -17,7 +17,7 @@ var expressWinston = require('express-winston');
 
 var app = express()
 var varkesConfig
-var odata = false;
+var apiType = "openapi";
 var nodePort;
 var localKyma = false;
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
@@ -124,7 +124,8 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
         serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
-        if (!odata) {
+        apiType = api.type;
+        if (!apiType || apiType == "openapi") {
             var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
             serviceMetadata.api.spec = doc;
             if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
@@ -146,6 +147,10 @@ function createService(serviceMetadata, api, hostname) {
             if (error) {
                 reject(error)
             } else {
+                if (httpResponse.statusCode >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
+                }
                 resolve(body)
             }
         })
@@ -189,6 +194,10 @@ function createEvent(eventMetadata, event) {
             if (error) {
                 reject(error)
             } else {
+                if (httpResponse >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
+                }
                 resolve(body)
             }
         })
@@ -208,7 +217,16 @@ function sendEvent(req, res) {
         },
         rejectUnauthorized: !localKyma
     }, (error, httpResponse, body) => {
-        res.send(body)
+        if (error) {
+            LOGGER.error("Error while sending Event: %s", error)
+            res.status(500).send({ error: error.message })
+        } else if (httpResponse.statusCode >= 400) {
+            LOGGER.error("Error while sending Event: %s", JSON.stringify(body))
+            res.status(httpResponse.statusCode).type("json").send(body)
+        } else {
+            LOGGER.debug("Received API data: %s", JSON.stringify(body))
+            res.status(httpResponse.statusCode).type("json").send(body)
+        }
     })
 }
 function defineServiceMetadata() {

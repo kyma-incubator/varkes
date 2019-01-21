@@ -1,9 +1,4 @@
 module.exports = {
-    error_messages: {
-        500: '{"error":\"Something went Wrong\"}',
-        400: '{"error":\"Errorrrr\"}',
-        404: '{"error":\"End Point not found\"}'
-    },
     name: "Combined OpenAPI-Mock",
     apis: [
         {

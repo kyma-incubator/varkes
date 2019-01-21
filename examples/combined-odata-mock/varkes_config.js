@@ -4,7 +4,9 @@ module.exports = {
         {
             name: "courses",
             metadata: "/courses/metadata",
-            specification_file: "apis/courses.xml"
+            specification_file: "apis/courses.xml",
+            oauth: "/authorizationserver/oauth/token",
+            type: "odata"
         }
     ],
     events: [

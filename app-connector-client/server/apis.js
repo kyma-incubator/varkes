@@ -28,8 +28,8 @@ function getAll(req, res) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
-                LOGGER.error("Error while getting all API: %s", error)
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while getting all API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data")
@@ -65,8 +65,8 @@ function create(req, res) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
-                LOGGER.error("Error while creating API: %s", error)
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while creating API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
@@ -93,8 +93,8 @@ function get(req, res) {
             if (error) {
                 LOGGER.error("Error while getting API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
-                LOGGER.error("Error while getting API: %s", error)
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while getting API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
@@ -125,8 +125,8 @@ function update(req, res) {
             if (error) {
                 LOGGER.error("Error while updating API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
-                LOGGER.error("Error while updating API: %s", error)
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while updating API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
@@ -153,8 +153,8 @@ function deleteApi(req, res) {
             if (error) {
                 LOGGER.error("Error while deleting API: %s", error)
                 res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode != 200) {
-                LOGGER.error("Error while deleting API: %s", error)
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while deleting API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
