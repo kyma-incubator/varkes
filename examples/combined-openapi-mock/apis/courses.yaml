@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   description: "Commerce Webservices Version 2"
   version: "2.0"
@@ -136,10 +136,13 @@ paths:
           description: "Not Found"
 definitions:
   CoursesDTO:
-    type: "array"
-    items:
-      code:
-        type: "string"
-      name:
-        type: "string"
+    type: object
+    properties:
+      courses:
+        type: "array"
+        items:
+          code:
+            type: "string"
+          name:
+            type: "string"
 
