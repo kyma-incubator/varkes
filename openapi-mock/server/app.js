@@ -66,13 +66,6 @@ function configValidation(configJson) {
       if (!api.baseurl || !api.baseurl.match(matchRegex)) {
         error_message += "\napi " + api.name + ": baseurl does not exist or is in the wrong format";
       }
-      if (!api.metadata || !api.metadata.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": metadata does not exist or is in the wrong format";
-      }
-
-      if (!api.oauth || !api.oauth.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": oauth does not exist or is in the wrong format";
-      }
       if (!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) {
         error_message += "\napi " + api.name + ": specification_file does not exist or is not a yaml file";
       }
