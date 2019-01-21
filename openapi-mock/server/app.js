@@ -27,7 +27,7 @@ module.exports = function (varkesConfigPath) {
 
   app.config = varkesConfig;
   app.use(bodyParser.json());
-
+  app.use(bodyParser.urlencoded({ extended: true }))
   mock_controller.init(app, varkesConfig);
   mock_controller.recordRequest(app);
 

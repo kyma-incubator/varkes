@@ -7,7 +7,10 @@ const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const LOGGER = require("./logger").logger
 var morgan = require('morgan');
-
+const DIR_NAME = "./generated/";
+const TMP_FILE = "tmp.yaml";
+var ouath_endpoint = "/oauth/token";
+var metadata_endpoint = "/metadata";
 var config;
 
 module.exports = {
@@ -16,9 +19,22 @@ module.exports = {
         for (var i = 0; i < config.apis.length; i++) {
             var api = config.apis[i];
             var openApi_doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
+            if (api.oauth)
+                ouath_endpoint = api.oauth;
+            if (api.metadata)
+                metadata_endpoint = api.metadata;
             createMetadataEndpoint(openApi_doc, api, app);
-            createEndpoints(openApi_doc, api);
             createConsole(openApi_doc, api, app);
+            if (api.hasOwnProperty("added_endpoints")) {
+                if (!fs.existsSync(DIR_NAME + TMP_FILE)) {
+                    if (!fs.existsSync(DIR_NAME))
+                        fs.mkdirSync(DIR_NAME);
+                    var yml_format = pretty_yaml.stringify(openApi_doc);
+                    utility.writeToFile(DIR_NAME + TMP_FILE, yml_format, true);
+                }
+                createEndpoints(openApi_doc, api);
+            }
+
         }
     },
     recordRequest: function (app) {
@@ -68,31 +84,44 @@ function registerLogger(app) {
 }
 
 function createEndpoints(openApi_doc, api) {
-    if (api.hasOwnProperty("added_endpoints")) {
-        api.added_endpoints.forEach(function (point) {
-            var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
-            if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
-                LOGGER.debug("Adding custom endpoint %s to %s", point.url, api.name)
-                openApi_doc["paths"][point.url] = endpoint;
-                var yml_format = pretty_yaml.stringify(openApi_doc);
-                utility.writeToFile(api.specification_file, yml_format, true);
-            }
-        });
-    }
+
+    api.added_endpoints.forEach(function (point) {
+        var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
+        if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
+            LOGGER.debug("Adding custom endpoint %s to %s", point.url, api.name)
+            openApi_doc["paths"][point.url] = endpoint;
+        }
+    });
+    var yml_format = pretty_yaml.stringify(openApi_doc);
+    utility.writeToFile(DIR_NAME + TMP_FILE, yml_format, true);
 }
 function createMetadataEndpoint(openApi_doc, api, app) {
     try {
-        app.get(api.baseurl + api.metadata, function (req, res) {
+
+        console.log(api.baseurl + ouath_endpoint);
+        app.get(api.baseurl + metadata_endpoint, function (req, res) {
             res.type('text/x-yaml')
             res.status(200)
             res.send(openApi_doc)
         });
-        var endpoint = yaml.safeLoad(fs.readFileSync(__dirname + "/resources/OAuth_template.yaml", 'utf8'));
-        if (!openApi_doc["paths"].hasOwnProperty(api.oauth)) {
-            openApi_doc["paths"][api.oauth] = endpoint;
-            var yml_format = pretty_yaml.stringify(openApi_doc);
-            utility.writeToFile(api.specification_file, yml_format, true);
-        }
+        app.post(api.baseurl + ouath_endpoint, function (req, res) {
+            if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
+                res.type('text/json');
+                res.status(200);
+                res.send({ token: 3333 });
+            }
+            else {
+                var message = "Some of the required parameters are missing";
+                res.status(404);
+                res.send({ error: message });
+            }
+        });
+        // var endpoint = yaml.safeLoad(fs.readFileSync(__dirname + "/resources/OAuth_template.yaml", 'utf8'));
+        // if (!openApi_doc["paths"].hasOwnProperty(api.oauth)) {
+        //     openApi_doc["paths"][api.oauth] = endpoint;
+        //     var yml_format = pretty_yaml.stringify(openApi_doc);
+        //     utility.writeToFile(api.specification_file, yml_format, true);
+        // }
     } catch (e) {
         LOGGER.error("Error while enriching swaggers with oauth endpoints: %s", e)
     }

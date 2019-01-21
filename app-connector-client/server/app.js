@@ -22,7 +22,7 @@ var nodePort;
 var localKyma = false;
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
+var oauth_endpoint = "/oauth/token";
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
 
@@ -122,8 +122,9 @@ function createService(serviceMetadata, api, hostname) {
         serviceMetadata.api.targetUrl = hostname;
         if (api.baseurl)
             serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
-
-        serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
+        if (api.oauth)
+            oauth_endpoint = api.oauth;
+        serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + oauth_endpoint;
         apiType = api.type;
         if (!apiType || apiType == "openapi") {
             var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
