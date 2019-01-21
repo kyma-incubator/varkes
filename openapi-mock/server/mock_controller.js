@@ -99,8 +99,6 @@ function createEndpoints(openApi_doc, api, file_name) {
 }
 function createMetadataEndpoint(openApi_doc, api, app) {
     try {
-
-        console.log(api.baseurl + ouath_endpoint);
         app.get(api.baseurl + metadata_endpoint, function (req, res) {
             res.type('text/x-yaml')
             res.status(200)
