@@ -45,13 +45,11 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     }
 
     app.use(expressWinston.logger(LOGGER))
-    app.use(express.static(path.resolve(__dirname, 'views/')))
-
+    app.use(express.static(path.resolve(__dirname, 'views/static/')))
     app.use("/apis", apis)
     app.use("/connection", connector) //* in the routes folder
 
-
-    app.get("/app", function (req, res) {
+    app.get("/", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))
     })
     app.get("/metadata", function (req, res) {
@@ -66,12 +64,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         resolve(app)
     });
 }
-
-
-
-
-
-
 
 function configValidation(configJson) {
     var error_message = "";
