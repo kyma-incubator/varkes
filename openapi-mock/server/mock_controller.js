@@ -25,18 +25,7 @@ module.exports = {
                 metadata_endpoint = api.metadata;
             createMetadataEndpoint(openApi_doc, api, app);
             createConsole(openApi_doc, api, app);
-            if (api.hasOwnProperty("added_endpoints")) {
-                var file_name = DIR_NAME + api.name + "_" + TMP_FILE;
-                if (!fs.existsSync(file_name)) {
-                    if (!fs.existsSync(DIR_NAME))
-                        fs.mkdirSync(DIR_NAME);
-                    var yml_format = pretty_yaml.stringify(openApi_doc);
-                    utility.writeToFile(file_name, yml_format, true);
-                    api.specification_file = file_name;
-                }
-                createEndpoints(openApi_doc, api, file_name);
-            }
-
+            createEndpoints(openApi_doc, api);
         }
     },
     recordRequest: function (app) {
@@ -85,17 +74,23 @@ function registerLogger(app) {
     });
 }
 
-function createEndpoints(openApi_doc, api, file_name) {
-
-    api.added_endpoints.forEach(function (point) {
-        var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
-        if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
-            LOGGER.debug("Adding custom endpoint %s to %s", point.url, api.name)
-            openApi_doc["paths"][point.url] = endpoint;
-        }
-    });
-    var yml_format = pretty_yaml.stringify(openApi_doc);
-    utility.writeToFile(file_name, yml_format, true);
+function createEndpoints(openApi_doc, api) {
+    if (api.hasOwnProperty("added_endpoints")) {
+        var file_name = DIR_NAME + api.name + "_" + TMP_FILE;
+        LOGGER.debug("Adding new Endpoints for api %s and creating new openapi file %s", api.name, file_name);
+        if (!fs.existsSync(DIR_NAME))
+            fs.mkdirSync(DIR_NAME);
+        api.specification_file = file_name;
+        api.added_endpoints.forEach(function (point) {
+            var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
+            if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
+                LOGGER.debug("Adding custom endpoint %s to %s", point.url, api.name)
+                openApi_doc["paths"][point.url] = endpoint;
+            }
+        });
+        var yml_format = pretty_yaml.stringify(openApi_doc);
+        utility.writeToFile(file_name, yml_format, true);
+    }
 }
 function createMetadataEndpoint(openApi_doc, api, app) {
     try {
@@ -116,12 +111,6 @@ function createMetadataEndpoint(openApi_doc, api, app) {
                 res.send({ error: message });
             }
         });
-        // var endpoint = yaml.safeLoad(fs.readFileSync(__dirname + "/resources/OAuth_template.yaml", 'utf8'));
-        // if (!openApi_doc["paths"].hasOwnProperty(api.oauth)) {
-        //     openApi_doc["paths"][api.oauth] = endpoint;
-        //     var yml_format = pretty_yaml.stringify(openApi_doc);
-        //     utility.writeToFile(api.specification_file, yml_format, true);
-        // }
     } catch (e) {
         LOGGER.error("Error while enriching swaggers with oauth endpoints: %s", e)
     }
