@@ -27,7 +27,7 @@ npm-publish:
 	npm publish
 
 clean:
-	rm -rf ./node_modules ./requests.log
+	rm -rf ./node_modules ./requests.log ./generated
 
 run:
 	npm start
