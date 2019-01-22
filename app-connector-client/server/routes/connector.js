@@ -1,15 +1,17 @@
 var request = require("request")
 const fs = require("fs")
 const path = require("path")
-var LOGGER = require("./logger").logger
-var CONFIG = require("./config")
+var LOGGER = require("../logger").logger
+var CONFIG = require("../config")
 var forge = require("node-forge")
 const url = require("url")
 const services = require("./services")
 const events = require("./events")
 
+var nodePort;
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
 
 const keysDirectory = path.resolve(CONFIG.keyDir)
 
@@ -77,7 +79,7 @@ function info(req, res) {
     if (info) {
         res.status(200).send(info)
     } else {
-        res.status(400).send({error:"Not connected to a Kyma cluster"})
+        res.status(400).send({ error: "Not connected to a Kyma cluster" })
     }
 }
 function key(req, res) {
@@ -155,7 +157,12 @@ async function connect(req, res) {
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
 
-        info(req, res)
+        info = createInfo()
+        if (info) {
+            res.status(200).send(info)
+        } else {
+            res.status(400).send({ error: "Not connected to a Kyma cluster" })
+        }
 
     } catch (error) {
         message = "There is an error while registering.\n Please make sure that your token is unique"

@@ -1,25 +1,24 @@
 #!/usr/bin/env node
 
 var express = require("express")
-var connector = require("./connector")
-var apis = require("./apis")
-var keys = require("./keys")
+
+
 var fs = require("fs")
 var LOGGER = require("./logger").logger
 const path = require("path")
 const bodyParser = require('body-parser');
 const CONFIG = require("./config")
 var expressWinston = require('express-winston');
-const events = require("./events")
 
+//route definitions
+const events = require("./routes/events")
+var connector = require("./routes/connector")
+var apis = require("./routes/apis")
+var keys = require("./keys")
 
 var app = express()
 var varkesConfig
-var apiType = "openapi";
-var nodePort;
-var localKyma = false;
-const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
 
 
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
@@ -49,7 +48,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.use("/apis", apis)
     app.use("/connection", connector)
 
-    app.post("/connection", connect);
 
     app.get("/app", function (req, res) {
         res.sendFile(path.resolve(__dirname, "views/index.html"))

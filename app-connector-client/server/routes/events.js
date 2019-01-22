@@ -1,4 +1,4 @@
-var LOGGER = require("./logger").logger
+var LOGGER = require("../logger").logger
 
 
 

@@ -1,5 +1,5 @@
 
-var LOGGER = require("./logger").logger
+var LOGGER = require("../logger").logger
 async function createServicesFromConfig(hostname, apisConfig) {
     if (!apisConfig)
         return
