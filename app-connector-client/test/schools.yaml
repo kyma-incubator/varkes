@@ -1,8 +1,8 @@
 openapi: "3.0.0"
 info:
-  description: "Commerce Webservices Version 2"
+  description: "Schools Webservices"
   version: "2.0"
-  title: "Commerce Webservices V2"
+  title: "Schools Webservices"
 basePath: "/entity"
 consumes:
   - "application/json"
