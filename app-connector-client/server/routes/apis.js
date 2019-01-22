@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-var CONFIG = require("./config")
+var CONFIG = require("../config")
 const path = require("path")
 var request = require("request")
-var LOGGER = require("./logger").logger
+var LOGGER = require("../logger").logger
 const fs = require("fs")
 
 var apiRouter = require("express").Router()
