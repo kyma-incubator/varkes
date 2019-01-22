@@ -3,15 +3,13 @@ module.exports = {
     apis: [
         {
             baseurl: "/api2",
-            metadata: "/metadata",
-            oauth: "/authorizationserver/oauth/token",
             specification_file: 'apis/schools.yaml',
             name: "schools"
         },
         {
             baseurl: "/api1",
             name: "courses",
-            metadata: "/metadata",
+            metadata: "/courseMetadata",
             specification_file: 'apis/courses.yaml',
             oauth: "/authorizationserver/oauth/token"
         }

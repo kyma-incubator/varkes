@@ -1,8 +1,8 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
-  description: "Commerce Webservices Version 2"
+  description: "Schools Webservices"
   version: "2.0"
-  title: "Commerce Webservices V2"
+  title: "Schools Webservices"
 basePath: "/api2"
 consumes:
   - "application/json"
@@ -23,7 +23,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/SchoolsDTO"
         401:
           description: "Unauthorized"
         403:
@@ -31,8 +31,8 @@ paths:
         404:
           description: "Not Found"
     post:
-      summary: "insert school"
-      description: "Given a list of course in body, insert data."
+      summary: "insert schools"
+      description: "Given a list of school in body, insert data."
       consumes:
         - "application/json"
       produces:
@@ -44,12 +44,14 @@ paths:
           description: "List of Component identifiers"
           required: true
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            type: "object"
+            school:
+              $ref: "#/definitions/SchoolDTO"
       responses:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/SchoolsDTO"
         201:
           description: "Created"
         401:
@@ -61,68 +63,51 @@ paths:
     security:
       - oauth2_Password: []
       - oauth2_client_credentials: []
-  /authorizationserver/oauth/token:
-    post:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
+  /schoolsbyId/{id}:
+    get:
+      summary: "Get a list of available schools."
+      description: "Lists supported payment card types."
       consumes:
-        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
         - "application/xml"
         - "application/json"
       parameters:
-        - in: "body"
-          name: "parameters"
-          description: "List of Component identifiers"
+        - name: "id"
+          in: "path"
+          description: "school identifier"
           required: true
-          schema:
-            type: "object"
-            properties:
-              client_id:
-                type: "string"
-              client_secret:
-                type: "string"
-              grant_type:
-                type: "string"
+          type: "string"
+          default: "1"
       responses:
         200:
           description: "OK"
           schema:
-            type: "object"
-            properties:
-              access_token_url:
+            school:
+              code:
+                type: "string"
+              name:
                 type: "string"
             default:
-              token: "3333"
+              school:
+                code: "C1"
+                name: ""
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
         404:
           description: "Not Found"
-  /trial_endpoint:
-    get:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/xml"
-        - "application/json"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            type: "object"
-            properties:
-              token:
-                type: "string"
-            default:
-              token: "3333"
-        404:
-          description: "Not Found"
+    security:
+      - oauth2_Password: []
+      - oauth2_client_credentials: []
 definitions:
-  SchoolDTO:
+  SchoolsDTO:
     type: "array"
     items:
-      areacode:
-        type: "string"
-      name:
-        type: "string"
-
+      ref: "#/definitions/SchoolDTO"
+  SchoolDTO:
+    code:
+      type: "string"
+    name:
+      type: "string"

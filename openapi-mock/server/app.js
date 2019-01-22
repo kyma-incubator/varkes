@@ -27,7 +27,7 @@ module.exports = function (varkesConfigPath) {
 
   app.config = varkesConfig;
   app.use(bodyParser.json());
-
+  app.use(bodyParser.urlencoded({ extended: true }))
   mock_controller.init(app, varkesConfig);
   mock_controller.recordRequest(app);
 
@@ -63,15 +63,16 @@ function configValidation(configJson) {
       if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
         error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
       }
-      if (!api.baseurl || !api.baseurl.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": baseurl does not exist or is in the wrong format";
-      }
-      if (!api.metadata || !api.metadata.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": metadata does not exist or is in the wrong format";
+      if (api.metadata && !api.metadata.match(matchRegex)) {
+        error_message += "\napi " + api.name + ": metadata is in the wrong format";
       }
 
-      if (!api.oauth || !api.oauth.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": oauth does not exist or is in the wrong format";
+      if (api.oauth && !api.oauth.match(matchRegex)) {
+        error_message += "\napi " + api.name + ": oauth is in the wrong format";
+      }
+
+      if (!api.baseurl || !api.baseurl.match(matchRegex)) {
+        error_message += "\napi " + api.name + ": baseurl does not exist or is in the wrong format";
       }
       if (!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) {
         error_message += "\napi " + api.name + ": specification_file does not exist or is not a yaml file";
