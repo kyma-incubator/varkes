@@ -63,6 +63,14 @@ function configValidation(configJson) {
       if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
         error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
       }
+      if (api.metadata && !api.metadata.match(matchRegex)) {
+        error_message += "\napi " + api.name + ": metadata is in the wrong format";
+      }
+
+      if (api.oauth && !api.oauth.match(matchRegex)) {
+        error_message += "\napi " + api.name + ": oauth is in the wrong format";
+      }
+
       if (!api.baseurl || !api.baseurl.match(matchRegex)) {
         error_message += "\napi " + api.name + ": baseurl does not exist or is in the wrong format";
       }
