@@ -46,7 +46,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.use(express.static(path.resolve(__dirname, 'views/')))
 
     app.use("/apis", apis)
-    app.use("/connection", connector)
+    app.use("/connection", connector) //* in the routes folder
 
 
     app.get("/app", function (req, res) {
