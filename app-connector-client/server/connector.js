@@ -5,13 +5,15 @@ var LOGGER = require("./logger").logger
 var CONFIG = require("./config")
 var forge = require("node-forge")
 const url = require("url")
+const services = require("./services")
+const events = require("./events")
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 const keysDirectory = path.resolve(CONFIG.keyDir)
 
-function connect(localKyma, url) {
+function authenticateToKyma(localKyma, url) {
     return new Promise((resolve, reject) => {
         LOGGER.debug("Connecting ..")
         var URLs = {}
@@ -131,9 +133,44 @@ function parseSubjectToJsonArray(subject) {
 
     return subjectsArray
 }
+
+async function connect(req, res) {
+    if (!req.body) res.sendStatus(400);
+
+    try {
+        data = await authenticateToKyma(req.query.localKyma, req.body.url)
+
+        if (req.query.localKyma == true) {
+            var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
+            data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + nodePort);
+        }
+        CONFIG.URLs = data
+        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
+
+        if (req.body.register) {
+            LOGGER.debug("Auto-register APIs")
+            var hostname = req.body.hostname || "http://localhost"
+            await services.createServicesFromConfig(hostname, varkesConfig.apis)
+            await events.createEventsFromConfig(varkesConfig.events)
+            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+        }
+
+        info(req, res)
+
+    } catch (error) {
+        message = "There is an error while registering.\n Please make sure that your token is unique"
+        LOGGER.error("Failed to connect to kyma cluster: %s", error)
+        res.statusCode = 401
+        res.send(message)
+    }
+}
+
+
+
 var connectionRouter = require("express").Router()
 connectionRouter.get("/", info)
 connectionRouter.delete("/", disconnect)
 connectionRouter.get("/key", key)
 connectionRouter.get("/cert", cert)
-module.exports = { connectFunc: connect, router: connectionRouter, info: info }
+connectionRouter.post("/", connect)
+module.exports = connectionRouter
