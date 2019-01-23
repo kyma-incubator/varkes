@@ -1,20 +1,10 @@
 openapi: '3.0.0'
 info:
-  version: '0.1.0'
+  version: '1.3.20'
   title: 'Varkes Application Connector Client'
   description: 'Client for connecting an application to a Kyma cluster'
 paths:
-  /metadata:
-    get:
-      tags:
-        - 'metadata'
-      summary: 'Returns this OpenAPI definition'
-      responses:
-        '200':
-          description: "Successful"
-          content:
-            application/yaml:
-              type: yaml
+  
   /connection:
     post:
       tags:
@@ -27,54 +17,33 @@ paths:
         required: false
         schema:
           type: 'boolean'
-      - in: 'body'
-        name: 'url'
-        schema:
-          type: 'string'
-          example: 'https://kyma-cluster/v1/applications/sampleApp/info?token=xxx'
+      requestBody:
+        description: "Connection details of the Kyma cluster"
         required: true
-        description: 'The token url provided by the Kyma cluster to connect to'
-      - in: 'body'
-        name: 'register'
-        schema:
-          type: 'boolean'
-        required: false
-        description: 'On connect, should the mock register all bundled APIs?'
-      - in: 'body'
-        name: 'hostname'
-        schema:
-          type: 'string'
-          example: 'http://localhost:10000'
-        required: true
-        description: 'The url to the mock so that a Kyma cluster can reach the mocked APIs'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionDetails'
       responses:
        '200':
         description: 'Successful connection to Kyma'
         content:
           application/json:
             schema:
-              type: 'object'
-              properties:
-                metadataUrl:
-                  type: 'string'
-                  description: 'URL on connected Kyma cluster to manage APIs'
-                eventsUrl:
-                  type: 'string'
-                  description: 'URL on connected Kyma cluster to send events'
-                cluster_domain:
-                  type: 'string'
-                  description: 'Domain of the connected Kyma cluster'
-                re_name:
-                  type: 'string'
-                  description: 'Application on connected Kyma cluster'
+             $ref: '#/components/schemas/ConnectionResponse'
        '401':
           description: 'Connection is not authorized, usually the provided token is not valid'
           content:
-            text/plain:
+            application/json:
               schema:
-                type: 'string'
-                example: There is an error while registering. Please make sure that your token is unique and valid
+                type: 'object'
+                properties:
+                  error:
+                    type: string
+                    example: There is an error while registering. Please make sure that your token is unique
     get:
+      tags:
+        - 'connection'
       summary: Returns active connection info
       responses:
         '200':
@@ -82,27 +51,31 @@ paths:
           content:
             application/json:
               schema:
-                type: 'object'
-                properties:
-                  metadataUrl:
-                    type: 'string'
-                    description: 'URL on connected Kyma cluster to manage APIs'
-                  eventsUrl:
-                    type: 'string'
-                    description: 'URL on connected Kyma cluster to send events'
-                  cluster_domain:
-                    type: 'string'
-                    description: 'Domain of the connected Kyma cluster'
-                  re_name:
-                    type: 'string'
-                    description: 'Application on connected Kyma cluster'
+                $ref: '#/components/schemas/ConnectionResponse'
+        '400':
+          description: "Not connected to Kyma cluster"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     delete:
+      tags:
+        - 'connection'
       summary: Disconnects the mock from current kyma cluster
       responses:
         204:
           description: Disconnection was successful
+        400:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/ErrorResponse'
+                   
   /connection/key:
     get:
+      tags:
+        - 'connection'
       summary: 'Gets the private key used by the mock'
       responses:
         '200':
@@ -112,8 +85,16 @@ paths:
              schema:
                type: 'string'
                format: binary
+        '400':
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /connection/cert:
     get:
+      tags:
+        - 'connection'
       summary: Get the client certificate for connected Kyma cluster
       responses:
         '200':
@@ -123,8 +104,16 @@ paths:
              schema:
                type: 'string'
                format: binary
+        '400':
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /events:
     post:
+      tags:
+        - "event"
       summary: 'Sends a new event to the connected Kyma cluster'
       requestBody:
         description: 'Event payload'
@@ -152,9 +141,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
   /apis:
     post:
+      tags:
+        - "api"
       summary: 'Registers a new API on the connected Kyma cluster'
       requestBody:
         description: 'API to be registered'
@@ -177,21 +168,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceId'
-        '400':
-          description: 'Bad request'
+        '4XX':
+          description: "Error message returned by server"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
+               $ref: '#/components/schemas/ErrorResponse'
+          
+        '500':
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     get:
+      tags:
+        - "api"
       summary: 'Gets all registered apis on connected Kyma cluster'
       parameters:
-      - in: 'query'
-      name: 'localKyma'
-      description: 'deployment to local kyma'
-      required: true
-      schema:
-        type: 'boolean'
+        - in: 'query'
+          name: 'localKyma'
+          description: 'deployment to local kyma'
+          required: true
+          schema:
+             type: 'boolean'
       responses:
         '200':
           description: 'Successful operation'
@@ -201,12 +201,26 @@ paths:
                 type: 'array'
                 items:
                   $ref: '#/components/schemas/Service'
+        '4XX':
+          description: "Error message returned by server"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /apis/{Id}:
     get:
+      tags:
+        - "api"
       summary: 'Gets a API by ID from connected Kyma cluster'
       parameters:
       - in: 'path'
-        name: 'id'
+        name: 'Id'
         description: 'ID of a API'
         required: true
         schema:
@@ -230,8 +244,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: "Not Connected"
+        '500':
+          description: "Error while getting API"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          
     put:
+      tags:
+        - "api"
       summary: 'Updates a API by ID on connected Kyma cluster'
       requestBody:
         description: 'API to be stored'
@@ -262,8 +287,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: "Not connected"
+        '500':
+          description: Error while updating API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     delete:
+      tags:
+        - "api"
       summary: 'Deletes a API by ID on connected Kyma cluster'
       parameters:
       - in: 'path'
@@ -287,24 +322,103 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetadataErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: "Error while deleting API"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /metadata:
+    get:
+      tags:
+        - 'misc'
+      summary: 'Returns this OpenAPI definition'
+      responses:
+        '200':
+          description: "Successful"
+          content:
+            application/yaml:
+              examples:
+                {}
+  /console:
+    get:
+      tags:
+        - "misc"
+      summary: Returns openapi console for testing
+      responses:
+        '200':
+          description: "Successful"
+          content:
+            application/html:
+              examples: {}
+              
+  /app:
+    get:
+      tags:
+        - "misc"
+      summary: Returns homepage
+      responses:
+        '200':
+          description: "Successful"
+          content:
+            application/html:
+              examples: {}
 components:
   schemas:
+    ConnectionDetails:
+      type : 'object'
+      properties:
+        token:
+          type: "string"
+          example: 'https://kyma-cluster/v1/applications/sampleApp/info?token=xxx'
+          description: 'The token url provided by the Kyma cluster to connect to'
+        register:
+          type: 'boolean'
+          description: Defines whether you want to auto register your APIs to Kyma while registering
+          
+        hostname:
+          type: "string"
+          example: "http://localhost:10000"
+          description: Hostname of the APIs you are registering
+      required:
+        - token
+        - hostname
+    
     ServiceId:
       type: 'object'
       properties:
         id:
           type: 'string'
           format: 'uuid'
+          description: ID of the newly created application
+    ConnectionResponse:
+      type: 'object'
+      properties:
+        metadataUrl:
+          type: 'string'
+          description: 'URL on connected Kyma cluster to manage APIs'
+        eventsUrl:
+          type: 'string'
+          description: 'URL on connected Kyma cluster to send events'
+        cluster_domain:
+          type: 'string'
+          description: 'Domain of the connected Kyma cluster'
+        re_name:
+              type: 'string'
+              description: 'Application name on connected Kyma cluster'
     ServiceDetails:
       type: 'object'
       properties:
         provider:
           type: 'string'
+          description: "Name of the provider of the new application"
         name:
           type: 'string'
+          description: Name of the new application
         description:
           type: 'string'
+          description: "Summmary of the new application"
         api:
           $ref: '#/components/schemas/Api'
         events:
@@ -321,18 +435,25 @@ components:
         id:
           type: 'string'
           format: 'uuid'
+          description: ID of the api
         provider:
           type: 'string'
+          description: provider of the api
         name:
           type: 'string'
+          description: name of the api
         description:
           type: 'string'
+          description: description of the api
+
     Api:
+      description: "The apis that are being registered with the application"
       type: 'object'
       properties:
         targetUrl:
           type: 'string'
           format: 'uri'
+          description: "The endpoint of the API"
         credentials:
           $ref: '#/components/schemas/ApiCredentials'
         spec:
@@ -342,6 +463,7 @@ components:
         - targetUrl
     Events:
       type: 'object'
+      description: "Events that are being registered with the application"
       properties:
         spec:
           description: 'AsynApi file v1: https://github.com/asyncapi/asyncapi/blob/develop/schema/asyncapi.json'
@@ -353,28 +475,34 @@ components:
           description: 'Type of event'
           type: 'string'
         event-type-version:
-          description: version of event type
+          description: "version of event type"
           type: 'string'
         event-time:
           description: 'time when event was send'
         data:
           description: 'event payload'
-          tyoe: 'object'
+          type: 'object'
     Documentation:
       type: 'object'
+      description: "Documentation of the Application"
       properties:
         displayName: 
           type: 'string'
+          description: Name of the application 
         description: 
           type: 'string'
+          description: Summary of the application
         type:
           type: 'string'
+          description: Type of the application
         tags:
           type: 'array'
+          description: Tags of the application
           items: 
             type: 'string'
         docs:
           type: 'array'
+          description: Docs of the application
           items:
             $ref: '#/components/schemas/Document'
       required:
@@ -383,19 +511,24 @@ components:
         - type
     Document:
       type: 'object'
+      description: "Documentation document"
       properties:
         title:
           type: 'string'
+          description: Title of the document
         type:
           type: 'string'
+          description: Type of the document
         source:
           type: 'string'
+          description: Source of the document
       required:
         - title
         - type
         - source
     ApiCredentials:
       type: 'object'
+      description: Credential endpoint of the API
       properties:
         oauth:
           $ref: '#/components/schemas/OAuth'
@@ -403,6 +536,7 @@ components:
         - oauth
     OAuth:
       type: 'object'
+      description: OAuth endpoint of the API
       properties:
         url:
           type: 'string'
@@ -415,10 +549,11 @@ components:
         - url
         - clientId
         - clientSecret
-    MetadataErrorResponse:
+    ErrorResponse:
       type: 'object'
+      description: Error returned from the server
       properties:
-        code:
-          type: 'integer'
         error:
-          type: 'string'
+          type: "string"
+          example: You are not connected. Please try to reconnect
+    
