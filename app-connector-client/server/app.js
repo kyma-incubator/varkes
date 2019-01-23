@@ -25,7 +25,6 @@ var varkesConfig
 
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
-    const appName = getAppName()
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
@@ -53,7 +52,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.use("/connection", connector) //* in the routes folder
 
     app.get("/", function (req, res) {
-        res.render('index', { appName: appName })
+        res.render('index', { appName: varkesConfig.name }) // read from varkesConfig defined above
     })
     app.get("/metadata", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
@@ -88,9 +87,4 @@ function configValidation(configJson) {
     if (error_message != "") {
         throw new Error("Config Error: " + error_message);
     }
-}
-
-
-function getAppName() {
-    return "Varkes App Connector"
 }
