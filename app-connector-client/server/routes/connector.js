@@ -59,14 +59,18 @@ function authenticateToKyma(localKyma, url) {
     })
 }
 function disconnect(req, res) {
+    var deletedFileCount = 0
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
+        deletedFileCount++
     }
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
         fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
+        deletedFileCount++
     }
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
         fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
+        deletedFileCount++
     }
     CONFIG.URLs = {
         metadataUrl: "",
@@ -74,21 +78,17 @@ function disconnect(req, res) {
         certificatesUrl: ""
     }
 
-    res.status(204).send()
+    deletedFileCount == 3 ? res.status(204).send() : res.status(400).send({ error: "Not all files were deleted. Are you sure you were connected ?" })
 }
 function info(req, res) {
     info = createInfo()
-    if (info) {
-        res.status(200).send(info)
-    } else {
-        res.status(400).send({ error: "Not connected to a Kyma cluster" })
-    }
+    info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 function key(req, res) {
-    res.download(keyFile)
+    fs.existsSync(keyFile) ? res.download(keyFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 function cert(req, res) {
-    res.download(certFile)
+    fs.existsSync(certFile) ? res.download(certFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
 function createInfo() {
@@ -168,10 +168,10 @@ async function connect(req, res) {
         }
 
     } catch (error) {
-        message = "There is an error while registering.\n Please make sure that your token is unique"
+        message = "There is an error while registering. Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.statusCode = 401
-        res.send(message)
+        res.send({ error: message })
     }
 }
 
