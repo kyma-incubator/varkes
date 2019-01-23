@@ -25,7 +25,7 @@ var varkesConfig
 
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
-
+    const appName = getAppName()
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
@@ -45,12 +45,15 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     }
 
     app.use(expressWinston.logger(LOGGER))
+    app.set('view engine', 'ejs'); //* using EJS as template engine
+    app.set('views', path.join(__dirname, '/views/'));
     app.use(express.static(path.resolve(__dirname, 'views/static/')))
+
     app.use("/apis", apis)
     app.use("/connection", connector) //* in the routes folder
 
     app.get("/", function (req, res) {
-        res.sendFile(path.resolve(__dirname, "views/index.html"))
+        res.render('index', { appName: appName })
     })
     app.get("/metadata", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
@@ -85,4 +88,9 @@ function configValidation(configJson) {
     if (error_message != "") {
         throw new Error("Config Error: " + error_message);
     }
+}
+
+
+function getAppName() {
+    return "Varkes App Connector"
 }
