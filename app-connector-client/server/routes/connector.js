@@ -9,6 +9,7 @@ const services = require("./services")
 const events = require("./events")
 
 var nodePort;
+var varkesConfig;
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
@@ -152,8 +153,8 @@ async function connect(req, res) {
         if (req.body.register) {
             LOGGER.debug("Auto-register APIs")
             var hostname = req.body.hostname || "http://localhost"
-            await services.createServicesFromConfig(hostname, varkesConfig.apis)
-            await events.createEventsFromConfig(varkesConfig.events)
+            await services.createServicesFromConfig(req.query.localKyma, hostname, varkesConfig.apis)
+            await events.createEventsFromConfig(req.query.localKyma, varkesConfig.events)
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
 
@@ -180,4 +181,8 @@ connectionRouter.delete("/", disconnect)
 connectionRouter.get("/key", key)
 connectionRouter.get("/cert", cert)
 connectionRouter.post("/", connect)
-module.exports = connectionRouter
+module.exports = function (config, nodePortParam = null) {
+    varkesConfig = config;
+    nodePort = nodePortParam;
+    return connectionRouter;
+}

@@ -12,7 +12,7 @@ var expressWinston = require('express-winston');
 
 //route definitions
 const events = require("./routes/events")
-var connector = require("./routes/connector")
+var connector;
 var apis = require("./routes/apis")
 var keys = require("./keys")
 
@@ -29,10 +29,11 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
-        endpointConfig = path.resolve(varkesConfigPath)
-        LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = require(endpointConfig)
+        endpointConfig = path.resolve(varkesConfigPath);
+        LOGGER.info("Using configuration %s", endpointConfig);
+        varkesConfig = require(endpointConfig);
         configValidation(varkesConfig)
+        connector = require("./routes/connector")(varkesConfig, nodePortParam);
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
@@ -66,12 +67,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         resolve(app)
     });
 }
-
-
-
-
-
-
 
 function configValidation(configJson) {
     var error_message = "";

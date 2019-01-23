@@ -7,7 +7,7 @@ module.exports = {
     name: "app-connector-mock",
     events: [
         {
-            specification_file: "test/events.json",
+            specification_file: "./test/events.json",
             name: "events",
             description: "All Events v1",
             labels: {
@@ -20,7 +20,7 @@ module.exports = {
             baseurl: "/entity",
             metadata: "/metadata",
             oauth: "/authorizationserver/oauth/token",
-            specification_file: 'test/schools.yaml',
+            specification_file: './test/schools.yaml',
             name: "schools",
             added_endpoints: [ //endpoints
                 {
@@ -33,7 +33,7 @@ module.exports = {
             baseurl: "/entity/v1",
             metadata: "/metadata",
             name: "courses",
-            specification_file: 'test/courses.yaml',
+            specification_file: './test/courses.yaml',
             oauth: "/authorizationserver/oauth/token"
         }
     ]

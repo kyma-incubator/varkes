@@ -1,6 +1,9 @@
 
 var LOGGER = require("../logger").logger
-async function createServicesFromConfig(hostname, apisConfig) {
+const yaml = require('js-yaml');
+const fs = require("fs")
+const apis = require("./apis");
+async function createServicesFromConfig(localKyma, hostname, apisConfig) {
     if (!apisConfig)
         return
 
@@ -8,14 +11,14 @@ async function createServicesFromConfig(hostname, apisConfig) {
     for (i = 0; i < apisConfig.length; i++) {
         api = apisConfig[i]
         try {
-            await createService(serviceMetadata, api, hostname)
+            await createService(localKyma, serviceMetadata, api, hostname)
             LOGGER.debug("Registered API successful: %s", api.name)
         } catch (error) {
             LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
         }
     }
 }
-function createService(serviceMetadata, api, hostname) {
+function createService(localKyma, serviceMetadata, api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         serviceMetadata.name = api.name;
@@ -24,8 +27,9 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
         serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
-        if (!odata) {
+        if (!api.type || api.type != "odata") {
             var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
+
             serviceMetadata.api.spec = doc;
             if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
                 serviceMetadata.description = doc.info.description;
@@ -43,11 +47,15 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.apiType = "odata";
         }
 
-        apis.createAPI(localKyma, serviceMetadata, function (data, err) {
+        apis.createAPI(localKyma, serviceMetadata, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
-                resolve(data)
+                if (httpResponse.statusCode >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
+                }
+                resolve(body)
             }
         })
     })
