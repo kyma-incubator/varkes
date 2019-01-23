@@ -19,10 +19,6 @@ var keys = require("./keys")
 var app = express()
 var varkesConfig
 
-
-
-
-
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
 

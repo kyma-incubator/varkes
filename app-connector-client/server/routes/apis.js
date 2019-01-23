@@ -9,22 +9,13 @@ var apiRouter = require("express").Router()
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
 function getAll(req, res) {
     LOGGER.debug("Getting all APIs")
     err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        request({
-            url: CONFIG.URLs.metadataUrl,
-            method: "GET",
-            agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
-            },
-            rejectUnauthorized: !req.query.localKyma
-        }, function (error, httpResponse, body) {
+        apiRouter.getAllAPIs(req.query.localKyma, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
@@ -33,12 +24,26 @@ function getAll(req, res) {
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data")
-                res.status(200).type("json").send(body)
+                res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
     }
 };
+apiRouter.getAllAPIs = function (localKyma, cb) {
+    request({
+        url: CONFIG.URLs.metadataUrl,
+        method: "GET",
+        agentOptions: {
+            cert: fs.readFileSync(certFile),
+            key: fs.readFileSync(keyFile)
+        },
+        rejectUnauthorized: !localKyma
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body);
+    });
+};
 apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
+
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -54,7 +59,24 @@ apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
         cb(error, httpResponse, body);
     });
 
-}
+};
+apiRouter.updateAPI = function (localKyma, serviceMetadata, api_id, cb) {
+    request.put({
+        url: `${CONFIG.URLs.metadataUrl}/${api_id}`,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        json: serviceMetadata,
+        agentOptions: {
+            cert: fs.readFileSync(certFile),
+            key: fs.readFileSync(keyFile)
+        },
+        rejectUnauthorized: !localKyma
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body);
+    });
+
+};
 function create(req, res) {
     LOGGER.debug("Creating API %s", req.body.name)
     err = assureConnected()
@@ -98,7 +120,7 @@ function get(req, res) {
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
-                res.status(200).type("json").send(body)
+                res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
     }
@@ -110,29 +132,19 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        request.put({
-            url: `${CONFIG.URLs.metadataUrl}/${req.params.api}`,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            json: req.body,
-            agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
-            },
-            rejectUnauthorized: !req.query.localKyma
-        }, function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while updating API: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while updating API: %s", JSON.stringify(body))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received API data: %s", JSON.stringify(body))
-                res.status(200).type("json").send(body)
-            }
-        });
+        apiRouter.updateAPI(req.query.localKyma, req.body, req.params.api,
+            function (error, httpResponse, body) {
+                if (error) {
+                    LOGGER.error("Error while updating API: %s", error)
+                    res.status(500).send({ error: error.message })
+                } else if (httpResponse.statusCode >= 400) {
+                    LOGGER.error("Error while updating API: %s", JSON.stringify(body))
+                    res.status(httpResponse.statusCode).type("json").send(body)
+                } else {
+                    LOGGER.debug("Received API data: %s", JSON.stringify(body))
+                    res.status(httpResponse.statusCode).type("json").send(body)
+                }
+            })
     }
 };
 
@@ -158,7 +170,7 @@ function deleteApi(req, res) {
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
-                res.status(200).type("json").send(body)
+                res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
     }

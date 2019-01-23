@@ -23,16 +23,26 @@ function sendEvent(req, res) {
     })
 }
 
-async function createEventsFromConfig(localKyma, eventsConfig) {
+async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
     eventMetadata = defineEventMetadata()
     for (i = 0; i < eventsConfig.length; i++) {
-        event = eventsConfig[i]
+        event = eventsConfig[i];
         try {
-            await createEvent(localKyma, eventMetadata, event)
-            LOGGER.debug("Registered Event API successful: %s", event.name)
+            var reg_api;
+            if (registeredApis.length > 0)
+                reg_api = registeredApis.find(x => x.name == event.name);
+            if (!reg_api) {
+                LOGGER.debug("Registered Event API successful: %s", event.name)
+                await createEvent(localKyma, eventMetadata, event)
+            }
+            else {
+                LOGGER.debug("Updated Event API successful: %s", event.name)
+                await updateEvent(localKyma, eventMetadata, event, reg_api.id)
+            }
+
         } catch (error) {
             LOGGER.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
         }
@@ -43,21 +53,7 @@ function createEvent(localKyma, eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         try {
-            eventMetadata.name = event.name;
-            if (eventMetadata.description) {
-                eventMetadata.description = event.description;
-            }
-            else {
-                eventMetadata.description = event.name;
-            }
-            if (eventMetadata.labels) {
-                eventMetadata.labels = event.labels;
-            }
-            console.log(event.specification_file)
-            serviceJSON = JSON.parse(fs.readFileSync(event.specification_file))
-
-            eventMetadata.events = serviceJSON;
-
+            eventMetadata = fillEventData(eventMetadata, event);
             apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
                 if (err) {
                     reject(err)
@@ -76,7 +72,46 @@ function createEvent(localKyma, eventMetadata, event) {
 
     })
 }
+function updateEvent(localKyma, eventMetadata, event, event_id) {
+    LOGGER.debug("Auto-update Event API '%s'", event.name)
+    return new Promise((resolve, reject) => {
+        try {
 
+            eventMetadata = fillEventData(eventMetadata, event);
+            apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (httpResponse.statusCode >= 400) {
+                        var err = new Error(body.error);
+                        reject(err);
+                    }
+                    resolve(body)
+                }
+            })
+        }
+        catch (err) {
+            reject(err);
+        }
+
+    })
+}
+function fillEventData(eventMetadata, event) {
+    eventMetadata.name = event.name;
+    if (eventMetadata.description) {
+        eventMetadata.description = event.description;
+    }
+    else {
+        eventMetadata.description = event.name;
+    }
+    if (eventMetadata.labels) {
+        eventMetadata.labels = event.labels;
+    }
+    serviceJSON = JSON.parse(fs.readFileSync(event.specification_file))
+
+    eventMetadata.events = serviceJSON;
+    return eventMetadata;
+}
 function defineEventMetadata() {
     return {
         "provider": "SAP Hybris",
