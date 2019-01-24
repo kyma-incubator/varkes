@@ -7,8 +7,8 @@ module.exports = function (app) {
     registerLogger(app);
     var apis = app.varkesConfig.apis;
     apis.forEach(function (api) {
-        app.get(api.metadata, function (req, res, next) {
-            var spec = fs.readFileSync(api.specification_file,'utf-8');
+        app.get(api.metadata ? api.metadata : "/metadata", function (req, res, next) {
+            var spec = fs.readFileSync(api.specification_file, 'utf-8');
             res.status(200);
             res.type("text/xml");
             res.send(spec);
@@ -25,7 +25,7 @@ module.exports = function (app) {
             }
             if (app.varkesConfig.hasOwnProperty("error_messages")) {
                 if (app.varkesConfig.error_messages.hasOwnProperty(arguments[0].statusCode)) {
-                    LOGGER.debug("Modifying error response with status code '%s'",arguments[0].statusCode)
+                    LOGGER.debug("Modifying error response with status code '%s'", arguments[0].statusCode)
                     arguments[0] = app.varkesConfig.error_messages[arguments[0].statusCode];
                 }
                 else if (app.varkesConfig.error_messages.hasOwnProperty(arguments[0])) {

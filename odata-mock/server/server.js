@@ -3,7 +3,7 @@
 var odataApp = require("./app")
 var app = require('express')()
 var LOGGER = require("./logger").logger
-var configPath = "test/varkes_config.js"
+var configPath //= "test/varkes_config.js"
 
 if (process.argv.length > 2) {
     configPath = process.argv[2]

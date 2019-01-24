@@ -8,8 +8,6 @@ module.exports = {
     apis: [
         {
             baseurl: "/api1",
-            metadata: "/metadata",
-            oauth: "/authorizationserver/oauth/token",
             specification_file: 'test/pets.yaml',
             name: "pets"
         },
