@@ -1,24 +1,22 @@
-var request = require("request")
-const fs = require("fs")
-const path = require("path")
-var LOGGER = require("../logger").logger
-var CONFIG = require("../config")
-var forge = require("node-forge")
-const url = require("url")
-const services = require("./services")
-const events = require("./events")
-
-var nodePort;
+import request = require("request")
+import fs = require("fs");
+import path = require("path");
+import { LOGGER } from "../logger"
+import { CONFIG } from "../config"
+import { pki } from "node-forge"
+import url = require("url");
+import services = require("./services");
+import { Request, Response } from "express"
+import events = require("./events");
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 
 const keysDirectory = path.resolve(CONFIG.keyDir)
 
-function authenticateToKyma(localKyma, url) {
+function authenticateToKyma(localKyma: boolean, url: string) {
     return new Promise((resolve, reject) => {
         LOGGER.debug("Connecting ..")
-        var URLs = {}
         request({ //Step 4
             url: url,
             method: "GET",
@@ -28,10 +26,10 @@ function authenticateToKyma(localKyma, url) {
                 if (error) {
                     reject(error)
                 }
-                else if (response.statusCode !== 200) reject(new Error(response.statusCode))
+                else if (response.statusCode !== 200) reject(new Error(response.statusCode.toString()))
                 else if (response.statusCode == 200) {
                     LOGGER.debug("Connector received: %s", body)
-                    URLs = JSON.parse(body).api
+                    let URLs = JSON.parse(body).api
                     runOpenSSL(JSON.parse(body).certificate.subject)
                     request.post({ //Step 9
                         url: JSON.parse(body).csrUrl,
@@ -43,7 +41,7 @@ function authenticateToKyma(localKyma, url) {
                                 reject(error)
                             }
                             else if (response.statusCode == 201) {
-                                CRT_base64_decoded = (Buffer.from(body.crt, 'base64').toString("ascii"))
+                                let CRT_base64_decoded = (Buffer.from(body.crt, 'base64').toString("ascii"))
                                 //Step 11
                                 fs.writeFileSync(`${keysDirectory}/${CONFIG.crtFile}`, CRT_base64_decoded)
                                 LOGGER.info("Connected to %s", URLs.metadataUrl)
@@ -56,7 +54,7 @@ function authenticateToKyma(localKyma, url) {
         )
     })
 }
-function disconnect(req, res) {
+function disconnect(req: Request, res: Response) {
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
     }
@@ -74,25 +72,25 @@ function disconnect(req, res) {
 
     res.status(204).send()
 }
-function info(req, res) {
-    info = createInfo()
+function info(req: Request, res: Response) {
+    let info = createInfo()
     if (info) {
         res.status(200).send(info)
     } else {
         res.status(400).send({ error: "Not connected to a Kyma cluster" })
     }
 }
-function key(req, res) {
+function key(req: Request, res: Response) {
     res.download(keyFile)
 }
-function cert(req, res) {
+function cert(req: Request, res: Response) {
     res.download(certFile)
 }
 
 function createInfo() {
     if (CONFIG.URLs.metadataUrl !== "") {
         const myURL = new url.URL(CONFIG.URLs.metadataUrl)
-        response = {
+        let response = {
             "cluster_domain": "",
             "re_name": "",
             "eventsUrl": "",
@@ -107,25 +105,28 @@ function createInfo() {
     return null
 }
 
-function runOpenSSL(subject) {
+function runOpenSSL(subject: any) {
 
     LOGGER.debug("Creating CSR using subject %s", subject)
-    var privateKey = fs.readFileSync(keyFile, 'utf8')
-    var pk = forge.pki.privateKeyFromPem(privateKey)
-    var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
+    let privateKey = fs.readFileSync(keyFile, 'utf8')
+    let pk: any = pki.privateKeyFromPem(privateKey)
+    //let publicKey = pki.setRsaPublicKey(pk.n, pk.e)
+    let publicKey = pki.rsa.setPublicKey(pk.n, pk.e)
+    //let publicKey = pki.publicKeyFromPem(privateKey)
+
 
     // create a certification request (CSR)
-    var csr = forge.pki.createCertificationRequest();
-    csr.publicKey = publickey
+    var csr = pki.createCertificationRequest();
+    csr.publicKey = publicKey
 
     csr.setSubject(parseSubjectToJsonArray(subject))
     csr.sign(pk)
-    fs.writeFileSync(`${keysDirectory}/${CONFIG.csrFile}`, forge.pki.certificationRequestToPem(csr))
+    fs.writeFileSync(`${keysDirectory}/${CONFIG.csrFile}`, pki.certificationRequestToPem(csr))
 }
 
-function parseSubjectToJsonArray(subject) {
-    var subjectsArray = []
-    subject.split(",").map(el => {
+function parseSubjectToJsonArray(subject: string) {
+    let subjectsArray: Array<any> = []
+    subject.split(",").map((el: string) => {
         const val = el.split("=")
         subjectsArray.push({
             shortName: val[0],
@@ -136,15 +137,14 @@ function parseSubjectToJsonArray(subject) {
     return subjectsArray
 }
 
-async function connect(req, res) {
+function connect(req: Request, res: Response) {
     if (!req.body) res.sendStatus(400);
 
-    try {
-        data = await authenticateToKyma(req.query.localKyma, req.body.url)
 
+    authenticateToKyma(req.query.localKyma, req.body.url).then((data: any) => {
         if (req.query.localKyma == true) {
             var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
-            data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + nodePort);
+            data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + CONFIG.nodePort);
         }
         CONFIG.URLs = data
         fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
@@ -152,24 +152,32 @@ async function connect(req, res) {
         if (req.body.register) {
             LOGGER.debug("Auto-register APIs")
             var hostname = req.body.hostname || "http://localhost"
-            await services.createServicesFromConfig(hostname, varkesConfig.apis)
-            await events.createEventsFromConfig(varkesConfig.events)
-            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+
+            services.createServicesFromConfig(req.query.localKyma, hostname, CONFIG.varkesConfig.apis).then(() => {
+                events.createEventsFromConfig(CONFIG.varkesConfig.events).then(() => {
+                    LOGGER.debug("Auto-registered %d APIs and %d Event APIs", CONFIG.varkesConfig.apis ? CONFIG.varkesConfig.apis.length : 0, CONFIG.varkesConfig.events ? CONFIG.varkesConfig.events.length : 0)
+                })
+            })
+
+            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", CONFIG.varkesConfig.apis ? CONFIG.varkesConfig.apis.length : 0, CONFIG.varkesConfig.events ? CONFIG.varkesConfig.events.length : 0)
         }
 
-        info = createInfo()
+        let info = createInfo()
         if (info) {
             res.status(200).send(info)
         } else {
             res.status(400).send({ error: "Not connected to a Kyma cluster" })
         }
-
-    } catch (error) {
-        message = "There is an error while registering.\n Please make sure that your token is unique"
+    }).catch(error => {
+        let message = "There is an error while registering.\n Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.statusCode = 401
         res.send(message)
-    }
+    })
+
+
+
+
 }
 
 

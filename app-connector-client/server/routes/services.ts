@@ -1,21 +1,28 @@
 
-var LOGGER = require("../logger").logger
-async function createServicesFromConfig(hostname, apisConfig) {
+import { LOGGER } from "../logger"
+
+import * as yaml from "js-yaml"
+import * as fs from "fs"
+import { createAPI } from "./apis"
+let odata: any;
+
+
+async function createServicesFromConfig(localKyma: boolean, hostname: string, apisConfig: any) {
     if (!apisConfig)
         return
 
-    serviceMetadata = defineServiceMetadata()
-    for (i = 0; i < apisConfig.length; i++) {
-        api = apisConfig[i]
+    let serviceMetadata = defineServiceMetadata()
+    for (let i = 0; i < apisConfig.length; i++) {
+        let api = apisConfig[i]
         try {
-            await createService(serviceMetadata, api, hostname)
+            await createService(localKyma, serviceMetadata, api, hostname)
             LOGGER.debug("Registered API successful: %s", api.name)
         } catch (error) {
             LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
         }
     }
 }
-function createService(serviceMetadata, api, hostname) {
+function createService(localKyma: boolean, serviceMetadata: any, api: any, hostname: string) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         serviceMetadata.name = api.name;
@@ -43,7 +50,7 @@ function createService(serviceMetadata, api, hostname) {
             serviceMetadata.api.apiType = "odata";
         }
 
-        apis.createAPI(localKyma, serviceMetadata, function (data, err) {
+        createAPI(localKyma, serviceMetadata, function (data: any, err: any) {
             if (err) {
                 reject(err)
             } else {
@@ -76,6 +83,4 @@ function defineServiceMetadata() {
     }
 }
 
-module.exports = {
-    createServicesFromConfig: createServicesFromConfig
-}
+export { createServicesFromConfig }

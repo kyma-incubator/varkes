@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-var CONFIG = require("../config")
-const path = require("path")
-var request = require("request")
-var LOGGER = require("../logger").logger
-const fs = require("fs")
-
-var apiRouter = require("express").Router()
+import { CONFIG } from "../config"
+import path = require("path")
+import request = require("request")
+import { LOGGER } from "../logger"
+import fs = require("fs");
+import { Router, Response, Request } from "express"
+var apiRouter = Router()
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
-function getAll(req, res) {
+function getAll(req: Request, res: Response) {
     LOGGER.debug("Getting all APIs")
-    err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -38,7 +38,7 @@ function getAll(req, res) {
         })
     }
 };
-apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
+function createAPI(localKyma: boolean, serviceMetadata: any, cb: Function) {
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -55,13 +55,13 @@ apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
     });
 
 }
-function create(req, res) {
+function create(req: Request, res: Response) {
     LOGGER.debug("Creating API %s", req.body.name)
-    err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        apiRouter.createAPI(req.query.localKyma, req.body, function (error, httpResponse, body) {
+        createAPI(req.query.localKyma, req.body, function (error: Error, httpResponse: Response, body: any) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
@@ -76,9 +76,9 @@ function create(req, res) {
     }
 };
 
-function get(req, res) {
+function get(req: Request, res: Response) {
     LOGGER.debug("Get API %s", req.params.api)
-    err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -104,9 +104,9 @@ function get(req, res) {
     }
 };
 
-function update(req, res) {
+function update(req: Request, res: Response) {
     LOGGER.debug("Update API %s", req.params.api)
-    err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -136,9 +136,9 @@ function update(req, res) {
     }
 };
 
-function deleteApi(req, res) {
+function deleteApi(req: Request, res: Response) {
     LOGGER.debug("Delete API %s", req.params.api)
-    err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -178,4 +178,4 @@ apiRouter.get("/:api", get)
 apiRouter.put("/:api", update)
 apiRouter.delete("/:api", deleteApi)
 
-module.exports = apiRouter
+export { apiRouter, createAPI }

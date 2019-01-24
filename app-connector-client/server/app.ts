@@ -1,40 +1,39 @@
 #!/usr/bin/env node
 
-var express = require("express")
-
+import * as express from "express"
 
 var fs = require("fs")
-var LOGGER = require("./logger").logger
+import { LOGGER } from "./logger"
 const path = require("path")
 const bodyParser = require('body-parser');
-const CONFIG = require("./config")
+import { CONFIG, varkesConfigInterface } from "./config"
 var expressWinston = require('express-winston');
 
 //route definitions
 const events = require("./routes/events")
 var connector = require("./routes/connector")
-var apis = require("./routes/apis")
+import { apiRouter } from "./routes/apis"
 var keys = require("./keys")
 
 var app = express()
-var varkesConfig
 
 
 
+let varkesConfig = CONFIG.varkesConfig
 
 
-module.exports = function (varkesConfigPath = null, nodePortParam = null) {
-    nodePort = nodePortParam;
+export default function connectorApp(varkesConfigPath: string | null = null, nodePortParam: any = null): Promise<any> {
+    CONFIG.nodePort = nodePortParam;
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
-        endpointConfig = path.resolve(varkesConfigPath)
+        let endpointConfig = path.resolve(varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
-        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
+        varkesConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname + "/resources/defaultConfig.json"), "utf-8"))
     }
 
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
@@ -48,26 +47,27 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.set('views', path.join(__dirname, '/views/'));
     app.use(express.static(path.resolve(__dirname, 'views/static/')))
 
-    app.use("/apis", apis)
+    app.use("/apis", apiRouter)
     app.use("/connection", connector) //* in the routes folder
 
-    app.get("/", function (req, res) {
+    app.get("/", function (_req, res) {
         res.render('index', { appName: varkesConfig.name }) // read from varkesConfig defined above
     })
-    app.get("/metadata", function (req, res) {
+    app.get("/metadata", function (_req, res) {
         res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
     })
-    app.get("/console", function (req, res) {
+    app.get("/console", function (_req, res) {
         res.sendFile(path.resolve(__dirname, "resources/console.html"))
     })
     app.post("/events", events.sendEvent)
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, _reject) {
         resolve(app)
     });
 }
 
-function configValidation(configJson) {
+
+function configValidation(configJson: varkesConfigInterface) {
     var error_message = "";
 
     var events = configJson.events;

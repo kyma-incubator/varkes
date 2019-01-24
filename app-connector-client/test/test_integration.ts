@@ -1,8 +1,10 @@
 
-var request = require('supertest');
-var server = require("../server/app")("test/varkes_config.js");
-const fs = require("fs")
-const path = require("path")
+import * as request from "supertest"
+import connectorApp from "../server/app"
+var server = connectorApp("test/varkes_config.json")
+import * as fs from "fs"
+import * as path from "path"
+
 const serviceMetadata = path.resolve("test/service-metadata.json")
 
 if (process.env.NODE_ENV == "test") {
@@ -29,7 +31,7 @@ if (process.env.NODE_ENV == "test") {
 
     describe("Connect to kyma", function () {
         it("kyma can create certs from token", done => {
-            confURL = process.env.TOKENURL
+            let confURL = process.env.TOKENURL
             request(server)
                 .post("/connection").send(
 
@@ -44,7 +46,7 @@ if (process.env.NODE_ENV == "test") {
     })
 
     describe("api endpoints", () => {
-        var serviceId;
+        let serviceId: string;
         it("shows all services at /apis", (done) => {
             request(server)
                 .get("/")

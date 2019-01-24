@@ -1,6 +1,8 @@
 
 var request = require('supertest');
-var server = require("../server/app")("test/varkes_config.js");
+
+import connectorApp from "../server/app"
+var server = connectorApp("test/varkes_config.json")
 
 describe('tests controllers', function () {
     it('should work', function () {
@@ -10,7 +12,7 @@ describe('tests controllers', function () {
                     request(app)
                         .get('/metadata')
                         .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET console', function () {
@@ -18,7 +20,7 @@ describe('tests controllers', function () {
                     request(app)
                         .get('/metadata')
                         .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET apis', function () {
@@ -26,7 +28,7 @@ describe('tests controllers', function () {
                     request(app)
                         .get('/apis')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400,done)
+                        .expect(400, done)
                 });
             });
             describe('GET connection info', function () {
@@ -35,7 +37,7 @@ describe('tests controllers', function () {
                         .get('/connection')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400,done)
+                        .expect(400, done)
                 });
             });
         })
