@@ -3,8 +3,8 @@ module.exports = {
     apis: [
         {
             name: "courses",
-            metadata: "/courses/metadata",
-            specification_file: "test/courses.xml"
+            specification_file: "test/courses.xml",
+            type: "odata"
         }
     ],
     storage_file_path: "test/data.json",

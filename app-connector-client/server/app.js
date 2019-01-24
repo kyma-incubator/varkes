@@ -75,16 +75,22 @@ function configValidation(configJson) {
         for (var i = 1; i <= events.length; i++) {
             {
                 var event = events[i - 1];
-                if (!event.name || !event.name.match(/[a-zA-Z0-9]+/)) {
-                    error_message += "\nevent number " + i + ": name does not exist or is in the wrong format";
+                if (!event.name) {
+                    error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
-                if ((!event.specification_file || !event.specification_file.match(/[a-zA-Z0-9]+.json/))) {
-                    error_message += "\nevent number " + i + ": specification_file does not exist or is not a json file";
+                if (!event.name.match(/^[\w]+$/)) {
+                    error_message += "\nevent " + event.name + ": name " + event.name + " contains non-alphanumeric letters, please remove them";
+                }
+                if (!event.specification_file) {
+                    error_message += "\nevent " + event.name + ": missing attribute 'specification_file', a specification_file is mandatory";
+                }
+                if (!event.specification_file.match(/^[/\\\w]+.json$/)) {
+                    error_message += "\nevent " + event.name + ": specification_file " + event.specification_file + " does not match pattern '^[/\\\w]+.json$'";
                 }
             }
         }
     }
     if (error_message != "") {
-        throw new Error("Config Error: " + error_message);
+        throw new Error("Validation of configuration failed: " + error_message);
     }
 }
