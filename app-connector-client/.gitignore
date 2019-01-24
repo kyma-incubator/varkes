@@ -3,3 +3,4 @@ keys/
 *.log
 kyma-responses
 dist/
+.nyc_output

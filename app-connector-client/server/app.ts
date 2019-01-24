@@ -4,13 +4,13 @@ import * as express from "express"
 
 var fs = require("fs")
 import { LOGGER } from "./logger"
-const path = require("path")
-const bodyParser = require('body-parser');
+import path = require("path");
+import bodyParser = require('body-parser');
 import { CONFIG, varkesConfigInterface } from "./config"
 var expressWinston = require('express-winston');
 
 //route definitions
-const events = require("./routes/events")
+import events = require("./routes/events");
 var connector = require("./routes/connector")
 import { apiRouter } from "./routes/apis"
 var keys = require("./keys")
