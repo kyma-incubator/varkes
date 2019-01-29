@@ -3,11 +3,10 @@ var LOGGER = require("../logger").logger
 const yaml = require('js-yaml');
 const fs = require("fs")
 const apis = require("./apis");
-var registeredApis = [];
-async function createServicesFromConfig(localKyma, hostname, apisConfig) {
+async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
-    await getAllAPI(localKyma);
+
     serviceMetadata = defineServiceMetadata()
     for (i = 0; i < apisConfig.length; i++) {
         api = apisConfig[i]
@@ -73,8 +72,7 @@ function getAllAPI(localKyma) {
                 var err = new Error(body.error);
                 reject(err);
             } else {
-                registeredApis = JSON.parse(body);
-                resolve(body)
+                resolve(JSON.parse(body))
             }
         })
     })
@@ -88,8 +86,8 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
     if (!api.type || api.type != "odata") {
         var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
-
-        serviceMetadata.api.spec = doc;
+        serviceMetadata.api.specificationUrl = api.metadata;
+        //serviceMetadata.api.spec = doc;
         if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
             serviceMetadata.description = doc.info.description;
         }
@@ -129,5 +127,6 @@ function defineServiceMetadata() {
 }
 
 module.exports = {
-    createServicesFromConfig: createServicesFromConfig
+    createServicesFromConfig: createServicesFromConfig,
+    getAllAPI: getAllAPI
 }
