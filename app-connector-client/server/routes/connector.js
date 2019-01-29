@@ -153,7 +153,8 @@ async function connect(req, res) {
         if (req.body.register) {
             LOGGER.debug("Auto-register APIs")
             var hostname = req.body.hostname || "http://localhost"
-            var registeredApis = await services.createServicesFromConfig(req.query.localKyma, hostname, varkesConfig.apis)
+            var registeredApis = await services.getAllAPI(req.query.localKyma);
+            registeredApis = await services.createServicesFromConfig(req.query.localKyma, hostname, varkesConfig.apis, registeredApis)
             await events.createEventsFromConfig(req.query.localKyma, varkesConfig.events, registeredApis);
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
