@@ -52,47 +52,36 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
 function createEvent(localKyma, eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        try {
-            eventMetadata = fillEventData(eventMetadata, event);
-            apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
-                if (err) {
-                    reject(err)
-                } else {
-                    if (httpResponse.statusCode >= 400) {
-                        var err = new Error(body.error);
-                        reject(err);
-                    }
-                    resolve(body)
+        eventMetadata = fillEventData(eventMetadata, event);
+        apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
+            if (err) {
+                reject(err)
+            } else {
+                if (httpResponse.statusCode >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
                 }
-            })
-        }
-        catch (err) {
-            reject(err);
-        }
+                resolve(body)
+            }
+        })
 
     })
 }
 function updateEvent(localKyma, eventMetadata, event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        try {
-
-            eventMetadata = fillEventData(eventMetadata, event);
-            apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
-                if (err) {
-                    reject(err)
-                } else {
-                    if (httpResponse.statusCode >= 400) {
-                        var err = new Error(body.error);
-                        reject(err);
-                    }
-                    resolve(body)
+        eventMetadata = fillEventData(eventMetadata, event);
+        apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
+            if (err) {
+                reject(err)
+            } else {
+                if (httpResponse.statusCode >= 400) {
+                    var err = new Error(body.error);
+                    reject(err);
                 }
-            })
-        }
-        catch (err) {
-            reject(err);
-        }
+                resolve(body)
+            }
+        })
 
     })
 }
