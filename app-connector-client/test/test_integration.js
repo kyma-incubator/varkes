@@ -1,6 +1,6 @@
 
 var request = require('supertest');
-var server = require("../server/app")("test/varkes_config.js");
+var server = require("../server/app")("test/varkes_config.json");
 const fs = require("fs")
 const path = require("path")
 const serviceMetadata = path.resolve("test/service-metadata.json")

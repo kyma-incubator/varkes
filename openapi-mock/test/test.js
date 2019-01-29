@@ -1,6 +1,6 @@
 var request = require('supertest');
 var app = require("express")();
-var server = require('../server/app')('./test/varkes_config.js');
+var server = require('../server/app')('./test/varkes_config.json');
 describe('controllers', function () {
   it('should work', function () {
     server.then(function (app) {

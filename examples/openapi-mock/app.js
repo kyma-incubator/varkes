@@ -4,7 +4,7 @@ var app = require('express')()
 
 runAsync = async () => {
     try {
-        app.use(await openapiApp("./varkes_config.js"))
+        app.use(await openapiApp("./varkes_config.json"))
         return app.listen(10000, function () {
             console.info("Started application on port %d", 10000)
         });
