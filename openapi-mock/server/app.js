@@ -56,32 +56,39 @@ module.exports = function (varkesConfigPath) {
 function configValidation(configJson) {
   var error_message = "";
   if (configJson.hasOwnProperty("apis")) {
-    var apis = configJson.apis;
-    var matchRegex = /^(\/[a-zA-Z0-9]+)+$/
-    for (var i = 1; i <= apis.length; i++) {
-      var api = apis[i - 1];
-      if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
-        error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
+    for (var i = 1; i <= configJson.apis.length; i++) {
+      var api = configJson.apis[i - 1];
+      if (!api.name) {
+        error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
+      } if (!api.name.match(/^[\w]+$/)) {
+        error_message += "\napi " + api.name + ": name " + api.name + " contains non-alphanumeric letters, please remove them";
       }
-      if (api.metadata && !api.metadata.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": metadata is in the wrong format";
+      if(!api.type){
+        api.type="openapi"
       }
-
-      if (api.oauth && !api.oauth.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": oauth is in the wrong format";
+      if (!api.type.match(/^(openapi|odata)$/)) {
+        error_message += "\napi " + api.name + ": type " + api.type + " is not matching the pattern '^(openapi|odata)$'";
       }
-
-      if (!api.baseurl || !api.baseurl.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": baseurl does not exist or is in the wrong format";
+      if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
+        error_message += "\napi " + api.name + ": metadata " + api.metadata + " is not matching the pattern '^\\/[/\\\\\w]+$+'";
       }
-      if (!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.yaml/)) {
-        error_message += "\napi " + api.name + ": specification_file does not exist or is not a yaml file";
+      if (api.oauth && !api.oauth.match(/^\/[/\\\w]+$/)) {
+        error_message += "\napi " + api.name + ": oauth " + api.oath + " is not matching the pattern '^\\/[/\\\\\w]+$'";
+      }
+      if (api.type == "openapi" && !api.specification_file.match(/^[/\\\w]+.yaml|yml|json$/)) {
+        error_message += "\napi " + api.name + ": specification_file " + api.specification_file + " does not match pattern '^[/\\\w]+.yaml|yml|json$'";
+      }
+      if (api.type == "openapi" && !api.baseurl) {
+        error_message += "\napi " + api.name + ": missing attribute 'baseurl', a baseurl is mandatory";
+      }
+      if (api.type == "openapi" && !api.baseurl.match(/^\/[/\\\w]+$/)) {
+        error_message += "\napi " + api.name + ": baseurl " + api.baseurl + " is not matching the pattern '^\\/[/\\\\\w]+$'";
       }
     }
   }
 
   if (error_message != "") {
-    throw new Error("Config Error: " + error_message);
+    throw new Error("Validation of configuration failed: " + error_message);
   }
 }
 

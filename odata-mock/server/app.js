@@ -42,7 +42,7 @@ async function configure(varkesConfigPath) {
   parsedModels.forEach(function (parsedModel) {
 
     parsedModel.modelConfigs.forEach(function (config) {
-      bootConfig.models[config.name]=config.value
+      bootConfig.models[config.name] = config.value
     })
     parsedModel.modelDefs.forEach(function (definition) {
       bootConfig.modelDefinitions.push(definition)
@@ -66,23 +66,26 @@ async function configure(varkesConfigPath) {
 function configValidation(configJson) {
   var error_message = "";
   if (configJson.hasOwnProperty("apis")) {
-    var apis = configJson.apis;
-    var matchRegex = /^(\/[a-zA-Z0-9]+)+$/
-    for (var i = 1; i <= apis.length; i++) {
-      var api = apis[i - 1];
-      if (!api.name || !api.name.match(/[a-zA-Z0-9]+/)) {
-        error_message += "\napi number " + i + ": name does not exist or is in the wrong format";
+    for (var i = 1; i <= configJson.apis.length; i++) {
+      var api = configJson.apis[i - 1];
+      if (!api.name) {
+        error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
+      } if (!api.name.match(/^[\w]+$/)) {
+        error_message += "\napi " + api.name + ": name '" + api.name + "' contains non-alphanumeric letters, please remove them";
       }
-      if (!api.metadata || !api.metadata.match(matchRegex)) {
-        error_message += "\napi " + api.name + ": metadata does not exist or is in the wrong format";
+      if (api.type && !api.type.match(/^(openapi|odata)$/)) {
+        error_message += "\napi " + api.name + ": type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
       }
-      if ((!api.specification_file || !api.specification_file.match(/[a-zA-Z0-9]+.xml/))) {
-        error_message += "\napi " + api.name + ": specification_file does not exist or is not a xml file";
+      if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
+        error_message += "\napi " + api.name + ": metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
+      }
+      if (api.type == "odata" && !api.specification_file.match(/^[/\\\w]+.xml$/)) {
+        error_message += "\napi " + api.name + ": specification_file '" + api.specification_file + "' does not match pattern '^[/\\\\w]+.xml$'";
       }
     }
   }
 
   if (error_message != "") {
-    throw new Error("Config Error: " + error_message);
+    throw new Error("Validation of configuration failed: " + error_message);
   }
 }
