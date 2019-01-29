@@ -9,7 +9,7 @@ const path = require("path")
 const bodyParser = require('body-parser');
 const CONFIG = require("./config")
 var expressWinston = require('express-winston');
-
+var connectorModule = require("./routes/connector");
 //route definitions
 const events = require("./routes/events")
 var connector;
@@ -29,7 +29,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         LOGGER.info("Using configuration %s", endpointConfig);
         varkesConfig = require(endpointConfig);
         configValidation(varkesConfig)
-        connector = require("./routes/connector")(varkesConfig, nodePortParam);
+        connector = connectorModule(varkesConfig, nodePortParam);
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
