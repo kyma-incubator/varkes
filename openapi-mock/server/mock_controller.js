@@ -93,7 +93,7 @@ function createEndpoints(openApi_doc, api) {
     }
 }
 function createOauthEndpoint(oauth_endpoint, api, app) {
-    LOGGER.error("Registered %s%s", api.baseurl, oauth_endpoint)
+    LOGGER.debug("Adding oauth endpoint %s%s", api.baseurl, oauth_endpoint)
     app.post(api.baseurl + oauth_endpoint, function (req, res) {
         if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
             res.type('application/json');
@@ -109,6 +109,7 @@ function createOauthEndpoint(oauth_endpoint, api, app) {
 }
 
 function createMetadataEndpoint(openApi_doc, metadata_endpoint, api, app) {
+    LOGGER.debug("Adding metadata endpoint %s%s", api.baseurl, metadata_endpoint)
     app.get(api.baseurl + metadata_endpoint, function (req, res) {
         res.type('text/x-yaml')
         res.status(200)
@@ -117,6 +118,7 @@ function createMetadataEndpoint(openApi_doc, metadata_endpoint, api, app) {
 }
 
 function createConsole(openApi_doc, api, app) {
+    LOGGER.debug("Adding console endpoint %s%s", api.baseurl,"/console")
     app.get(api.baseurl + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
         html = html.replace("OPENAPI", api.baseurl + api.metadata)
