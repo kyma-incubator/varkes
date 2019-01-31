@@ -1,0 +1,13 @@
+{
+    "name": "Kyma-Mock",
+    "apis": [
+        {
+            "baseurl": "/kyma",
+            "metadata": "/metadata",
+            "oauth": "/authorizationserver/oauth/token",
+            "specification_file": "apis/kyma.yaml",
+            "name": "Kyma"
+        }
+    ],
+    "request_log_path": "requests.log"
+}

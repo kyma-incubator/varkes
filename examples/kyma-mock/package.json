@@ -1,0 +1,26 @@
+{
+  "name": "varkes-example-openapi-mock",
+  "version": "0.1.0",
+  "description": "Standalone example of varkes openapi-mock",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha --exit",
+    "start": "node ."
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lodash": ">=4.17.11",
+    "deep-extend": ">=0.5.1",
+    "varkes-openapi-mock": "^0.3.12",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
+  }
+}

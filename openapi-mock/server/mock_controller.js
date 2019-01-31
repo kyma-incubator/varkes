@@ -23,6 +23,7 @@ module.exports = {
                 ouath_endpoint = api.oauth;
             if (api.metadata)
                 metadata_endpoint = api.metadata;
+            openApi_doc.basePath = api.baseurl;
             createMetadataEndpoint(openApi_doc, api, app);
             createConsole(openApi_doc, api, app);
             createEndpoints(openApi_doc, api);
@@ -75,8 +76,8 @@ function registerLogger(app) {
 }
 
 function createEndpoints(openApi_doc, api) {
+    var file_name = DIR_NAME + api.name + "_" + TMP_FILE;
     if (api.hasOwnProperty("added_endpoints")) {
-        var file_name = DIR_NAME + api.name + "_" + TMP_FILE;
         LOGGER.debug("Adding new Endpoints for api %s and creating new openapi file %s", api.name, file_name);
         if (!fs.existsSync(DIR_NAME))
             fs.mkdirSync(DIR_NAME);
@@ -88,9 +89,9 @@ function createEndpoints(openApi_doc, api) {
                 openApi_doc["paths"][point.url] = endpoint;
             }
         });
-        var yml_format = pretty_yaml.stringify(openApi_doc);
-        utility.writeToFile(file_name, yml_format, true);
     }
+    var yml_format = pretty_yaml.stringify(openApi_doc);
+    utility.writeToFile(file_name, yml_format, true);
 }
 function createMetadataEndpoint(openApi_doc, api, app) {
     try {
