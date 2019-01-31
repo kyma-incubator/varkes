@@ -1,5 +1,5 @@
 var request = require('supertest');
-var server = require('../server/app')("./test/varkes_config.js");
+var server = require('../server/app')("./test/varkes_config.json");
 describe('controllers', function () {
 
     it('test_odata', function (done) {
@@ -10,7 +10,7 @@ describe('controllers', function () {
                         .get('/api/courses/1')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET course 1 via odata', function () {
@@ -19,7 +19,7 @@ describe('controllers', function () {
                         .get('/odata/Courses(\'1\')')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
         }).finally(done);

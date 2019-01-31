@@ -9,29 +9,26 @@ const path = require("path")
 const bodyParser = require('body-parser');
 const CONFIG = require("./config")
 var expressWinston = require('express-winston');
-
+var connectorModule = require("./routes/connector");
 //route definitions
 const events = require("./routes/events")
-var connector = require("./routes/connector")
+var connector;
 var apis = require("./routes/apis")
 var keys = require("./keys")
 
 var app = express()
 var varkesConfig
 
-
-
-
-
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     nodePort = nodePortParam;
     app.use(bodyParser.json());
 
     if (varkesConfigPath) {
-        endpointConfig = path.resolve(varkesConfigPath)
-        LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = require(endpointConfig)
+        endpointConfig = path.resolve(varkesConfigPath);
+        LOGGER.info("Using configuration %s", endpointConfig);
+        varkesConfig = require(endpointConfig);
         configValidation(varkesConfig)
+        connector = connectorModule(varkesConfig, nodePortParam);
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
