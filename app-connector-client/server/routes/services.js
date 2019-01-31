@@ -3,6 +3,9 @@ var LOGGER = require("../logger").logger
 const yaml = require('js-yaml');
 const fs = require("fs")
 const apis = require("./apis");
+
+const OAUTH = "/authorizationserver/oauth/token"
+
 async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
@@ -83,9 +86,9 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     if (api.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
-    serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
+    serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
     if (!api.type || api.type != "odata") {
-        var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
+        var doc = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
         serviceMetadata.api.specificationUrl = api.metadata;
         //serviceMetadata.api.spec = doc;
         if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {

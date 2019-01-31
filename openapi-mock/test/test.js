@@ -24,12 +24,34 @@ describe('controllers', function () {
         });
       });
 
+      describe('GET oauth for pets', function () {
+        it('should return response 200', function (done) {
+          request(app)
+            .post("/api1/authorizationserver/oauth/token")
+            .send({client_id:"1",client_secret:"2",grant_type:"3"})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200, done)
+        });
+      });
+
       describe('GET metadata for courses', function () {
         it('should return response 200', function (done) {
           request(app)
-            .get("/api2/metadata")
+            .get("/api2/mymetadata")
             .set('Accept', 'application/json')
             .expect('Content-Type', 'text/x-yaml; charset=utf-8')
+            .expect(200, done)
+        });
+      });
+
+      describe('GET oauth for courses', function () {
+        it('should return response 200', function (done) {
+          request(app)
+            .post("/api2/myoauth/token")
+            .send({client_id:"1",client_secret:"2",grant_type:"3"})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(200, done)
         });
       });

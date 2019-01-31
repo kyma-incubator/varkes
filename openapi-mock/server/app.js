@@ -35,7 +35,7 @@ module.exports = function (varkesConfigPath) {
 
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     middlewares.push(
-      middleware(varkesConfig.apis[i].specification_file, app, function (err, middleware) {
+      middleware(varkesConfig.apis[i].specification, app, function (err, middleware) {
         app.use(
           middleware.metadata(),
           middleware.CORS(),
@@ -60,8 +60,6 @@ function configValidation(configJson) {
       var api = configJson.apis[i - 1];
       if (!api.name) {
         error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
-      } if (!api.name.match(/^[\w]+$/)) {
-        error_message += "\napi " + api.name + ": name " + api.name + " contains non-alphanumeric letters, please remove them";
       }
       if(!api.type){
         api.type="openapi"
@@ -75,8 +73,8 @@ function configValidation(configJson) {
       if (api.oauth && !api.oauth.match(/^\/[/\\\w]+$/)) {
         error_message += "\napi " + api.name + ": oauth " + api.oath + " is not matching the pattern '^\\/[/\\\\\w]+$'";
       }
-      if (api.type == "openapi" && !api.specification_file.match(/^[/\\\w]+.yaml|yml|json$/)) {
-        error_message += "\napi " + api.name + ": specification_file " + api.specification_file + " does not match pattern '^[/\\\w]+.yaml|yml|json$'";
+      if (api.type == "openapi" && !api.specification.match(/^.+\.(json|yaml|yml)$/)) {
+        error_message += "\napi " + api.name + ": specification " + api.specification + " does not match pattern '^.+\\.(json|yaml|yml)$'";
       }
       if (api.type == "openapi" && !api.baseurl) {
         error_message += "\napi " + api.name + ": missing attribute 'baseurl', a baseurl is mandatory";
