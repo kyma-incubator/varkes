@@ -31,7 +31,7 @@ async function configure(varkesConfigPath) {
   LOGGER.info("Parsing specifications and generating models")
   var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
-    parsedModels.push(parser.parseEdmx(varkesConfig.apis[i].specification_file));
+    parsedModels.push(parser.parseEdmx(varkesConfig.apis[i].specification));
   }
   parsedModels = await Promise.all(parsedModels)
 
@@ -70,8 +70,6 @@ function configValidation(configJson) {
       var api = configJson.apis[i - 1];
       if (!api.name) {
         error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
-      } if (!api.name.match(/^[\w]+$/)) {
-        error_message += "\napi " + api.name + ": name '" + api.name + "' contains non-alphanumeric letters, please remove them";
       }
       if (api.type && !api.type.match(/^(openapi|odata)$/)) {
         error_message += "\napi " + api.name + ": type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
@@ -79,8 +77,8 @@ function configValidation(configJson) {
       if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
         error_message += "\napi " + api.name + ": metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
       }
-      if (api.type == "odata" && !api.specification_file.match(/^[/\\\w]+.xml$/)) {
-        error_message += "\napi " + api.name + ": specification_file '" + api.specification_file + "' does not match pattern '^[/\\\\w]+.xml$'";
+      if (api.type == "odata" && !api.specification.match(/^.+\.xml$/)) {
+        error_message += "\napi " + api.name + ": specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
       }
     }
   }

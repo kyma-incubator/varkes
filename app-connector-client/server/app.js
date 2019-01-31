@@ -75,14 +75,11 @@ function configValidation(configJson) {
                 if (!event.name) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
-                if (!event.name.match(/^[\w]+$/)) {
-                    error_message += "\nevent " + event.name + ": name " + event.name + " contains non-alphanumeric letters, please remove them";
+                if (!event.specification) {
+                    error_message += "\nevent " + event.name + ": missing attribute 'specification', a specification is mandatory";
                 }
-                if (!event.specification_file) {
-                    error_message += "\nevent " + event.name + ": missing attribute 'specification_file', a specification_file is mandatory";
-                }
-                if (!event.specification_file.match(/^[/\\\w]+.json$/)) {
-                    error_message += "\nevent " + event.name + ": specification_file " + event.specification_file + " does not match pattern '^[/\\\w]+.json$'";
+                if (!event.specification.match(/^.+\.json$/)) {
+                    error_message += "\nevent " + event.name + ": specification " + event.specification + " does not match pattern '^.+\\.json$'";
                 }
             }
         }

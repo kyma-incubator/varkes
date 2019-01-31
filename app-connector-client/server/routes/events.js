@@ -96,7 +96,7 @@ function fillEventData(eventMetadata, event) {
     if (eventMetadata.labels) {
         eventMetadata.labels = event.labels;
     }
-    serviceJSON = JSON.parse(fs.readFileSync(event.specification_file))
+    serviceJSON = JSON.parse(fs.readFileSync(event.specification))
 
     eventMetadata.events = serviceJSON;
     return eventMetadata;

@@ -7,10 +7,11 @@ const pretty_yaml = require('json-to-pretty-yaml');
 const util = require('util');
 const LOGGER = require("./logger").logger
 var morgan = require('morgan');
+
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
-var ouath_endpoint = "/oauth/token";
-var metadata_endpoint = "/metadata";
+const OAUTH = "/authorizationserver/oauth/token";
+const METADATA = "/metadata";
 var config;
 
 module.exports = {
@@ -18,12 +19,11 @@ module.exports = {
         config = configObj;
         for (var i = 0; i < config.apis.length; i++) {
             var api = config.apis[i];
-            var openApi_doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
-            if (api.oauth)
-                ouath_endpoint = api.oauth;
-            if (api.metadata)
-                metadata_endpoint = api.metadata;
-            createMetadataEndpoint(openApi_doc, api, app);
+            var openApi_doc = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
+            var oauthEndpoint = api.oauth ? api.oauth : OAUTH;
+            var metadataEndpoint = api.metadata ? api.metadata : METADATA;
+            createOauthEndpoint(oauthEndpoint, api, app);
+            createMetadataEndpoint(openApi_doc, metadataEndpoint, api, app);
             createConsole(openApi_doc, api, app);
             createEndpoints(openApi_doc, api);
         }
@@ -80,7 +80,7 @@ function createEndpoints(openApi_doc, api) {
         LOGGER.debug("Adding new Endpoints for api %s and creating new openapi file %s", api.name, file_name);
         if (!fs.existsSync(DIR_NAME))
             fs.mkdirSync(DIR_NAME);
-        api.specification_file = file_name;
+        api.specification = file_name;
         api.added_endpoints.forEach(function (point) {
             var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
             if (!openApi_doc["paths"].hasOwnProperty(point.url)) {
@@ -92,28 +92,28 @@ function createEndpoints(openApi_doc, api) {
         utility.writeToFile(file_name, yml_format, true);
     }
 }
-function createMetadataEndpoint(openApi_doc, api, app) {
-    try {
-        app.get(api.baseurl + metadata_endpoint, function (req, res) {
-            res.type('text/x-yaml')
-            res.status(200)
-            res.send(openApi_doc)
-        });
-        app.post(api.baseurl + ouath_endpoint, function (req, res) {
-            if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
-                res.type('text/json');
-                res.status(200);
-                res.send({ token: 3333 });
-            }
-            else {
-                var message = "Some of the required parameters are missing";
-                res.status(404);
-                res.send({ error: message });
-            }
-        });
-    } catch (e) {
-        LOGGER.error("Error while enriching swaggers with oauth endpoints: %s", e)
-    }
+function createOauthEndpoint(oauth_endpoint, api, app) {
+    LOGGER.error("Registered %s%s", api.baseurl, oauth_endpoint)
+    app.post(api.baseurl + oauth_endpoint, function (req, res) {
+        if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
+            res.type('application/json');
+            res.status(200);
+            res.send({ token: 3333 });
+        }
+        else {
+            var message = "Some of the required parameters are missing";
+            res.status(400);
+            res.send({ error: message });
+        }
+    });
+}
+
+function createMetadataEndpoint(openApi_doc, metadata_endpoint, api, app) {
+    app.get(api.baseurl + metadata_endpoint, function (req, res) {
+        res.type('text/x-yaml')
+        res.status(200)
+        res.send(openApi_doc)
+    });
 }
 
 function createConsole(openApi_doc, api, app) {
