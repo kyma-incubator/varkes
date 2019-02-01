@@ -111,9 +111,15 @@ function createOauthEndpoint(oauth_endpoint, api, app) {
 function createMetadataEndpoint(openApi_doc, metadata_endpoint, api, app) {
     LOGGER.debug("Adding metadata endpoint %s%s", api.baseurl, metadata_endpoint)
     app.get(api.baseurl + metadata_endpoint, function (req, res) {
-        res.type('text/x-yaml')
-        res.status(200)
-        res.send(openApi_doc)
+        if(!req.headers["accept"] || req.accepts('application/json')){
+            res.type('application/json')
+            res.status(200)
+            res.send(openApi_doc)
+        }else{
+            res.type('text/x-yaml')
+            res.status(200)
+            res.send(pretty_yaml.stringify(openApi_doc))
+        }
     });
 }
 

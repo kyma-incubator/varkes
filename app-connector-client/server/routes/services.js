@@ -5,6 +5,7 @@ const fs = require("fs")
 const apis = require("./apis");
 
 const OAUTH = "/authorizationserver/oauth/token"
+const METADATA = "/metadata"
 
 async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
@@ -90,12 +91,16 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
     if (!api.type || api.type != "odata") {
         var specInJson
-        if(api.specification.endsWith(".json")){
+        if (api.specification.endsWith(".json")) {
             specInJson = JSON.parse(fs.readFileSync(api.specification))
-        }else{
+        } else {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
         }
-        serviceMetadata.api.specificationUrl = hostname + api.metadata;
+        if (hostname.indexOf("localhost") > -1) {
+            serviceMetadata.api.spec = specInJson
+        } else {
+            serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
+        }
         if (api.description) {
             serviceMetadata.description = api.description;
         } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
@@ -114,7 +119,7 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
         } else {
             serviceMetadata.description = api.name;
         }
-        serviceMetadata.api.specificationUrl = hostname + api.metadata;
+        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
         serviceMetadata.api.apiType = "odata";
     }
     return serviceMetadata;
