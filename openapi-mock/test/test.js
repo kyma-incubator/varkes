@@ -9,7 +9,7 @@ describe('controllers', function () {
           request(app)
             .get("/api1/metadata")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'text/x-yaml; charset=utf-8')
+            .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(200, done)
         });
       })
@@ -39,7 +39,7 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api2/mymetadata")
-            .set('Accept', 'application/json')
+            .set('Accept', 'application/x-yaml')
             .expect('Content-Type', 'text/x-yaml; charset=utf-8')
             .expect(200, done)
         });
