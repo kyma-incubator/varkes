@@ -36,7 +36,7 @@ describe('tests odata controllers', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/metadata')
-                        .expect('Content-Type', 'text/yaml; charset=UTF-8')
+                        .expect('Content-Type', 'application/json; charset=UTF-8')
                         .expect(200,done)
                 });
             });
