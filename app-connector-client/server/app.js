@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 var express = require("express")
-
-
 var fs = require("fs")
 var LOGGER = require("./logger").logger
 const path = require("path")
@@ -10,9 +8,7 @@ const bodyParser = require('body-parser');
 const CONFIG = require("./config")
 var expressWinston = require('express-winston');
 var connectorModule = require("./routes/connector");
-//route definitions
 const events = require("./routes/events")
-var connector;
 var apis = require("./routes/apis")
 var keys = require("./keys")
 
@@ -28,7 +24,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         LOGGER.info("Using configuration %s", endpointConfig);
         varkesConfig = require(endpointConfig);
         configValidation(varkesConfig)
-        connector = connectorModule(varkesConfig, nodePortParam);
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
@@ -41,12 +36,12 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     }
 
     app.use(expressWinston.logger(LOGGER))
-    app.set('view engine', 'ejs'); //* using EJS as template engine
+    app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, '/views/'));
     app.use(express.static(path.resolve(__dirname, 'views/static/')))
 
     app.use("/apis", apis)
-    app.use("/connection", connector) //* in the routes folder
+    app.use("/connection", connectorModule(varkesConfig, nodePortParam))
 
     app.get("/", function (req, res) {
         res.render('index', { appName: varkesConfig.name })

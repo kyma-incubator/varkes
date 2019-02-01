@@ -80,6 +80,7 @@ function getAllAPI(localKyma) {
         })
     })
 }
+
 function fillServiceMetadata(serviceMetadata, api, hostname) {
     serviceMetadata.name = api.name;
     serviceMetadata.api.targetUrl = hostname;
