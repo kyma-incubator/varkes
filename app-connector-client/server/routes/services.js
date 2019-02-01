@@ -96,11 +96,8 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
         }
-        if (hostname.indexOf("localhost") > -1) {
-            serviceMetadata.api.spec = specInJson
-        } else {
-            serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
-        }
+        serviceMetadata.api.spec = specInJson
+        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
         if (api.description) {
             serviceMetadata.description = api.description;
         } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
