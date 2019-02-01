@@ -72,13 +72,13 @@ function configValidation(configJson) {
         error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
       }
       if (api.type && !api.type.match(/^(openapi|odata)$/)) {
-        error_message += "\napi " + api.name + ": type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
+        error_message += "\napi '" + api.name + "': type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
       }
       if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
-        error_message += "\napi " + api.name + ": metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
+        error_message += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
       }
       if (api.type == "odata" && !api.specification.match(/^.+\.xml$/)) {
-        error_message += "\napi " + api.name + ": specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
+        error_message += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
       }
     }
   }

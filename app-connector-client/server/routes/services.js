@@ -88,22 +88,32 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
 
     serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
     if (!api.type || api.type != "odata") {
-        var doc = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
-        serviceMetadata.api.specificationUrl = api.metadata;
-        //serviceMetadata.api.spec = doc;
-        if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("description")) {
-            serviceMetadata.description = doc.info.description;
+        var specInJson
+        if(api.specification.endsWith(".json")){
+            specInJson = JSON.parse(fs.readFileSync(api.specification))
+        }else{
+            specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
         }
-        else if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("title")) {
-            serviceMetadata.description = doc.info.title;
+        serviceMetadata.api.specificationUrl = hostname + api.metadata;
+        if (api.description) {
+            serviceMetadata.description = api.description;
+        } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
+            serviceMetadata.description = specInJson.info.description;
+        }
+        else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
+            serviceMetadata.description = specInJson.info.title;
         }
         else {
             serviceMetadata.description = api.name;
         }
     }
     else {
-        serviceMetadata.description = api.name;
-        serviceMetadata.api.specificationUrl = api.metadata;
+        if (api.description) {
+            serviceMetadata.description = api.description;
+        } else {
+            serviceMetadata.description = api.name;
+        }
+        serviceMetadata.api.specificationUrl = hostname + api.metadata;
         serviceMetadata.api.apiType = "odata";
     }
     return serviceMetadata;

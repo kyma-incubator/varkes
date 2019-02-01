@@ -4,8 +4,11 @@ const path = require("path")
 var CONFIG = require("../config")
 const apis = require("./apis");
 var request = require("request")
+const yaml = require('js-yaml');
+
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
 function sendEvent(req, res) {
     request.post({
         url: CONFIG.URLs.eventsUrl,
@@ -96,9 +99,15 @@ function fillEventData(eventMetadata, event) {
     if (eventMetadata.labels) {
         eventMetadata.labels = event.labels;
     }
-    serviceJSON = JSON.parse(fs.readFileSync(event.specification))
 
-    eventMetadata.events = serviceJSON;
+    var specInJson
+    if(event.specification.endsWith(".json")){
+        specInJson = JSON.parse(fs.readFileSync(event.specification))
+    }else{
+        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
+    }
+
+    eventMetadata.events.spec = specInJson;
     return eventMetadata;
 }
 function defineEventMetadata() {
@@ -106,10 +115,9 @@ function defineEventMetadata() {
         "provider": "SAP Hybris",
         "name": "",
         "description": "",
-        "labels": {
-            "connected-app": "myApp"
-        },
+        "labels": {},
         "events": {
+            "spec":{}
         }
     }
 }

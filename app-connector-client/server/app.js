@@ -76,10 +76,10 @@ function configValidation(configJson) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
                 if (!event.specification) {
-                    error_message += "\nevent " + event.name + ": missing attribute 'specification', a specification is mandatory";
+                    error_message += "\nevent '" + event.name + "': missing attribute 'specification', a specification is mandatory";
                 }
-                if (!event.specification.match(/^.+\.json$/)) {
-                    error_message += "\nevent " + event.name + ": specification " + event.specification + " does not match pattern '^.+\\.json$'";
+                if (!event.specification.match(/^.+\.(json|yaml|yml)$/)) {
+                    error_message += "\nevent '" + event.name + "': specification '" + event.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
                 }
             }
         }

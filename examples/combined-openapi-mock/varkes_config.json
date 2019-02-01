@@ -20,7 +20,7 @@
             "name": "events",
             "description": "All Events v1",
             "labels": {
-                "connected-app": "testApp"
+                "label1": "value1"
             }
         }
     ]

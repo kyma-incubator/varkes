@@ -7,11 +7,19 @@
     "name": "app-connector-mock",
     "events": [
         {
-            "specification": "test/events.json",
-            "name": "events",
+            "specification": "test/events1.json",
+            "name": "events1",
             "description": "All Events v1",
             "labels": {
-                "connected-app": "testApp"
+                "label1": "value1"
+            }
+        },
+        {
+            "specification": "test/events2.yaml",
+            "name": "events2",
+            "description": "All Events v2",
+            "labels": {
+                "label1": "value1"
             }
         }
     ],
@@ -20,7 +28,7 @@
             "baseurl": "/entity",
             "metadata": "/metadata",
             "oauth": "/authorizationserver/oauth/token",
-            "specification": "test/schools.yaml",
+            "specification": "test/schools.json",
             "name": "schools",
             "added_endpoints": [
                 {
