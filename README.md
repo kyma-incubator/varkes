@@ -9,8 +9,7 @@
 ## App Connector Client
 App connector has a REST api that is used to get certificate from kyma cluster. You can run it with `npm start` or you can use the *Dockerfile* to create a docker image. Further instructions are in [app-connector-client/README.md](app-connector-client/README.md).
 
-## OpenAPI Mock
-Mocks REST calls given an OpenAPI specification. [openapi-mock/README.md](openapi-mock/README.md).
+## Overview
 
 ## Odata Mock
 Mocks rest calls given an OData specification [odata-mock/README.md](odata-mock/README.md).
