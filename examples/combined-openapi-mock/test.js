@@ -21,14 +21,24 @@ describe('tests odata controllers', function () {
                         .expect(200,done)
                 });
             });
-            describe('GET metadata', function () {
+            describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/metadata')
-                        .expect('Content-Type', 'application/json; charset=UTF-8')
+                        .get('/api1/courseMetadata.json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200,done)
                 });
             });
+
+            describe('GET varkes metadata', function () {
+                it('should return 200', function (done) {
+                    request(app)
+                        .get('/metadata')
+                        .expect('Content-Type', 'text/yaml; charset=UTF-8')
+                        .expect(200,done)
+                });
+            });
+
             describe('GET connection info', function () {
                 it('should return 400', function (done) {
                     request(app)

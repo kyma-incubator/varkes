@@ -6,6 +6,5 @@
             "metadata": "/courses/metadata",
             "specification": "apis/courses.xml"
         }
-    ],
-    "storage_file_path": "data.json"
+    ]
 }
