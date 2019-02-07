@@ -49,10 +49,6 @@ async function configure(varkesConfigPath) {
     })
   })
 
-  if (varkesConfig.storage_file_path) {
-    bootConfig.dataSources.db.file = varkesConfig.storage_file_path
-  }
-
   return new Promise(function (resolve, reject) {
     boot(app, bootConfig, function (err) {
       if (err) {

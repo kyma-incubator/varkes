@@ -1,6 +1,6 @@
 {
   "name": "varkes-odata-mock",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "main": "server/app.js",
   "engines": {
     "node": ">=4"
@@ -25,7 +25,8 @@
     "odata2openapi": "1.x.x",
     "serve-favicon": "2.x.x",
     "strong-error-handler": "2.x.x",
-    "winston": "3.x.x"
+    "winston": "3.x.x",
+    "log4js": "4.x.x"
   },
   "devDependencies": {
     "mocha": "5.x.x",

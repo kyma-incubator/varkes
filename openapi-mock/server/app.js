@@ -10,8 +10,6 @@ const path = require("path")
 const fs = require('fs');
 
 var middlewares = [];
-var memoryStores = [];
-var MemoryDataStore = middleware.MemoryDataStore;
 var varkesConfig
 
 module.exports = function (varkesConfigPath) {
@@ -31,7 +29,7 @@ module.exports = function (varkesConfigPath) {
   mock_controller.init(app, varkesConfig);
   mock_controller.recordRequest(app);
 
-  let myDB = new MemoryDataStore();
+  let myDB = new middleware.MemoryDataStore();
 
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     middlewares.push(

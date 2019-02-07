@@ -24,7 +24,7 @@ module.exports = {
             var metadataEndpoint = api.metadata ? api.metadata : METADATA;
             createOauthEndpoint(oauthEndpoint, api, app);
             createMetadataEndpoint(openApi_doc, metadataEndpoint, api, app);
-            createConsole(openApi_doc, api, app);
+            createConsole(metadataEndpoint, api, app);
             createEndpoints(openApi_doc, api);
         }
     },
@@ -111,24 +111,28 @@ function createOauthEndpoint(oauth_endpoint, api, app) {
 function createMetadataEndpoint(openApi_doc, metadata_endpoint, api, app) {
     LOGGER.debug("Adding metadata endpoint %s%s", api.baseurl, metadata_endpoint)
     app.get(api.baseurl + metadata_endpoint, function (req, res) {
-        if(!req.headers["accept"] || req.accepts('application/json')){
-            res.type('application/json')
-            res.status(200)
-            res.send(openApi_doc)
-        }else{
-            res.type('text/x-yaml')
-            res.status(200)
-            res.send(pretty_yaml.stringify(openApi_doc))
-        }
+        res.type('text/x-yaml')
+        res.status(200)
+        res.send(pretty_yaml.stringify(openApi_doc))
     });
+    app.get(api.baseurl + metadata_endpoint + ".json", function (req, res) {
+        res.type('application/json')
+        res.status(200)
+        res.send(openApi_doc)
+    })
+    app.get(api.baseurl + metadata_endpoint + ".yaml", function (req, res) {
+        res.type('text/x-yaml')
+        res.status(200)
+        res.send(pretty_yaml.stringify(openApi_doc))
+    })
 }
 
-function createConsole(openApi_doc, api, app) {
-    LOGGER.debug("Adding console endpoint %s%s", api.baseurl,"/console")
+function createConsole(metadata, api, app) {
+    LOGGER.debug("Adding console endpoint %s%s", api.baseurl, "/console")
     app.get(api.baseurl + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
-        html = html.replace("OPENAPI", api.baseurl + api.metadata)
-        html = html.replace("NAME", api.baseurl + api.name)
+        html = html.replace("OPENAPI", api.baseurl + metadata + ".json")
+        html = html.replace("NAME", api.name)
         res.type("text/html")
         res.status(200)
         res.send(html)

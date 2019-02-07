@@ -42,7 +42,6 @@ function createEntities(service) {
 		jsonTemplate.definition.plural = entityName + "s";
 		jsonTemplate.definition = createEntityProperties(entityType, jsonTemplate.definition);
 		result.modelDefs.push(jsonTemplate)
-		LOGGER.debug("%s",JSON.stringify(jsonTemplate))
 	});
 
 	return result

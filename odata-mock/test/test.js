@@ -4,19 +4,19 @@ describe('controllers', function () {
 
     it('test_odata', function (done) {
         server.then(function (app) {
-            describe('GET course 1 via API', function () {
+            describe('GET courses via API', function () {
                 it('should return response 200', function (done) {
                     request(app)
-                        .get('/api/courses/1')
+                        .get('/api/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
             });
-            describe('GET course 1 via odata', function () {
+            describe('GET courses via odata', function () {
                 it('should return response 200', function (done) {
                     request(app)
-                        .get('/odata/Courses(\'1\')')
+                        .get('/odata/Courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
