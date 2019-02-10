@@ -8,11 +8,26 @@
     "apis": [
         {
             "baseurl": "/api1",
-            "specification": "test/pets.yaml",
-            "name": "pets v2"
+            "specification": "test/pets_openapi.yaml",
+            "name": "pets openapi yaml"
         },
         {
             "baseurl": "/api2",
+            "specification": "test/pets_openapi.json",
+            "name": "pets openapi json"
+        },
+        {
+            "baseurl": "/api3",
+            "specification": "test/pets_swagger.yaml",
+            "name": "pets swagger yaml"
+        },
+        {
+            "baseurl": "/api4",
+            "specification": "test/pets_swagger.json",
+            "name": "pets swagger json"
+        },
+        {
+            "baseurl": "/api5",
             "metadata": "/mymetadata",
             "name": "courses",
             "specification": "test/courses.yaml",

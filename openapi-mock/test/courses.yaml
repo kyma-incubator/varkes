@@ -1,4 +1,4 @@
-openapi: "3.0.0"
+swagger: "2.0"
 info:
   description: "Courses Webservices"
   version: "2.0"
@@ -8,7 +8,7 @@ consumes:
 produces:
   - "application/json"
   - "application/xml"
-basePath: "/api2"
+basePath: "/api5"
 paths:
   /courses:
     get:
@@ -58,9 +58,6 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
   /courses/{code}:
     get:
       summary: "Get a list of available courses."
@@ -81,7 +78,8 @@ paths:
         200:
           description: "OK"
           schema:
-            course:
+            type: "object"
+            properties:
               code:
                 type: "string"
               name:
@@ -92,71 +90,14 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
-  /authorizationserver/oauth/token:
-    post:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
-      consumes:
-        - "application/x-www-form-urlencoded"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "parameters"
-          description: "List of Component identifiers"
-          required: true
-          schema:
-            type: "object"
-            properties:
-              client_id:
-                type: "string"
-              client_secret:
-                type: "string"
-              grant_type:
-                type: "string"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            type: "object"
-            properties:
-              access_token_url:
-                type: "string"
-            default:
-              token: "3333"
-        404:
-          description: "Not Found"
-  /trial_endpoint:
-    get:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/xml"
-        - "application/json"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            type: "object"
-            properties:
-              token:
-                type: "string"
-            default:
-              token: "3333"
-        404:
-          description: "Not Found"
 definitions:
   CoursesDTO:
     type: "array"
     items:
-      code:
-        type: "string"
-      name:
-        type: "string"
+      type: "object"
+      properties:
+        code:
+          type: "string"
+        name:
+          type: "string"
 
