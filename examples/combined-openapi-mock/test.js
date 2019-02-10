@@ -2,12 +2,21 @@ var request = require('supertest');
 var exampleApp = require("./app.js")
 
 describe('tests odata controllers', function () {
-    it('should work', function () {
+    it('should work', function (done) {
         exampleApp.then(function (app) {
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api1/courses')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .expect(200,done)
+                });
+            });
+            describe('GET schools', function () {
+                it('should return 200', function (done) {
+                    request(app)
+                        .get('/api2/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200,done)
@@ -48,6 +57,6 @@ describe('tests odata controllers', function () {
                         .expect(400,done)
                 });
             });
-        })
+        }).finally(done);
     });
 });

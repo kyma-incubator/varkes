@@ -2,7 +2,7 @@ var request = require('supertest');
 var exampleApp = require("./app.js")
 
 describe('tests openapi controllers', function () {
-    it('should work', function () {
+    it('should work', function (done) {
         exampleApp.then(function (app) {
             describe('GET courses', function () {
                 it('should return 200', function (done) {
@@ -21,6 +21,6 @@ describe('tests openapi controllers', function () {
                         .expect(200,done)
                 });
             });
-        })
+        }).finally(done);
     });
 });

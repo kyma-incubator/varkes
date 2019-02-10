@@ -11,13 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "varkes-odata-mock": "0.3.9",
-    "compression": "1.x.x",
-    "express": "4.x.x",
-    "loopback": "3.x.x",
-    "cors": "2.x.x",
-    "helmet": "3.x.x",
-    "n-odata-server": "0.x.x",
-    "loopback-component-explorer": "6.x.x"
+    "express": "4.x.x"
   },
   "devDependencies": {
     "mocha": "5.x.x",

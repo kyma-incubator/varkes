@@ -13,7 +13,7 @@
     "body-parser": "1.x.x",
     "compression": "1.x.x",
     "cors": "2.x.x",
-    "express-resource": "1.x.x",
+    "express": "4.x.x",
     "helmet": "3.x.x",
     "loopback": "3.x.x",
     "loopback-boot": "2.x.x",
@@ -21,12 +21,9 @@
     "loopback-datasource-juggler": "2.x.x",
     "morgan": "1.x.x",
     "n-odata-server": "0.x.x",
-    "nodemailer": "4.x.x",
     "odata2openapi": "1.x.x",
-    "serve-favicon": "2.x.x",
     "strong-error-handler": "2.x.x",
-    "winston": "3.x.x",
-    "log4js": "4.x.x"
+    "winston": "3.x.x"
   },
   "devDependencies": {
     "mocha": "5.x.x",

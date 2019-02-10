@@ -10,12 +10,9 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "deep-extend": "0.5.x",
     "express": "4.x.x",
-    "lodash": "4.x.x",
-    "npm": "6.5.x",
     "varkes-app-connector-client": "1.3.23",
-    "varkes-openapi-mock": "0.3.17"
+    "varkes-openapi-mock": "0.3.18"
   },
   "devDependencies": {
     "mocha": "5.x.x",

@@ -8,17 +8,13 @@
   "license": "Apache-2.0",
   "main": "server/app.js",
   "dependencies": {
-    "lodash": "4.x.x",
-    "deep-extend": "0.x.x",
     "body-parser": "1.x.x",
     "express": "4.x.x",
     "express-resource": "1.x.x",
-    "fs-extra": "7.x.x",
     "json-to-pretty-yaml": "1.x.x",
     "morgan": "1.x.x",
     "path": "0.x.x",
     "swagger-express-middleware": "2.x.x",
-    "tar": "4.x.x",
     "util": "0.x.x",
     "winston": "3.x.x",
     "api-spec-converter": "2.x.x"
