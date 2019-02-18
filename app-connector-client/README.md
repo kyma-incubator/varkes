@@ -1,4 +1,6 @@
 # App Connector Client
+[![npm version](https://badge.fury.io/js/varkes-app-connector-client.svg)](https://badge.fury.io/js/varkes-app-connector-client)
+
 App Connector Client provides an interface to pair your application with Kyma and register it's APIs.
 
 After startup, you have access to:
