@@ -1,10 +1,12 @@
 FROM node:11-alpine
 RUN apk --no-cache upgrade
 
-COPY . /odata-mock
-WORKDIR /odata-mock
+WORKDIR /app
+COPY package*.json ./
 
+ENV NODE_ENV=production
 RUN npm install
+COPY . .
 
 EXPOSE 10000
 CMD ["npm","start"]
