@@ -2,9 +2,9 @@
     "name": "Varkes OData-Mock",
     "apis": [
         {
-            "name": "courses",
-            "metadata": "/courses/metadata",
-            "specification": "test/courses.xml"
+            "name": "services",
+            "metadata": "/services/metadata",
+            "specification": "test/services.xml"
         }
     ]
 }

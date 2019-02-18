@@ -2,8 +2,8 @@
     "name": "Combined OData-Mock",
     "apis": [
         {
-            "name": "courses",
-            "specification": "apis/courses.xml",
+            "name": "services",
+            "specification": "apis/services.xml",
             "type": "odata"
         }
     ],
