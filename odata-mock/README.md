@@ -3,9 +3,9 @@
 Mocks rest calls given an OData specification 
 
 After startup, you have access to:
-- odata API - http://localhost:10000/odata/myResource
-- rest API - http://localhost:10000/api/myResource/metadata
-- console - http://localhost:10000/api/console
+- odata API - http://localhost:10000/odata/
+- odata metadata - http://localhost:10000/odata/$metadata
+- rest API - http://localhost:10000/api/console
 
 ## Starting the application
 
