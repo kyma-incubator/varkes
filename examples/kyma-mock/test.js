@@ -7,18 +7,18 @@ describe('tests openapi controllers', function () {
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/courses')
+                        .get('/kyma/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/console')
+                        .get('/kyma/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
         }).finally(done);
