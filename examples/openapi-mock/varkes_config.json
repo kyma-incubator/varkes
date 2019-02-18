@@ -3,13 +3,9 @@
     "apis": [
         {
             "baseurl": "/api1",
-<<<<<<< HEAD
             "metadata": "/metadata",
             "oauth": "/authorizationserver/oauth/token",
             "specification_file": "apis/courses.yaml",
-=======
-            "specification": "apis/courses.yaml",
->>>>>>> master
             "name": "courses"
         }
     ],
