@@ -1,0 +1,11 @@
+{
+    "name": "OpenAPI-Mock",
+    "apis": [
+        {
+            "baseurl": "/kyma",
+            "specification": "apis/kyma.yaml",
+            "name": "kyma"
+        }
+    ],
+    "request_log_path": "requests.log"
+}
