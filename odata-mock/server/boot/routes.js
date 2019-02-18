@@ -8,7 +8,7 @@ module.exports = function (app) {
     var apis = app.varkesConfig.apis;
     apis.forEach(function (api) {
         app.get(api.metadata ? api.metadata : "/metadata", function (req, res, next) {
-            var spec = fs.readFileSync(api.specification_file, 'utf-8');
+            var spec = fs.readFileSync(api.specification, 'utf-8');
             res.status(200);
             res.type("text/xml");
             res.send(spec);

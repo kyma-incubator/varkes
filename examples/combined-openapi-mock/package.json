@@ -10,16 +10,13 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "deep-extend": ">=0.5.1",
-    "express": "^4.16.4",
-    "lodash": "^4.17.11",
-    "npm": "^6.5.0",
-    "varkes-app-connector-client": "^1.3.15",
-    "varkes-openapi-mock": "^0.3.10"
+    "express": "4.x.x",
+    "varkes-app-connector-client": "1.3.23",
+    "varkes-openapi-mock": "0.3.18"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "supertest": "^3.3.0"
+    "mocha": "5.x.x",
+    "supertest": "3.x.x"
   },
   "repository": {
     "type": "ssh",

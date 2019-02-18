@@ -3,24 +3,41 @@
     "apis": [
         {
             "baseurl": "/api2",
+<<<<<<< HEAD
             "specification_file": "apis/schools.yaml",
+=======
+            "specification": "apis/schools.yaml",
+>>>>>>> master
             "name": "schools"
         },
         {
             "baseurl": "/api1",
             "name": "courses",
             "metadata": "/courseMetadata",
+<<<<<<< HEAD
             "specification_file": "apis/courses.yaml",
             "oauth": "/authorizationserver/oauth/token"
+=======
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+>>>>>>> master
         }
     ],
     "events": [
         {
+<<<<<<< HEAD
             "specification_file": "apis/events.json",
             "name": "events",
             "description": "All Events v1",
             "labels": {
                 "connected-app": "testApp"
+=======
+            "specification": "apis/events.json",
+            "name": "events",
+            "description": "All Events v1",
+            "labels": {
+                "label1": "value1"
+>>>>>>> master
             }
         }
     ]

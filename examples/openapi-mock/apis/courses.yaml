@@ -1,8 +1,8 @@
-openapi: "3.0.0"
+swagger: "2.0"
 info:
-  description: "Courses Version 2"
+  description: "Courses Webservices"
   version: "2.0"
-  title: "Courses V2"
+  title: "Courses Webservices"
 basePath: "/api1"
 consumes:
   - "application/json"
@@ -31,8 +31,8 @@ paths:
         404:
           description: "Not Found"
     post:
-      summary: "insert courses"
-      description: "Given a list of course in body, insert data."
+      summary: "insert course"
+      description: "Given a course in body"
       consumes:
         - "application/json"
       produces:
@@ -40,16 +40,16 @@ paths:
         - "application/json"
       parameters:
         - in: "body"
-          name: "componentIdList"
-          description: "List of Component identifiers"
+          name: "body"
+          description: "a course"
           required: true
           schema:
-            $ref: "#/definitions/CoursesDTO"
+            $ref: "#/definitions/CourseDTO"
       responses:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/CoursesDTO"
+            $ref: "#/definitions/CourseDTO"
         201:
           description: "Created"
         401:
@@ -58,10 +58,7 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
-  /coursesbyId/{id}:
+  /courses/{id}:
     get:
       summary: "Get a list of available courses."
       description: "Lists supported payment card types."
@@ -81,65 +78,22 @@ paths:
         200:
           description: "OK"
           schema:
-            course:
-              code:
-                type: "string"
-              name:
-                type: "string"
-            default:
-              course:
-                code: "C1"
-                name: "course1"
+            $ref: "#/definitions/CourseDTO"
         401:
           description: "Unauthorized"
         403:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
-  /authorizationserver/oauth/token:
-    post:
-      summary: "Get OAuth2 access token"
-      description: "Returns the acess token for Kyma"
-      consumes:
-        - "application/x-www-form-urlencoded"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "parameters"
-          description: "List of Component identifiers"
-          required: true
-          schema:
-            type: "object"
-            properties:
-              client_id:
-                type: "string"
-              client_secret:
-                type: "string"
-              grant_type:
-                type: "string"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            type: "object"
-            properties:
-              access_token_url:
-                type: "string"
-            default:
-              token: "3333"
-        404:
-          description: "Not Found"
 definitions:
   CoursesDTO:
     type: "array"
     items:
+      $ref: "#/definitions/CourseDTO"
+  CourseDTO:
+    type: "object"
+    properties:
       code:
         type: "string"
       name:
         type: "string"
-

@@ -59,7 +59,7 @@ Install using [NPM](https://docs.npmjs.com/getting-started/what-is-npm).
 npm install
 ````
 Then you need to copy your OpenAPI yaml into the api/swagger directory as [swagger.yml](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/swagger.yaml)<br>
-OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/config.js) file specified by the "specification_file" element
+OR you could simply change the path in the [config.js](https://github.com/kyma-incubator/varkes/blob/master/examples/openapi-app/config.js) file specified by the "specification" element
 
 You need to remove the host in order for swagger-express-middleware to do it's magic
 <br>
@@ -111,7 +111,7 @@ In this file you define the paths of all the important files like the [swagger.y
 
 ````javascript
 module.exports = {
-    specification_file: 'swagger.yaml',
+    specification: 'swagger.yaml',
     request_log_path: 'requests.log',
     added_endpoints: [
         {

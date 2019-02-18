@@ -3,6 +3,13 @@ var LOGGER = require("../logger").logger
 const yaml = require('js-yaml');
 const fs = require("fs")
 const apis = require("./apis");
+<<<<<<< HEAD
+=======
+
+const OAUTH = "/authorizationserver/oauth/token"
+const METADATA = "/metadata"
+
+>>>>>>> master
 async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
@@ -83,6 +90,7 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     if (api.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
+<<<<<<< HEAD
     serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + api.oauth;
     if (!api.type || api.type != "odata") {
         var doc = yaml.safeLoad(fs.readFileSync(api.specification_file, 'utf8'));
@@ -93,14 +101,48 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
         }
         else if (doc.hasOwnProperty("info") && doc.info.hasOwnProperty("title")) {
             serviceMetadata.description = doc.info.title;
+=======
+function fillServiceMetadata(serviceMetadata, api, hostname) {
+    serviceMetadata.name = api.name;
+    serviceMetadata.api.targetUrl = hostname;
+    if (api.baseurl)
+        serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
+
+    serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
+    if (!api.type || api.type != "odata") {
+        var specInJson
+        if (api.specification.endsWith(".json")) {
+            specInJson = JSON.parse(fs.readFileSync(api.specification))
+        } else {
+            specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
+        }
+        serviceMetadata.api.spec = specInJson
+        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
+        if (api.description) {
+            serviceMetadata.description = api.description;
+        } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
+            serviceMetadata.description = specInJson.info.description;
+        }
+        else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
+            serviceMetadata.description = specInJson.info.title;
+>>>>>>> master
         }
         else {
             serviceMetadata.description = api.name;
         }
     }
     else {
+<<<<<<< HEAD
         serviceMetadata.description = api.name;
         serviceMetadata.api.specificationUrl = api.metadata;
+=======
+        if (api.description) {
+            serviceMetadata.description = api.description;
+        } else {
+            serviceMetadata.description = api.name;
+        }
+        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
+>>>>>>> master
         serviceMetadata.api.apiType = "odata";
     }
     return serviceMetadata;

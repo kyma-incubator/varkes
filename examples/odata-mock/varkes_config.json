@@ -4,8 +4,14 @@
         {
             "name": "courses",
             "metadata": "/courses/metadata",
+<<<<<<< HEAD
             "specification_file": "apis/courses.xml"
         }
     ],
     "storage_file_path": "data.json"
+=======
+            "specification": "apis/courses.xml"
+        }
+    ]
+>>>>>>> master
 }

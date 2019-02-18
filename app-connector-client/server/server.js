@@ -4,7 +4,9 @@ var connectorApp = require("./app")
 var app = require('express')()
 var LOGGER = require("./logger").logger
 var nodePort
-var configPath //= "test/varkes_config.json"
+
+var configPath = "test/varkes_config.json"
+
 
 if (process.argv.length > 2) {
     configPath = process.argv[2]

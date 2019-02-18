@@ -1,5 +1,5 @@
-openapi: "3.0.0"
-basePath: "/api1"
+swagger: "2.0"
+basePath: "/api3"
 info:
   version: "1.0.0"
   title: "OpenAPI petstore"
@@ -65,72 +65,33 @@ definitions:
         type: "integer"
         minimum: 10000
         maximum: 99999
-  pet-filters:
-    - name: "tags"
-      in: "query"
-      description: "Filters pets by one or more tags"
-      required: false
-      type: "array"
-      items:
-        type: "string"
-      uniqueItems: true
-      collectionFormat: "csv"
-    - name: "type"
-      in: "query"
-      description: "Filters pets by type (dog, cat, or bird)"
-      required: false
-      type: "string"
-      enum:
-        - "cat"
-        - "dog"
-        - "bird"
-    - name: "age"
-      in: "query"
-      description: "Filters pets by age"
-      required: false
-      type: "integer"
-    - name: "dob"
-      in: "query"
-      description: "Filters pets by date of birth"
-      required: false
-      type: "string"
-      format: "date"
-    - name: "address.city"
-      in: "query"
-      description: "Filters pets by city"
-      required: false
-      type: "string"
-    - name: "address.state"
-      in: "query"
-      description: "Filters pets by state"
-      required: false
-      type: "string"
-    - name: "address.zipcode"
-      in: "query"
-      description: "Filters pets by zip code"
-      required: false
-      type: "integer"
-    - name: "vet.name"
-      in: "query"
-      description: "Filters pets by veterinarian name"
-      required: false
-      type: "string"
-    - name: "vet.address.city"
-      in: "query"
-      description: "Filters pets by veterinarian city"
-      required: false
-      type: "string"
-    - name: "vet.address.state"
-      in: "query"
-      description: "Filters pets by veterinarian state"
-      required: false
-      type: "string"
-    - name: "vet.address.zipcode"
-      in: "query"
-      description: "Filters pets by veterinarian zip code"
-      required: false
-      type: "integer"
 parameters:
+  tags:
+    name: "tags"
+    in: "query"
+    description: "Filters pets by one or more tags"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    uniqueItems: true
+    collectionFormat: "csv"
+  type:
+    name: "type"
+    in: "query"
+    description: "Filters pets by type (dog, cat, or bird)"
+    required: true
+    type: "string"
+    enum:
+      - "cat"
+      - "dog"
+      - "bird"
+  age:
+    name: "age"
+    in: "query"
+    description: "Filters pets by age"
+    required: false
+    type: "integer"
   petName:
     name: "petName"
     in: "path"
@@ -143,7 +104,9 @@ paths:
       description: "Returns all pets, optionally filtered by one or more criteria"
       operationId: "findPets"
       parameters:
-        $ref: "#/definitions/pet-filters"
+        - $ref: "#/parameters/tags"
+        - $ref: "#/parameters/type"
+        - $ref: "#/parameters/age"
       responses:
         default:
           description: "Returns the matching pets"
@@ -159,7 +122,9 @@ paths:
       description: "Deletes all pets, optionally filtered by one or more criteria"
       operationId: "deletePets"
       parameters:
-        $ref: "#/definitions/pet-filters"
+        - $ref: "#/parameters/tags"
+        - $ref: "#/parameters/type"
+        - $ref: "#/parameters/age"
       responses:
         default:
           description: "Returns the pets that were deleted"

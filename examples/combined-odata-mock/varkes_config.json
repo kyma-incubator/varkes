@@ -3,14 +3,19 @@
     "apis": [
         {
             "name": "courses",
+<<<<<<< HEAD
             "metadata": "/courses/metadata",
             "specification_file": "apis/courses.xml",
             "oauth": "/authorizationserver/oauth/token",
+=======
+            "specification": "apis/courses.xml",
+>>>>>>> master
             "type": "odata"
         }
     ],
     "events": [
         {
+<<<<<<< HEAD
             "specification_file": "apis/events.json",
             "name": "events",
             "description": "All Events v1",
@@ -20,4 +25,11 @@
         }
     ],
     "storage_file_path": "data.json"
+=======
+            "specification": "apis/events.json",
+            "name": "events",
+            "description": "All Events v1"
+        }
+    ]
+>>>>>>> master
 }

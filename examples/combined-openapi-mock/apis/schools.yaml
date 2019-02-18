@@ -1,4 +1,4 @@
-openapi: "3.0.0"
+swagger: "2.0"
 info:
   description: "Schools Webservices"
   version: "2.0"
@@ -31,8 +31,8 @@ paths:
         404:
           description: "Not Found"
     post:
-      summary: "insert schools"
-      description: "Given a list of school in body, insert data."
+      summary: "insert school"
+      description: "Given a school in body."
       consumes:
         - "application/json"
       produces:
@@ -40,18 +40,16 @@ paths:
         - "application/json"
       parameters:
         - in: "body"
-          name: "componentIdList"
-          description: "List of Component identifiers"
+          name: "body"
+          description: "school object"
           required: true
           schema:
-            type: "object"
-            school:
-              $ref: "#/definitions/SchoolDTO"
+            $ref: "#/definitions/SchoolDTO"
       responses:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/SchoolsDTO"
+            $ref: "#/definitions/SchoolDTO"
         201:
           description: "Created"
         401:
@@ -60,10 +58,7 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
-  /schoolsbyId/{id}:
+  /schools/{id}:
     get:
       summary: "Get a list of available schools."
       description: "Lists supported payment card types."
@@ -83,31 +78,22 @@ paths:
         200:
           description: "OK"
           schema:
-            school:
-              code:
-                type: "string"
-              name:
-                type: "string"
-            default:
-              school:
-                code: "C1"
-                name: ""
+            $ref: "#/definitions/SchoolDTO"
         401:
           description: "Unauthorized"
         403:
           description: "Forbidden"
         404:
           description: "Not Found"
-    security:
-      - oauth2_Password: []
-      - oauth2_client_credentials: []
 definitions:
   SchoolsDTO:
     type: "array"
     items:
-      ref: "#/definitions/SchoolDTO"
+      $ref: "#/definitions/SchoolDTO"
   SchoolDTO:
-    code:
-      type: "string"
-    name:
-      type: "string"
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      name:
+        type: "string"

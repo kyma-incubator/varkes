@@ -7,11 +7,27 @@
     "name": "app-connector-mock",
     "events": [
         {
+<<<<<<< HEAD
             "specification_file": "test/events.json",
             "name": "events",
             "description": "All Events v1",
             "labels": {
                 "connected-app": "testApp"
+=======
+            "specification": "test/events1.json",
+            "name": "events1",
+            "description": "All Events v1",
+            "labels": {
+                "label1": "value1"
+            }
+        },
+        {
+            "specification": "test/events2.yaml",
+            "name": "events2",
+            "description": "All Events v2",
+            "labels": {
+                "label1": "value1"
+>>>>>>> master
             }
         }
     ],
@@ -20,7 +36,11 @@
             "baseurl": "/entity",
             "metadata": "/metadata",
             "oauth": "/authorizationserver/oauth/token",
+<<<<<<< HEAD
             "specification_file": "test/schools.yaml",
+=======
+            "specification": "test/schools.json",
+>>>>>>> master
             "name": "schools",
             "added_endpoints": [
                 {
@@ -33,7 +53,11 @@
             "baseurl": "/entity/v1",
             "metadata": "/metadata",
             "name": "courses",
+<<<<<<< HEAD
             "specification_file": "test/courses.yaml",
+=======
+            "specification": "test/courses.yaml",
+>>>>>>> master
             "oauth": "/authorizationserver/oauth/token"
         }
     ]

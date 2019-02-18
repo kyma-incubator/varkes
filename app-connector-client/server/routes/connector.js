@@ -7,6 +7,7 @@ var forge = require("node-forge")
 const url = require("url")
 const services = require("./services")
 const events = require("./events")
+var express = require("express")
 
 var nodePort;
 var varkesConfig;
@@ -174,16 +175,16 @@ async function connect(req, res) {
     }
 }
 
-
-
-var connectionRouter = require("express").Router()
-connectionRouter.get("/", info)
-connectionRouter.delete("/", disconnect)
-connectionRouter.get("/key", key)
-connectionRouter.get("/cert", cert)
-connectionRouter.post("/", connect)
 module.exports = function (config, nodePortParam = null) {
     varkesConfig = config;
     nodePort = nodePortParam;
+
+    var connectionRouter = express.Router()
+    connectionRouter.get("/", info)
+    connectionRouter.delete("/", disconnect)
+    connectionRouter.get("/key", key)
+    connectionRouter.get("/cert", cert)
+    connectionRouter.post("/", connect)
+
     return connectionRouter;
 }

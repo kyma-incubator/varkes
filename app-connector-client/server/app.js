@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 var express = require("express")
-
-
 var fs = require("fs")
 var LOGGER = require("./logger").logger
 const path = require("path")
@@ -13,6 +11,7 @@ var connectorModule = require("./routes/connector");
 //route definitions
 const events = require("./routes/events")
 var connector;
+const events = require("./routes/events")
 var apis = require("./routes/apis")
 var keys = require("./keys")
 
@@ -41,12 +40,12 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     }
 
     app.use(expressWinston.logger(LOGGER))
-    app.set('view engine', 'ejs'); //* using EJS as template engine
+    app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, '/views/'));
     app.use(express.static(path.resolve(__dirname, 'views/static/')))
 
     app.use("/apis", apis)
-    app.use("/connection", connector) //* in the routes folder
+    app.use("/connection", connectorModule(varkesConfig, nodePortParam))
 
     app.get("/", function (req, res) {
         res.render('index', { appName: varkesConfig.name })
@@ -75,14 +74,11 @@ function configValidation(configJson) {
                 if (!event.name) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
-                if (!event.name.match(/^[\w]+$/)) {
-                    error_message += "\nevent " + event.name + ": name " + event.name + " contains non-alphanumeric letters, please remove them";
+                if (!event.specification) {
+                    error_message += "\nevent '" + event.name + "': missing attribute 'specification', a specification is mandatory";
                 }
-                if (!event.specification_file) {
-                    error_message += "\nevent " + event.name + ": missing attribute 'specification_file', a specification_file is mandatory";
-                }
-                if (!event.specification_file.match(/^[/\\\w]+.json$/)) {
-                    error_message += "\nevent " + event.name + ": specification_file " + event.specification_file + " does not match pattern '^[/\\\w]+.json$'";
+                if (!event.specification.match(/^.+\.(json|yaml|yml)$/)) {
+                    error_message += "\nevent '" + event.name + "': specification '" + event.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
                 }
             }
         }

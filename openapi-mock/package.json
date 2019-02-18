@@ -1,6 +1,6 @@
 {
   "name": "varkes-openapi-mock",
-  "version": "0.3.11",
+  "version": "0.3.17",
   "private": false,
   "description": "Open API Mock",
   "keywords": [],
@@ -8,25 +8,20 @@
   "license": "Apache-2.0",
   "main": "server/app.js",
   "dependencies": {
-    "lodash": "^4.17.11",
-    "deep-extend": ">=0.5.1",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "express-resource": "^1.0.0",
-    "fs-extra": "^7.0.1",
-    "json-to-pretty-yaml": "^1.2.2",
-    "morgan": "^1.9.1",
-    "npm": "^6.5.0",
-    "path": "^0.12.7",
-    "swagger-express-middleware": "^1.2.0",
-    "swagger-express-mw": "^0.7.0",
-    "tar": "^4.4.8",
-    "util": "^0.11.1",
-    "winston": "^3.0.0"
+    "body-parser": "1.x.x",
+    "express": "4.x.x",
+    "express-resource": "1.x.x",
+    "json-to-pretty-yaml": "1.x.x",
+    "morgan": "1.x.x",
+    "path": "0.x.x",
+    "swagger-express-middleware": "2.x.x",
+    "util": "0.x.x",
+    "winston": "3.x.x",
+    "api-spec-converter": "2.x.x"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "supertest": "^3.3.0"
+    "mocha": "5.x.x",
+    "supertest": "3.x.x"
   },
   "repository": {
     "type": "ssh",
