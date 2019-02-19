@@ -2,9 +2,9 @@
     "name": "OData-Mock",
     "apis": [
         {
-            "name": "courses",
-            "metadata": "/courses/metadata",
-            "specification": "apis/courses.xml"
+            "name": "services",
+            "metadata": "/services/metadata",
+            "specification": "apis/services.xml"
         }
     ]
 }
