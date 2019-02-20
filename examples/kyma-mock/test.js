@@ -7,28 +7,28 @@ describe('tests kyma controllers', function () {
             describe('GET connector api health', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/connectorapi/v1/health')
+                        .get('/kyma/connector/v1/health')
                         .expect(200, done)
                 });
             });
             describe('GET events api health', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/eventsapi/v1/health')
+                        .get('/kyma/events/v1/health')
                         .expect(200, done)
                 });
             });
             describe('GET metadata api health', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/metadataapi/v1/health')
+                        .get('/kyma/metadata/v1/health')
                         .expect(200, done)
                 });
             });
             describe('GET connector api console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/connectorapi/console')
+                        .get('/kyma/connector/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -36,7 +36,7 @@ describe('tests kyma controllers', function () {
             describe('GET events api console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/eventsapi/console')
+                        .get('/kyma/events/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -44,7 +44,7 @@ describe('tests kyma controllers', function () {
             describe('GET metadata api console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/metadataapi/console')
+                        .get('/kyma/metadata/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
