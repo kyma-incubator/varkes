@@ -45,11 +45,12 @@
                     </div>
 
                     <br />
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="get_certificates"
-                        onclick="giveToken()">Connect to Kyma
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                        id="get_certificates" onclick="giveToken()">Connect to Kyma
                     </button>
                 </div>
-                <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" id="disconnect_button">
+                <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+                    id="disconnect_button">
                     Disconnect
                 </button>
 
@@ -63,7 +64,8 @@
                     <ul class="demo-list-item mdl-list">
 
                     </ul>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="newServiceView()">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                        onclick="newServiceView()">
                         New API
                     </button>
                 </div>
@@ -103,15 +105,18 @@
                         <td>
                             <div id="ed" style="text-align: -webkit-center">
                                 <div id="jsoneditor" style="width: 700px; height: 600px;"></div>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                <button
+                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="create_service" onclick="createService()">Create
                                     API
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                <button
+                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="update_service">Update
                                     API
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                <button
+                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                     id="delete_service">Delete
                                     API
                                 </button>
@@ -128,7 +133,8 @@
                                     <br>
                                     <label>Event Data:</label><br>
                                     <textarea id="payload" style="width: 700px; height: 500px;"></textarea><br>
-                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                    <button
+                                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                         id="send_event" onclick="sendEvent()">Send Event</button>
                                 </div>
                                 <div id="events">
@@ -188,10 +194,7 @@
         var json = {}
         var properties = opt.subscribe.payload.properties;
         Object.keys(properties).forEach(function (property) {
-            var example = properties[property].example;
-            for (name in example) {
-                json[name] = example[name];
-            }
+            json[property] = properties[property].example;
         })
         $("#payload").val(JSON.stringify(json))
     }
