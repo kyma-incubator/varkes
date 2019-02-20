@@ -2,10 +2,19 @@
     "name": "OpenAPI-Mock",
     "apis": [
         {
-            "baseurl": "/kyma",
-            "specification": "apis/kyma.yaml",
-            "name": "kyma"
+            "baseurl": "/connectorapi",
+            "specification": "apis/connectorapi.yaml",
+            "name": "connectorapi"
+        },
+        {
+            "baseurl": "/eventsapi",
+            "specification": "apis/eventsapi.yaml",
+            "name": "eventsapi"
+        },
+        {
+            "baseurl": "/metadataapi",
+            "specification": "apis/metadataapi.yaml",
+            "name": "metadataapi"
         }
-    ],
-    "request_log_path": "requests.log"
+    ]
 }
