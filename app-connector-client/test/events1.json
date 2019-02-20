@@ -20,9 +20,7 @@
                         "customerUid": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "customerUid": "adam@hybris.com"
-                            },
+                            "example": "adam@hybris.com",
                             "properties": null,
                             "description": "Email of a Customer",
                             "title": "Customer uid"
@@ -30,9 +28,7 @@
                         "storeUid": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "storeUid": "4caad296"
-                            },
+                            "example": "4caad296",
                             "properties": null,
                             "description": "Unique id of a Store",
                             "title": "StoreUid"
@@ -40,9 +36,7 @@
                         "customerId": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "customerUid": "0ed118f9474e"
-                            },
+                            "example": "0ed118f9474e",
                             "properties": null,
                             "description": "Unique id of a Customer",
                             "title": "Customer uid"
@@ -65,9 +59,7 @@
                         "customerUid": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "customerUid": "adam@hybris.com"
-                            },
+                            "example": "adam@hybris.com",
                             "properties": null,
                             "description": "Email of a Customer",
                             "title": "Customer uid"
@@ -75,9 +67,7 @@
                         "storeUid": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "storeUid": "4caad296"
-                            },
+                            "example": "4caad296",
                             "properties": null,
                             "description": "Unique id of a Store",
                             "title": "StoreUid"
@@ -85,9 +75,7 @@
                         "customerId": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "customerUid": "0ed118f9474e"
-                            },
+                            "example": "0ed118f9474e",
                             "properties": null,
                             "description": "Unique id of a Customer",
                             "title": "Customer uid"
@@ -95,9 +83,7 @@
                         "token": {
                             "type": "string",
                             "required": null,
-                            "example": {
-                                "token": "0edED312318f9474e"
-                            },
+                            "example": "0edED312318f9474e",
                             "properties": null,
                             "description": "Encrypted SecureToken",
                             "title": "Encrypted SecureToken"
