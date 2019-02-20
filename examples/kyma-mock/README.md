@@ -1,6 +1,6 @@
-# openapi-mock example
+# kyma-mock example
 
-This example illustrate how to use the `varkes-openapi-mock` standalone.
+This example is mocking the Kyma application
 
 ## Run local
 
@@ -10,25 +10,20 @@ npm install
 npm start
 ```
 
-Navigate to `http://localhost:10000/console` to see the console
+Navigate to `http://localhost:10000/connectorapi/console` to see the connector api console
+
+Navigate to `http://localhost:10000/eventsapi/console` to see the events api console
+
+Navigate to `http://localhost:10000/metadataapi/console` to see the metadata api console
 
 ## Run local using docker
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/develop/varkes-example-openapi-mock:latest
-```
-
-## Run in Kyma
-
-To run the mock using Kyma as runtime envrironment, run the following kubectl command to set up a namespace:
-
-```bash
-kubectl create namespace mocks
-kubectl label namespace mocks env=true
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/develop/varkes-example-kyma-mock:latest
 ```
 
 and to deploy the mock
 ```bash
-kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/examples/openapi-mock/deployment/deployment.yaml
+kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/examples/kyma-mock/deployment/deployment.yaml
 ```
