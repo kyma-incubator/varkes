@@ -30,6 +30,6 @@ describe('tests odata controllers', function () {
                         .expect(200, done)
                 });
             });
-        }).finally(done);
-    });
+        }).then(done);
+    }).timeout(3000);
 });

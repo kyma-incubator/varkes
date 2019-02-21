@@ -2,7 +2,7 @@ var request = require('supertest');
 var server = require('../server/app')('./test/varkes_config.json');
 
 describe('controllers', function () {
-  it('should work', function (done) {
+  it('should work', (done) => {
     server.then(function (app) {
       describe('GET metadata for default metadata endpoint', function () {
         it('should return response 200', function (done) {
@@ -68,7 +68,7 @@ describe('controllers', function () {
             .expect(/pets openapi yaml/)
         });
       })
-    
+
       describe('GET console for custom metadata endpoint', function () {
         it('should return response 200', function (done) {
           request(app)
@@ -84,7 +84,7 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .post("/api1/authorizationserver/oauth/token")
-            .send({client_id:"1",client_secret:"2",grant_type:"3"})
+            .send({ client_id: "1", client_secret: "2", grant_type: "3" })
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(200, done)
@@ -95,7 +95,7 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .post("/api5/myoauth/token")
-            .send({client_id:"1",client_secret:"2",grant_type:"3"})
+            .send({ client_id: "1", client_secret: "2", grant_type: "3" })
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(200, done)
@@ -185,6 +185,6 @@ describe('controllers', function () {
             .expect(400, done)
         });
       });
-    }).finally(done);
+    }).then(done)
   })
-});
+})

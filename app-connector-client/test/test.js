@@ -3,7 +3,7 @@ var request = require('supertest');
 var server = require("../server/app")("test/varkes_config.json");
 
 describe('tests controllers', function () {
-    it('should work', () => {
+    it('should work', (done) => {
         server.then(function (app) {
             describe('GET metadata', function () {
                 it('should return 200', function (done) {
@@ -38,6 +38,6 @@ describe('tests controllers', function () {
                         .expect(400, done)
                 });
             });
-        })
+        }).then(done)
     })
 })

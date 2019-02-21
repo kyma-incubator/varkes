@@ -10,7 +10,7 @@ describe('tests odata controllers', function () {
                         .get('/api1/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET schools', function () {
@@ -19,7 +19,7 @@ describe('tests odata controllers', function () {
                         .get('/api2/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET console', function () {
@@ -27,7 +27,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/api1/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET api1 metadata', function () {
@@ -35,7 +35,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/api1/courseMetadata.json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
 
@@ -44,7 +44,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/metadata')
                         .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
 
@@ -54,9 +54,9 @@ describe('tests odata controllers', function () {
                         .get('/connection')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400,done)
+                        .expect(400, done)
                 });
             });
-        }).finally(done);
+        }).then(done);
     });
 });

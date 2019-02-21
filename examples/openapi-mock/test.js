@@ -10,7 +10,7 @@ describe('tests openapi controllers', function () {
                         .get('/api1/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET console', function () {
@@ -18,9 +18,9 @@ describe('tests openapi controllers', function () {
                     request(app)
                         .get('/api1/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
-        }).finally(done);
+        }).then(done);
     });
 });

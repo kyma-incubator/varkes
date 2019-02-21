@@ -39,6 +39,6 @@ describe('controllers', function () {
                         .expect(200, done)
                 });
             });
-        }).finally(done);
+        }).then(done);
     });
 });
