@@ -1,6 +1,6 @@
 openapi: '3.0.0'
 info:
-  version: '1.3.20'
+  version: '1.0.0'
   title: 'Varkes Application Connector Client'
   description: 'Client for connecting an application to a Kyma cluster'
 paths:
