@@ -1,4 +1,5 @@
 # OpenAPI Mock
+[![npm version](https://badge.fury.io/js/varkes-openapi-mock.svg)](https://badge.fury.io/js/varkes-openapi-mock)
 
 Mocks res calls given an OpenAPI specification 
 
