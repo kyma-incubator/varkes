@@ -1,5 +1,5 @@
 const fs = require("fs")
-var CONFIG = require("./config")
+var CONFIG = require("./app-connector-config.json")
 const path = require("path")
 var LOGGER = require("./logger").logger
 var forge = require("node-forge")
