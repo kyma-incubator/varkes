@@ -11,13 +11,16 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "asyncapi-generator": "^0.6.4",
     "body-parser": "1.x.x",
     "commander": "2.x.x",
     "ejs": "2.x.x",
     "express": "4.x.x",
     "express-winston": "3.x.x",
     "js-yaml": "3.x.x",
+    "json-schema-ref-parser": "^6.1.0",
     "node-forge": "0.x.x",
+    "openapi-sampler": "^1.0.0-beta.14",
     "request": "2.x.x",
     "winston": "3.x.x"
   },

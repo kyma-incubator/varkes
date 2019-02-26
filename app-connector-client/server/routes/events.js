@@ -5,9 +5,10 @@ var CONFIG = require("../config")
 const apis = require("./apis");
 var request = require("request")
 const yaml = require('js-yaml');
-
+var refParser = require('json-schema-ref-parser');
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+const openapiSampler = require('openapi-sampler');
 
 function sendEvent(req, res) {
     request.post({
@@ -48,67 +49,93 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
 
         } catch (error) {
             LOGGER.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
+            throw error
         }
     }
 }
 
-function createEvent(localKyma, eventMetadata, event) {
+async function createEvent(localKyma, eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
-        apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
-            if (err) {
-                reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+        fillEventData(eventMetadata, event).then(function (result) {
+            eventMetadata = result
+            apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (httpResponse.statusCode >= 400) {
+                        var err = new Error(body.error);
+                        reject(err);
+                    }
+                    resolve(body)
                 }
-                resolve(body)
-            }
+            })
         })
+            .catch(function (err) {
+                reject(err)
+            });
 
     })
 }
-function updateEvent(localKyma, eventMetadata, event, event_id) {
+async function updateEvent(localKyma, eventMetadata, event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
-        apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
-            if (err) {
-                reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+        fillEventData(eventMetadata, event).then(function (result) {
+            eventMetadata = result;
+            apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (httpResponse.statusCode >= 400) {
+                        var err = new Error(body.error);
+                        reject(err);
+                    }
+                    resolve(body)
                 }
-                resolve(body)
-            }
-        })
-
+            })
+        }).catch(function (err) {
+            reject(err)
+        });
     })
 }
 function fillEventData(eventMetadata, event) {
-    eventMetadata.name = event.name;
-    if (eventMetadata.description) {
-        eventMetadata.description = event.description;
-    }
-    else {
-        eventMetadata.description = event.name;
-    }
-    if (eventMetadata.labels) {
-        eventMetadata.labels = event.labels;
-    }
+    return new Promise(function (resolve, reject) {
+        eventMetadata.name = event.name;
+        if (eventMetadata.description) {
+            eventMetadata.description = event.description;
+        }
+        else {
+            eventMetadata.description = event.name;
+        }
+        if (eventMetadata.labels) {
+            eventMetadata.labels = event.labels;
+        }
 
-    var specInJson
-    if (event.specification.endsWith(".json")) {
-        specInJson = JSON.parse(fs.readFileSync(event.specification))
-    } else {
-        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
-    }
+        var specInJson
+        if (event.specification.endsWith(".json")) {
+            specInJson = JSON.parse(fs.readFileSync(event.specification))
+        } else {
+            specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
+        }
 
-    eventMetadata.events.spec = specInJson;
-    return eventMetadata;
+        refParser.dereference(specInJson)
+            .then(function (schema) {
+                Object.keys(schema.topics).forEach((topicKey) => {
+                    if (schema.topics[topicKey].publish) {
+                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish)
+                    }
+                    else {
+                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe)
+                    }
+                })
+                eventMetadata.events.spec = schema;
+                resolve(eventMetadata);
+            })
+            .catch(function (err) {
+                reject(err)
+            });
+    })
+
 }
 function defineEventMetadata() {
     return {

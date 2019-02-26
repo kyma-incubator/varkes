@@ -160,6 +160,9 @@
 <script>
     var remote_env_url = "";
     var hostname = "";
+    var events;
+    const openapiSampler = require('openapi-sampler');
+    var refParser = require('json-schema-ref-parser');
     $(document).ready(function () {
         newServiceView()
         getAPIs()
@@ -192,14 +195,39 @@
         var select = $('#event-types').select()[0];
         var opt = JSON.parse(select.options[select.selectedIndex].value);
         var json = {}
-        var properties = opt.subscribe.payload.properties;
-        Object.keys(properties).forEach(function (property) {
-            json[property] = properties[property].example;
-        })
-        $("#payload").val(JSON.stringify(json))
+        // if (opt.subscribe) {
+        //     json = opt.subscribe.payload)
+        // }
+        // else {
+        //     json = openapiSampler.sample(opt.publish.payload)
+        // }
+
+        // console.log("json")
+        // console.log(json)
+        $("#payload").val(JSON.stringify(opt.example))
+    }
+    function buildEventExample(properties) {
+        var json_tmp = {}
+        if (properties) {
+            Object.keys(properties).forEach(function (property) {
+                if (properties[property].type == "array") {
+                    var array_tmp = []
+                    tmp_obj = buildEventExample(properties[property].items.properties)
+                    array_tmp.push(tmp_obj)
+                    json_tmp[property] = array_tmp
+                }
+                else if (properties[property].type == "object") {
+                    json_tmp[property] = buildEventExample(properties[property].properties)
+                }
+                else if (properties[property].example) {
+                    json_tmp[property] = properties[property].example;
+                }
+            })
+        }
+        return json_tmp
     }
     function getAPIs() {
-
+        var events
         $("#tokenInput").val('')
         $("#apis ul").empty()
         console.log("get apis called")
@@ -409,15 +437,23 @@
         console.log(api)
         if (api.events && api.events.spec) {
             console.log(api.events.spec.topics)
-            var topics = api.events.spec.topics //object, topics are keys
-            $("#event-types").empty()
-            Object.keys(topics).forEach(t => {
+            events = api.events
+            refParser.dereference(api.events)
+                .then(function (schema) {
+                    var topics = schema.spec.topics
+                    $("#event-types").empty()
+                    Object.keys(topics).forEach(t => {
 
-                var o = new Option(t, JSON.stringify(topics[t])); //name , value
-                //$(o).html(t);
-                $("#event-types").append(o);
+                        var o = new Option(t, JSON.stringify(topics[t])); //name , value
+                        $("#event-types").append(o);
 
-            });
+                    });
+                })
+                .catch(function (err) {
+                    console.error(err)
+                });
+            //object, topics are keys
+
         }
 
 
