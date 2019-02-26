@@ -19,6 +19,7 @@ module.exports = {
     createEventsFromConfig: createEventsFromConfig
 }
 
+const check_api = require('check_api');
 function sendEvent(req, res) {
     request.post({
         url: CONFIG.URLs.eventsUrl,
@@ -126,7 +127,7 @@ function fillEventData(eventMetadata, event) {
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
         }
-
+        check_api.check_api(specInJson)
         refParser.dereference(specInJson)
             .then(function (schema) {
                 Object.keys(schema.topics).forEach((topicKey) => {
