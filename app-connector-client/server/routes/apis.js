@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var CONFIG = require("../config")
+var CONFIG = require("../app-connector-config.json")
 const path = require("path")
 var request = require("request")
 var LOGGER = require("../logger").logger
