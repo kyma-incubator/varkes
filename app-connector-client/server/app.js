@@ -18,7 +18,6 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     var app = express()
     app.use(bodyParser.json());
     var varkesConfig = config(varkesConfigPath)
-
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
     } else {

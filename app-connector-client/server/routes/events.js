@@ -39,10 +39,9 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
-    eventMetadata = defineEventMetadata()
-    for (i = 0; i < eventsConfig.length; i++) {
-        event = eventsConfig[i];
-
+    var eventMetadata = defineEventMetadata()
+    for (var i = 0; i < eventsConfig.length; i++) {
+        var event = eventsConfig[i];
         try {
             var reg_api;
             if (registeredApis.length > 0)

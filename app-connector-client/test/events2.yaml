@@ -41,6 +41,7 @@ topics:
         - customerId
         properties:
           customerUid:
+            type: string
             example: adam@hybris.com
             description: Email of a Customer
             title: Customer uid

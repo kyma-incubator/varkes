@@ -12,7 +12,8 @@ const openapiSampler = require('openapi-sampler');
 var refParser = require('json-schema-ref-parser');
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
+const openapiSampler = require('openapi-sampler');
+var refParser = require('json-schema-ref-parser');
 module.exports = {
     router: router,
     updateAPI: updateAPI,
@@ -155,7 +156,6 @@ function get(req, res) {
                 else {
                     res.status(httpResponse.statusCode).type("json").send(body)
                 }
-
             }
         })
     }
