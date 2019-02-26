@@ -9,9 +9,10 @@ const CONFIG = require("../config.json")
 const apis = require("./apis");
 const request = require("request")
 const yaml = require('js-yaml');
-
+var refParser = require('json-schema-ref-parser');
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+const openapiSampler = require('openapi-sampler');
 
 module.exports = {
     router: router,
@@ -65,18 +66,23 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
 async function createEvent(localKyma, eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
-        apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
-            if (err) {
-                reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+        fillEventData(eventMetadata, event).then(function (result) {
+            eventMetadata = result
+            apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (httpResponse.statusCode >= 400) {
+                        var err = new Error(body.error);
+                        reject(err);
+                    }
+                    resolve(body)
                 }
-                resolve(body)
-            }
+            })
         })
+            .catch(function (err) {
+                reject(err)
+            });
 
     })
 }
