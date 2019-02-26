@@ -43,6 +43,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     eventMetadata = defineEventMetadata()
     for (i = 0; i < eventsConfig.length; i++) {
         event = eventsConfig[i];
+
         try {
             var reg_api;
             if (registeredApis.length > 0)
@@ -126,7 +127,7 @@ function fillEventData(eventMetadata, event) {
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
         }
-
+        check_api.check_api(specInJson)
         refParser.dereference(specInJson)
             .then(function (schema) {
                 Object.keys(schema.topics).forEach((topicKey) => {
