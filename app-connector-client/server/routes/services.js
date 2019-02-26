@@ -18,9 +18,9 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
     if (!apisConfig)
         return
 
-    serviceMetadata = defineServiceMetadata()
-    for (i = 0; i < apisConfig.length; i++) {
-        api = apisConfig[i]
+    var serviceMetadata = defineServiceMetadata()
+    for (var i = 0; i < apisConfig.length; i++) {
+        var api = apisConfig[i]
         try {
             var reg_api;
             if (registeredApis.length > 0)

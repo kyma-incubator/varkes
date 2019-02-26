@@ -19,25 +19,19 @@
                     "properties": {
                         "customerUid": {
                             "type": "string",
-                            "required": null,
                             "example": "adam@hybris.com",
-                            "properties": null,
                             "description": "Email of a Customer",
                             "title": "Customer uid"
                         },
                         "storeUid": {
                             "type": "string",
-                            "required": null,
                             "example": "4caad296",
-                            "properties": null,
                             "description": "Unique id of a Store",
                             "title": "StoreUid"
                         },
                         "customerId": {
                             "type": "string",
-                            "required": null,
                             "example": "0ed118f9474e",
-                            "properties": null,
                             "description": "Unique id of a Customer",
                             "title": "Customer uid"
                         }
@@ -58,33 +52,25 @@
                     "properties": {
                         "customerUid": {
                             "type": "string",
-                            "required": null,
                             "example": "adam@hybris.com",
-                            "properties": null,
                             "description": "Email of a Customer",
                             "title": "Customer uid"
                         },
                         "storeUid": {
                             "type": "string",
-                            "required": null,
                             "example": "4caad296",
-                            "properties": null,
                             "description": "Unique id of a Store",
                             "title": "StoreUid"
                         },
                         "customerId": {
                             "type": "string",
-                            "required": null,
                             "example": "0ed118f9474e",
-                            "properties": null,
                             "description": "Unique id of a Customer",
                             "title": "Customer uid"
                         },
                         "token": {
                             "type": "string",
-                            "required": null,
                             "example": "0edED312318f9474e",
-                            "properties": null,
                             "description": "Encrypted SecureToken",
                             "title": "Encrypted SecureToken"
                         }
