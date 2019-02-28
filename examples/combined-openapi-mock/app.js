@@ -15,8 +15,8 @@ var runAsync = async () => {
         app.use(await openapiApp("./varkes_config.json"))
         app.use(await connectorApp("./varkes_config.json"))
         if (port)
-            app.listen(10000, function () {
-                console.info("Started application on port %d", 10000)
+            app.listen(port, function () {
+                console.info("Started application on port %d", port)
             });
         return app
     } catch (error) {
