@@ -11,7 +11,7 @@ Information:
 # Proposal
 1) We create a new branch called `release`. Release branch will only be updated when we have a new release. It will be only merged from master , **not from any other branch.**
 
-2) We create a new job in Prow for release branch. `pre-submit-release-job` runs the tests.
+2) We create a new job in Prow for release branch for PR coming from master. `pre-submit-release-job` runs the tests.
 
 3) Once PR is merged to `release` branch, a `post-submit-release-job` is triggered. 
 
