@@ -26,7 +26,7 @@ var runAsync = async () => {
 module.exports = runAsync()
 
 function customizeMock(app){
-    app.get('/connector/v1/health', function (req, res, next) {
+    app.get('/connector/v1/applications/signingRequests/info', function (req, res, next) {
         var localDomain = req.protocol +"://"+ req.headers.host
 
         res.body = {
@@ -44,8 +44,16 @@ function customizeMock(app){
             }
         };
 
-        // Let the Mock middleware apply usual chain
         next();
-    });
-    return app
+    })
+
+    app.get('/connector/v1/applications/certificates', function (req, res, next) {
+        var localDomain = req.protocol +"://"+ req.headers.host
+
+        res.body = {
+            crt:  "BASE64_ENCODED_CRT"
+        };
+
+        next();
+    })
 }
