@@ -30,7 +30,7 @@ describe('tests kyma controllers', function () {
                     request(app)
                         .post('/connector/v1/applications/certificates?token=validToken')
                         .send({body:"bla"})
-                        .expect(/"crt":"BASE64_ENCODED_CRT"/)
+                        .expect(/"crt":"L/)
                         .expect(201,done)
                 });
             });

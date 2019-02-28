@@ -24,7 +24,7 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        apiRouter.getAllAPIs(req.query.localKyma, function (error, httpResponse, body) {
+        getAllAPIs(req.query.localKyma, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
@@ -32,7 +32,7 @@ function getAll(req, res) {
                 LOGGER.error("Error while getting all API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
-                LOGGER.debug("Received API data")
+                LOGGER.debug("Received all API data")
                 res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
@@ -93,7 +93,7 @@ function create(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        apiRouter.createAPI(req.query.localKyma, req.body, function (error, httpResponse, body) {
+        createAPI(req.query.localKyma, req.body, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
@@ -101,7 +101,7 @@ function create(req, res) {
                 LOGGER.error("Error while creating API: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
-                LOGGER.debug("Received API data: %s", JSON.stringify(body))
+                LOGGER.debug("Received create API data: %s", JSON.stringify(body))
                 res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
@@ -142,7 +142,7 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        apiRouter.updateAPI(req.query.localKyma, req.body, req.params.api,
+        updateAPI(req.query.localKyma, req.body, req.params.api,
             function (error, httpResponse, body) {
                 if (error) {
                     LOGGER.error("Error while updating API: %s", error)

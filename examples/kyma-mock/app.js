@@ -3,6 +3,8 @@
 
 const openapiApp = require("varkes-openapi-mock")
 const app = require('express')()
+const uuid = require('uuid/v4')
+const bodyParser = require('body-parser');
 
 var runAsync = async () => {
     var port
@@ -27,8 +29,10 @@ var runAsync = async () => {
 module.exports = runAsync()
 
 function customizeMock(app) {
+    app.use(bodyParser.json());
+
     app.get('/connector/v1/applications/signingRequests/info', function (req, res, next) {
-        console.log("Incoming signing request using token "+req.params.token)
+        console.log("Incoming signing request")
         var localDomain = req.protocol + "://" + req.headers.host
 
         res.body = {
@@ -49,14 +53,11 @@ function customizeMock(app) {
         next();
     })
 
-    app.post('/connector/v1/applications/certificates', function (req, res, next) {
-        console.log("Incoming certificate request using token "+req.params.token)
-        var localDomain = req.protocol + "://" + req.headers.host
-
-        res.body = {
-            crt: "BASE64_ENCODED_CRT"
-        };
+    app.post('/metadata/v1/metadata/services', function (req, res, next) {
+        if(req.body)
+            req.body.id = uuid();
 
         next();
     })
+    
 }

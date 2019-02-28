@@ -61,10 +61,13 @@ paths:
                 eventsUrl:
                   type: 'string'
                   description: 'URL on connected Kyma cluster to send events'
-                cluster_domain:
+                consoleUrl:
+                  type: 'string'
+                  description: 'URL on connected Kyma cluster to browse console'
+                domain:
                   type: 'string'
                   description: 'Domain of the connected Kyma cluster'
-                re_name:
+                app:
                   type: 'string'
                   description: 'Application on connected Kyma cluster'
        '401':
@@ -90,10 +93,13 @@ paths:
                   eventsUrl:
                     type: 'string'
                     description: 'URL on connected Kyma cluster to send events'
-                  cluster_domain:
+                  consoleUrl:
+                    type: 'string'
+                    description: 'URL on connected Kyma cluster to browse console'
+                  domain:
                     type: 'string'
                     description: 'Domain of the connected Kyma cluster'
-                  re_name:
+                  app:
                     type: 'string'
                     description: 'Application on connected Kyma cluster'
     delete:

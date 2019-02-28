@@ -62,7 +62,8 @@ function callCSRUrl(csrResponse) {
         if (response.statusCode !== 201) {
             throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
         }
-        CRT_base64_decoded = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
+        LOGGER.debug("CSR URL returned '%s'", JSON.stringify(response.body))
+        var CRT_base64_decoded = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
 
         fs.writeFileSync(`${keysDirectory}/${CONFIG.crtFile}`, CRT_base64_decoded)
         LOGGER.debug("Wrote crt file to '%s'", `${keysDirectory}/${CONFIG.crtFile}`)
@@ -109,24 +110,19 @@ function cert(req, res) {
 function createInfo(api) {
     if (api.metadataUrl !== "") {
         const myURL = new url.URL(api.metadataUrl)
-        response = {
-            "cluster_domain": "",
-            "re_name": "",
-            "eventsUrl": "",
-            "metadataUrl": ""
+        var domains = myURL.hostname.split(".")
+        return {
+            domain: domains[1] ? domains[1] : domains[0],
+            app: myURL.pathname.split("/")[1],
+            consoleUrl: api.metadataUrl.replace("gateway","console"),
+            eventsUrl: api.eventsUrl,
+            metadataUrl: api.metadataUrl
         }
-        domains = myURL.hostname.split(".")
-        response.cluster_domain = domains[1] ? domains[1] : domains[0]
-        response.re_name = myURL.pathname.split("/")[1]
-        response.eventsUrl = api.eventsUrl;
-        response.metadataUrl = api.metadataUrl;
-        return response
     }
     return null
 }
 
 function generateCSR(subject) {
-
     LOGGER.debug("Creating CSR using subject %s", subject)
     var privateKey = fs.readFileSync(keyFile, 'utf8')
     var pk = forge.pki.privateKeyFromPem(privateKey)
@@ -159,7 +155,7 @@ async function connect(req, res) {
     if (!req.body) res.sendStatus(400);
 
     try {
-        data = await callTokenUrl(req.query.localKyma, req.body.url)
+        var data = await callTokenUrl(req.query.localKyma, req.body.url)
             .then(generateCSRFromResponse)
             .then(callCSRUrl)
 
@@ -182,7 +178,7 @@ async function connect(req, res) {
         }
 
         info = createInfo(data)
-        LOGGER.info("Connected to %s", info.cluster_domain)
+        LOGGER.info("Connected to %s", info.domain)
 
         if (info) {
             res.status(200).send(info)
@@ -191,7 +187,7 @@ async function connect(req, res) {
         }
 
     } catch (error) {
-        message = "There is an error while registering.\n Please make sure that your token is unique"
+        var message = "There is an error while registering.\n Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.statusCode = 401
         res.send(message)
