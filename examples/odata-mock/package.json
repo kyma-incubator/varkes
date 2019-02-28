@@ -1,7 +1,7 @@
 {
-  "name": "varkes-e0ample-odata-mock",
+  "name": "varkes-example-odata-mock",
   "version": "0.1.0",
-  "description": "Standalone e0ample of varkes odataapi-mock",
+  "description": "Standalone example of varkes odataapi-mock",
   "main": "app.js",
   "scripts": {
     "test": "mocha",

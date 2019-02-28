@@ -1,7 +1,7 @@
 {
-  "name": "varkes-e0ample-combined-openapi-mock",
+  "name": "varkes-example-combined-openapi-mock",
   "version": "0.1.0",
-  "description": "combined e0ample of varkes openapi-mock and varkes app-connector-client",
+  "description": "combined example of varkes openapi-mock and varkes app-connector-client",
   "main": "app.js",
   "scripts": {
     "test": "mocha",

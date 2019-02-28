@@ -1,7 +1,7 @@
 {
-  "name": "varkes-e0ample-combined-odata-mock",
+  "name": "varkes-example-combined-odata-mock",
   "version": "1.0.0",
-  "description": "combined e0ample of odata and app-connector-client",
+  "description": "combined example of odata and app-connector-client",
   "main": "app.js",
   "scripts": {
     "test": "mocha",
