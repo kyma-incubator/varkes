@@ -10,11 +10,11 @@ npm install
 npm start
 ```
 
-Navigate to `http://localhost:10000/connectorapi/console` to see the connector api console
+Navigate to `http://localhost:10000/connector/console` to see the connector api console
 
-Navigate to `http://localhost:10000/eventsapi/console` to see the events api console
+Navigate to `http://localhost:10000/events/console` to see the events api console
 
-Navigate to `http://localhost:10000/metadataapi/console` to see the metadata api console
+Navigate to `http://localhost:10000/metadata/console` to see the metadata api console
 
 ## Run local using docker
 
