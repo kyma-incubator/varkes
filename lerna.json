@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "./app-connector-client",
+    "./examples/*",
+    "./odata-mock",
+    "./openapi-mock"
+  ],
+  "version": "0.0.3"
+}
