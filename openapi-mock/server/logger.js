@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict'
+
 var winston = require("winston")
 
 const console_logger = new winston.transports.Console({

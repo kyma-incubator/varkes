@@ -1,13 +1,22 @@
-var LOGGER = require("../logger").logger
+#!/usr/bin/env node
+'use strict'
+
+const express = require('express')
+const LOGGER = require("../logger").logger
 const fs = require("fs")
 const path = require("path")
-var CONFIG = require("../app-connector-config.json")
+const CONFIG = require("../config.json")
 const apis = require("./apis");
-var request = require("request")
+const request = require("request")
 const yaml = require('js-yaml');
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
+module.exports = {
+    router: router,
+    createEventsFromConfig: createEventsFromConfig
+}
 
 function sendEvent(req, res) {
     request.post({
@@ -122,7 +131,9 @@ function defineEventMetadata() {
     }
 }
 
-module.exports = {
-    sendEvent: sendEvent,
-    createEventsFromConfig: createEventsFromConfig
+function router() {
+    var eventsRouter = express.Router()
+    eventsRouter.post("/", sendEvent)
+    return eventsRouter;
 }
+

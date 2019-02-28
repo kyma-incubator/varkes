@@ -1,9 +1,16 @@
-var request = require('supertest');
-var server = require('../server/app')("./test/varkes_config.json");
-describe('controllers', function () {
+#!/usr/bin/env node
+'use strict'
 
-    it('test_odata', function (done) {
-        server.then(function (app) {
+const mock = require('../server/app')
+const request = require('supertest')
+const express = require('express')
+
+describe('test app', function () {
+    it('should work', function (done,fail) {
+        mock('./test/varkes_config.json').then(function (mock) {
+            var app = express()
+            app.use(mock)
+
             describe('GET Advertisements via API', function () {
                 it('should return response 200', function (done) {
                     request(app)
@@ -39,6 +46,8 @@ describe('controllers', function () {
                         .expect(200, done)
                 });
             });
-        }).finally(done);
+
+            done()
+        }).catch(error => done(error))
     });
 });

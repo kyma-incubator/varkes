@@ -1,4 +1,7 @@
-var winston = require("winston")
+#!/usr/bin/env node
+'use strict'
+
+const winston = require("winston")
 
 const console_logger = new winston.transports.Console({
   format: winston.format.combine(
@@ -10,9 +13,7 @@ const console_logger = new winston.transports.Console({
 
 const file_logger = new winston.transports.File({ filename: process.env.NODE_ENV ? `logs/${process.env.NODE_ENV}.log` : 'logs/server.log' })
 
-
 module.exports = {
-
   logger: winston.createLogger({
     level: process.env.DEBUG ? 'debug' : 'info',
     format: winston.format.combine(

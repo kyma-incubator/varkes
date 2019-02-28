@@ -1,11 +1,18 @@
+#!/usr/bin/env node
+'use strict'
 
-var LOGGER = require("../logger").logger
+const LOGGER = require("../logger").logger
 const yaml = require('js-yaml');
 const fs = require("fs")
 const apis = require("./apis");
 
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
+
+module.exports = {
+    createServicesFromConfig: createServicesFromConfig,
+    getAllAPI: getAllAPI
+}
 
 async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
@@ -32,6 +39,7 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
     }
     return registeredApis;
 }
+
 function createService(localKyma, serviceMetadata, api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
@@ -49,6 +57,7 @@ function createService(localKyma, serviceMetadata, api, hostname) {
         });
     })
 }
+
 function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
@@ -66,6 +75,7 @@ function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
         });
     })
 }
+
 function getAllAPI(localKyma) {
     LOGGER.debug("Get all API ")
     return new Promise((resolve, reject) => {
@@ -122,7 +132,6 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     return serviceMetadata;
 }
 
-
 function defineServiceMetadata() {
     return {
         "provider": "SAP Hybris",
@@ -140,9 +149,4 @@ function defineServiceMetadata() {
             "spec": {}
         }
     }
-}
-
-module.exports = {
-    createServicesFromConfig: createServicesFromConfig,
-    getAllAPI: getAllAPI
 }

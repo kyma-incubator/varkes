@@ -4,8 +4,8 @@
   "description": "combined example of varkes openapi-mock and varkes app-connector-client",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --exit",
-    "start": "node ."
+    "test": "mocha",
+    "start": "node . 10000"
   },
   "author": "",
   "license": "Apache-2.0",
