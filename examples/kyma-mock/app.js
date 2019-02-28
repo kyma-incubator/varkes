@@ -16,6 +16,7 @@ var runAsync = async () => {
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
+                console.info("Connect to the kyma app using token: " + "http://localhost:" + port + "/connector/v1/applications/signingRequests/info?token=123")
             })
         return app
     } catch (error) {
@@ -25,12 +26,13 @@ var runAsync = async () => {
 
 module.exports = runAsync()
 
-function customizeMock(app){
+function customizeMock(app) {
     app.get('/connector/v1/applications/signingRequests/info', function (req, res, next) {
-        var localDomain = req.protocol +"://"+ req.headers.host
+        console.log("Incoming signing request using token "+req.params.token)
+        var localDomain = req.protocol + "://" + req.headers.host
 
         res.body = {
-            csrUrl:  localDomain + '/connector/v1/applications/certificates?token=' + "validToken",
+            csrUrl: localDomain + '/connector/v1/applications/certificates?token=' + "validToken",
             api: {
                 metadataUrl: localDomain + '/metadata/v1/metadata/services',
                 eventsUrl: localDomain + '/events/v1/events',
@@ -47,11 +49,12 @@ function customizeMock(app){
         next();
     })
 
-    app.get('/connector/v1/applications/certificates', function (req, res, next) {
-        var localDomain = req.protocol +"://"+ req.headers.host
+    app.post('/connector/v1/applications/certificates', function (req, res, next) {
+        console.log("Incoming certificate request using token "+req.params.token)
+        var localDomain = req.protocol + "://" + req.headers.host
 
         res.body = {
-            crt:  "BASE64_ENCODED_CRT"
+            crt: "BASE64_ENCODED_CRT"
         };
 
         next();
