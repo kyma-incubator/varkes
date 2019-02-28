@@ -6,7 +6,7 @@ const app = require('express')()
 
 var runAsync = async () => {
     var port
-    if (process.argv.length > 2 && Number.isInteger(process.argv[2])) {
+    if (process.argv.length > 2 && parseInt(process.argv[2])) {
         port = process.argv[2]
     }
 
