@@ -25,6 +25,16 @@ describe('tests kyma controllers', function () {
                 });
             });
 
+            describe('POST connector csr', function () {
+                it('should return 201', function (done) {
+                    request(app)
+                        .post('/connector/v1/applications/certificates?token=validToken')
+                        .send({body:"bla"})
+                        .expect(/"crt":"BASE64_ENCODED_CRT"/)
+                        .expect(201,done)
+                });
+            });
+
             describe('GET events api health', function () {
                 it('should return 200', function (done) {
                     request(app)
