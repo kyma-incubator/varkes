@@ -6,7 +6,6 @@ const path = require("path")
 const request = require("request")
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-const express = require("express")
 
 const openapiSampler = require('openapi-sampler');
 var refParser = require('json-schema-ref-parser');
