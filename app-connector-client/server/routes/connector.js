@@ -1,21 +1,27 @@
-var request = require("request")
+#!/usr/bin/env node
+'use strict'
+
+const request = require("request")
 const fs = require("fs")
 const path = require("path")
-var LOGGER = require("../logger").logger
-var CONFIG = require("../app-connector-config.json")
-var forge = require("node-forge")
+const LOGGER = require("../logger").logger
+const CONFIG = require("../config.json")
+const forge = require("node-forge")
 const url = require("url")
 const services = require("./services")
 const events = require("./events")
-var express = require("express")
+const express = require("express")
 
 var nodePort;
 var varkesConfig;
+
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
-
 const keysDirectory = path.resolve(CONFIG.keyDir)
+
+module.exports = {
+    router: router
+}
 
 function authenticateToKyma(localKyma, url) {
     return new Promise((resolve, reject) => {
@@ -175,7 +181,7 @@ async function connect(req, res) {
     }
 }
 
-module.exports = function (config, nodePortParam = null) {
+function router(config, nodePortParam = null) {
     varkesConfig = config;
     nodePort = nodePortParam;
 

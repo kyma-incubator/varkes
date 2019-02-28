@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict'
 
 var openapiApp = require("./app")
 var app = require('express')()
@@ -9,7 +10,7 @@ if (process.argv.length > 2) {
     configPath = process.argv[2]
 }
 
-runAsync = async () => {
+var runAsync = async () => {
     try {
         app.use(await openapiApp(configPath))
         app.listen(10000, function () {

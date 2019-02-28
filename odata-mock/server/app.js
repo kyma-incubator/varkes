@@ -1,41 +1,43 @@
-'use strict';
-var loopback = require('loopback');
-var boot = require('loopback-boot');
+#!/usr/bin/env node
+'use strict'
+
+const config = require('./config.js')
+const loopback = require('loopback');
+const boot = require('loopback-boot');
 const fs = require('fs');
-var bodyParser = require('body-parser');
-var LOGGER = require("./logger").logger
-var parser = require("./parser")
-const path = require("path")
+const bodyParser = require('body-parser');
+const LOGGER = require("./logger").logger
+const parser = require("./parser")
 
-var varkesConfig
-
-module.exports = function (varkesConfigPath) {
-  return configure(varkesConfigPath)
-}
-
-async function configure(varkesConfigPath) {
-  if (varkesConfigPath) {
-    var endpointConfig = path.resolve(varkesConfigPath)
-    LOGGER.info("Using configuration %s", endpointConfig)
-    varkesConfig = require(endpointConfig)
-    configValidation(varkesConfig)
-  } else {
-    LOGGER.info("Using default configuration")
-    varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
-  }
+module.exports = async function (varkesConfigPath) {
+  var varkesConfig = config(varkesConfigPath)
 
   var app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
 
   LOGGER.info("Parsing specifications and generating models")
+  var bootConfig = await generateBootConfig(varkesConfig)
+
+  LOGGER.info("Booting loopback middleware")
+
+  return new Promise(function (resolve, reject) {
+    boot(app, bootConfig, function (err) {
+      if (err) {
+        reject(err);
+      }
+      resolve(app);
+    });
+  });
+}
+
+async function generateBootConfig(varkesConfig) {
   var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     parsedModels.push(parser.parseEdmx(varkesConfig.apis[i].specification));
   }
   parsedModels = await Promise.all(parsedModels)
 
-  LOGGER.info("Booting loopback middleware")
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
   var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/boot_config.json", "utf-8"))
 
@@ -49,37 +51,5 @@ async function configure(varkesConfigPath) {
     })
   })
 
-  return new Promise(function (resolve, reject) {
-    boot(app, bootConfig, function (err) {
-      if (err) {
-        reject(err);
-      }
-      resolve(app);
-    });
-  });
-}
-
-function configValidation(configJson) {
-  var error_message = "";
-  if (configJson.hasOwnProperty("apis")) {
-    for (var i = 1; i <= configJson.apis.length; i++) {
-      var api = configJson.apis[i - 1];
-      if (!api.name) {
-        error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
-      }
-      if (api.type && !api.type.match(/^(openapi|odata)$/)) {
-        error_message += "\napi '" + api.name + "': type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
-      }
-      if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
-        error_message += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
-      }
-      if (api.type == "odata" && !api.specification.match(/^.+\.xml$/)) {
-        error_message += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
-      }
-    }
-  }
-
-  if (error_message != "") {
-    throw new Error("Validation of configuration failed: " + error_message);
-  }
+  return bootConfig
 }

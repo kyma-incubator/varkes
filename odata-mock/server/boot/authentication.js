@@ -1,6 +1,6 @@
-'use strict';
+#!/usr/bin/env node
+'use strict'
 
 module.exports = function enableAuthentication(server) {
-  // enable authentication
   server.enableAuth();
-};
+}

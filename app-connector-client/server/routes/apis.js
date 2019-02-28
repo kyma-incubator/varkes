@@ -1,17 +1,26 @@
 #!/usr/bin/env node
-var CONFIG = require("../app-connector-config.json")
-const path = require("path")
-var request = require("request")
-var LOGGER = require("../logger").logger
-const fs = require("fs")
+'use strict'
 
-var apiRouter = require("express").Router()
+const CONFIG = require("../config.json")
+const path = require("path")
+const request = require("request")
+const LOGGER = require("../logger").logger
+const fs = require("fs")
+const express = require("express")
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
+module.exports = {
+    router: router,
+    updateAPI: updateAPI,
+    createAPI: createAPI,
+    getAllAPIs: getAllAPIs
+}
+
 function getAll(req, res) {
     LOGGER.debug("Getting all APIs")
-    err = assureConnected()
+    var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -29,7 +38,8 @@ function getAll(req, res) {
         })
     }
 };
-apiRouter.getAllAPIs = function (localKyma, cb) {
+
+function getAllAPIs(localKyma, cb) {
     request({
         url: CONFIG.URLs.metadataUrl,
         method: "GET",
@@ -42,8 +52,8 @@ apiRouter.getAllAPIs = function (localKyma, cb) {
         cb(error, httpResponse, body);
     });
 };
-apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
 
+function createAPI(localKyma, serviceMetadata, cb) {
     request.post({
         url: CONFIG.URLs.metadataUrl,
         headers: {
@@ -58,9 +68,9 @@ apiRouter.createAPI = function (localKyma, serviceMetadata, cb) {
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
-
 };
-apiRouter.updateAPI = function (localKyma, serviceMetadata, api_id, cb) {
+
+function updateAPI(localKyma, serviceMetadata, api_id, cb) {
     request.put({
         url: `${CONFIG.URLs.metadataUrl}/${api_id}`,
         headers: {
@@ -75,11 +85,11 @@ apiRouter.updateAPI = function (localKyma, serviceMetadata, api_id, cb) {
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
-
 };
+
 function create(req, res) {
     LOGGER.debug("Creating API %s", req.body.name)
-    err = assureConnected()
+    var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -100,7 +110,7 @@ function create(req, res) {
 
 function get(req, res) {
     LOGGER.debug("Get API %s", req.params.api)
-    err = assureConnected()
+    var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -128,7 +138,7 @@ function get(req, res) {
 
 function update(req, res) {
     LOGGER.debug("Update API %s", req.params.api)
-    err = assureConnected()
+    var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -150,7 +160,7 @@ function update(req, res) {
 
 function deleteApi(req, res) {
     LOGGER.debug("Delete API %s", req.params.api)
-    err = assureConnected()
+    var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -183,11 +193,14 @@ function assureConnected() {
     return null
 }
 
-apiRouter.get("/", getAll)
-apiRouter.post("/", create)
+function router() {
+    var apiRouter = express.Router()
+    apiRouter.get("/", getAll)
+    apiRouter.post("/", create)
 
-apiRouter.get("/:api", get)
-apiRouter.put("/:api", update)
-apiRouter.delete("/:api", deleteApi)
+    apiRouter.get("/:api", get)
+    apiRouter.put("/:api", update)
+    apiRouter.delete("/:api", deleteApi)
 
-module.exports = apiRouter
+    return apiRouter;
+}

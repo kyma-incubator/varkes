@@ -8,20 +8,19 @@
   "license": "Apache-2.0",
   "main": "server/app.js",
   "dependencies": {
-    "body-parser": "1.x.x",
-    "express": "4.x.x",
-    "express-resource": "1.x.x",
-    "json-to-pretty-yaml": "1.x.x",
-    "morgan": "1.x.x",
-    "path": "0.x.x",
-    "swagger-express-middleware": "2.x.x",
-    "util": "0.x.x",
-    "winston": "3.x.x",
-    "api-spec-converter": "2.x.x"
+    "api-spec-converter": "^2.7.31",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "json-to-pretty-yaml": "^1.2.2",
+    "morgan": "^1.9.1",
+    "path": "^0.12.7",
+    "swagger-express-middleware": "^2.0.1",
+    "util": "^0.11.1",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "mocha": "5.x.x",
-    "supertest": "3.x.x"
+    "mocha": "^6.0.2",
+    "supertest": "^3.4.2"
   },
   "repository": {
     "type": "ssh",

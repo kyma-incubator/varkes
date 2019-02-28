@@ -10,24 +10,24 @@
     "test": "mocha"
   },
   "dependencies": {
-    "body-parser": "1.x.x",
-    "compression": "1.x.x",
-    "cors": "2.x.x",
-    "express": "4.x.x",
-    "helmet": "3.x.x",
-    "loopback": "3.x.x",
-    "loopback-boot": "2.x.x",
-    "loopback-component-explorer": "6.x.x",
-    "loopback-datasource-juggler": "2.x.x",
-    "morgan": "1.x.x",
-    "n-odata-server": "0.x.x",
-    "odata2openapi": "1.x.x",
-    "strong-error-handler": "2.x.x",
-    "winston": "3.x.x"
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "loopback": "^3.25.0",
+    "loopback-boot": "^3.0.0",
+    "loopback-component-explorer": "^6.3.1",
+    "loopback-datasource-juggler": "^4.6.0",
+    "morgan": "^1.9.1",
+    "n-odata-server": "^0.4.1",
+    "odata2openapi": "^1.3.0",
+    "strong-error-handler": "^3.2.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "mocha": "5.x.x",
-    "supertest": "3.x.x"
+    "mocha": "^6.0.2",
+    "supertest": "^3.4.2"
   },
   "repository": {
     "type": "ssh",
