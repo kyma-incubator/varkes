@@ -5,14 +5,13 @@ const odataApp = require("./app")
 const app = require('express')()
 const LOGGER = require("./logger").logger
 
-const configPath //= "test/varkes_config.json"
-
-
-if (process.argv.length > 2) {
-    configPath = process.argv[2]
-}
+var configPath //= "test/varkes_config.json"
 
 var runAsync = async () => {
+    if (process.argv.length > 2) {
+        configPath = process.argv[2]
+    }
+    
     try {
         app.use(await odataApp(configPath))
         app.listen(10000, function () {

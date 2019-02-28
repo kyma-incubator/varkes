@@ -4,9 +4,9 @@
 const connectorApp = require("./app")
 const app = require('express')()
 const LOGGER = require("./logger").logger
-const configPath //= "test/varkes_config.json"
+var configPath //= "test/varkes_config.json"
 
-runAsync = async () => {
+var runAsync = async () => {
 
     if (process.argv.length > 2) {
         configPath = process.argv[2]
