@@ -189,7 +189,6 @@ async function connect(req, res) {
     } catch (error) {
         var message = "There is an error while registering.\n Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
-        throw error
         res.statusCode = 401
         res.send(message)
     }

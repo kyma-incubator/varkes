@@ -12,7 +12,6 @@ const yaml = require('js-yaml');
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-const openapiSampler = require('openapi-sampler');
 
 module.exports = {
     router: router,
@@ -63,7 +62,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     }
 }
 
-async function createEvent(localKyma, eventMetadata, event) {
+function createEvent(localKyma, eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         eventMetadata = fillEventData(eventMetadata, event);
