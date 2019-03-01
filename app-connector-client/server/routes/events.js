@@ -116,9 +116,9 @@ function fillEventData(eventMetadata, event) {
     } else {
         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
     }
+
     eventMetadata.events.spec = specInJson;
     return eventMetadata
-
 }
 function defineEventMetadata() {
     return {
