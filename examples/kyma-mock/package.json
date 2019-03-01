@@ -1,6 +1,6 @@
 {
   "name": "varkes-example-kyma-mock",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Standalone example of varkes kyma-mock",
   "main": "app.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "uuid": "^3.3.2",
-    "varkes-openapi-mock": "0.3.18"
+    "varkes-openapi-mock": "1.0.0"
   },
   "devDependencies": {
     "mocha": "^6.0.2",
