@@ -40,6 +40,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
         return
 
     var eventMetadata = defineEventMetadata()
+    var error_message = ""
     for (var i = 0; i < eventsConfig.length; i++) {
         var event = eventsConfig[i];
         try {
@@ -56,9 +57,14 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
             }
 
         } catch (error) {
-            LOGGER.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
-            throw error
+            var message = "Registration of Event API " + event.name + "failed: " + JSON.stringify(error)
+            LOGGER.error(message)
+            error_message += "\n" + message
         }
+    }
+    if (error_message != "") {
+        var err = new Error(error_message);
+        throw err;
     }
 }
 
