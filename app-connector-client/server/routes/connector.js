@@ -114,7 +114,7 @@ function createInfo(api) {
         return {
             domain: domains[1] ? domains[1] : domains[0],
             app: myURL.pathname.split("/")[1],
-            consoleUrl: api.metadataUrl.replace("gateway","console"),
+            consoleUrl: api.metadataUrl.replace("gateway", "console"),
             eventsUrl: api.eventsUrl,
             metadataUrl: api.metadataUrl
         }
