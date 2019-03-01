@@ -19,7 +19,6 @@ module.exports = {
     createEventsFromConfig: createEventsFromConfig
 }
 
-const check_api = require('check_api');
 function sendEvent(req, res) {
     request.post({
         url: CONFIG.URLs.eventsUrl,
