@@ -47,7 +47,7 @@ function configValidation(configJson) {
                     }
                     check_api.check_api(specInJson, {}, function (err, options) {
                         if (err) {
-                            error_message += "\nevent number " + i + ": Schema validation Error \n" + JSON.stringify(err)
+                            error_message += "\nevent " + event.name + ": Schema validation Error \n" + JSON.stringify(err)
                         }
                     })
                 }

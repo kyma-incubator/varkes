@@ -41,8 +41,7 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
         }
     }
     if (error_message != "") {
-        var err = new Error(error_message);
-        throw err;
+        throw new Error(error_message);
     }
     return registeredApis;
 }

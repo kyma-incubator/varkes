@@ -63,8 +63,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
         }
     }
     if (error_message != "") {
-        var err = new Error(error_message);
-        throw err;
+        throw new Error(error_message);
     }
 }
 
