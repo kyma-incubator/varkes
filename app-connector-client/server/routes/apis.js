@@ -6,10 +6,7 @@ const path = require("path")
 const request = require("request")
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-
-var apiRouter = require("express").Router()
-const openapiSampler = require('openapi-sampler');
-var refParser = require('json-schema-ref-parser');
+var express = require("express")
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 const openapiSampler = require('openapi-sampler');
