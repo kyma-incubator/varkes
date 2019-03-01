@@ -10,10 +10,10 @@ Mocks REST calls given an OpenAPI specification. [openapi-mock/README.md](openap
 Mocks rest calls given an OData specification [odata-mock/README.md](odata-mock/README.md).
 
 ## Developing
-This project is maintained by Lerna. To start developing , clone this repo and run `lerna bootstrap` to install dependencies and link local dependencies.
+This project is maintained by Lerna. To start developing , clone this repo and run `lerna bootstrap --hoist` to install dependencies and link local dependencies.
 
 > If you don't have lerna, you can install it with `npm install -g lerna`
 
 After that step, you can make your changes and commit freely. Versioning will be handled by CI.
 
-To test the whole codebase, run `npm test` in root repository. Lerna will run tests one by one. For individual tests, go to respective project folder and run `npm test`.
+To test the whole codebase, run `lerna run test` in root repository. Lerna will run tests in parallel. For individual tests, go to respective project folder and run `npm test`.
