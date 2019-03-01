@@ -49,5 +49,5 @@ describe('test app', function () {
 
             done()
         }).catch(error => done(error))
-    });
+    }).timeout(50000);
 });

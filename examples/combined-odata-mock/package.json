@@ -1,5 +1,5 @@
 {
-  "name": "varkes-example-combined-odata-mock",
+  "name": "@varkes/example-combined-odata-mock",
   "version": "1.0.0",
   "description": "combined example of odata and app-connector-client",
   "main": "app.js",
@@ -10,9 +10,9 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.16.4",
-    "varkes-app-connector-client": "1.0.0",
-    "varkes-odata-mock": "1.0.0"
+    "@varkes/app-connector-client": "^1.0.0",
+    "@varkes/odata-mock": "^1.0.0",
+    "express": "^4.16.4"
   },
   "devDependencies": {
     "mocha": "^6.0.2",

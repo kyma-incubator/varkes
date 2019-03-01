@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const odataApp = require("varkes-odata-mock")
+const odataApp = require("@varkes/odata-mock")
 const app = require('express')()
 
 var runAsync = async () => {

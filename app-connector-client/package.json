@@ -1,5 +1,5 @@
 {
-  "name": "varkes-app-connector-client",
+  "name": "@varkes/app-connector-client",
   "version": "1.0.0",
   "description": "Client for Kyma application connectivity",
   "main": "server/app.js",
@@ -19,8 +19,8 @@
     "js-yaml": "^3.12.2",
     "node-forge": "^0.8.1",
     "request": "^2.88.0",
-    "winston": "^3.2.1",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "mocha": "^6.0.2",

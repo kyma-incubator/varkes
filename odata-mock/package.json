@@ -1,5 +1,5 @@
 {
-  "name": "varkes-odata-mock",
+  "name": "@varkes/odata-mock",
   "version": "1.0.0",
   "main": "server/app.js",
   "engines": {
