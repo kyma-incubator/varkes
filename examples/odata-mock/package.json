@@ -7,6 +7,9 @@
     "test": "mocha",
     "start": "node . 10000"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
