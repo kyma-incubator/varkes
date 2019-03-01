@@ -6,7 +6,6 @@ const path = require("path")
 const request = require("request")
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-
 var express = require("express")
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
