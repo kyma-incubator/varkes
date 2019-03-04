@@ -1,36 +1,26 @@
-# How Release Pipeline should work
+# Release Process
 
-Information:
+Assumptions:
 
 - The version of the release is determined by package.json. When `npm publish` is called, It tries to create a new release with that version.
-
-- `npm version patch` increases the patch number of the package.json. This change should be commited.
 
 - We don't want to create a new release everytime we push to master.
 
 # Proposal
-1) We create a new branch called `release`. Release branch will only be updated when we have a new release. It will be only merged from master , **not from any other branch.**
+1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do just testing. They have the same functionality.
 
-2) We create a new job in Prow for release branch for PR coming from master. `pre-submit-release-job` runs the tests.
+2) When we want a new release , we open a new branch with proposed release number & run `npm version` to update package version manually, then open a PR. `npm version` also creates a git tag.
 
-3) Once PR is merged to `release` branch, a `post-submit-release-job` is triggered. 
+3) When the proposed release PR is accepted but not yet merged we run `npm publish` to publish it to registry. That way , while we are discussing a release candidate we can continue working on master and do rebases to add features to RC before it's merged.
 
-- It updates the version with `npm vervion`.
-- Publishes the package with `npm publish`.
-- Once publish is complete, kyma-bot merges release branch with master so that master branch also has the updated version number.
+4) Once release is complete we merge the release candidate to master. This will trigger the `post-submit-master-job` again but it will only do testing. New release will be stored in a git tag , so we can delete the RC branch.
 
-> This way while release process is automatic, it is controlled manually by opening a PR to release branch. Only one PR should be present for each release.
+> This process is manual and does not require any bot to perform git operations. The branching is only between master and RC.
 
-This approach testes the same code 2-3 times:
-
- - When there is a PR to master, `pre-submit-master-job` tests for individual changes.
- - When there is a PR to release , `pre-submit-release-job`, tests for all changes.
- - Optionally we can also add tests to `post-submit-release-job` to test with new version number.
 ```
- feature1 -> pr -> master  
- feature2 -> pr -> master  
- ...  
- master -> release candidate -> release  
- release -> prow-job -> npm registry  
- release -> merge -> master
+    RC->npm version->discussions -> accepted -> npm publish
+    /                 /(rebase-merge)                     \
+master->feature1->master->...                       ...->master
  ```
+
+After this process master will have the new version but may also have features that are not yet published. Those features will be included in the next RC PR. 
