@@ -1,5 +1,7 @@
+#!/usr/bin/env node
+'use strict'
 
-var LOGGER = require("../logger").logger
+const LOGGER = require("../logger").logger
 const yaml = require('js-yaml');
 const fs = require("fs")
 const apis = require("./apis");
@@ -7,13 +9,19 @@ const apis = require("./apis");
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
 
+module.exports = {
+    createServicesFromConfig: createServicesFromConfig,
+    getAllAPI: getAllAPI
+}
+
 async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
 
-    serviceMetadata = defineServiceMetadata()
-    for (i = 0; i < apisConfig.length; i++) {
-        api = apisConfig[i]
+    var serviceMetadata = defineServiceMetadata()
+    var error_message = ""
+    for (var i = 0; i < apisConfig.length; i++) {
+        var api = apisConfig[i]
         try {
             var reg_api;
             if (registeredApis.length > 0)
@@ -27,11 +35,17 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
         } catch (error) {
-            LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
+            var message = "Registration of API " + api.name + "failed: " + JSON.stringify(error)
+            LOGGER.error(message)
+            error_message += "\n" + message
         }
+    }
+    if (error_message != "") {
+        throw new Error(error_message);
     }
     return registeredApis;
 }
+
 function createService(localKyma, serviceMetadata, api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
@@ -49,6 +63,7 @@ function createService(localKyma, serviceMetadata, api, hostname) {
         });
     })
 }
+
 function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
@@ -66,6 +81,7 @@ function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
         });
     })
 }
+
 function getAllAPI(localKyma) {
     LOGGER.debug("Get all API ")
     return new Promise((resolve, reject) => {
@@ -122,7 +138,6 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     return serviceMetadata;
 }
 
-
 function defineServiceMetadata() {
     return {
         "provider": "SAP Hybris",
@@ -140,9 +155,4 @@ function defineServiceMetadata() {
             "spec": {}
         }
     }
-}
-
-module.exports = {
-    createServicesFromConfig: createServicesFromConfig,
-    getAllAPI: getAllAPI
 }

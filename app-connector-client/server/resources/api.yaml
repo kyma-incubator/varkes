@@ -22,6 +22,7 @@ paths:
         content:
           application/json:
             schema:
+
               $ref: "#/components/schemas/ConnectionDetails"
       responses:
         "200":

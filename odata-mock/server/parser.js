@@ -1,6 +1,7 @@
-"use strict";
+#!/usr/bin/env node
+'use strict'
 
-var LOGGER = require("./logger").logger
+const LOGGER = require("./logger").logger
 const fs = require("fs");
 
 Object.defineProperty(exports, "__esModule", { value: true });

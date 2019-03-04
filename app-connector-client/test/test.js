@@ -1,10 +1,16 @@
+#!/usr/bin/env node
+'use strict'
 
-var request = require('supertest');
-var server = require("../server/app")("test/varkes_config.json");
+const mock = require('../server/app')
+const request = require('supertest')
+const express = require('express')
 
 describe('tests controllers', function () {
     it('should work', function (done) {
-        server.then(function (app) {
+        mock('./test/varkes_config.json').then(function (mock) {
+            var app = express()
+            app.use(mock)
+
             describe('GET metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
@@ -38,6 +44,8 @@ describe('tests controllers', function () {
                         .expect(400, done)
                 });
             });
-        }).finally(done);
+
+            done()
+        }).catch(error => done(error))
     })
 })

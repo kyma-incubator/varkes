@@ -1,18 +1,20 @@
-'use strict';
+#!/usr/bin/env node
+'use strict'
 
-var yaml = require('js-yaml');
+const express = require('express')
+const yaml = require('js-yaml');
 const fs = require('fs');
 const pretty_yaml = require('json-to-pretty-yaml');
-const util = require('util');
 const LOGGER = require("./logger").logger
-var morgan = require('morgan');
-var Converter = require('api-spec-converter');
-var middleware = require('swagger-express-middleware');
+const morgan = require('morgan');
+const Converter = require('api-spec-converter');
+const middleware = require('swagger-express-middleware');
 
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
-module.exports = async function (app, config) {
+module.exports = async function (config) {
+    var app = express()
     for (var i = 0; i < config.apis.length; i++) {
         var api = config.apis[i];
         if (api.type = "openapi") {
@@ -63,17 +65,10 @@ function customErrorResponses(app, config) {
         if (!err.status) {
             err.status = 500;
         }
-        if (config.error_messages && config.error_messages.hasOwnProperty(err.status)) {
-            LOGGER.debug("Applying configured custom error message for error code %d", err.status)
-            res.status(err.status);
-            res.type('json');
-            res.send(util.format(config.error_messages[err.status]));
-        } else {
-            LOGGER.debug("Converting error response to JSON")
-            res.status(err.status);
-            res.type('json');
-            res.send({ error: err.message })
-        }
+        LOGGER.debug("Converting error response to JSON")
+        res.status(err.status);
+        res.type('json');
+        res.send({ error: err.message })
     });
 }
 
@@ -153,10 +148,10 @@ async function validateSpec(api, type) {
             return fromSpec.validate()
         }).then(function (result) {
             if (result.errors) {
-                throw new Error("Validation error of api '" + api.name + "':" + JSON.stringify(result.errors, null, 2));
+                throw new Error("Validation error of api '" + api.name + "':" + pretty_yaml.stringify(result.errors));
             }
             if (result.warnings) {
-                LOGGER.warn("%s", JSON.stringify(result.warnings, null, 2));
+                LOGGER.warn("%s", pretty_yaml.stringify(result.warnings));
             }
         });
 }

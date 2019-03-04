@@ -1,9 +1,13 @@
-var request = require('supertest');
-var exampleApp = require("./app.js")
+#!/usr/bin/env node
+'use strict'
+
+const request = require('supertest');
+const exampleApp = require("./app.js")
 
 describe('tests odata controllers', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
+
             describe('GET Advertisements via API', function () {
                 it('should return 200', function (done) {
                     request(app)
@@ -30,6 +34,8 @@ describe('tests odata controllers', function () {
                         .expect(200, done)
                 });
             });
-        }).finally(done);
+
+            done()
+        }).catch(error => done(error))
     });
 });

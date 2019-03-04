@@ -1,13 +1,21 @@
-var openapiApp = require("varkes-openapi-mock")
+#!/usr/bin/env node
+'use strict'
 
-var app = require('express')()
+const openapiApp = require("varkes-openapi-mock")
+const app = require('express')()
 
-runAsync = async () => {
+var runAsync = async () => {
+    var port
+    if (process.argv.length > 2 && parseInt(process.argv[2])) {
+        port = process.argv[2]
+    }
     try {
         app.use(await openapiApp("./varkes_config.json"))
-        return app.listen(10000, function () {
-            console.info("Started application on port %d", 10000)
-        });
+        if (port)
+            app.listen(port, function () {
+                console.info("Started application on port %d", port)
+            });
+        return app
     } catch (error) {
         console.error("Problem while starting application: %s", error)
     }
