@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "uuid": "^3.3.2",
-    "varkes-openapi-mock": "0.3.18"
+    "varkes-openapi-mock": "0.3.19"
   },
   "devDependencies": {
     "mocha": "^6.0.2",

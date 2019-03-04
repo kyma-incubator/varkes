@@ -10,7 +10,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "varkes-odata-mock": "0.3.10",
+    "varkes-odata-mock": "0.3.11",
     "express": "^4.16.4"
   },
   "devDependencies": {
