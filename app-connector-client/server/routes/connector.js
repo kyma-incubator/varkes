@@ -95,7 +95,7 @@ function disconnect(req, res) {
 }
 
 function info(req, res) {
-    info = createInfo()
+    info = createInfo(CONFIG.URLs)
     info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
