@@ -405,57 +405,20 @@ components:
           example: myapp
 
     ServiceDetails:
-      type: "object"
-      properties:
-        provider:
-          type: "string"
-          description: "Name of the provider of the new application"
-          example: SAP-Hybris
-        name:
-          type: "string"
-          description: Name of the new application
-          example: schools
-        description:
-          type: "string"
-          description: "Summmary of the new application"
-          example: Schools Webservices
-        labels:
-          type: "object"
-          example:
-            connected-app: event-trial
-            label1: value1
-
-        api:
-          $ref: "#/components/schemas/Api"
-        events:
-          $ref: "#/components/schemas/Events"
-        documentation:
-          $ref: "#/components/schemas/Documentation"
-      required:
-        - provider
-        - name
-        - description
-    Service:
-      type: "object"
-      properties:
-        id:
-          type: "string"
-          format: "uuid"
-          description: ID of the api
-          example: 83a01131-69be-4e52-8a98-2ffa69f7575c
-        provider:
-          type: "string"
-          description: provider of the api
-          example: "SAP-Hybris"
-        name:
-          type: "string"
-          description: name of the api
-          "example": "schools"
-        description:
-          type: "string"
-          description: description of the api
-          example: "schools Webservices"
-
+      allOf:
+        - $ref: "#/components/schemas/Service"
+        - type: "object"
+          properties:
+            api:
+              $ref: "#/components/schemas/Api"
+            events:
+              $ref: "#/components/schemas/Events"
+            documentation:
+              $ref: "#/components/schemas/Documentation"
+          required:
+            - provider
+            - name
+            - description
     Api:
       description: "The apis that are being registered with the application"
       type: "object"
@@ -602,3 +565,26 @@ components:
           type: string
           description: Id of the sent event
           example: f64fc421-2759-4685-a184-752208570615
+    Service:
+      type: "object"
+      description: "Info"
+      allOf:
+        - $ref: "#/components/schemas/ServiceId"
+        - properties:
+            provider:
+              type: "string"
+              description: provider of the api
+              example: "SAP-Hybris"
+            name:
+              type: "string"
+              description: name of the api
+              "example": "schools"
+            description:
+              type: "string"
+              description: description of the api
+              example: "schools Webservices"
+            labels:
+              type: "object"
+              example:
+                connected-app: event-trial
+                label1: value1

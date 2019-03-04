@@ -120,6 +120,8 @@ function get(req, res) {
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
+                var body = JSON.parse(body)
+                body.id = req.params.api //kyma doesn't return Id on get, but we are.
                 res.status(httpResponse.statusCode).type("json").send(body)
             }
         })
