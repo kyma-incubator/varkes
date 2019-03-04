@@ -132,7 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServiceId"
+                $ref: "#/components/schemas/EventId"
         "400":
           description: "Bad request"
           content:
@@ -363,7 +363,7 @@ components:
         register:
           type: "boolean"
           description: Defines whether you want to auto register your APIs to Kyma while registering
-
+          example: true
         hostname:
           type: "string"
           example: "http://localhost:10000"
@@ -379,6 +379,7 @@ components:
           type: "string"
           format: "uuid"
           description: ID of the newly created application
+          example: "83a01131-69be-4e52-8a98-2ffa69f7575c"
     ConnectionResponse:
       type: "object"
       properties:
@@ -390,26 +391,40 @@ components:
           type: "string"
           description: "URL on connected Kyma cluster to send events"
           example: https://gateway.mycluster.kyma.cx/event-trial/v1/events
-        cluster_domain:
+        consoleUrl:
+          type: "string"
+          description: "URL to reach kyma console"
+          example: https://console.mycluster.kyma.cx/event-trial/v1/metadata/services
+        domain:
           type: "string"
           description: "Domain of the connected Kyma cluster"
-          example: mycluster
-        re_name:
+          example: prod-cluster
+        app:
           type: "string"
           description: "Application name on connected Kyma cluster"
-          example: my application name
+          example: myapp
+
     ServiceDetails:
       type: "object"
       properties:
         provider:
           type: "string"
           description: "Name of the provider of the new application"
+          example: SAP-Hybris
         name:
           type: "string"
           description: Name of the new application
+          example: schools
         description:
           type: "string"
           description: "Summmary of the new application"
+          example: Schools Webservices
+        labels:
+          type: "object"
+          example:
+            connected-app: event-trial
+            label1: value1
+
         api:
           $ref: "#/components/schemas/Api"
         events:
@@ -427,15 +442,19 @@ components:
           type: "string"
           format: "uuid"
           description: ID of the api
+          example: 83a01131-69be-4e52-8a98-2ffa69f7575c
         provider:
           type: "string"
           description: provider of the api
+          example: "SAP-Hybris"
         name:
           type: "string"
           description: name of the api
+          "example": "schools"
         description:
           type: "string"
           description: description of the api
+          example: "schools Webservices"
 
     Api:
       description: "The apis that are being registered with the application"
@@ -445,11 +464,15 @@ components:
           type: "string"
           format: "uri"
           description: "The endpoint of the API"
+          example: "http://localhost:10000/entity"
         credentials:
           $ref: "#/components/schemas/ApiCredentials"
         spec:
           type: "object"
           description: "OpenApi v2 swagger file: https://github.com/OAI/OpenAPI-Specification/blob/master/schemas/v2.0/schema.json"
+          example:
+            $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
+
       required:
         - targetUrl
     Events:
@@ -459,17 +482,23 @@ components:
         spec:
           description: "AsynApi file v1: https://github.com/asyncapi/asyncapi/blob/develop/schema/asyncapi.json"
           type: "object"
+          example:
+            $ref: https://raw.githubusercontent.com/asyncapi/asyncapi/master/examples/1.1.0/anyof.yml
     EventDetails:
       type: "object"
       properties:
         event-type:
           description: "Type of event"
           type: "string"
+          example: "customer.created"
         event-type-version:
           description: "version of event type"
           type: "string"
+          example: "v1"
         event-time:
           description: "time when event was send"
+          type: string
+          example: "2019-03-04T14:19:29.450Z"
         data:
           description: "event payload"
           type: "object"
@@ -482,16 +511,22 @@ components:
       properties:
         displayName:
           type: "string"
-          description: Name of the application
+          description: Name of the Documentation
+          example: "Schools"
         description:
           type: "string"
-          description: Summary of the application
+          description: Summary of the documentation
+          example: "Schools webservices"
         type:
           type: "string"
-          description: Type of the application
+          description: Type of the documentation
+          example: "Overview"
         tags:
           type: "array"
           description: Tags of the application
+          example:
+            - tag1
+            - tag2
           items:
             type: "string"
         docs:
@@ -510,12 +545,15 @@ components:
         title:
           type: "string"
           description: Title of the document
+          example: Service Overview Documentation
         type:
           type: "string"
           description: Type of the document
+          example: "Overview"
         source:
           type: "string"
           description: Source of the document
+          example: This service does this and that...
       required:
         - title
         - type
@@ -535,10 +573,13 @@ components:
         url:
           type: "string"
           format: "uri"
+          example: "http://localhost:10000/entity/authorizationserver/oauth/token"
         clientId:
           type: "string"
+          example : "*********"
         clientSecret:
           type: "string"
+          example : "*********"
       required:
         - url
         - clientId
@@ -553,3 +594,11 @@ components:
     KeyFile:
       type: "string"
       format: binary
+    EventId:
+      type: "object"
+      description: "Id of the sent event"
+      properties:
+        event-id:
+          type: string
+          description: Id of the sent event
+          example: f64fc421-2759-4685-a184-752208570615

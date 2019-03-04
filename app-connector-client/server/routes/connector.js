@@ -81,7 +81,7 @@ function disconnect(req, res) {
     deletedFileCount == 3 ? res.status(204).send() : res.status(400).send({ error: "Not all files were deleted. Are you sure you were connected ?" })
 }
 function info(req, res) {
-    info = createInfo()
+    info = createInfo(CONFIG.URLs)
     info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 function key(req, res) {
@@ -91,20 +91,17 @@ function cert(req, res) {
     fs.existsSync(certFile) ? res.download(certFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
-function createInfo() {
-    if (CONFIG.URLs.metadataUrl !== "") {
-        const myURL = new url.URL(CONFIG.URLs.metadataUrl)
-        response = {
-            "cluster_domain": "",
-            "re_name": "",
-            "eventsUrl": "",
-            "metadataUrl": ""
+function createInfo(api) {
+    if (api.metadataUrl !== "") {
+        const myURL = new url.URL(api.metadataUrl)
+        var domains = myURL.hostname.split(".")
+        return {
+            domain: domains[1] ? domains[1] : domains[0],
+            app: myURL.pathname.split("/")[1],
+            consoleUrl: api.metadataUrl.replace("gateway", "console"),
+            eventsUrl: api.eventsUrl,
+            metadataUrl: api.metadataUrl
         }
-        response.cluster_domain = myURL.hostname.split(".")[1]
-        response.re_name = myURL.pathname.split("/")[1]
-        response.eventsUrl = CONFIG.URLs.eventsUrl;
-        response.metadataUrl = CONFIG.URLs.metadataUrl;
-        return response
     }
     return null
 }
