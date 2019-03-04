@@ -1,6 +1,7 @@
 # OData Mock
+[![npm version](https://badge.fury.io/js/varkes-odata-mock.svg)](https://badge.fury.io/js/varkes-odata-mock)
 
-Mocks rest calls given an OData specification 
+Mocks rest calls given an OData specification
 
 After startup, you have access to:
 - odata API - http://localhost:10000/odata/
