@@ -6,6 +6,8 @@ const fs = require('fs');
 const LOGGER = require("./logger").logger
 const check_api = require('check_api');
 const yaml = require('js-yaml');
+const pretty_yaml = require('json-to-pretty-yaml');
+
 module.exports = function (varkesConfigPath) {
     var varkesConfig
     if (varkesConfigPath) {
@@ -47,7 +49,7 @@ function configValidation(configJson) {
                     }
                     check_api.check_api(specInJson, {}, function (err, options) {
                         if (err) {
-                            error_message += "\nevent " + event.name + ": Schema validation Error \n" + JSON.stringify(err)
+                            error_message += "\nevent " + event.name + ": Schema validation Error \n" + pretty_yaml.stringify(err)
                         }
                     })
                 }

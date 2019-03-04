@@ -148,10 +148,10 @@ async function validateSpec(api, type) {
             return fromSpec.validate()
         }).then(function (result) {
             if (result.errors) {
-                throw new Error("Validation error of api '" + api.name + "':" + JSON.stringify(result.errors, null, 2));
+                throw new Error("Validation error of api '" + api.name + "':" + pretty_yaml.stringify(result.errors));
             }
             if (result.warnings) {
-                LOGGER.warn("%s", JSON.stringify(result.warnings, null, 2));
+                LOGGER.warn("%s", pretty_yaml.stringify(result.warnings));
             }
         });
 }
