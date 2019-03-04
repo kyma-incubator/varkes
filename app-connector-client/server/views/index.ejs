@@ -19,7 +19,7 @@
 
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
-          mdl-layout--fixed-header">
+              mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
                 <span id="app-title" class="mdl-layout-title">
@@ -165,8 +165,6 @@
         getAPIs()
         $("#create_service").hide();
         hostname = window.location.origin;
-        console.log("hostname");
-        console.log(hostname);
     })
     function newServiceView() {
         editor.set(json);
@@ -188,18 +186,7 @@
             }
         })
     }
-    function fillEventEditor(e) {
-        var select = $('#event-types').select()[0];
-        var opt = JSON.parse(select.options[select.selectedIndex].value);
-        var json = {}
-        var properties = opt.subscribe.payload.properties;
-        Object.keys(properties).forEach(function (property) {
-            json[property] = properties[property].example;
-        })
-        $("#payload").val(JSON.stringify(json))
-    }
     function getAPIs() {
-
         $("#tokenInput").val('')
         $("#apis ul").empty()
         console.log("get apis called")
@@ -212,24 +199,20 @@
                         if (element.id && element.id != "") {
                             $("#apis ul").append
                                 (`
-                                        <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
-                        
-                           ${element.name}
-                        
-                                        </a>`)
+                                            <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
+                            
+                               ${element.name}
+                            
+                                            </a>`)
                         }
                     });
-
                     getConnectionInfo()
                 }
-
             }
         ).fail(function (xhr, options, error) {
             $("#apis ul").text("No certificate defined, please provide a token url")
         })
     }
-
-
     function createService() {
         $.ajax({
             type: "POST",
@@ -238,14 +221,11 @@
             success: function (data) {
                 getAPIs()
                 showService(data.id)
-
             },
             contentType: "application/json"
         }
-
         )
     }
-
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
@@ -258,25 +238,21 @@
             contentType: "application/json"
         })
     }
-
     function giveToken() {
         var sendData = {
             url: $("#tokenInput").val(),
             hostname: hostname,
             register: $("#registerMockApp").is(':checked')
         }
-
         console.log(sendData)
         $.ajax({
             type: "POST",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(sendData),
             success: function (data) {
-
                 getAPIs()
                 $('#create_service').show();
                 $('#downloadLinks').show();
-
                 changeButtonToDisconnectKyma()
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
@@ -289,10 +265,8 @@
             },
             contentType: "application/json"
         }
-
         )
     }
-
     function changeButtonToDisconnectKyma() {
         connectDiv = $("#kymaConnect")
         connectDiv.hide()
@@ -331,41 +305,23 @@
                 $("#create_service").hide()
                 $("#update_service").show()
                 $("#update_service").attr("onclick", `updateService("${serviceID}")`)
-
                 $("#delete_service").show()
                 $("#delete_service").attr("onclick", `deleteService("${serviceID}")`)
-
             }
         })
     }
-
     function getConnectionInfo() {
         console.log("query connection info")
         $.ajax({
             type: "get",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
-                var insert_string = "/home/settings/apps";
-                remote_env_url = data.metadataUrl.match(/https:\/\/[a-zA-Z0-9.\/]+.kyma.cx\/[a-zA-Z0-9.]+/)[0];
-                console.log("remote")
-                console.log(remote_env_url)
-                remote_env_url = remote_env_url.replace("gateway", "console");
-                console.log("remote2")
-                console.log(remote_env_url)
-                var index = remote_env_url.lastIndexOf("/");
-                String.prototype.splice = function (idx, rem, str) {
-                    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
-                };
-                remote_env_url = remote_env_url.splice(index, 0, insert_string);
-                console.log("remote3")
-                console.log(remote_env_url)
-                $("#api-title").html(`Register to Kyma \n <p> Connected to <a href=` + remote_env_url + ` target="_blank" >${data.re_name}</a> in <b>${data.cluster_domain}</b>`)
+                $("#api-title").html(`Registered to Kyma \n <p> Connected to <a href=${data.consoleUrl} target="_blank" >${data.app}</a> in <b>${data.domain}</b>`)
                 changeButtonToDisconnectKyma()
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
                 if (data.eventsUrl)
                     $('#event_url').val(data.eventsUrl)
-
             }
         })
     }
@@ -385,48 +341,37 @@
             "event-time": eventTime,
             "data": eventData
         }
-        console.log(event)
-
         //send event to kyma
         $.ajax({
             type: "POST",
             url: "/events/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(event),
             success: function (data) {
-                console.log(data)
                 $("#events ul").append(`${data["event-id"]}`)
-
             },
             contentType: "application/json"
         }
-
         )
     }
-
-
-
     function parseAPIEventsToComboBox(api) {
-        console.log(api)
         if (api.events && api.events.spec) {
-            console.log(api.events.spec.topics)
-            var topics = api.events.spec.topics //object, topics are keys
+            var topics = api.events.spec.topics
             $("#event-types").empty()
             Object.keys(topics).forEach(t => {
-
-                var o = new Option(t, JSON.stringify(topics[t])); //name , value
-                //$(o).html(t);
+                var o = new Option(t, JSON.stringify(topics[t]));
                 $("#event-types").append(o);
-
             });
         }
-
-
     }
-
+    function fillEventEditor(e) {
+        var select = $('#event-types').select()[0];
+        var opt = JSON.parse(select.options[select.selectedIndex].value);
+        var json = {}
+        $("#payload").val(JSON.stringify(opt.example))
+    }
     var container = document.getElementById("jsoneditor");
     var options = {};
     var editor = new JSONEditor(container, options);
-
     // set json
     var json = {
         "provider": "SAP Hybris",
@@ -458,10 +403,8 @@
                 }
             ]
         }
-
     };
     editor.set(json);
-
 </script>
 
 </html>

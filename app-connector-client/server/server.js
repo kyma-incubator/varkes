@@ -1,19 +1,20 @@
 #!/usr/bin/env node
+'use strict'
 
-var connectorApp = require("./app")
-var app = require('express')()
-var LOGGER = require("./logger").logger
-var nodePort
-var configPath = "test/varkes_config.json"
+const connectorApp = require("./app")
+const app = require('express')()
+const LOGGER = require("./logger").logger
+var configPath //= "test/varkes_config.json"
 
-if (process.argv.length > 2) {
-    configPath = process.argv[2]
-    if (process.argv.length > 3) {
-        nodePort = process.argv[3]
+var runAsync = async () => {
+
+    if (process.argv.length > 2) {
+        configPath = process.argv[2]
+        if (process.argv.length > 3) {
+            nodePort = process.argv[3]
+        }
     }
-}
 
-runAsync = async () => {
     try {
         app.use(await connectorApp(configPath))
         app.listen(10000, function () {

@@ -1,6 +1,9 @@
-var bodyParser = require('body-parser');
-var morgan = require('morgan')
-var LOGGER = require("./../logger").logger
+#!/usr/bin/env node
+'use strict'
+
+const bodyParser = require('body-parser');
+const morgan = require('morgan')
+const LOGGER = require("./../logger").logger
 const fs = require('fs');
 
 module.exports = function (app) {

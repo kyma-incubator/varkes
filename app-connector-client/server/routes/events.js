@@ -1,13 +1,22 @@
-var LOGGER = require("../logger").logger
+#!/usr/bin/env node
+'use strict'
+
+const express = require('express')
+const LOGGER = require("../logger").logger
 const fs = require("fs")
 const path = require("path")
-var CONFIG = require("../app-connector-config.json")
+const CONFIG = require("../config.json")
 const apis = require("./apis");
-var request = require("request")
+const request = require("request")
 const yaml = require('js-yaml');
 
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+
+module.exports = {
+    router: router,
+    createEventsFromConfig: createEventsFromConfig
+}
 
 function sendEvent(req, res) {
     request.post({
@@ -30,9 +39,10 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
-    eventMetadata = defineEventMetadata()
-    for (i = 0; i < eventsConfig.length; i++) {
-        event = eventsConfig[i];
+    var eventMetadata = defineEventMetadata()
+    var error_message = ""
+    for (var i = 0; i < eventsConfig.length; i++) {
+        var event = eventsConfig[i];
         try {
             var reg_api;
             if (registeredApis.length > 0)
@@ -47,8 +57,13 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
             }
 
         } catch (error) {
-            LOGGER.error("Registration of Event API '%s' failed: %s", event.name, JSON.stringify(error))
+            var message = "Registration of Event API " + event.name + "failed: " + JSON.stringify(error)
+            LOGGER.error(message)
+            error_message += "\n" + message
         }
+    }
+    if (error_message != "") {
+        throw new Error(error_message);
     }
 }
 
@@ -70,10 +85,10 @@ function createEvent(localKyma, eventMetadata, event) {
 
     })
 }
-function updateEvent(localKyma, eventMetadata, event, event_id) {
+async function updateEvent(localKyma, eventMetadata, event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
+        eventMetadata = fillEventData(eventMetadata, event)
         apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
@@ -85,7 +100,6 @@ function updateEvent(localKyma, eventMetadata, event, event_id) {
                 resolve(body)
             }
         })
-
     })
 }
 function fillEventData(eventMetadata, event) {
@@ -108,7 +122,7 @@ function fillEventData(eventMetadata, event) {
     }
 
     eventMetadata.events.spec = specInJson;
-    return eventMetadata;
+    return eventMetadata
 }
 function defineEventMetadata() {
     return {
@@ -122,7 +136,9 @@ function defineEventMetadata() {
     }
 }
 
-module.exports = {
-    sendEvent: sendEvent,
-    createEventsFromConfig: createEventsFromConfig
+function router() {
+    var eventsRouter = express.Router()
+    eventsRouter.post("/", sendEvent)
+    return eventsRouter;
 }
+

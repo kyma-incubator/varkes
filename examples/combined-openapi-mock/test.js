@@ -1,16 +1,20 @@
-var request = require('supertest');
-var exampleApp = require("./app.js")
+#!/usr/bin/env node
+'use strict'
+
+const request = require('supertest');
+const exampleApp = require("./app.js")
 
 describe('tests odata controllers', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
+
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api1/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET schools', function () {
@@ -19,7 +23,7 @@ describe('tests odata controllers', function () {
                         .get('/api2/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET console', function () {
@@ -27,7 +31,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/api1/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
             describe('GET api1 metadata', function () {
@@ -35,7 +39,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/api1/courseMetadata.json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
 
@@ -44,7 +48,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/metadata')
                         .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                        .expect(200,done)
+                        .expect(200, done)
                 });
             });
 
@@ -54,9 +58,11 @@ describe('tests odata controllers', function () {
                         .get('/connection')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400,done)
+                        .expect(400, done)
                 });
             });
-        }).finally(done);
+
+            done()
+        }).catch(error => done(error))
     });
 });

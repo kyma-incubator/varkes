@@ -1,63 +1,76 @@
-var request = require("request")
+#!/usr/bin/env node
+'use strict'
+
+const request = require("request-promise")
 const fs = require("fs")
 const path = require("path")
-var LOGGER = require("../logger").logger
-var CONFIG = require("../app-connector-config.json")
-var forge = require("node-forge")
+const LOGGER = require("../logger").logger
+const CONFIG = require("../config.json")
+const forge = require("node-forge")
 const url = require("url")
 const services = require("./services")
 const events = require("./events")
-var express = require("express")
+const express = require("express")
 
 var nodePort;
 var varkesConfig;
+
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
-
 const keysDirectory = path.resolve(CONFIG.keyDir)
 
-function authenticateToKyma(localKyma, url) {
-    return new Promise((resolve, reject) => {
-        LOGGER.debug("Connecting ..")
-        var URLs = {}
-        request({ //Step 4
-            url: url,
-            method: "GET",
-            rejectUnauthorized: !localKyma
-        },
-            function (error, response, body) {
-                if (error) {
-                    reject(error)
-                }
-                else if (response.statusCode !== 200) reject(new Error(response.statusCode))
-                else if (response.statusCode == 200) {
-                    LOGGER.debug("Connector received: %s", body)
-                    URLs = JSON.parse(body).api
-                    runOpenSSL(JSON.parse(body).certificate.subject)
-                    request.post({ //Step 9
-                        url: JSON.parse(body).csrUrl,
-                        json: { csr: fs.readFileSync(`${keysDirectory}/${CONFIG.csrFile}`, "base64") },
-                        rejectUnauthorized: !localKyma
-                    },
-                        function (error, response, body) {
-                            if (error) {
-                                reject(error)
-                            }
-                            else if (response.statusCode == 201) {
-                                CRT_base64_decoded = (Buffer.from(body.crt, 'base64').toString("ascii"))
-                                //Step 11
-                                fs.writeFileSync(`${keysDirectory}/${CONFIG.crtFile}`, CRT_base64_decoded)
-                                LOGGER.info("Connected to %s", URLs.metadataUrl)
-                                resolve(URLs)
-                            }
-                        }
-                    )
-                }
-            }
-        )
+module.exports = {
+    router: router
+}
+
+function callTokenUrl(localKyma, url) {
+    LOGGER.debug("Calling token URL '%s'", url)
+    return request({
+        uri: url,
+        method: "GET",
+        rejectUnauthorized: !localKyma,
+        resolveWithFullResponse: true
+    }).then(function (response) {
+        if (response.statusCode !== 200) {
+            throw new Error("Calling token URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
+        }
+        LOGGER.debug("Token URL returned '%s'", response.body)
+        var result = JSON.parse(response.body)
+        result.localKyma = localKyma
+        return result
     })
 }
+
+function generateCSRFromResponse(csrResponse) {
+    return new Promise(function (resolve, reject) {
+        generateCSR(csrResponse.certificate.subject)
+        resolve(csrResponse)
+    })
+}
+
+function callCSRUrl(csrResponse) {
+    LOGGER.debug("Calling csr URL '%s'", csrResponse.csrUrl)
+    var csrData = fs.readFileSync(`${keysDirectory}/${CONFIG.csrFile}`, "base64")
+
+    return request.post({
+        uri: csrResponse.csrUrl,
+        body: { csr: csrData },
+        json: true,
+        rejectUnauthorized: !csrResponse.localKyma,
+        resolveWithFullResponse: true
+    }).then(function (response) {
+        if (response.statusCode !== 201) {
+            throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
+        }
+        LOGGER.debug("CSR URL returned '%s'", JSON.stringify(response.body))
+        var CRT_base64_decoded = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
+
+        fs.writeFileSync(`${keysDirectory}/${CONFIG.crtFile}`, CRT_base64_decoded)
+        LOGGER.debug("Wrote crt file to '%s'", `${keysDirectory}/${CONFIG.crtFile}`)
+        return csrResponse.api
+    })
+}
+
 function disconnect(req, res) {
     var deletedFileCount = 0
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
@@ -80,13 +93,16 @@ function disconnect(req, res) {
 
     deletedFileCount == 3 ? res.status(204).send() : res.status(400).send({ error: "Not all files were deleted. Are you sure you were connected ?" })
 }
+
 function info(req, res) {
-    info = createInfo(CONFIG.URLs)
+    info = createInfo()
     info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
+
 function key(req, res) {
     fs.existsSync(keyFile) ? res.download(keyFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
+
 function cert(req, res) {
     fs.existsSync(certFile) ? res.download(certFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
@@ -106,8 +122,7 @@ function createInfo(api) {
     return null
 }
 
-function runOpenSSL(subject) {
-
+function generateCSR(subject) {
     LOGGER.debug("Creating CSR using subject %s", subject)
     var privateKey = fs.readFileSync(keyFile, 'utf8')
     var pk = forge.pki.privateKeyFromPem(privateKey)
@@ -120,6 +135,7 @@ function runOpenSSL(subject) {
     csr.setSubject(parseSubjectToJsonArray(subject))
     csr.sign(pk)
     fs.writeFileSync(`${keysDirectory}/${CONFIG.csrFile}`, forge.pki.certificationRequestToPem(csr))
+    LOGGER.debug("Wrote csr file to '%s'", `${keysDirectory}/${CONFIG.csrFile}`)
 }
 
 function parseSubjectToJsonArray(subject) {
@@ -139,17 +155,21 @@ async function connect(req, res) {
     if (!req.body) res.sendStatus(400);
 
     try {
-        data = await authenticateToKyma(req.query.localKyma, req.body.url)
+        var data = await callTokenUrl(req.query.localKyma, req.body.url)
+            .then(generateCSRFromResponse)
+            .then(callCSRUrl)
 
         if (req.query.localKyma == true) {
             var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
             data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + nodePort);
         }
+
         CONFIG.URLs = data
         fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
+        LOGGER.debug("Wrote api file to '%s' using value '%s'", path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data))
 
         if (req.body.register) {
-            LOGGER.debug("Auto-register APIs")
+            LOGGER.debug("Auto-registering APIs")
             var hostname = req.body.hostname || "http://localhost"
             var registeredApis = await services.getAllAPI(req.query.localKyma);
             registeredApis = await services.createServicesFromConfig(req.query.localKyma, hostname, varkesConfig.apis, registeredApis)
@@ -157,7 +177,9 @@ async function connect(req, res) {
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
 
-        info = createInfo()
+        info = createInfo(data)
+        LOGGER.info("Connected to %s", info.domain)
+
         if (info) {
             res.status(200).send(info)
         } else {
@@ -172,7 +194,7 @@ async function connect(req, res) {
     }
 }
 
-module.exports = function (config, nodePortParam = null) {
+function router(config, nodePortParam = null) {
     varkesConfig = config;
     nodePort = nodePortParam;
 

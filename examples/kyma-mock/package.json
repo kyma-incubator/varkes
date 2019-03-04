@@ -1,7 +1,7 @@
 {
-  "name": "varkes-example-combined-openapi-mock",
+  "name": "varkes-example-kyma-mock",
   "version": "0.1.0",
-  "description": "combined example of varkes openapi-mock and varkes app-connector-client",
+  "description": "Standalone example of varkes kyma-mock",
   "main": "app.js",
   "scripts": {
     "test": "mocha",
@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "express": "^4.16.4",
-    "varkes-app-connector-client": "1.3.26",
+    "uuid": "^3.3.2",
     "varkes-openapi-mock": "0.3.19"
   },
   "devDependencies": {

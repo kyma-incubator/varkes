@@ -1,15 +1,17 @@
 #!/usr/bin/env node
+'use strict'
 
-var openapiApp = require("./app")
-var app = require('express')()
-var LOGGER = require("./logger").logger
+const openapiApp = require("./app")
+const app = require('express')()
+const LOGGER = require("./logger").logger
 var configPath //= "test/varkes_config.json"
 
-if (process.argv.length > 2) {
-    configPath = process.argv[2]
-}
+var runAsync = async () => {
 
-runAsync = async () => {
+    if (process.argv.length > 2) {
+        configPath = process.argv[2]
+    }
+    
     try {
         app.use(await openapiApp(configPath))
         app.listen(10000, function () {

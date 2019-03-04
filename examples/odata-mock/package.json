@@ -4,18 +4,18 @@
   "description": "Standalone example of varkes odataapi-mock",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --exit",
-    "start": "node ."
+    "test": "mocha",
+    "start": "node . 10000"
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "varkes-odata-mock": "0.3.10",
-    "express": "4.x.x"
+    "varkes-odata-mock": "0.3.11",
+    "express": "^4.16.4"
   },
   "devDependencies": {
-    "mocha": "5.x.x",
-    "supertest": "3.x.x"
+    "mocha": "^6.0.2",
+    "supertest": "^3.4.2"
   },
   "repository": {
     "type": "ssh",
