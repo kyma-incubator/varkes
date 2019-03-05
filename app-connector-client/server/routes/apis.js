@@ -131,6 +131,7 @@ function get(req, res) {
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
                 body = JSON.parse(body)
+                body.id = req.params.api //comply with the api spec
                 if (body.events && body.events.spec) {
                     refParser.dereference(body.events.spec)
                         .then(function (schema) {
