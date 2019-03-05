@@ -14,6 +14,10 @@ This project is maintained by Lerna. To start developing , clone this repo and r
 
 > If you don't have lerna, you can install it with `npm install -g lerna`
 
-After that step, you can make your changes and commit freely. Versioning will be handled by CI.
+After that step, you can make your changes and commit freely. There is no need to update the package versions in dependent subprojects.
 
-To test the whole codebase, run `lerna run test` in root repository. Lerna will run tests in parallel. For individual tests, go to respective project folder and run `npm test`.
+To increase version number , run `lerna version --no-git-tag-version`. It asks user the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the package.json of subprojects.
+
+To see how CI operates on Lerna, check the makefile in the root folder.
+
+`lerna publish` automatically increases version number before publishing so we are using `npm publish` instead and just use lerna to run that command in projects. To test publishing scheme, you can use [verdaccio](https://github.com/verdaccio/verdaccio) for setting up a private registry.

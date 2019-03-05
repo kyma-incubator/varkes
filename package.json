@@ -5,6 +5,7 @@
     "lerna": "^3.13.0"
   },
   "scripts": {
-    "test": "lerna exec --concurrency 1 -- npm test"
+    "test": "lerna exec --concurrency 1 -- npm test",
+    "publish": "lerna exec --no-bail -- npm publish"
   }
 }

@@ -1,4 +1,4 @@
-APP_NAME = varkes-mocking-suite
+APP_NAME = varkes
 
 .PHONY: ci-pr
 ci-pr: resolve validate
@@ -13,7 +13,7 @@ validate:
 	npx lerna run test
 
 npm-publish:
-	lerna publish
+	npm run publish
 
 clean:
 	lerna clean
