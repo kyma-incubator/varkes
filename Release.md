@@ -9,18 +9,13 @@ Assumptions:
 # Proposal
 1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do just testing. They have the same functionality.
 
-2) When we want a new release , we open a new branch with proposed release number & run `npm version` to update package version manually, then open a PR. `npm version` also creates a git tag.
+2) There is a new branch called `release` that is only used by the release process. When we want to create a new release, we create a new branch from master with the new release name and run `npm version (lerna version)` locally and push to update versions in package.json.
 
-3) When the proposed release PR is accepted but not yet merged we run `npm publish` to publish it to registry. That way , while we are discussing a release candidate we can continue working on master and do rebases to add features to RC before it's merged.
+3) When we are satisfied with the release candidate, we open a PR to the `release` branch. The PR runs `pre-submit-release-job`, to test the project with the new versions.
 
-4) Once release is complete we merge the release candidate to master. This will trigger the `post-submit-master-job` again but it will only do testing. New release will be stored in a git tag , so we can delete the RC branch.
+4) When PR is merged to `release branch`, `post-submit-release-job` runs `publish` command and uses kyma-project npm token to publish varkes to npm registry. 
 
-> This process is manual and does not require any bot to perform git operations. The branching is only between master and RC.
+5) The branch with the individual release name can be deleted. Different versions will be tracked by git tag created in step 2.
 
-```
-    RC->npm version->discussions -> accepted -> npm publish
-    /                 /(rebase-merge)                     \
-master->feature1->master->...                       ...->master
- ```
+> This approach allows us to have dummy version numbers in master. For each RC, we can define a custom version number and keep the version in master always 0.1.0. That way we don't have to merge back from release to master.
 
-After this process master will have the new version but may also have features that are not yet published. Those features will be included in the next RC PR. 
