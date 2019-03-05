@@ -88,7 +88,7 @@ function disconnect(req, res) {
             certificatesUrl: ""
         }
     } catch (error) { //only triggger if there is an error with unlinkSync
-        res.status(400).send({ error: "There was an internal error while deleting the files." })
+        res.status(500).send({ error: "There was an internal error while deleting the files." })
         return //exit function
     }
     res.status(204).send() //means no error

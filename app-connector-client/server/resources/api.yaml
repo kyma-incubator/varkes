@@ -64,7 +64,7 @@ paths:
       responses:
         204:
           description: Disconnection was successful
-        400:
+        500:
           description: "There was an internal error while deleting files"
           content:
             application/json:
