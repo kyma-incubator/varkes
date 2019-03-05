@@ -19,20 +19,25 @@ module.exports = {
 }
 
 function sendEvent(req, res) {
-    request.post({
-        url: CONFIG.URLs.eventsUrl,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: req.body,
-        agentOptions: {
-            cert: fs.readFileSync(certFile),
-            key: fs.readFileSync(keyFile)
-        },
-        rejectUnauthorized: !req.params.localKyma
-    }, (error, httpResponse, body) => {
-        res.send(body)
-    })
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        request.post({
+            url: CONFIG.URLs.eventsUrl,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            json: req.body,
+            agentOptions: {
+                cert: fs.readFileSync(certFile),
+                key: fs.readFileSync(keyFile)
+            },
+            rejectUnauthorized: !req.params.localKyma
+        }, (error, httpResponse, body) => {
+            res.send(body)
+        })
+    }
 }
 
 async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
@@ -142,3 +147,9 @@ function router() {
     return eventsRouter;
 }
 
+function assureConnected() {
+    if (CONFIG.URLs.metadataUrl == "") {
+        return "Not connected to a kyma cluster, please re-connect"
+    }
+    return null
+}

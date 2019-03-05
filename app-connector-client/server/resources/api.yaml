@@ -65,7 +65,7 @@ paths:
         204:
           description: Disconnection was successful
         400:
-          description: "Error"
+          description: "There was an internal error while deleting files"
           content:
             application/json:
               schema:
@@ -84,7 +84,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/KeyFile"
         "400":
-          description: "Error"
+          description: "Private key could not be downloaded. Delete keys folder and restart varkes."
           content:
             application/json:
               schema:
@@ -102,7 +102,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/KeyFile"
         "400":
-          description: "Error"
+          description: "Certificate file could not be found. You must be connected to Kyma instance, else restart Varkes."
           content:
             application/json:
               schema:
@@ -134,7 +134,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EventId"
         "400":
-          description: "Bad request"
+          description: "Not connected to kyma cluster"
           content:
             application/json:
               schema:
@@ -165,15 +165,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceId"
-        "4XX":
-          description: "Error message returned by server"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
-        "500":
-          description: "Error"
+        "400":
+          description: "Not connected to Kyma cluster"
           content:
             application/json:
               schema:
@@ -198,14 +191,8 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Service"
-        "4XX":
-          description: "Error message returned by server"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: "Error"
+        "400":
+          description: "Not connected to Kyma"
           content:
             application/json:
               schema:
@@ -237,24 +224,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServiceDetails"
         "404":
-          description: "API not found"
+          description: "API with the requested Id could not be found"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "400":
-          description: "Not Connected"
+          description: "You are not connected to a Kyma instance."
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: "Error while getting API"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
     put:
       tags:
         - "api"
@@ -283,20 +263,18 @@ paths:
       responses:
         "200":
           description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceDetails"
         "404":
-          description: "API not found"
+          description: "API with the requested Id could not be found"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "400":
-          description: "Not connected"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: Error while updating API
+          description: "You are not connected to a Kyma instance."
           content:
             application/json:
               schema:
@@ -324,12 +302,6 @@ paths:
           description: "Successful operation"
         "404":
           description: "API not found"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: "Error while deleting API"
           content:
             application/json:
               schema:
@@ -426,7 +398,7 @@ components:
         targetUrl:
           type: "string"
           format: "uri"
-          description: "The endpoint of the API"
+          description: "The full URL to the base path of the API including host and protocol"
           example: "http://localhost:10000/entity"
         credentials:
           $ref: "#/components/schemas/ApiCredentials"
@@ -468,6 +440,11 @@ components:
           example:
             mykey: myvalue
             somekey: somevalue
+      required:
+        - event-type
+        - event-type-version
+        - event-time
+        - data
     Documentation:
       type: "object"
       description: "Documentation of the Application"
@@ -539,10 +516,10 @@ components:
           example: "http://localhost:10000/entity/authorizationserver/oauth/token"
         clientId:
           type: "string"
-          example : "*********"
+          example: "*********"
         clientSecret:
           type: "string"
-          example : "*********"
+          example: "*********"
       required:
         - url
         - clientId
@@ -574,7 +551,7 @@ components:
             provider:
               type: "string"
               description: provider of the api
-              example: "SAP-Hybris"
+              example: "Texas Education Board"
             name:
               type: "string"
               description: name of the api
@@ -582,7 +559,7 @@ components:
             description:
               type: "string"
               description: description of the api
-              example: "schools Webservices"
+              example: "API to manage schools in Texas"
             labels:
               type: "object"
               example:

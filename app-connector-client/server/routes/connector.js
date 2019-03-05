@@ -72,26 +72,26 @@ function callCSRUrl(csrResponse) {
 }
 
 function disconnect(req, res) {
-    var deletedFileCount = 0
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
-        deletedFileCount++
+    try {
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
+        }
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
+        }
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
+        }
+        CONFIG.URLs = {
+            metadataUrl: "",
+            eventsUrl: "",
+            certificatesUrl: ""
+        }
+    } catch (error) { //only triggger if there is an error with unlinkSync
+        res.status(400).send({ error: "There was an internal error while deleting the files." })
+        return //exit function
     }
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
-        deletedFileCount++
-    }
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
-        deletedFileCount++
-    }
-    CONFIG.URLs = {
-        metadataUrl: "",
-        eventsUrl: "",
-        certificatesUrl: ""
-    }
-
-    deletedFileCount == 3 ? res.status(204).send() : res.status(400).send({ error: "Not all files were deleted. Are you sure you were connected ?" })
+    res.status(204).send() //means no error
 }
 
 function info(req, res) {
