@@ -23,7 +23,7 @@
     "node-forge": "^0.8.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
     "check_api": "^1.2.2",
     "json-schema-ref-parser": "^6.1.0",
     "json-to-pretty-yaml": "^1.2.2",
