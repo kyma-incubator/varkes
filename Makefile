@@ -6,6 +6,9 @@ ci-pr: resolve validate
 .PHONY: ci-master
 ci-master: resolve validate
 
+.PHONY: ci-release
+ci-release: npm-publish
+
 resolve:
 	npx lerna bootstrap --hoist
 
@@ -17,3 +20,7 @@ npm-publish:
 
 clean:
 	lerna clean
+
+version:
+	lerna version
+
