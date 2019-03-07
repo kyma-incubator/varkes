@@ -6,11 +6,11 @@ const path = require("path")
 const request = require("request")
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-const express = require("express")
-
+var express = require("express")
 const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
 const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-
+const openapiSampler = require('openapi-sampler');
+var refParser = require('json-schema-ref-parser');
 module.exports = {
     router: router,
     updateAPI: updateAPI,
@@ -130,7 +130,30 @@ function get(req, res) {
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
-                res.status(httpResponse.statusCode).type("json").send(body)
+                body = JSON.parse(body)
+                body.id = req.params.api //comply with the api spec
+                if (body.events && body.events.spec) {
+                    refParser.dereference(body.events.spec)
+                        .then(function (schema) {
+                            Object.keys(schema.topics).forEach((topicKey) => {
+                                if (schema.topics[topicKey].publish) {
+                                    schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
+                                }
+                                else {
+                                    schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
+                                }
+                            })
+                            body.events.spec = schema;
+                            res.status(httpResponse.statusCode).type("json").send(body)
+                        })
+                        .catch(function (err) {
+                            LOGGER.error("Error while getting API: %s", err)
+                            res.status(500).send({ error: err.message })
+                        });
+                }
+                else {
+                    res.status(httpResponse.statusCode).type("json").send(body)
+                }
             }
         })
     }

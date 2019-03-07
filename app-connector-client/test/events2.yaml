@@ -17,23 +17,17 @@ topics:
         properties:
           customerUid:
             type: string
-            required: 
             example: adam@hybris.com
-            properties: 
             description: Email of a Customer
             title: Customer uid
           storeUid:
             type: string
-            required: 
             example: 4caad296
-            properties: 
             description: Unique id of a Store
             title: StoreUid
           customerId:
             type: string
-            required: 
             example: 0ed118f9474e
-            properties: 
             description: Unique id of a Customer
             title: Customer uid
   password.forgotten.v1:
@@ -48,29 +42,21 @@ topics:
         properties:
           customerUid:
             type: string
-            required: 
             example: adam@hybris.com
-            properties: 
             description: Email of a Customer
             title: Customer uid
           storeUid:
             type: string
-            required: 
             example: 4caad296
-            properties: 
             description: Unique id of a Store
             title: StoreUid
           customerId:
             type: string
-            required: 
             example: 0ed118f9474e
-            properties: 
             description: Unique id of a Customer
             title: Customer uid
           token:
             type: string
-            required: 
             example: 0edED312318f9474e
-            properties: 
             description: Encrypted SecureToken
             title: Encrypted SecureToken

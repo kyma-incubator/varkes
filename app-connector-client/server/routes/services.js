@@ -18,9 +18,10 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
     if (!apisConfig)
         return
 
-    serviceMetadata = defineServiceMetadata()
-    for (i = 0; i < apisConfig.length; i++) {
-        api = apisConfig[i]
+    var serviceMetadata = defineServiceMetadata()
+    var error_message = ""
+    for (var i = 0; i < apisConfig.length; i++) {
+        var api = apisConfig[i]
         try {
             var reg_api;
             if (registeredApis.length > 0)
@@ -34,8 +35,13 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
         } catch (error) {
-            LOGGER.error("Registration of API '%s' failed: %s", api.name, error)
+            var message = "Registration of API " + api.name + "failed: " + JSON.stringify(error)
+            LOGGER.error(message)
+            error_message += "\n" + message
         }
+    }
+    if (error_message != "") {
+        throw new Error(error_message);
     }
     return registeredApis;
 }

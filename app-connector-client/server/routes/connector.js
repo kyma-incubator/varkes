@@ -72,39 +72,39 @@ function callCSRUrl(csrResponse) {
 }
 
 function disconnect(req, res) {
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
+    try {
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
+        }
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
+        }
+        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
+            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
+        }
+        CONFIG.URLs = {
+            metadataUrl: "",
+            eventsUrl: "",
+            certificatesUrl: ""
+        }
+    } catch (error) { //only triggger if there is an error with unlinkSync
+        res.status(500).send({ error: "There was an internal error while deleting the files." })
+        return //exit function
     }
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
-    }
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
-        fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
-    }
-    CONFIG.URLs = {
-        metadataUrl: "",
-        eventsUrl: "",
-        certificatesUrl: ""
-    }
-
-    res.status(204).send()
+    res.status(204).send() //means no error
 }
 
 function info(req, res) {
     info = createInfo(CONFIG.URLs)
-    if (info) {
-        res.status(200).send(info)
-    } else {
-        res.status(400).send({ error: "Not connected to a Kyma cluster" })
-    }
+    info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
 function key(req, res) {
-    res.download(keyFile)
+    fs.existsSync(keyFile) ? res.download(keyFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
 function cert(req, res) {
-    res.download(certFile)
+    fs.existsSync(certFile) ? res.download(certFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
 }
 
 function createInfo(api) {
@@ -114,7 +114,7 @@ function createInfo(api) {
         return {
             domain: domains[1] ? domains[1] : domains[0],
             app: myURL.pathname.split("/")[1],
-            consoleUrl: api.metadataUrl.replace("gateway","console"),
+            consoleUrl: api.metadataUrl.replace("gateway", "console"),
             eventsUrl: api.eventsUrl,
             metadataUrl: api.metadataUrl
         }
@@ -187,10 +187,10 @@ async function connect(req, res) {
         }
 
     } catch (error) {
-        var message = "There is an error while registering.\n Please make sure that your token is unique"
+        message = "There is an error while registering. Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.statusCode = 401
-        res.send(message)
+        res.send({ error: message })
     }
 }
 
