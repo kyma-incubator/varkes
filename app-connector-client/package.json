@@ -24,6 +24,10 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "winston": "^3.2.1"
+    "check_api": "^1.2.2",
+    "json-schema-ref-parser": "^6.1.0",
+    "json-to-pretty-yaml": "^1.2.2",
+    "openapi-sampler": "^1.0.0-beta.14"
   },
   "devDependencies": {
     "mocha": "^6.0.2",

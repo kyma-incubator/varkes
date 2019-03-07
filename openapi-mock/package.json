@@ -1,6 +1,7 @@
 {
   "name": "@varkes/openapi-mock",
   "version": "0.1.0",
+
   "private": false,
   "description": "Open API Mock",
   "keywords": [],

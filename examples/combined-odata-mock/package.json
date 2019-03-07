@@ -16,6 +16,7 @@
     "@varkes/app-connector-client": "^0.1.0",
     "@varkes/odata-mock": "^0.1.0",
     "express": "^4.16.4"
+
   },
   "devDependencies": {
     "mocha": "^6.0.2",
