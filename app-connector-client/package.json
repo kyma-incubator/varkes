@@ -1,6 +1,6 @@
 {
   "name": "@varkes/app-connector-client",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Client for Kyma application connectivity",
   "main": "server/app.js",
   "scripts": {
@@ -15,19 +15,19 @@
   "license": "Apache-2.0",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "check_api": "^1.2.2",
     "commander": "^2.19.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-winston": "^3.1.0",
     "js-yaml": "^3.12.2",
-    "node-forge": "^0.8.1",
-    "request": "^2.88.0",
-    "winston": "^3.2.1",
-    "request-promise": "^4.2.4",
-    "check_api": "^1.2.2",
     "json-schema-ref-parser": "^6.1.0",
     "json-to-pretty-yaml": "^1.2.2",
-    "openapi-sampler": "^1.0.0-beta.14"
+    "node-forge": "^0.8.1",
+    "openapi-sampler": "^1.0.0-beta.14",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "mocha": "^6.0.2",
