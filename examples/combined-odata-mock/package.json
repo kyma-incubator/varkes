@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "combined example of odata and app-connector-client",
   "main": "app.js",
+  "private": true,
   "scripts": {
     "test": "mocha",
     "start": "node . 10000"

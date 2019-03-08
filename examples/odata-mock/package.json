@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Standalone example of varkes odataapi-mock",
   "main": "app.js",
+  "private": true,
   "scripts": {
     "test": "mocha",
     "start": "node . 10000"

@@ -16,11 +16,8 @@ validate:
 	npx lerna run test
 
 npm-publish:
-	npm run publish
+	lerna publish from-package --yes
 
 clean:
 	lerna clean
-
-version:
-	lerna version
 
