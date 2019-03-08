@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server",
     "build": "docker build -t varkes/server .",
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "publishConfig": {
     "access": "public"
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
     "supertest": "^3.4.2"
   },
   "repository": {

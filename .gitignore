@@ -5,3 +5,4 @@ kyma-responses
 deployments
 index.js
 **/generated
+.nyc_output
