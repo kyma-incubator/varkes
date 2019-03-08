@@ -28,24 +28,24 @@ describe('tests controllers', function () {
                 });
             });
             describe('GET apis', function () {
-                it('should return 400', function (done) {
+                it('should return 200', function (done) {
                     request(app)
                         .get('/apis')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400, done)
+                        .expect(200, done)
                 });
             });
             describe('GET connection info', function () {
-                it('should return 400', function (done) {
+                it('should return 200', function (done) {
                     request(app)
                         .get('/connection')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400, done)
+                        .expect(200, done)
                 });
             });
 
             done()
         }).catch(error => done(error))
-    })
+    }).timeout(3000);
 })
