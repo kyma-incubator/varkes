@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const openapiApp = require("varkes-openapi-mock")
+const openapiApp = require("@varkes/openapi-mock")
 const app = require('express')()
 const uuid = require('uuid/v4')
 const bodyParser = require('body-parser');
@@ -54,10 +54,10 @@ function customizeMock(app) {
     })
 
     app.post('/metadata/v1/metadata/services', function (req, res, next) {
-        if(req.body)
+        if (req.body)
             req.body.id = uuid();
 
         next();
     })
-    
+
 }

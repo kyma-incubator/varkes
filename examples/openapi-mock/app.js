@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const openapiApp = require("varkes-openapi-mock")
+const openapiApp = require("@varkes/openapi-mock")
 const app = require('express')()
 
 var runAsync = async () => {

@@ -6,7 +6,7 @@ const request = require('supertest')
 const express = require('express')
 
 describe('test app', function () {
-    it('should work', function (done,fail) {
+    it('should work', function (done, fail) {
         mock('./test/varkes_config.json').then(function (mock) {
             var app = express()
             app.use(mock)
@@ -49,5 +49,5 @@ describe('test app', function () {
 
             done()
         }).catch(error => done(error))
-    });
+    }).timeout(50000);
 });

@@ -1,6 +1,6 @@
 {
-  "name": "varkes-odata-mock",
-  "version": "0.3.10",
+  "name": "@varkes/odata-mock",
+  "version": "0.0.0",
   "main": "server/app.js",
   "engines": {
     "node": ">=4"
@@ -8,6 +8,9 @@
   "scripts": {
     "start": "node server/server",
     "test": "mocha"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

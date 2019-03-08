@@ -1,12 +1,15 @@
 {
-  "name": "varkes-openapi-mock",
-  "version": "0.3.18",
+  "name": "@varkes/openapi-mock",
+  "version": "0.0.0",
   "private": false,
   "description": "Open API Mock",
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
   "main": "server/app.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "api-spec-converter": "^2.7.31",
     "body-parser": "^1.18.3",
