@@ -1,5 +1,5 @@
 <p align="center">
- <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo_medium.png" width="235">
 </p>
 
 # OData Mock
