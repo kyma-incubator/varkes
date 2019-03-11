@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+</p>
+
 # odata-mock example
 
 This example illustrate how to use the `varkes-odata-mock` standalone.

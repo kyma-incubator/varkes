@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+</p>
+
 # Varkes
 [![Build status](https://status.build.kyma-project.io/badge.svg?jobs=post-master-varkes)](https://status.build.kyma-project.io/?repo=kyma-incubator%2Fvarkes&job=post-master-varkes)
 

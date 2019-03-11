@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+</p>
+
 # OData Mock
 [![npm version](https://badge.fury.io/js/varkes-odata-mock.svg)](https://badge.fury.io/js/varkes-odata-mock)
 
