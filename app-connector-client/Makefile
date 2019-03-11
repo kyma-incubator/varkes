@@ -1,13 +1,5 @@
 APP_NAME = varkes-app-connector-client
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
-TAG = $(DOCKER_TAG)
-
-.PHONY: ci-pr
-ci-pr: resolve docker-build docker-push
-
-.PHONY: ci-master
-ci-master: resolve docker-build docker-push npm-publish
-
 resolve:
 	npm install
 
@@ -18,12 +10,11 @@ docker-build:
 	docker build -t $(APP_NAME):latest .
 
 docker-push:
-	docker tag $(APP_NAME) $(IMG):latest
-	docker push $(IMG):latest
-
-npm-publish:
-	npm version "patch" --git-tag-version=false
-	npm publish
+	make docker-build
+	#DOCKER_TAG comes as parameter from outside -> make docker-push DOCKER_TAG=master
+	echo $(DOCKERT_TAG)
+	docker tag $(APP_NAME) $(IMG):$(DOCKER_TAG)
+	docker push $(IMG):$(DOCKER_TAG)
 
 clean:
 	rm -rf ./node_modules ./logs
