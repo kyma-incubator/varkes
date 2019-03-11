@@ -176,7 +176,6 @@ async function connect(req, res) {
             await events.createEventsFromConfig(req.query.localKyma, varkesConfig.events, registeredApis);
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
-
         info = createInfo(data)
         LOGGER.info("Connected to %s", info.domain)
 
@@ -187,10 +186,9 @@ async function connect(req, res) {
         }
 
     } catch (error) {
-        message = "There is an error while registering. Please make sure that your token is unique"
+        var message = "There is an error while registering. Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
-        res.statusCode = 401
-        res.send({ error: message })
+        res.status(401).send({ error: message })
     }
 }
 
