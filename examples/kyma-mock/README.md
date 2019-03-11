@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+</p>
+
 # kyma-mock example
 
 This example is mocking the Kyma application

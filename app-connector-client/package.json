@@ -5,8 +5,8 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node server/server",
-    "build": "docker build -t varkes/server .",
-    "test": "nyc mocha"
+    "start:dev": "export DEBUG=true && node server/server test/varkes_config.json",
+    "test": "mocha"
   },
   "publishConfig": {
     "access": "public"

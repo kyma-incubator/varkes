@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logo.svg" width="235">
+</p>
+
 # Varkes
 [![Build status](https://status.build.kyma-project.io/badge.svg?jobs=post-master-varkes)](https://status.build.kyma-project.io/?repo=kyma-incubator%2Fvarkes&job=post-master-varkes)
 
@@ -12,13 +16,13 @@ Mocks REST calls given an OpenAPI specification. [openapi-mock/README.md](openap
 Mocks rest calls given an OData specification [odata-mock/README.md](odata-mock/README.md).
 
 ## Developing
-This project is maintained by Lerna. To start developing , clone this repo and run `lerna bootstrap --hoist` to install dependencies and link local dependencies.
+This project is maintained by Lerna. To start developing, clone this repo and run `lerna bootstrap --hoist` to install dependencies and link local dependencies.
 
 > If you don't have lerna, you can install it with `npm install -g lerna`
 
 After that step, you can make your changes and commit freely. There is no need to update the package versions in dependent subprojects.
 
-To increase version number , run `lerna version --no-git-tag-version`. It asks user the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the package.json of subprojects.
+To increase version number, run `lerna version --no-git-tag-version`. It asks user the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the `package.json` of subprojects.
 
 To see how CI operates on Lerna, check the makefile in the root folder.
 
