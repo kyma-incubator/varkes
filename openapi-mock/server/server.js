@@ -4,7 +4,7 @@
 const openapiApp = require("./app")
 const app = require('express')()
 const LOGGER = require("./logger").logger
-var configPath //= "test/varkes_config.json"
+var configPath
 
 var runAsync = async () => {
 

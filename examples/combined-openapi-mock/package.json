@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "test": "mocha",
+    "start:dev": "export DEBUG=true && node . 10000",
     "start": "node . 10000"
   },
   "publishConfig": {
