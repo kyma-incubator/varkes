@@ -4,14 +4,14 @@
 const request = require('supertest');
 const exampleApp = require("./app.js")
 
-describe('tests odata controllers', function () {
+describe('testing stress mock', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
 
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/courses')
+                        .get('/api302/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -20,7 +20,7 @@ describe('tests odata controllers', function () {
             describe('GET schools', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api2/schools')
+                        .get('/api3/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('tests odata controllers', function () {
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/console')
+                        .get('/api302/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -37,7 +37,7 @@ describe('tests odata controllers', function () {
             describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/courseMetadata.json')
+                        .get('/api302/courseMetadata.json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
