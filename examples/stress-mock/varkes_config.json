@@ -1800,6 +1800,11 @@
             "metadata": "/courseMetadata",
             "specification": "apis/courses.yaml",
             "oauth": "/coursesOauth/token"
+        },
+        {
+            "name": "services",
+            "specification": "apis/services.xml",
+            "type": "odata"
         }
     ],
     "events": [
