@@ -11,6 +11,11 @@ Mocks REST calls given an OpenAPI specification. [openapi-mock/README.md](openap
 ## Odata Mock
 Mocks rest calls given an OData specification [odata-mock/README.md](odata-mock/README.md).
 
+## Examples
+Examples folder provides mocks written using openapi & odata packages. If you want to use them without cloning the whole repo, please refer to tags in `release` branch. There, you can find the latest version of the dependencies already included in their package.json files. Working on examples in master branch without cloning the whole repo is currently impossible because they use development version numbers in their package.jsons and these are not published to npm registry.
+
+To create docker images of examples, please also refer to `release` branch, where npm installed in docker containers can get the latest version from the registry.
+
 ## Developing
 This project is maintained by Lerna. To start developing, clone this repo and run `lerna bootstrap --hoist` to install dependencies and link local dependencies.
 
@@ -21,5 +26,3 @@ After that step, you can make your changes and commit freely. There is no need t
 To increase version number, run `lerna version --no-git-tag-version`. It asks user the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the `package.json` of subprojects.
 
 To see how CI operates on Lerna, check the makefile in the root folder.
-
-`lerna publish` automatically increases version number before publishing so we are using `npm publish` instead and just use lerna to run that command in projects. To test publishing scheme, you can use [verdaccio](https://github.com/verdaccio/verdaccio) for setting up a private registry.
