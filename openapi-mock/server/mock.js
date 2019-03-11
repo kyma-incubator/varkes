@@ -22,7 +22,6 @@ module.exports = async function (config) {
             createConsole(api, app);
 
             var spec = loadSpec(api)
-            spec.basePath = api.baseurl
             if (spec.openapi) {
                 var jsonSpec = await transformSpec(api)
 
@@ -30,7 +29,7 @@ module.exports = async function (config) {
                 writeSpec(specString, api, i)
                 spec = loadSpec(api)
             }
-
+            spec.basePath = api.baseurl
             await validateSpec(api, 'swagger_2')
 
             createMetadataEndpoint(spec, api, app);
