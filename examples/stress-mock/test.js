@@ -4,14 +4,14 @@
 const request = require('supertest');
 const exampleApp = require("./app.js")
 
-describe('testing stress mock', function () {
+describe('tests stress apis', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
 
             describe('GET courses', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api302/courses')
+                        .get('/api156/courses')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -20,7 +20,7 @@ describe('testing stress mock', function () {
             describe('GET schools', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api3/schools')
+                        .get('/api7/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('testing stress mock', function () {
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api302/console')
+                        .get('/api156/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -37,8 +37,8 @@ describe('testing stress mock', function () {
             describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api302/courseMetadata.json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .get('/api156/courseMetadata')
+                        .expect('Content-Type', 'text/x-yaml; charset=utf-8')
                         .expect(200, done)
                 });
             });
@@ -64,5 +64,5 @@ describe('testing stress mock', function () {
 
             done()
         }).catch(error => done(error))
-    });
+    }).timeout(10000);
 });
