@@ -37,5 +37,5 @@ describe('tests odata controllers', function () {
 
             done()
         }).catch(error => done(error))
-    });
+    }).timeout(5000);
 });
