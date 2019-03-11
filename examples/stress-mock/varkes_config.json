@@ -1,0 +1,1815 @@
+{
+    "name": "Stress-Mock",
+    "apis": [
+        {
+            "baseurl": "/api151",
+            "specification": "apis/schools.yaml",
+            "name": "schools151"
+        },
+        {
+            "baseurl": "/api302",
+            "name": "courses302",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api3",
+            "specification": "apis/schools.yaml",
+            "name": "schools3"
+        },
+        {
+            "baseurl": "/api154",
+            "name": "courses154",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api4",
+            "specification": "apis/schools.yaml",
+            "name": "schools4"
+        },
+        {
+            "baseurl": "/api155",
+            "name": "courses155",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api5",
+            "specification": "apis/schools.yaml",
+            "name": "schools5"
+        },
+        {
+            "baseurl": "/api156",
+            "name": "courses156",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api6",
+            "specification": "apis/schools.yaml",
+            "name": "schools6"
+        },
+        {
+            "baseurl": "/api157",
+            "name": "courses157",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api7",
+            "specification": "apis/schools.yaml",
+            "name": "schools7"
+        },
+        {
+            "baseurl": "/api158",
+            "name": "courses158",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api8",
+            "specification": "apis/schools.yaml",
+            "name": "schools8"
+        },
+        {
+            "baseurl": "/api159",
+            "name": "courses159",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api9",
+            "specification": "apis/schools.yaml",
+            "name": "schools9"
+        },
+        {
+            "baseurl": "/api160",
+            "name": "courses160",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api10",
+            "specification": "apis/schools.yaml",
+            "name": "schools10"
+        },
+        {
+            "baseurl": "/api161",
+            "name": "courses161",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api11",
+            "specification": "apis/schools.yaml",
+            "name": "schools11"
+        },
+        {
+            "baseurl": "/api162",
+            "name": "courses162",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api12",
+            "specification": "apis/schools.yaml",
+            "name": "schools12"
+        },
+        {
+            "baseurl": "/api163",
+            "name": "courses163",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api13",
+            "specification": "apis/schools.yaml",
+            "name": "schools13"
+        },
+        {
+            "baseurl": "/api164",
+            "name": "courses164",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api14",
+            "specification": "apis/schools.yaml",
+            "name": "schools14"
+        },
+        {
+            "baseurl": "/api165",
+            "name": "courses165",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api15",
+            "specification": "apis/schools.yaml",
+            "name": "schools15"
+        },
+        {
+            "baseurl": "/api166",
+            "name": "courses166",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api16",
+            "specification": "apis/schools.yaml",
+            "name": "schools16"
+        },
+        {
+            "baseurl": "/api167",
+            "name": "courses167",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api17",
+            "specification": "apis/schools.yaml",
+            "name": "schools17"
+        },
+        {
+            "baseurl": "/api168",
+            "name": "courses168",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api18",
+            "specification": "apis/schools.yaml",
+            "name": "schools18"
+        },
+        {
+            "baseurl": "/api169",
+            "name": "courses169",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api19",
+            "specification": "apis/schools.yaml",
+            "name": "schools19"
+        },
+        {
+            "baseurl": "/api170",
+            "name": "courses170",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api20",
+            "specification": "apis/schools.yaml",
+            "name": "schools20"
+        },
+        {
+            "baseurl": "/api171",
+            "name": "courses171",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api21",
+            "specification": "apis/schools.yaml",
+            "name": "schools21"
+        },
+        {
+            "baseurl": "/api172",
+            "name": "courses172",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api22",
+            "specification": "apis/schools.yaml",
+            "name": "schools22"
+        },
+        {
+            "baseurl": "/api173",
+            "name": "courses173",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api23",
+            "specification": "apis/schools.yaml",
+            "name": "schools23"
+        },
+        {
+            "baseurl": "/api174",
+            "name": "courses174",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api24",
+            "specification": "apis/schools.yaml",
+            "name": "schools24"
+        },
+        {
+            "baseurl": "/api175",
+            "name": "courses175",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api25",
+            "specification": "apis/schools.yaml",
+            "name": "schools25"
+        },
+        {
+            "baseurl": "/api176",
+            "name": "courses176",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api26",
+            "specification": "apis/schools.yaml",
+            "name": "schools26"
+        },
+        {
+            "baseurl": "/api177",
+            "name": "courses177",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api27",
+            "specification": "apis/schools.yaml",
+            "name": "schools27"
+        },
+        {
+            "baseurl": "/api178",
+            "name": "courses178",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api28",
+            "specification": "apis/schools.yaml",
+            "name": "schools28"
+        },
+        {
+            "baseurl": "/api179",
+            "name": "courses179",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api29",
+            "specification": "apis/schools.yaml",
+            "name": "schools29"
+        },
+        {
+            "baseurl": "/api180",
+            "name": "courses180",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api30",
+            "specification": "apis/schools.yaml",
+            "name": "schools30"
+        },
+        {
+            "baseurl": "/api181",
+            "name": "courses181",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api31",
+            "specification": "apis/schools.yaml",
+            "name": "schools31"
+        },
+        {
+            "baseurl": "/api182",
+            "name": "courses182",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api32",
+            "specification": "apis/schools.yaml",
+            "name": "schools32"
+        },
+        {
+            "baseurl": "/api183",
+            "name": "courses183",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api33",
+            "specification": "apis/schools.yaml",
+            "name": "schools33"
+        },
+        {
+            "baseurl": "/api184",
+            "name": "courses184",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api34",
+            "specification": "apis/schools.yaml",
+            "name": "schools34"
+        },
+        {
+            "baseurl": "/api185",
+            "name": "courses185",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api35",
+            "specification": "apis/schools.yaml",
+            "name": "schools35"
+        },
+        {
+            "baseurl": "/api186",
+            "name": "courses186",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api36",
+            "specification": "apis/schools.yaml",
+            "name": "schools36"
+        },
+        {
+            "baseurl": "/api187",
+            "name": "courses187",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api37",
+            "specification": "apis/schools.yaml",
+            "name": "schools37"
+        },
+        {
+            "baseurl": "/api188",
+            "name": "courses188",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api38",
+            "specification": "apis/schools.yaml",
+            "name": "schools38"
+        },
+        {
+            "baseurl": "/api189",
+            "name": "courses189",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api39",
+            "specification": "apis/schools.yaml",
+            "name": "schools39"
+        },
+        {
+            "baseurl": "/api190",
+            "name": "courses190",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api40",
+            "specification": "apis/schools.yaml",
+            "name": "schools40"
+        },
+        {
+            "baseurl": "/api191",
+            "name": "courses191",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api41",
+            "specification": "apis/schools.yaml",
+            "name": "schools41"
+        },
+        {
+            "baseurl": "/api192",
+            "name": "courses192",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api42",
+            "specification": "apis/schools.yaml",
+            "name": "schools42"
+        },
+        {
+            "baseurl": "/api193",
+            "name": "courses193",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api43",
+            "specification": "apis/schools.yaml",
+            "name": "schools43"
+        },
+        {
+            "baseurl": "/api194",
+            "name": "courses194",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api44",
+            "specification": "apis/schools.yaml",
+            "name": "schools44"
+        },
+        {
+            "baseurl": "/api195",
+            "name": "courses195",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api45",
+            "specification": "apis/schools.yaml",
+            "name": "schools45"
+        },
+        {
+            "baseurl": "/api196",
+            "name": "courses196",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api46",
+            "specification": "apis/schools.yaml",
+            "name": "schools46"
+        },
+        {
+            "baseurl": "/api197",
+            "name": "courses197",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api47",
+            "specification": "apis/schools.yaml",
+            "name": "schools47"
+        },
+        {
+            "baseurl": "/api198",
+            "name": "courses198",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api48",
+            "specification": "apis/schools.yaml",
+            "name": "schools48"
+        },
+        {
+            "baseurl": "/api199",
+            "name": "courses199",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api49",
+            "specification": "apis/schools.yaml",
+            "name": "schools49"
+        },
+        {
+            "baseurl": "/api200",
+            "name": "courses200",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api50",
+            "specification": "apis/schools.yaml",
+            "name": "schools50"
+        },
+        {
+            "baseurl": "/api201",
+            "name": "courses201",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api51",
+            "specification": "apis/schools.yaml",
+            "name": "schools51"
+        },
+        {
+            "baseurl": "/api202",
+            "name": "courses202",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api52",
+            "specification": "apis/schools.yaml",
+            "name": "schools52"
+        },
+        {
+            "baseurl": "/api203",
+            "name": "courses203",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api53",
+            "specification": "apis/schools.yaml",
+            "name": "schools53"
+        },
+        {
+            "baseurl": "/api204",
+            "name": "courses204",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api54",
+            "specification": "apis/schools.yaml",
+            "name": "schools54"
+        },
+        {
+            "baseurl": "/api205",
+            "name": "courses205",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api55",
+            "specification": "apis/schools.yaml",
+            "name": "schools55"
+        },
+        {
+            "baseurl": "/api206",
+            "name": "courses206",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api56",
+            "specification": "apis/schools.yaml",
+            "name": "schools56"
+        },
+        {
+            "baseurl": "/api207",
+            "name": "courses207",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api57",
+            "specification": "apis/schools.yaml",
+            "name": "schools57"
+        },
+        {
+            "baseurl": "/api208",
+            "name": "courses208",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api58",
+            "specification": "apis/schools.yaml",
+            "name": "schools58"
+        },
+        {
+            "baseurl": "/api209",
+            "name": "courses209",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api59",
+            "specification": "apis/schools.yaml",
+            "name": "schools59"
+        },
+        {
+            "baseurl": "/api210",
+            "name": "courses210",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api60",
+            "specification": "apis/schools.yaml",
+            "name": "schools60"
+        },
+        {
+            "baseurl": "/api211",
+            "name": "courses211",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api61",
+            "specification": "apis/schools.yaml",
+            "name": "schools61"
+        },
+        {
+            "baseurl": "/api212",
+            "name": "courses212",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api62",
+            "specification": "apis/schools.yaml",
+            "name": "schools62"
+        },
+        {
+            "baseurl": "/api213",
+            "name": "courses213",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api63",
+            "specification": "apis/schools.yaml",
+            "name": "schools63"
+        },
+        {
+            "baseurl": "/api214",
+            "name": "courses214",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api64",
+            "specification": "apis/schools.yaml",
+            "name": "schools64"
+        },
+        {
+            "baseurl": "/api215",
+            "name": "courses215",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api65",
+            "specification": "apis/schools.yaml",
+            "name": "schools65"
+        },
+        {
+            "baseurl": "/api216",
+            "name": "courses216",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api66",
+            "specification": "apis/schools.yaml",
+            "name": "schools66"
+        },
+        {
+            "baseurl": "/api217",
+            "name": "courses217",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api67",
+            "specification": "apis/schools.yaml",
+            "name": "schools67"
+        },
+        {
+            "baseurl": "/api218",
+            "name": "courses218",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api68",
+            "specification": "apis/schools.yaml",
+            "name": "schools68"
+        },
+        {
+            "baseurl": "/api219",
+            "name": "courses219",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api69",
+            "specification": "apis/schools.yaml",
+            "name": "schools69"
+        },
+        {
+            "baseurl": "/api220",
+            "name": "courses220",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api70",
+            "specification": "apis/schools.yaml",
+            "name": "schools70"
+        },
+        {
+            "baseurl": "/api221",
+            "name": "courses221",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api71",
+            "specification": "apis/schools.yaml",
+            "name": "schools71"
+        },
+        {
+            "baseurl": "/api222",
+            "name": "courses222",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api72",
+            "specification": "apis/schools.yaml",
+            "name": "schools72"
+        },
+        {
+            "baseurl": "/api223",
+            "name": "courses223",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api73",
+            "specification": "apis/schools.yaml",
+            "name": "schools73"
+        },
+        {
+            "baseurl": "/api224",
+            "name": "courses224",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api74",
+            "specification": "apis/schools.yaml",
+            "name": "schools74"
+        },
+        {
+            "baseurl": "/api225",
+            "name": "courses225",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api75",
+            "specification": "apis/schools.yaml",
+            "name": "schools75"
+        },
+        {
+            "baseurl": "/api226",
+            "name": "courses226",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api76",
+            "specification": "apis/schools.yaml",
+            "name": "schools76"
+        },
+        {
+            "baseurl": "/api227",
+            "name": "courses227",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api77",
+            "specification": "apis/schools.yaml",
+            "name": "schools77"
+        },
+        {
+            "baseurl": "/api228",
+            "name": "courses228",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api78",
+            "specification": "apis/schools.yaml",
+            "name": "schools78"
+        },
+        {
+            "baseurl": "/api229",
+            "name": "courses229",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api79",
+            "specification": "apis/schools.yaml",
+            "name": "schools79"
+        },
+        {
+            "baseurl": "/api230",
+            "name": "courses230",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api80",
+            "specification": "apis/schools.yaml",
+            "name": "schools80"
+        },
+        {
+            "baseurl": "/api231",
+            "name": "courses231",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api81",
+            "specification": "apis/schools.yaml",
+            "name": "schools81"
+        },
+        {
+            "baseurl": "/api232",
+            "name": "courses232",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api82",
+            "specification": "apis/schools.yaml",
+            "name": "schools82"
+        },
+        {
+            "baseurl": "/api233",
+            "name": "courses233",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api83",
+            "specification": "apis/schools.yaml",
+            "name": "schools83"
+        },
+        {
+            "baseurl": "/api234",
+            "name": "courses234",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api84",
+            "specification": "apis/schools.yaml",
+            "name": "schools84"
+        },
+        {
+            "baseurl": "/api235",
+            "name": "courses235",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api85",
+            "specification": "apis/schools.yaml",
+            "name": "schools85"
+        },
+        {
+            "baseurl": "/api236",
+            "name": "courses236",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api86",
+            "specification": "apis/schools.yaml",
+            "name": "schools86"
+        },
+        {
+            "baseurl": "/api237",
+            "name": "courses237",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api87",
+            "specification": "apis/schools.yaml",
+            "name": "schools87"
+        },
+        {
+            "baseurl": "/api238",
+            "name": "courses238",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api88",
+            "specification": "apis/schools.yaml",
+            "name": "schools88"
+        },
+        {
+            "baseurl": "/api239",
+            "name": "courses239",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api89",
+            "specification": "apis/schools.yaml",
+            "name": "schools89"
+        },
+        {
+            "baseurl": "/api240",
+            "name": "courses240",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api90",
+            "specification": "apis/schools.yaml",
+            "name": "schools90"
+        },
+        {
+            "baseurl": "/api241",
+            "name": "courses241",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api91",
+            "specification": "apis/schools.yaml",
+            "name": "schools91"
+        },
+        {
+            "baseurl": "/api242",
+            "name": "courses242",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api92",
+            "specification": "apis/schools.yaml",
+            "name": "schools92"
+        },
+        {
+            "baseurl": "/api243",
+            "name": "courses243",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api93",
+            "specification": "apis/schools.yaml",
+            "name": "schools93"
+        },
+        {
+            "baseurl": "/api244",
+            "name": "courses244",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api94",
+            "specification": "apis/schools.yaml",
+            "name": "schools94"
+        },
+        {
+            "baseurl": "/api245",
+            "name": "courses245",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api95",
+            "specification": "apis/schools.yaml",
+            "name": "schools95"
+        },
+        {
+            "baseurl": "/api246",
+            "name": "courses246",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api96",
+            "specification": "apis/schools.yaml",
+            "name": "schools96"
+        },
+        {
+            "baseurl": "/api247",
+            "name": "courses247",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api97",
+            "specification": "apis/schools.yaml",
+            "name": "schools97"
+        },
+        {
+            "baseurl": "/api248",
+            "name": "courses248",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api98",
+            "specification": "apis/schools.yaml",
+            "name": "schools98"
+        },
+        {
+            "baseurl": "/api249",
+            "name": "courses249",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api99",
+            "specification": "apis/schools.yaml",
+            "name": "schools99"
+        },
+        {
+            "baseurl": "/api250",
+            "name": "courses250",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api100",
+            "specification": "apis/schools.yaml",
+            "name": "schools100"
+        },
+        {
+            "baseurl": "/api251",
+            "name": "courses251",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api101",
+            "specification": "apis/schools.yaml",
+            "name": "schools101"
+        },
+        {
+            "baseurl": "/api252",
+            "name": "courses252",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api102",
+            "specification": "apis/schools.yaml",
+            "name": "schools102"
+        },
+        {
+            "baseurl": "/api253",
+            "name": "courses253",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api103",
+            "specification": "apis/schools.yaml",
+            "name": "schools103"
+        },
+        {
+            "baseurl": "/api254",
+            "name": "courses254",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api104",
+            "specification": "apis/schools.yaml",
+            "name": "schools104"
+        },
+        {
+            "baseurl": "/api255",
+            "name": "courses255",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api105",
+            "specification": "apis/schools.yaml",
+            "name": "schools105"
+        },
+        {
+            "baseurl": "/api256",
+            "name": "courses256",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api106",
+            "specification": "apis/schools.yaml",
+            "name": "schools106"
+        },
+        {
+            "baseurl": "/api257",
+            "name": "courses257",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api107",
+            "specification": "apis/schools.yaml",
+            "name": "schools107"
+        },
+        {
+            "baseurl": "/api258",
+            "name": "courses258",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api108",
+            "specification": "apis/schools.yaml",
+            "name": "schools108"
+        },
+        {
+            "baseurl": "/api259",
+            "name": "courses259",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api109",
+            "specification": "apis/schools.yaml",
+            "name": "schools109"
+        },
+        {
+            "baseurl": "/api260",
+            "name": "courses260",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api110",
+            "specification": "apis/schools.yaml",
+            "name": "schools110"
+        },
+        {
+            "baseurl": "/api261",
+            "name": "courses261",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api111",
+            "specification": "apis/schools.yaml",
+            "name": "schools111"
+        },
+        {
+            "baseurl": "/api262",
+            "name": "courses262",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api112",
+            "specification": "apis/schools.yaml",
+            "name": "schools112"
+        },
+        {
+            "baseurl": "/api263",
+            "name": "courses263",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api113",
+            "specification": "apis/schools.yaml",
+            "name": "schools113"
+        },
+        {
+            "baseurl": "/api264",
+            "name": "courses264",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api114",
+            "specification": "apis/schools.yaml",
+            "name": "schools114"
+        },
+        {
+            "baseurl": "/api265",
+            "name": "courses265",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api115",
+            "specification": "apis/schools.yaml",
+            "name": "schools115"
+        },
+        {
+            "baseurl": "/api266",
+            "name": "courses266",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api116",
+            "specification": "apis/schools.yaml",
+            "name": "schools116"
+        },
+        {
+            "baseurl": "/api267",
+            "name": "courses267",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api117",
+            "specification": "apis/schools.yaml",
+            "name": "schools117"
+        },
+        {
+            "baseurl": "/api268",
+            "name": "courses268",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api118",
+            "specification": "apis/schools.yaml",
+            "name": "schools118"
+        },
+        {
+            "baseurl": "/api269",
+            "name": "courses269",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api119",
+            "specification": "apis/schools.yaml",
+            "name": "schools119"
+        },
+        {
+            "baseurl": "/api270",
+            "name": "courses270",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api120",
+            "specification": "apis/schools.yaml",
+            "name": "schools120"
+        },
+        {
+            "baseurl": "/api271",
+            "name": "courses271",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api121",
+            "specification": "apis/schools.yaml",
+            "name": "schools121"
+        },
+        {
+            "baseurl": "/api272",
+            "name": "courses272",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api122",
+            "specification": "apis/schools.yaml",
+            "name": "schools122"
+        },
+        {
+            "baseurl": "/api273",
+            "name": "courses273",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api123",
+            "specification": "apis/schools.yaml",
+            "name": "schools123"
+        },
+        {
+            "baseurl": "/api274",
+            "name": "courses274",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api124",
+            "specification": "apis/schools.yaml",
+            "name": "schools124"
+        },
+        {
+            "baseurl": "/api275",
+            "name": "courses275",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api125",
+            "specification": "apis/schools.yaml",
+            "name": "schools125"
+        },
+        {
+            "baseurl": "/api276",
+            "name": "courses276",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api126",
+            "specification": "apis/schools.yaml",
+            "name": "schools126"
+        },
+        {
+            "baseurl": "/api277",
+            "name": "courses277",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api127",
+            "specification": "apis/schools.yaml",
+            "name": "schools127"
+        },
+        {
+            "baseurl": "/api278",
+            "name": "courses278",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api128",
+            "specification": "apis/schools.yaml",
+            "name": "schools128"
+        },
+        {
+            "baseurl": "/api279",
+            "name": "courses279",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api129",
+            "specification": "apis/schools.yaml",
+            "name": "schools129"
+        },
+        {
+            "baseurl": "/api280",
+            "name": "courses280",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api130",
+            "specification": "apis/schools.yaml",
+            "name": "schools130"
+        },
+        {
+            "baseurl": "/api281",
+            "name": "courses281",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api131",
+            "specification": "apis/schools.yaml",
+            "name": "schools131"
+        },
+        {
+            "baseurl": "/api282",
+            "name": "courses282",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api132",
+            "specification": "apis/schools.yaml",
+            "name": "schools132"
+        },
+        {
+            "baseurl": "/api283",
+            "name": "courses283",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api133",
+            "specification": "apis/schools.yaml",
+            "name": "schools133"
+        },
+        {
+            "baseurl": "/api284",
+            "name": "courses284",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api134",
+            "specification": "apis/schools.yaml",
+            "name": "schools134"
+        },
+        {
+            "baseurl": "/api285",
+            "name": "courses285",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api135",
+            "specification": "apis/schools.yaml",
+            "name": "schools135"
+        },
+        {
+            "baseurl": "/api286",
+            "name": "courses286",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api136",
+            "specification": "apis/schools.yaml",
+            "name": "schools136"
+        },
+        {
+            "baseurl": "/api287",
+            "name": "courses287",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api137",
+            "specification": "apis/schools.yaml",
+            "name": "schools137"
+        },
+        {
+            "baseurl": "/api288",
+            "name": "courses288",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api138",
+            "specification": "apis/schools.yaml",
+            "name": "schools138"
+        },
+        {
+            "baseurl": "/api289",
+            "name": "courses289",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api139",
+            "specification": "apis/schools.yaml",
+            "name": "schools139"
+        },
+        {
+            "baseurl": "/api290",
+            "name": "courses290",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api140",
+            "specification": "apis/schools.yaml",
+            "name": "schools140"
+        },
+        {
+            "baseurl": "/api291",
+            "name": "courses291",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api141",
+            "specification": "apis/schools.yaml",
+            "name": "schools141"
+        },
+        {
+            "baseurl": "/api292",
+            "name": "courses292",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api142",
+            "specification": "apis/schools.yaml",
+            "name": "schools142"
+        },
+        {
+            "baseurl": "/api293",
+            "name": "courses293",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api143",
+            "specification": "apis/schools.yaml",
+            "name": "schools143"
+        },
+        {
+            "baseurl": "/api294",
+            "name": "courses294",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api144",
+            "specification": "apis/schools.yaml",
+            "name": "schools144"
+        },
+        {
+            "baseurl": "/api295",
+            "name": "courses295",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api145",
+            "specification": "apis/schools.yaml",
+            "name": "schools145"
+        },
+        {
+            "baseurl": "/api296",
+            "name": "courses296",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api146",
+            "specification": "apis/schools.yaml",
+            "name": "schools146"
+        },
+        {
+            "baseurl": "/api297",
+            "name": "courses297",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api147",
+            "specification": "apis/schools.yaml",
+            "name": "schools147"
+        },
+        {
+            "baseurl": "/api298",
+            "name": "courses298",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api148",
+            "specification": "apis/schools.yaml",
+            "name": "schools148"
+        },
+        {
+            "baseurl": "/api299",
+            "name": "courses299",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api149",
+            "specification": "apis/schools.yaml",
+            "name": "schools149"
+        },
+        {
+            "baseurl": "/api300",
+            "name": "courses300",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api150",
+            "specification": "apis/schools.yaml",
+            "name": "schools150"
+        },
+        {
+            "baseurl": "/api301",
+            "name": "courses301",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        },
+        {
+            "baseurl": "/api152",
+            "specification": "apis/schools.yaml",
+            "name": "schools152"
+        },
+        {
+            "baseurl": "/api303",
+            "name": "courses303",
+            "metadata": "/courseMetadata",
+            "specification": "apis/courses.yaml",
+            "oauth": "/coursesOauth/token"
+        }
+    ],
+    "events": [
+        {
+            "specification": "apis/events.json",
+            "name": "events",
+            "description": "All Events v1",
+            "labels": {
+                "label1": "value1"
+            }
+        }
+    ]
+}

@@ -1,0 +1,99 @@
+swagger: "2.0"
+info:
+  description: "Schools Webservices"
+  version: "2.0"
+  title: "Schools Webservices"
+basePath: "/api2"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+  - "application/xml"
+paths:
+  /schools:
+    get:
+      summary: "Get a list of available schools."
+      description: "Lists all available schools."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SchoolsDTO"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      summary: "insert school"
+      description: "Given a school in body."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "school object"
+          required: true
+          schema:
+            $ref: "#/definitions/SchoolDTO"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SchoolDTO"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /schools/{id}:
+    get:
+      summary: "Get a list of available schools."
+      description: "Lists supported payment card types."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "school identifier"
+          required: true
+          type: "string"
+          default: "1"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SchoolDTO"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+definitions:
+  SchoolsDTO:
+    type: "array"
+    items:
+      $ref: "#/definitions/SchoolDTO"
+  SchoolDTO:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      name:
+        type: "string"
