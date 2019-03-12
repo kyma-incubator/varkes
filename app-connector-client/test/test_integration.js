@@ -16,6 +16,9 @@ describe("should work", () => {
     var kymaServer
     var server
     before(async () => { //* start kyma mock before tests
+
+        await deleteKeysFile()
+
         await kyma.then(app => {
             kymaServer = app.listen(port)
         })
@@ -36,6 +39,7 @@ describe("should work", () => {
 
     after(() => { //* stop kyma mock after tests
         kymaServer.close()
+        deleteKeysFile()
     })
 
     describe('basic routes', function () {
@@ -168,3 +172,18 @@ function createServiceAndReturnId(server) {
             })
     })
 }
+
+function deleteKeysFile() {
+    const path = "./keys"
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
