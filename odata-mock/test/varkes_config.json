@@ -4,7 +4,7 @@
         {
             "name": "services",
             "metadata": "/services/metadata",
-            "specification": "test/services.xml"
+            "specification": "services.xml"
         }
     ]
 }

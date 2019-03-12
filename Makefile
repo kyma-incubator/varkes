@@ -13,7 +13,6 @@ resolve:
 	npx lerna bootstrap --hoist
 
 validate:
-	# a workaround to run kyma-mock to test app-connector
 	npx lerna run test
 
 npm-publish:
