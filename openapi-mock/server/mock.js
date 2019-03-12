@@ -29,7 +29,9 @@ module.exports = async function (config) {
                 writeSpec(specString, api, i)
                 spec = loadSpec(api)
             }
-            spec.basePath = api.baseurl
+            if (api.baseurl) {
+                spec.basePath = api.baseurl
+            }
             await validateSpec(api, 'swagger_2')
 
             createMetadataEndpoint(spec, api, app);
