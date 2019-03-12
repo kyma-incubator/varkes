@@ -8,10 +8,10 @@ describe('tests stress apis', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
 
-            describe('GET courses', function () {
+            describe('GET Advertisements via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api156/courses')
+                        .get('/odata/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('tests stress apis', function () {
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api156/console')
+                        .get('/api7/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -37,7 +37,7 @@ describe('tests stress apis', function () {
             describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api156/courseMetadata')
+                        .get('/api1/metadata')
                         .expect('Content-Type', 'text/x-yaml; charset=utf-8')
                         .expect(200, done)
                 });
