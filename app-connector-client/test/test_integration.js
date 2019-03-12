@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+'use strict'
 
 var request = require('supertest');
 const mock = require('../server/app')
@@ -6,16 +8,20 @@ const fs = require("fs")
 const path = require("path")
 const kyma = require("@varkes/example-kyma-mock")
 const serviceMetadata = path.resolve("test/service-metadata.json")
-require("../server/keys").generatePrivateKey()
 
-const port = 10005 //! listen in different port
+const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
 
 describe("should work", () => {
     var kymaServer
-    before(() => { //* start kyma mock before tests
+    var server
+    before(async () => { //* start kyma mock before tests
         kyma.then(app => {
             kymaServer = app.listen(port)
+        })
+        await mock("./test/varkes_config.json").then((mock) => {
+            server = express()
+            server.use(mock)
         })
     })
     after(() => { //* stop kyma mock after tests
@@ -23,153 +29,143 @@ describe("should work", () => {
     })
 
     describe('basic routes', function () {
-        before(async () => {
-            await mock("./test/varkes_config.json").then((mock) => {
-                server = express()
-                server.use(mock)
-
-            })
-        })
-        it('responds to /', function testSlash(done) {
-            request(server)
+        it('responds to /', function testSlash() {
+            return request(server)
                 .get('/')
-                .expect(200, done);
+                .expect(200);
         });
 
-        it("shows meteadata", done => {
-            request(server)
+        it("shows meteadata", () => {
+            return request(server)
                 .get("/metadata")
-                .expect(200, done)
+                .expect(200)
         })
-        it('404 everything else', function testPath(done) {
-            request(server)
+        it('404 everything else', function testPath() {
+            return request(server)
                 .get('/foo/bar')
-                .expect(404, done);
+                .expect(404);
         });
     });
 
     describe("Connect to kyma", function () {
-        it("kyma can create certs from token", done => {
-            confURL = tokenURL
-            request(server)
+        it("kyma can create certs from token", () => {
+            return request(server)
                 .post("/connection").send(
 
-                    { "url": confURL }
+                    { "url": tokenURL }
 
                 ).set('Accept', 'application/json').
-                expect(200).end((err, res) => {
-
-                    !err ? done() : {}
-                })
-        }).timeout(6000)
+                expect(200)
+        })
     })
 
     describe("api endpoints", () => {
-        var serviceId;
-
-        it("creates a new service", (done) => {
-            request(server)
-                .post("/apis/")
-                .send(
-                    JSON.parse(fs.readFileSync(serviceMetadata))
-                ).set("Accept", "application/json")
-                .expect(200).end((err, res) => {
-                    serviceId = res.body.id
-                    !err ? done() : console.log(res.body)
-
-                    it("shows a specific service", (done) => {
-                        request(server)
-                            .get(`/apis/${serviceId}`)
-                            .expect(200).end(
-                                (err, response) => {
-                                    !err ? done() : console.log(response)
-                                }
-                            )
-                    })
-                })
+        it("creates a new service", () => {
+            return createServiceAndReturnId(server)
         })
 
-
-
-        it("handles error when service doesn't exists", (done) => {
-            request(server)
-                .get("/apis/abc-def")
-                .expect(200).end(
-                    (err, response) => {
-                        response.body.error == 404 ? {} : done()
-                    }
-                )
-        })
-
-
-        it("updates a specific service", done => {
-            request(server)
+        it("deletes a service", async () => {
+            const serviceId = await createServiceAndReturnId(server)
+            return request(server)
                 .put(`/apis/${serviceId}`).
                 send(
                     JSON.parse(fs.readFileSync(serviceMetadata))
-                ).set("Accept", "application/json").expect(200, done)
-        })
-        after(() => {
-            it("deletes a specific service", done => {
-                request(server)
-                    .delete(`/apis/${serviceId}`)
-                    .expect(200).end((err, res) => {
-                        !err ? done() : {}
-                    })
-            }).timeout(5000)
+                ).set("Accept", "application/json")
+                .expect(200)
+
         })
 
+        it("shows a specific service", async () => {
+            const serviceId = await createServiceAndReturnId(server)
+            return request(server)
+                .get(`/apis/${serviceId}`)
+                .set("Accept", "application/json")
+                .expect(200)
+        })
+
+        it("updates a specific service", async () => {
+            const serviceId = await createServiceAndReturnId(server)
+            return request(server)
+                .put(`/apis/${serviceId}`).
+                send(
+                    JSON.parse(fs.readFileSync(serviceMetadata))
+                ).set("Accept", "application/json")
+                .expect(200)
+        })
     })
 
+
+    it("handles error when service doesn't exists", () => {
+        return request(server)
+            .get("/apis/abc-def")
+            .expect(404)
+
+    })
     describe("file operations", () => {
-        it("can download private key ", done => {
-            request(server)
+        it("can download private key ", () => {
+            return request(server)
                 .get("/connection/key")
-                .expect(200, done)
+                .expect(200)
         })
 
-        it("can download kyma certificate ", done => {
+        it("can download kyma certificate ", () => {
             request(server)
                 .get("/connection/cert")
-                .expect(200, done)
+                .expect(200)
         })
-        it("can get connection info", done => {
-            request(server)
+        it("can get connection info", () => {
+            return request(server)
                 .get("/connection")
-                .expect(200, done)
+                .expect(200)
         })
     })
     describe("test controllers", () => {
-        it('should return 200', function (done) {
-            request(server)
+        it('should return 200', () => {
+            return request(server)
                 .get('/metadata')
                 .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200, done)
+                .expect(200)
         });
 
 
-        it('should return 200', function (done) {
-            request(server)
+        it('should return 200', () => {
+            return request(server)
                 .get('/metadata')
                 .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200, done)
+                .expect(200)
         });
 
 
-        it('should return 200', function (done) {
+        it('should return 200', () => {
             request(server)
                 .get('/apis')
                 .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200, done)
+                .expect(200)
         });
 
 
-        it('should return 200', function (done) {
-            request(server)
+        it('should return 200', () => {
+            return request(server)
                 .get('/connection')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200, done)
+                .expect(200)
         });
     })
 })
+
+function createServiceAndReturnId(server) {
+    return new Promise((resolve, reject) => {
+        request(server)
+            .post("/apis/")
+            .send(
+                JSON.parse(fs.readFileSync(serviceMetadata))
+            )
+            .set("Accept", "application/json")
+            .expect(200)
+            .end((err, res) => {
+                var serviceId = res.body.id
+                !err ? resolve(serviceId) : reject(err)
+            })
+    })
+}

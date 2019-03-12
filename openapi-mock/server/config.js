@@ -27,7 +27,6 @@ module.exports = function (varkesConfigPath, currentDirectory) {
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
-        console.log(varkesConfig)
     }
     return varkesConfig
 }
