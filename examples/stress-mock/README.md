@@ -1,12 +1,13 @@
 # stress-mock example
 
-This example is to stress test our three modules and registering multiple apis to kyma
+This example is to test the application-mock capability of registering over 300 apis to kyma, kyma ability to handle that many request and the ability of the openapi-mock and odata-mock serve these apis.
 
 ## Run local
 
 To run it local run:
 ```
-npm app.js <port>
+npm install
+npm start
 ```
 
 Navigate to `http://localhost:10000` to see the UI of the `app-connector-client`.
