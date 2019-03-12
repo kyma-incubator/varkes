@@ -14,11 +14,14 @@ var runAsync = async () => {
 
 
     var config = defineConfig()
-    fs.writeFileSync("./generated/generated_config.json", JSON.stringify(config))
+    if (!fs.existsSync("./generated/")) {
+        fs.mkdirSync("./generated/");
+    }
+    fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config))
     try {
-        app.use(await connectorApp("./generated/generated_config.json"))
-        app.use(await odataApp("./generated/generated_config.json"))
-        app.use(await openapiApp("./generated/generated_config.json"))
+        app.use(await connectorApp("./generated/varkes_config.json"))
+        app.use(await odataApp("./generated/varkes_config.json"))
+        app.use(await openapiApp("./generated/varkes_config.json"))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
