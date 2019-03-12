@@ -92,9 +92,6 @@ function getAllAPI(localKyma) {
                 var err = new Error(body.error);
                 reject(err);
             } else {
-                if (body.id) {
-                    console.log(JSON.stringify(body))
-                }
                 resolve(JSON.parse(body))
             }
         })
