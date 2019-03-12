@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server",
     "start:dev": "export DEBUG=true && node server/server test/varkes_config.json",
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "publishConfig": {
     "access": "public"
@@ -32,7 +32,8 @@
   "devDependencies": {
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "@varkes/example-kyma-mock": "^0.0.0"
   },
   "repository": {
     "type": "ssh",

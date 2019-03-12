@@ -14,9 +14,7 @@ resolve:
 
 validate:
 	# a workaround to run kyma-mock to test app-connector
-	npm start --prefix examples/kyma-mock &
 	npx lerna run test
-	kill $!
 
 npm-publish:
 	lerna publish from-package --yes

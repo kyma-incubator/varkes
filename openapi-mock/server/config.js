@@ -8,16 +8,26 @@ const LOGGER = require("./logger").logger
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 
-module.exports = function (varkesConfigPath) {
+module.exports = function (varkesConfigPath, currentDirectory) {
     var varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(varkesConfigPath)
+        var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = require(endpointConfig)
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig), "utf-8")
+        varkesConfig.apis.map(api => {
+            api.specification = path.resolve(currentDirectory, api.specification)
+            if (api.added_endpoints) {
+                api.added_endpoints.map(ae => {
+                    ae.filePath = path.resolve(currentDirectory, ae.filePath)
+                })
+            }
+        })
+
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
         varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
+        console.log(varkesConfig)
     }
     return varkesConfig
 }
