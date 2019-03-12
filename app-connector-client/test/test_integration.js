@@ -16,14 +16,24 @@ describe("should work", () => {
     var kymaServer
     var server
     before(async () => { //* start kyma mock before tests
-        kyma.then(app => {
+        await kyma.then(app => {
             kymaServer = app.listen(port)
         })
         await mock("./test/varkes_config.json").then((mock) => {
             server = express()
             server.use(mock)
         })
+
+        await request(server)  //* Make sure we are connected to kyma
+            .post("/connection").send(
+
+                { "url": tokenURL }
+
+            ).set('Accept', 'application/json').
+            expect(200)
+
     })
+
     after(() => { //* stop kyma mock after tests
         kymaServer.close()
     })
@@ -46,18 +56,6 @@ describe("should work", () => {
                 .expect(404);
         });
     });
-
-    describe("Connect to kyma", function () {
-        it("kyma can create certs from token", () => {
-            return request(server)
-                .post("/connection").send(
-
-                    { "url": tokenURL }
-
-                ).set('Accept', 'application/json').
-                expect(200)
-        })
-    })
 
     describe("api endpoints", () => {
         it("creates a new service", () => {
@@ -92,15 +90,16 @@ describe("should work", () => {
                 ).set("Accept", "application/json")
                 .expect(200)
         })
+
+
+        it("handles error when service doesn't exists", () => {
+            return request(server)
+                .get("/apis/abc-def")
+                .expect(404)
+
+        })
     })
 
-
-    it("handles error when service doesn't exists", () => {
-        return request(server)
-            .get("/apis/abc-def")
-            .expect(404)
-
-    })
     describe("file operations", () => {
         it("can download private key ", () => {
             return request(server)
