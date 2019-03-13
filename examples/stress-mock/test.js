@@ -4,14 +4,14 @@
 const request = require('supertest');
 const exampleApp = require("./app.js")
 
-describe('tests odata controllers', function () {
+describe('tests stress apis', function () {
     it('should work', function (done) {
         exampleApp.then(function (app) {
 
-            describe('GET courses', function () {
+            describe('GET Advertisements via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/courses')
+                        .get('/odata/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -20,7 +20,7 @@ describe('tests odata controllers', function () {
             describe('GET schools', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api2/schools')
+                        .get('/api7/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('tests odata controllers', function () {
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/console')
+                        .get('/api7/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -37,8 +37,8 @@ describe('tests odata controllers', function () {
             describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/courseMetadata.json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .get('/api1/metadata')
+                        .expect('Content-Type', 'text/x-yaml; charset=utf-8')
                         .expect(200, done)
                 });
             });

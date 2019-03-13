@@ -35,7 +35,9 @@ module.exports = async function (varkesConfigPath, currentPath = "") {
 async function generateBootConfig(varkesConfig, currentPath) {
   var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
-    parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
+    if (varkesConfig.apis[i].type == "odata") {
+      parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
+    }
   }
   parsedModels = await Promise.all(parsedModels)
 

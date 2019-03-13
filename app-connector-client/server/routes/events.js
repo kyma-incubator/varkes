@@ -35,7 +35,18 @@ function sendEvent(req, res) {
             },
             rejectUnauthorized: !req.params.localKyma
         }, (error, httpResponse, body) => {
-            res.send(body)
+            if (error) {
+                LOGGER.error("Error while Sending Event: %s", error)
+                res.status(500).send({ error: error.message })
+            } else {
+                if (httpResponse.statusCode >= 400) {
+                    LOGGER.error("Error while Sending Event: %s", JSON.stringify(body))
+                    res.status(httpResponse.statusCode).type("json").send(body)
+                }
+                else {
+                    res.status(httpResponse.statusCode).type("json").send(body)
+                }
+            }
         })
     }
 }
@@ -148,6 +159,7 @@ function router() {
 }
 
 function assureConnected() {
+
     if (CONFIG.URLs.metadataUrl == "") {
         return "Not connected to a kyma cluster, please re-connect"
     }
