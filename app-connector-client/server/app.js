@@ -13,7 +13,6 @@ const connector = require("./routes/connector");
 const events = require("./routes/events")
 var apis = require("./routes/apis")
 var keys = require("./keys")
-
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     var app = express()
     app.use(bodyParser.json());
@@ -36,9 +35,23 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     app.get("/", function (req, res) {
         res.render('index', { appName: varkesConfig.name })
     })
-
+    app.get("/logo", function (req, res) {
+        var ext = "image/svg+xml"
+        var img_path = path.resolve(__dirname, 'views/static/logo.svg')
+        if (varkesConfig.logo) {
+            img_path = varkesConfig.logo;
+            var tmp = img_path.split(".")
+            ext = "image/" + tmp[tmp.length - 1]
+            if (ext = "image/svg") {
+                ext += "+xml"
+            }
+        }
+        var img = fs.readFileSync(img_path);
+        res.writeHead(200, { 'Content-Type': ext });
+        res.end(img, 'binary');
+    });
     app.get("/metadata", function (req, res) {
-        res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
+        res.sendFile(path)
     })
     app.get("/console", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/console.html"))

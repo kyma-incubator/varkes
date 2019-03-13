@@ -5,6 +5,7 @@
         "404": "{\"error\":\"End Point not found\"}"
     },
     "name": "app-connector-mock",
+    "logo": "C:\\Users\\D074188\\Desktop\\varkes\\logos\\logo.svg",
     "events": [
         {
             "specification": "test/events1.json",
