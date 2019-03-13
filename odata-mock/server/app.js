@@ -5,11 +5,12 @@ const config = require('./config.js')
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
+const path = require("path")
 const bodyParser = require('body-parser');
 const LOGGER = require("./logger").logger
 const parser = require("./parser")
 
-module.exports = async function (varkesConfigPath) {
+module.exports = async function (varkesConfigPath, currentPath = "") {
   var varkesConfig = config(varkesConfigPath)
 
   var app = loopback();
@@ -17,7 +18,7 @@ module.exports = async function (varkesConfigPath) {
   app.varkesConfig = varkesConfig
 
   LOGGER.info("Parsing specifications and generating models")
-  var bootConfig = await generateBootConfig(varkesConfig)
+  var bootConfig = await generateBootConfig(varkesConfig, currentPath)
 
   LOGGER.info("Booting loopback middleware")
 
@@ -31,11 +32,11 @@ module.exports = async function (varkesConfigPath) {
   });
 }
 
-async function generateBootConfig(varkesConfig) {
+async function generateBootConfig(varkesConfig, currentPath) {
   var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     if (varkesConfig.apis[i].type == "odata") {
-      parsedModels.push(parser.parseEdmx(varkesConfig.apis[i].specification));
+      parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
     }
   }
   parsedModels = await Promise.all(parsedModels)

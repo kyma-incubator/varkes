@@ -132,7 +132,7 @@ function get(req, res) {
                 LOGGER.debug("Received API data: %s", JSON.stringify(body))
                 body = JSON.parse(body)
                 body.id = req.params.api //comply with the api spec
-                if (body.events && body.events.spec) {
+                if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
                     refParser.dereference(body.events.spec)
                         .then(function (schema) {
                             Object.keys(schema.topics).forEach((topicKey) => {

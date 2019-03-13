@@ -7,9 +7,9 @@ const mock = require("./mock");
 const express = require("express");
 const config = require('./config.js')
 
-module.exports = async function (varkesConfigPath) {
+module.exports = async function (varkesConfigPath, currentDirectory = "") {
   var app = express()
-  var varkesConfig = config(varkesConfigPath);
+  var varkesConfig = config(varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(await mock(varkesConfig))

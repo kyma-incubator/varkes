@@ -7,7 +7,7 @@ const express = require('express')
 
 describe('controllers', function () {
   it('should work', function (done) {
-    mock('./test/varkes_config.json').then(function (mock) {
+    mock('varkes_config.json', __dirname).then(function (mock) {
       var app = express()
       app.get('/api1/pets/:petId', function (req, res, next) {
         res.body = {
@@ -212,5 +212,5 @@ describe('controllers', function () {
 
       done()
     }).catch(error => done(error))
-  })
+  }).timeout(5000)
 });
