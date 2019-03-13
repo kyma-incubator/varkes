@@ -22,13 +22,14 @@ validate:
 	npx lerna run test
 
 npm-publish:
-	lerna publish from-package --yes
+	echo "//registry.npmjs.org/:_authToken=\"${BOT_NPM_TOKEN}\"" > .npmrc
+	npx lerna publish from-package --yes
 
 clean:
-	lerna clean
+	npx lerna clean
 
 test:
 	echo $(DOCKER_TAG)
 docker-push:
 	#call docker-push in sub makefiles with docker parameter
-	lerna exec --no-bail -- make docker-push DOCKER_TAG=$(DOCKER_TAG)
+	npx lerna exec --no-bail -- make docker-push DOCKER_TAG=$(DOCKER_TAG)
