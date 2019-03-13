@@ -16,9 +16,7 @@ describe("should work", () => {
     var kymaServer
     var server
     before(async () => { //* start kyma mock before tests
-
-        await deleteKeysFile()
-
+        deleteKeysFile()
         await kyma.then(app => {
             kymaServer = app.listen(port)
         })
@@ -28,18 +26,19 @@ describe("should work", () => {
         })
 
         await request(server)  //* Make sure we are connected to kyma
-            .post("/connection").send(
-
+            .post("/connection")
+            .send(
                 { "url": tokenURL }
-
-            ).set('Accept', 'application/json').
+            )
+            .set('Accept', 'application/json').
             expect(200)
 
     })
 
     after(() => { //* stop kyma mock after tests
-        kymaServer.close()
-        deleteKeysFile()
+        kymaServer.close(() => {
+            deleteKeysFile()
+        })
     })
 
     describe('basic routes', function () {
@@ -63,36 +62,40 @@ describe("should work", () => {
 
     describe("api endpoints", () => {
         it("creates a new service", () => {
-            return createServiceAndReturnId(server)
+            return createService(server)
         })
 
-        it("deletes a service", async () => {
-            const serviceId = await createServiceAndReturnId(server)
-            return request(server)
-                .put(`/apis/${serviceId}`).
-                send(
-                    JSON.parse(fs.readFileSync(serviceMetadata))
-                ).set("Accept", "application/json")
-                .expect(200)
+        it("deletes a service", () => {
+            return createService(server).then((serviceId) => {
+                request(server)
+                    .put(`/apis/${serviceId}`).
+                    send(
+                        JSON.parse(fs.readFileSync(serviceMetadata))
+                    ).set("Accept", "application/json")
+                    .expect(200)
+            })
 
         })
 
-        it("shows a specific service", async () => {
-            const serviceId = await createServiceAndReturnId(server)
-            return request(server)
-                .get(`/apis/${serviceId}`)
-                .set("Accept", "application/json")
-                .expect(200)
+        it("shows a specific service", () => {
+            return createService(server).then(serviceId => {
+                request(server)
+                    .get(`/apis/${serviceId}`)
+                    .set("Accept", "application/json")
+                    .expect(200)
+            })
         })
 
-        it("updates a specific service", async () => {
-            const serviceId = await createServiceAndReturnId(server)
-            return request(server)
-                .put(`/apis/${serviceId}`).
-                send(
-                    JSON.parse(fs.readFileSync(serviceMetadata))
-                ).set("Accept", "application/json")
-                .expect(200)
+        it("updates a specific service", () => {
+            return createService(server).then(serviceId => {
+                request(server)
+                    .put(`/apis/${serviceId}`).
+                    send(
+                        JSON.parse(fs.readFileSync(serviceMetadata))
+                    ).set("Accept", "application/json")
+                    .expect(200)
+
+            })
         })
 
 
@@ -157,7 +160,7 @@ describe("should work", () => {
     })
 })
 
-function createServiceAndReturnId(server) {
+function createService(server) {
     return new Promise((resolve, reject) => {
         request(server)
             .post("/apis/")
