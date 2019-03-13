@@ -1,0 +1,99 @@
+swagger: "2.0"
+info:
+  description: "Courses Webservices"
+  version: "2.0"
+  title: "Courses Webservices"
+basePath: "/api1"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+  - "application/xml"
+paths:
+  /courses:
+    get:
+      summary: "Get a list of available courses."
+      description: "Lists all available courses."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/CoursesDTO"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+    post:
+      summary: "insert course"
+      description: "Given a course in body"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "a course"
+          required: true
+          schema:
+            $ref: "#/definitions/CourseDTO"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/CourseDTO"
+        201:
+          description: "Created"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+  /courses/{id}:
+    get:
+      summary: "Get a list of available courses."
+      description: "Lists supported payment card types."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "course identifier"
+          required: true
+          type: "string"
+          default: "1"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/CourseDTO"
+        401:
+          description: "Unauthorized"
+        403:
+          description: "Forbidden"
+        404:
+          description: "Not Found"
+definitions:
+  CoursesDTO:
+    type: "array"
+    items:
+      $ref: "#/definitions/CourseDTO"
+  CourseDTO:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+      name:
+        type: "string"

@@ -4,7 +4,8 @@
         {
             "name": "services",
             "metadata": "/services/metadata",
-            "specification": "apis/services.xml"
+            "specification": "apis/services.xml",
+            "type": "odata"
         }
     ]
 }

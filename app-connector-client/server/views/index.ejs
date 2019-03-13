@@ -183,13 +183,20 @@
             success: function (data) {
                 getAPIs()
                 newServiceView()
+            },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
             }
         })
     }
     function getAPIs() {
         $("#tokenInput").val('')
         $("#apis ul").empty()
-        console.log("get apis called")
         $.ajax(
             {
                 type: "get",
@@ -222,6 +229,14 @@
                 getAPIs()
                 showService(data.id)
             },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
+            },
             contentType: "application/json"
         }
         )
@@ -232,8 +247,15 @@
             url: "/apis/" + `${serviceId}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             data: JSON.stringify(editor.get()),
             success: function (data) {
-                console.log(data)
                 getAPIs()
+            },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
             },
             contentType: "application/json"
         })
@@ -244,7 +266,6 @@
             hostname: hostname,
             register: $("#registerMockApp").is(':checked')
         }
-        console.log(sendData)
         $.ajax({
             type: "POST",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
@@ -260,7 +281,12 @@
                     $('#event_url').val(data.eventsUrl)
             },
             error: function (data) {
-                window.alert(data.responseText);
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
                 $("#tokenInput").val('');
             },
             contentType: "application/json"
@@ -274,25 +300,38 @@
         disconnectButton.removeAttr("hidden")
         $('#downloadLinks').show();
         disconnectButton.click(function () {
-            console.log("Disconnect")
             $.ajax({
                 type: "DELETE",
                 url: "/connection",
                 success: function (data) {
                     location.reload()
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        window.alert(data.responseText);
+                    }
+                    else {
+                        showGeneralErrorMessage()
+                    }
                 }
             })
         })
     }
     function showService(serviceID) {
-        console.log("show service")
-        console.log(serviceID);
         $.ajax({
             type: "get",
             url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
             success: function (data) {
                 data.id = serviceID
                 parseAPIEventsToComboBox(data)
+            },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
             }
         })
         $.ajax({
@@ -307,11 +346,18 @@
                 $("#update_service").attr("onclick", `updateService("${serviceID}")`)
                 $("#delete_service").show()
                 $("#delete_service").attr("onclick", `deleteService("${serviceID}")`)
+            },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
             }
         })
     }
     function getConnectionInfo() {
-        console.log("query connection info")
         $.ajax({
             type: "get",
             url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
@@ -322,11 +368,19 @@
                     $('#metadata_url').val(data.metadataUrl)
                 if (data.eventsUrl)
                     $('#event_url').val(data.eventsUrl)
+            },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
+                $("#tokenInput").val('');
             }
         })
     }
     function sendEvent() {
-        console.log(JSON.parse($("#payload").val()))
         //collect event data from user input
         var sel = $("#event-types").select()[0];
         sel[sel.selectedIndex].innerHTML
@@ -349,6 +403,14 @@
             success: function (data) {
                 $("#events ul").append(`${data["event-id"]}`)
             },
+            error: function (data) {
+                if (data.responseText) {
+                    window.alert(data.responseText);
+                }
+                else {
+                    showGeneralErrorMessage()
+                }
+            },
             contentType: "application/json"
         }
         )
@@ -368,6 +430,9 @@
         var opt = JSON.parse(select.options[select.selectedIndex].value);
         var json = {}
         $("#payload").val(JSON.stringify(opt.example))
+    }
+    function showGeneralErrorMessage() {
+        window.alert("Something went wrong,please try again later")
     }
     var container = document.getElementById("jsoneditor");
     var options = {};

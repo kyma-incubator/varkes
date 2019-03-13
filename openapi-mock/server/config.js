@@ -54,7 +54,7 @@ function configValidation(configJson) {
             if (api.type == "openapi" && !api.baseurl) {
                 error_message += "\napi '" + api.name + "': missing attribute 'baseurl', a baseurl is mandatory";
             }
-            if (api.type == "openapi" && !api.baseurl.match(/^\/[/\\\w]+$/)) {
+            else if (api.type == "openapi" && !api.baseurl.match(/^\/[/\\\w]+$/)) {
                 error_message += "\napi '" + api.name + "': baseurl '" + api.baseurl + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
             }
         }

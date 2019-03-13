@@ -17,20 +17,21 @@ module.exports = async function (config) {
     var app = express()
     for (var i = 0; i < config.apis.length; i++) {
         var api = config.apis[i];
-        if (api.type = "openapi") {
+        if (!api.type || api.type == "openapi") {
             createOauthEndpoint(api, app);
             createConsole(api, app);
 
             var spec = loadSpec(api)
-
             if (spec.openapi) {
                 var jsonSpec = await transformSpec(api)
+
                 var specString = jsonSpec.stringify({ syntax: "yaml" })
                 writeSpec(specString, api, i)
                 spec = loadSpec(api)
+            }
+            if (api.baseurl) {
                 spec.basePath = api.baseurl
             }
-
             await validateSpec(api, 'swagger_2')
 
             createMetadataEndpoint(spec, api, app);
