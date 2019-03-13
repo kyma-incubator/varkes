@@ -23,7 +23,7 @@ validate:
 
 npm-publish:
 	echo "//registry.npmjs.org/:_authToken=\"${BOT_NPM_TOKEN}\"" > .npmrc
-	lerna publish from-package --yes
+	npx lerna publish from-package --yes
 
 clean:
 	lerna clean
