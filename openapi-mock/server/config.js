@@ -51,7 +51,10 @@ function configValidation(configJson) {
             if (api.type == "openapi" && !api.specification.match(/^.+\.(json|yaml|yml)$/)) {
                 error_message += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
             }
-            if (api.type == "openapi" && api.baseurl && !api.baseurl.match(/^\/[/\\\w]+$/)) {
+            if (api.type == "openapi" && !api.baseurl) {
+                error_message += "\napi '" + api.name + "': missing attribute 'baseurl', a baseurl is mandatory";
+            }
+            else if (api.type == "openapi" && !api.baseurl.match(/^\/[/\\\w]+$/)) {
                 error_message += "\napi '" + api.name + "': baseurl '" + api.baseurl + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
             }
         }

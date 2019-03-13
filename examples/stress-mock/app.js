@@ -13,7 +13,7 @@ var runAsync = async () => {
     }
 
 
-    var config = defineConfig()
+    var config = generateConfig()
     if (!fs.existsSync("./generated/")) {
         fs.mkdirSync("./generated/");
     }
@@ -31,7 +31,7 @@ var runAsync = async () => {
         console.error("Problem while starting application: %s", error)
     }
 }
-function defineConfig() {
+function generateConfig() {
     var config = {
         "name": "Stress-Mock",
         "apis": [],
