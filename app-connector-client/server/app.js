@@ -13,6 +13,7 @@ const connector = require("./routes/connector");
 const events = require("./routes/events")
 var apis = require("./routes/apis")
 var keys = require("./keys")
+const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
 module.exports = function (varkesConfigPath = null, nodePortParam = null) {
     var app = express()
     app.use(bodyParser.json());
@@ -36,18 +37,8 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         res.render('index', { appName: varkesConfig.name })
     })
     app.get("/logo", function (req, res) {
-        var ext = "image/svg+xml"
-        var img_path = path.resolve(__dirname, 'views/static/logo.svg')
-        if (varkesConfig.logo) {
-            img_path = varkesConfig.logo;
-            var tmp = img_path.split(".")
-            ext = "image/" + tmp[tmp.length - 1]
-            if (ext = "image/svg") {
-                ext += "+xml"
-            }
-        }
-        var img = fs.readFileSync(img_path);
-        res.writeHead(200, { 'Content-Type': ext });
+        var img = fs.readFileSync(varkesConfig.logo || VARKES_LOGO);
+        res.writeHead(200, { 'Content-Type': "image/svg+xml" });
         res.end(img, 'binary');
     });
     app.get("/metadata", function (req, res) {
