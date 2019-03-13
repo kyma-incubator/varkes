@@ -51,7 +51,7 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null) {
         res.end(img, 'binary');
     });
     app.get("/metadata", function (req, res) {
-        res.sendFile(path)
+        res.sendFile(path.resolve(__dirname, "resources/api.yaml"))
     })
     app.get("/console", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/console.html"))
