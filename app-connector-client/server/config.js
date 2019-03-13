@@ -56,6 +56,9 @@ function configValidation(configJson) {
             }
         }
     }
+    if (configJson.logo && !configJson.logo.match(/^.+\.(svg)$/)) {
+        error_message += "\nlogo image must be in svg format"
+    }
     if (error_message != "") {
         throw new Error("Validation of configuration failed: " + error_message);
     }
