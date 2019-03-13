@@ -6,6 +6,9 @@ const odataApp = require("@varkes/odata-mock")
 const connectorApp = require("@varkes/app-connector-client")
 const app = require('express')()
 var fs = require("fs")
+const OPEN_API_LOOP_COUNT = 151;
+const ODATA_LOOP_COUNT = 151;
+const EVENT_LOOP_COUNT = 11;
 var runAsync = async () => {
     var port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
@@ -35,16 +38,7 @@ function generateConfig() {
     var config = {
         "name": "Stress-Mock",
         "apis": [],
-        "events": [
-            {
-                "specification": "apis/events.json",
-                "name": "events",
-                "description": "All Events v1",
-                "labels": {
-                    "label1": "value1"
-                }
-            }
-        ]
+        "events": []
     }
     var openapi = {
         "specification": "apis/schools.yaml"
@@ -53,12 +47,28 @@ function generateConfig() {
         "specification": "apis/services.xml",
         "type": "odata"
     }
-    for (var i = 1; i < 151; i++) {
+    var event = {
+        "specification": "apis/events.json",
+        "description": "All Events v1",
+        "labels": {
+            "label1": "value1"
+        }
+    }
+
+    for (var i = 1; i < OPEN_API_LOOP_COUNT; i++) {
         openapi.baseurl = "/api" + i;
         openapi.name = "schools" + i;
         config.apis.push(JSON.parse(JSON.stringify(openapi)));
         odataapi.name = "services" + i;
         config.apis.push(JSON.parse(JSON.stringify(odataapi)));
+    }
+    for (var i = 1; i < ODATA_LOOP_COUNT; i++) {
+        odataapi.name = "services" + i;
+        config.apis.push(JSON.parse(JSON.stringify(odataapi)));
+    }
+    for (var i = 1; i < EVENT_LOOP_COUNT; i++) {
+        event.name = "event" + i;
+        config.events.push(JSON.parse(JSON.stringify(event)));
     }
     return config
 }
