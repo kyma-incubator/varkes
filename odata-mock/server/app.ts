@@ -7,10 +7,10 @@ const boot = require('loopback-boot');
 const fs = require('fs');
 const path = require("path")
 const bodyParser = require('body-parser');
-const LOGGER = require("./logger").logger
+import { logger as LOGGER } from "./logger"
 const parser = require("./parser")
 
-module.exports = async function (varkesConfigPath, currentPath = "") {
+module.exports = async function (varkesConfigPath: string, currentPath = "") {
   var varkesConfig = config(varkesConfigPath)
 
   var app = loopback();
@@ -23,7 +23,7 @@ module.exports = async function (varkesConfigPath, currentPath = "") {
   LOGGER.info("Booting loopback middleware")
 
   return new Promise(function (resolve, reject) {
-    boot(app, bootConfig, function (err) {
+    boot(app, bootConfig, function (err: Error) {
       if (err) {
         reject(err);
       }
@@ -32,7 +32,7 @@ module.exports = async function (varkesConfigPath, currentPath = "") {
   });
 }
 
-async function generateBootConfig(varkesConfig, currentPath) {
+async function generateBootConfig(varkesConfig: any, currentPath: string) {
   var parsedModels = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     if (varkesConfig.apis[i].type == "odata") {
@@ -42,14 +42,14 @@ async function generateBootConfig(varkesConfig, currentPath) {
   parsedModels = await Promise.all(parsedModels)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/boot_config.json", "utf-8"))
+  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config.json", "utf-8"))
 
   parsedModels.forEach(function (parsedModel) {
 
-    parsedModel.modelConfigs.forEach(function (config) {
+    parsedModel.modelConfigs.forEach(function (config: any) {
       bootConfig.models[config.name] = config.value
     })
-    parsedModel.modelDefs.forEach(function (definition) {
+    parsedModel.modelDefs.forEach(function (definition: any) {
       bootConfig.modelDefinitions.push(definition)
     })
   })

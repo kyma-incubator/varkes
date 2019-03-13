@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const LOGGER = require("./logger").logger
+import { logger as LOGGER } from "./logger"
 const fs = require("fs");
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -9,16 +9,16 @@ const { parse, convert } = require('odata2openapi');
 
 module.exports =
 	{
-		parseEdmx: function (path) {
+		parseEdmx: function (path: string) {
 			return new Promise(function (resolve, reject) {
-				fs.readFile(path, "utf8", function (err, data) {
+				fs.readFile(path, "utf8", function (err: Error, data: any) {
 					if (err) reject(err);
 
 					parse(data)
-						.then(service => {
-							var result = createEntities(service);
+						.then((service: any) => {
+							let result = createEntities(service);
 							resolve(result);
-						}).catch(error => {
+						}).catch((error: Error) => {
 							LOGGER.error("Error while parsing API '%s'", path)
 							reject(error)
 						})
@@ -27,15 +27,21 @@ module.exports =
 		}
 	};
 
-function createEntities(service) {
-	var result = {
+function createEntities(service: any) {
+	type resultType = {
+		modelConfigs: any[],
+		modelDefs: any[],
+	}
+
+	let result: resultType = {
 		modelConfigs: [],
 		modelDefs: []
 	}
 
-	service.entityTypes.forEach(function (entityType) {
-		var jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/modelTemplate.json", "utf8"));
-		var entityName = entityType.name;
+	service.entityTypes.forEach((entityType: any) => {
+		let jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/modelTemplate.json", "utf8"));
+		let entityName = entityType.name;
+
 
 		result.modelConfigs.push({ name: entityName, value: { dataSource: "db", public: true } })
 
@@ -48,9 +54,9 @@ function createEntities(service) {
 	return result
 }
 
-function createEntityProperties(entityType, template) {
+function createEntityProperties(entityType: any, template: any) {
 	template.properties = {}
-	entityType.properties.forEach(function (property) {
+	entityType.properties.forEach(function (property: any) {
 
 		template.properties[property.name] = {}
 		if (property.required) {
@@ -63,7 +69,7 @@ function createEntityProperties(entityType, template) {
 
 // https://loopback.io/doc/en/lb3/LoopBack-types.html
 // https://openui5.hana.ondemand.com/1.36.0/docs/guide/333a9dac5a614b1590c61916c9cecbf5.html
-function mapType(edmType) {
+function mapType(edmType: any) {
 	if (!edmType) {
 		return null
 	}

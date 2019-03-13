@@ -3,9 +3,9 @@
 
 const path = require("path")
 const fs = require('fs');
-const LOGGER = require("./logger").logger
+import { logger as LOGGER } from "./logger"
 
-module.exports = function (varkesConfigPath) {
+module.exports = function (varkesConfigPath: string) {
     var varkesConfig
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(varkesConfigPath)
@@ -19,7 +19,7 @@ module.exports = function (varkesConfigPath) {
     return varkesConfig
 }
 
-function configValidation(configJson) {
+function configValidation(configJson: any) {
     var error_message = "";
     if (configJson.hasOwnProperty("apis")) {
         for (var i = 1; i <= configJson.apis.length; i++) {

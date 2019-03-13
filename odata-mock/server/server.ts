@@ -3,15 +3,14 @@
 
 const odataApp = require("./app")
 const app = require('express')()
-const LOGGER = require("./logger").logger
-
-var configPath
+import { logger as LOGGER } from "./logger"
 
 var runAsync = async () => {
+    var configPath: string = ""
     if (process.argv.length > 2) {
-        configPath = process.argv[2]
+
+        var configPath = process.argv[2]
     }
-    
     try {
         app.use(await odataApp(configPath))
         app.listen(10000, function () {

@@ -3,14 +3,14 @@
 
 const bodyParser = require('body-parser');
 const morgan = require('morgan')
-const LOGGER = require("./../logger").logger
+import { logger as LOGGER } from "../logger"
 const fs = require('fs');
 
-module.exports = function (app) {
+module.exports = function (app: any) {
     registerLogger(app);
     var apis = app.varkesConfig.apis;
-    apis.forEach(function (api) {
-        app.get(api.metadata ? api.metadata : "/metadata", function (req, res, next) {
+    apis.forEach(function (api: any) {
+        app.get(api.metadata ? api.metadata : "/metadata", function (req: any, res: any, next: any) {
             var spec = fs.readFileSync(api.specification, 'utf-8');
             res.status(200);
             res.type("text/xml");
@@ -18,10 +18,10 @@ module.exports = function (app) {
         });
     });
 
-    function modifyResponseBody(req, res, next) {
+    function modifyResponseBody(req: any, res: any, next: any) {
         var oldSend = res.send;
 
-        res.send = function (data) {
+        res.send = function (data: any) {
             if (!arguments[0] && arguments[0].statusCode) {
                 arguments[0] = {};
                 arguments[0].statusCode = 500;
@@ -40,14 +40,14 @@ module.exports = function (app) {
         next();
     }
 
-    function registerLogger(app) {
-        morgan.token('header', function (req, res) {
+    function registerLogger(app: any) {
+        morgan.token('header', function (req: any, res: any) {
             if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
                 return req.rawHeaders;
             else
                 return "-";
         });
-        morgan.token('body', function (req, res) {
+        morgan.token('body', function (req: any, res: any) {
             if (req.body && Object.keys(req.body).length != 0)
                 return JSON.stringify(req.body);
             else
