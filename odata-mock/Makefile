@@ -13,7 +13,6 @@ docker-build:
 	docker build -t $(APP_NAME):latest .
 
 docker-push:
-	make docker-build
 	#DOCKER_TAG comes as parameter from outside -> make docker-push DOCKER_TAG=master
 	echo $(DOCKERT_TAG)
 	docker tag $(APP_NAME) $(IMG):$(DOCKER_TAG)
