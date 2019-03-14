@@ -20,6 +20,7 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
 
     var serviceMetadata = defineServiceMetadata()
     var error_message = ""
+    var promises = []
     for (var i = 0; i < apisConfig.length; i++) {
         var api = apisConfig[i]
         try {
@@ -27,15 +28,16 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
             if (registeredApis.length > 0)
                 reg_api = registeredApis.find(x => x.name == api.name);
             if (!reg_api) {
-                await createService(localKyma, serviceMetadata, api, hostname)
+                promises.push(createService(localKyma, serviceMetadata, api, hostname))
                 LOGGER.debug("Registered API successful: %s", api.name)
             }
             else {
-                await updateService(localKyma, serviceMetadata, api, reg_api.id, hostname);
+                promises.push(updateService(localKyma, serviceMetadata, api, reg_api.id, hostname));
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
+            await Promise.all(promises);
         } catch (error) {
-            var message = "Registration of API " + api.name + "failed: " + JSON.stringify(error)
+            var message = "Registration of API " + api.name + "failed: " + error.message
             LOGGER.error(message)
             error_message += "\n" + message
         }
@@ -58,7 +60,9 @@ function createService(localKyma, serviceMetadata, api, hostname) {
                     var err = new Error(body.error);
                     reject(err);
                 }
-                resolve(body)
+                else {
+                    resolve(body)
+                }
             }
         });
     })
@@ -76,7 +80,9 @@ function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
                     var err = new Error(body.error);
                     reject(err);
                 }
-                resolve(body)
+                else {
+                    resolve(body)
+                }
             }
         });
     })
