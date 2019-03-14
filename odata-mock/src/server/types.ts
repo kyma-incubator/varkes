@@ -7,7 +7,8 @@ type apiType = {
 }
 type VarkesConfigType = {
     name: string,
-    apis: apiType[]
+    apis: apiType[],
+    events: any[] //Todo: define event type
 }
 
 export { VarkesConfigType }

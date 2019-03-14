@@ -9,7 +9,7 @@ var runAsync = async () => {
     var configPath: string = ""
     if (process.argv.length > 2) {
 
-        var configPath = process.argv[2]
+        configPath = process.argv[2]
     }
     try {
         app.use(await init(configPath, __dirname))
