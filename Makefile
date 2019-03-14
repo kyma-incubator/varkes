@@ -17,6 +17,7 @@ ci-release: npm-publish docker-push
 
 resolve:
 	npx lerna bootstrap --hoist
+	npx lerna run compile
 
 validate:
 	npx lerna run test
