@@ -60,7 +60,7 @@ module.exports = async function (config) {
                 registerLogger(app);
             }
             catch (err) {
-                var message = "Serving API " + api.name + " failed: " + JSON.stringify(err)
+                var message = "Serving API " + api.name + " failed: " + err.message
                 LOGGER.error(message)
                 error_message += "\n" + message
             }

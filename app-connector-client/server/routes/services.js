@@ -37,7 +37,7 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
             }
             await Promise.all(promises);
         } catch (error) {
-            var message = "Registration of API " + api.name + "failed: " + JSON.stringify(error)
+            var message = "Registration of API " + api.name + "failed: " + error.message
             LOGGER.error(message)
             error_message += "\n" + message
         }
