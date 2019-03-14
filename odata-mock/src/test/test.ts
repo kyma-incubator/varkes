@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict'
 
-const mock = require('../server/app')
+import { init as mock } from "../server/app"
 const request = require('supertest')
 const express = require('express')
 
 describe('test app', function () {
     it('should work', (done) => {
-        mock('./test/varkes_config.json', __dirname).then((mock: any) => {
+        mock('./varkes_config.json', __dirname).then((mock: any) => {
             var app = express()
             app.use(mock)
 

@@ -5,27 +5,24 @@ import { logger as LOGGER } from "./logger"
 const fs = require("fs");
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const { parse, convert } = require('odata2openapi');
+const { parse } = require('odata2openapi');
 
-module.exports =
-	{
-		parseEdmx: function (path: string) {
-			return new Promise(function (resolve, reject) {
-				fs.readFile(path, "utf8", function (err: Error, data: any) {
-					if (err) reject(err);
+function parseEdmx(path: string) {
+	return new Promise(function (resolve, reject) {
+		fs.readFile(path, "utf8", function (err: Error, data: any) {
+			if (err) reject(err);
 
-					parse(data)
-						.then((service: any) => {
-							let result = createEntities(service);
-							resolve(result);
-						}).catch((error: Error) => {
-							LOGGER.error("Error while parsing API '%s'", path)
-							reject(error)
-						})
-				});
-			})
-		}
-	};
+			parse(data)
+				.then((service: any) => {
+					let result = createEntities(service);
+					resolve(result);
+				}).catch((error: Error) => {
+					LOGGER.error("Error while parsing API '%s'", path)
+					reject(error)
+				})
+		});
+	})
+}
 
 function createEntities(service: any) {
 	type resultType = {
@@ -69,7 +66,7 @@ function createEntityProperties(entityType: any, template: any) {
 
 // https://loopback.io/doc/en/lb3/LoopBack-types.html
 // https://openui5.hana.ondemand.com/1.36.0/docs/guide/333a9dac5a614b1590c61916c9cecbf5.html
-function mapType(edmType: any) {
+function mapType(edmType: string): string | null {
 	if (!edmType) {
 		return null
 	}
@@ -97,4 +94,6 @@ function mapType(edmType: any) {
 	}
 }
 
-exports.default = parse;
+export { parseEdmx }
+
+

@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict'
-
-const config = require('./config.js')
+import { config } from "./config"
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
 const path = require("path")
 const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
-const parser = require("./parser")
+import * as parser from "./parser"
+import { VarkesConfigType } from "./types"
 
-module.exports = async function (varkesConfigPath: string, currentPath = "") {
-  var varkesConfig = config(varkesConfigPath)
 
+async function init(varkesConfigPath: string, currentPath = "") {
+  var varkesConfig = config(varkesConfigPath, currentPath)
   var app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
@@ -32,8 +32,8 @@ module.exports = async function (varkesConfigPath: string, currentPath = "") {
   });
 }
 
-async function generateBootConfig(varkesConfig: any, currentPath: string) {
-  var parsedModels = [];
+async function generateBootConfig(varkesConfig: VarkesConfigType, currentPath: string) {
+  var parsedModels: any[] = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     if (varkesConfig.apis[i].type == "odata") {
       parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
@@ -56,3 +56,5 @@ async function generateBootConfig(varkesConfig: any, currentPath: string) {
 
   return bootConfig
 }
+
+export { init }

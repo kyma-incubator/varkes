@@ -4,11 +4,12 @@
 const path = require("path")
 const fs = require('fs');
 import { logger as LOGGER } from "./logger"
+import { VarkesConfigType } from "./types";
 
-module.exports = function (varkesConfigPath: string) {
+function config(varkesConfigPath: string, currentPath: string): VarkesConfigType {
     var varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(varkesConfigPath)
+        var endpointConfig = path.resolve(currentPath, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = require(endpointConfig)
         configValidation(varkesConfig)
@@ -19,7 +20,7 @@ module.exports = function (varkesConfigPath: string) {
     return varkesConfig
 }
 
-function configValidation(configJson: any) {
+function configValidation(configJson: VarkesConfigType) {
     var error_message = "";
     if (configJson.hasOwnProperty("apis")) {
         for (var i = 1; i <= configJson.apis.length; i++) {
@@ -43,3 +44,5 @@ function configValidation(configJson: any) {
         throw new Error("Validation of configuration failed: " + error_message);
     }
 }
+
+export { config }

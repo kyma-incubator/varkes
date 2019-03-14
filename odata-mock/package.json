@@ -7,9 +7,10 @@
     "node": ">=4"
   },
   "scripts": {
-    "start": "node server/server",
+    "prestart": "npm run pretest",
+    "start": "node dist/server/server.js",
     "start:dev": "export DEBUG=true && node server/server test/varkes_config.json",
-    "pretest": "tsc && copyfiles test/services.xml dist/ &&copyfiles server/resources/* dist/",
+    "pretest": "tsc && cd src && copyfiles test/services.xml ../dist/ && copyfiles test/varkes_config.json ../dist/ && copyfiles server/resources/* ../dist/",
     "test": "mocha dist/test "
   },
   "publishConfig": {
