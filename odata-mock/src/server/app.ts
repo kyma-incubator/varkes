@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict'
-
-const config = require('./config.js')
+import { config } from "./config"
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
 const path = require("path")
 const bodyParser = require('body-parser');
-const LOGGER = require("./logger").logger
-const parser = require("./parser")
+import { logger as LOGGER } from "./logger"
+import * as parser from "./parser"
+import { VarkesConfigType } from "./types"
 
-module.exports = async function (varkesConfigPath, currentPath = "") {
-  var varkesConfig = config(varkesConfigPath)
 
+async function init(varkesConfigPath: string, currentPath = "") {
+  var varkesConfig = config(varkesConfigPath, currentPath)
   var app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
@@ -23,7 +23,7 @@ module.exports = async function (varkesConfigPath, currentPath = "") {
   LOGGER.info("Booting loopback middleware")
 
   return new Promise(function (resolve, reject) {
-    boot(app, bootConfig, function (err) {
+    boot(app, bootConfig, function (err: Error) {
       if (err) {
         reject(err);
       }
@@ -32,8 +32,8 @@ module.exports = async function (varkesConfigPath, currentPath = "") {
   });
 }
 
-async function generateBootConfig(varkesConfig, currentPath) {
-  var parsedModels = [];
+async function generateBootConfig(varkesConfig: VarkesConfigType, currentPath: string) {
+  var parsedModels: any[] = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     if (varkesConfig.apis[i].type == "odata") {
       parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
@@ -42,17 +42,19 @@ async function generateBootConfig(varkesConfig, currentPath) {
   parsedModels = await Promise.all(parsedModels)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/boot_config.json", "utf-8"))
+  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config.json", "utf-8"))
 
   parsedModels.forEach(function (parsedModel) {
 
-    parsedModel.modelConfigs.forEach(function (config) {
+    parsedModel.modelConfigs.forEach(function (config: any) {
       bootConfig.models[config.name] = config.value
     })
-    parsedModel.modelDefs.forEach(function (definition) {
+    parsedModel.modelDefs.forEach(function (definition: any) {
       bootConfig.modelDefinitions.push(definition)
     })
   })
 
   return bootConfig
 }
+
+export { init }

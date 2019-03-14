@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 'use strict'
 
-const odataApp = require("./app")
+import { init } from "./app"
 const app = require('express')()
-const LOGGER = require("./logger").logger
-
-var configPath
+import { logger as LOGGER } from "./logger"
 
 var runAsync = async () => {
+    var configPath: string = ""
     if (process.argv.length > 2) {
+
         configPath = process.argv[2]
     }
-    
     try {
-        app.use(await odataApp(configPath))
+        app.use(await init(configPath, __dirname))
         app.listen(10000, function () {
             LOGGER.info("Started application on port %d", 10000)
         });

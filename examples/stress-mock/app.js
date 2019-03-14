@@ -23,7 +23,7 @@ var runAsync = async () => {
     fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config))
     try {
         app.use(await connectorApp("./generated/varkes_config.json"))
-        app.use(await odataApp("./generated/varkes_config.json"))
+        app.use(await odataApp.init("./generated/varkes_config.json"))
         app.use(await openapiApp("./generated/varkes_config.json"))
         if (port)
             app.listen(port, function () {
