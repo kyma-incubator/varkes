@@ -15,49 +15,60 @@ const TMP_FILE = "tmp.yaml";
 
 module.exports = async function (config) {
     var app = express()
+    var error_message = "";
     for (var i = 0; i < config.apis.length; i++) {
+
         var api = config.apis[i];
         if (!api.type || api.type == "openapi") {
-            createOauthEndpoint(api, app);
-            createConsole(api, app);
+            try {
+                createOauthEndpoint(api, app);
+                createConsole(api, app);
 
-            var spec = loadSpec(api)
-            if (spec.openapi) {
-                var jsonSpec = await transformSpec(api)
+                var spec = loadSpec(api)
+                if (spec.openapi) {
+                    var jsonSpec = await transformSpec(api)
 
-                var specString = jsonSpec.stringify({ syntax: "yaml" })
-                writeSpec(specString, api, i)
-                spec = loadSpec(api)
+                    var specString = jsonSpec.stringify({ syntax: "yaml" })
+                    writeSpec(specString, api, i)
+                    spec = loadSpec(api)
+                }
+                if (api.baseurl) {
+                    spec.basePath = api.baseurl
+                }
+                await validateSpec(api, 'swagger_2')
+
+                createMetadataEndpoint(spec, api, app);
+                createEndpoints(spec, api);
+
+                writeSpec(pretty_yaml.stringify(spec), api, i)
+
+                let myDB = new middleware.MemoryDataStore();
+                var middlewares = [];
+                middlewares.push(
+                    middleware(api.specification, app, function (err, middleware) {
+                        app.use(
+                            middleware.metadata(),
+                            middleware.CORS(),
+                            middleware.files(),
+                            middleware.parseRequest(),
+                            middleware.validateRequest(),
+                            middleware.mock(myDB),
+                        );
+                        customErrorResponses(app, config)
+                    })
+                )
+                registerLogger(app);
             }
-            if (api.baseurl) {
-                spec.basePath = api.baseurl
+            catch (err) {
+                var message = "Serving API " + api.name + " failed: " + JSON.stringify(err)
+                LOGGER.error(message)
+                error_message += "\n" + message
             }
-            await validateSpec(api, 'swagger_2')
-
-            createMetadataEndpoint(spec, api, app);
-            createEndpoints(spec, api);
-
-            writeSpec(pretty_yaml.stringify(spec), api, i)
-
-            let myDB = new middleware.MemoryDataStore();
-            var middlewares = [];
-            middlewares.push(
-                middleware(api.specification, app, function (err, middleware) {
-                    app.use(
-                        middleware.metadata(),
-                        middleware.CORS(),
-                        middleware.files(),
-                        middleware.parseRequest(),
-                        middleware.validateRequest(),
-                        middleware.mock(myDB),
-                    );
-                    customErrorResponses(app, config)
-                })
-            )
-            registerLogger(app);
         }
     }
-
+    if (error_message != "") {
+        throw new Error(error_message);
+    }
     return app
 }
 
