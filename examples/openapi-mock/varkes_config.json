@@ -4,6 +4,7 @@
         {
             "baseurl": "/api1",
             "specification": "apis/courses.yaml",
+            "authtype": "none",
             "name": "courses"
         }
     ]

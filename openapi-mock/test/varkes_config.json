@@ -3,33 +3,38 @@
     "apis": [
         {
             "baseurl": "/api1",
-            "specification": "pets_openapi.yaml",
+            "specification": "./test/pets_openapi.yaml",
+            "authtype": "none",
             "name": "pets openapi yaml"
         },
         {
             "baseurl": "/api2",
-            "specification": "pets_openapi.json",
+            "specification": "./test/pets_openapi.json",
+            "authtype": "none",
             "name": "pets openapi json"
         },
         {
             "baseurl": "/api3",
-            "specification": "pets_swagger.yaml",
+            "specification": "./test/pets_swagger.yaml",
+            "authtype": "none",
             "name": "pets swagger yaml"
         },
         {
             "baseurl": "/api4",
-            "specification": "pets_swagger.json",
+            "specification": "./test/pets_swagger.json",
+            "authtype": "none",
             "name": "pets swagger json"
         },
         {
             "baseurl": "/api5",
             "metadata": "/mymetadata",
             "name": "courses",
-            "specification": "courses.yaml",
+            "specification": "./test/courses.yaml",
+            "authtype": "none",
             "oauth": "/myoauth/token",
             "added_endpoints": [
                 {
-                    "filePath": "Endpoint_template.yaml",
+                    "filePath": "./test/Endpoint_template.yaml",
                     "url": "/trial_endpoint"
                 }
             ]

@@ -8,7 +8,17 @@ const apis = require("./apis");
 
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-
+var AUTH_ENDPOINTS = {
+    "oauth": {
+        "url": "http://localhost/oauth/validate",
+        "clientId": "string",
+        "clientSecret": "string"
+    },
+    "basic": {
+        "username": "admin",
+        "password": "nimda"
+    }
+}
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI
@@ -18,11 +28,11 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
     if (!apisConfig)
         return
 
-    var serviceMetadata = defineServiceMetadata()
     var error_message = ""
     var promises = []
     for (var i = 0; i < apisConfig.length; i++) {
         var api = apisConfig[i]
+        var serviceMetadata = defineServiceMetadata()
         try {
             var reg_api;
             if (registeredApis.length > 0)
@@ -109,8 +119,13 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     serviceMetadata.api.targetUrl = hostname;
     if (api.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
+    if (api.authtype != "none") {
+        serviceMetadata.api.credentials[api.authtype] = AUTH_ENDPOINTS[api.authtype]
+    }
 
-    serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
+    if (api.authtype == "oauth")
+        serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
+
     if (!api.type || api.type != "odata") {
         var specInJson
         if (api.specification.endsWith(".json")) {
@@ -152,13 +167,7 @@ function defineServiceMetadata() {
         "description": "",
         "api": {
             "targetUrl": "http://localhost/target",
-            "credentials": {
-                "oauth": {
-                    "url": "http://localhost/oauth/validate",
-                    "clientId": "string",
-                    "clientSecret": "string"
-                }
-            },
+            "credentials": {},
             "spec": {}
         }
     }
