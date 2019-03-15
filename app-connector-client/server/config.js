@@ -26,6 +26,7 @@ function configValidation(configJson) {
     var error_message = "";
 
     var events = configJson.events;
+    var apis = configJson.apis
     if (events) {
         for (var i = 1; i <= events.length; i++) {
             {
@@ -56,10 +57,26 @@ function configValidation(configJson) {
             }
         }
     }
+    if (apis) {
+        for (var i = 1; i <= apis.length; i++) {
+            {
+                var api = apis[i - 1];
+
+                if (!api.authtype) {
+                    error_message += "\napi " + (api.name ? api.name : "number " + i) + ": missing attribute 'authtype', authtype is mandatory";
+                }
+                else if (!(api.authtype == "oauth" || api.authtype == "none" || api.authtype == "basic")) {
+                    error_message += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'authtype' should be one of three values [oauth, basic, none]";
+                }
+
+            }
+        }
+    }
     if (configJson.logo && !configJson.logo.match(/^.+\.(svg)$/)) {
         error_message += "\nlogo image must be in svg format"
     }
     if (error_message != "") {
+
         throw new Error("Validation of configuration failed: " + error_message);
     }
 }
