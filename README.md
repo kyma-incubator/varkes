@@ -7,27 +7,27 @@
 
 ## Overview
 
-Varkes (Greek for “small boats”) is a framework which allows you to develop your functionality in an easy way, even if it’s based on a heavy application. With this small boat at hand, you can mock the heavy application (the “big ship”) within minutes to start developing your functionality. Varkes allows you to experiment with Kyma and develop your applications without thinking about their deployment. 
+Varkes (Greek for “small boats”) is a framework which mocks applications. This "small boat" allows you to mock even a complex application (a "big ship") and develop your functionality in an easy way. Instead of setting up and deploying the application, you simply pair the mock with Kyma to develop and experiment with it. When you are done, simply switch the "ships" to work with the actual application, and you are ready to go.
 
 
-Varkes framework provides the following npm components to make the application mocks work:
+Varkes framework provides the following node modules to make the application mocks work:
 
-* Application Connector Client, which is used to get the certificate from the Kyma cluster. You can run it with `npm start` or use the Dockerfile to create a docker image. For details, see [Application Connector Client](app-connector-client/README.md).
+* **Application Connector Client** used to pair with the Kyma cluster to register Events and APIs and send Events. For details, see [Application Connector Client](app-connector-client/README.md).
 
-* OpenAPI mock, which mocks the application APIs based on the OpenAPI specification. For details, see [OpenAPI mock](openapi-mock/README.md).
+* **OpenAPI mock** which mocks the application APIs based on the OpenAPI specification. For details, see [OpenAPI mock](openapi-mock/README.md).
 
-* Odata Mock, which mocks the application APIs based on the OData specification. For details, see [OData mock](odata-mock/README.md).
+* **Odata mock** which mocks the application APIs based on the OData specification. For details, see [OData mock](odata-mock/README.md).
 
 ## Architecture
 
-The diagram shows you how an application mock integrates with a Kyma cluster and which functionality is taken over by which framework modules:
+The diagram shows how an application mock integrates with a Kyma cluster and which functionality is taken over by which framework modules:
 
 ![Mocks Architecture](/assets/mocks-architecture.svg)
 
 ## Examples
 
-The `examples` folder provides mocks written using OpenAPI and OData packages. 
-Working on examples in master branch without cloning the whole repository is currently impossible because they use development version numbers in their `package.json` files and these are not published to npm registry. If you want to use them without cloning the whole repository, refer to tags in `release` branch. There, you can find the latest version of the dependencies already included in their `package.json` files. 
+The `examples` folder includes mocks based on OpenAPI and OData packages. 
+>**NOTE:** Using examples in the `master` branch without cloning the whole repository is currently impossible because they use development version numbers in their `package.json` files and these are not published to npm registry. If you want to use them without cloning the whole repository, refer to tags in the `release` branch. There, you can find the latest version of the dependencies already included in their `package.json` files. 
 
 To create Docker images of examples, see the `release` branch, where npm installed in Docker containers can get the latest version from the registry.
 
