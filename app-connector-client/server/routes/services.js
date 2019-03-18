@@ -120,7 +120,7 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
         }
         serviceMetadata.api.spec = specInJson
 
-        if(!api.description && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")){
+        if (!api.description && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
             api.description = specInJson.info.description
         }
 
