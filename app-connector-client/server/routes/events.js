@@ -73,7 +73,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
             }
 
         } catch (error) {
-            var message = "Registration of Event API " + event.name + "failed: " + JSON.stringify(error)
+            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error)
             LOGGER.error(message)
             error_message += "\n" + message
         }
@@ -120,14 +120,18 @@ async function updateEvent(localKyma, eventMetadata, event, event_id) {
 }
 function fillEventData(eventMetadata, event) {
     eventMetadata.name = event.name;
-    if (eventMetadata.description) {
+    if (event.description) {
         eventMetadata.description = event.description;
     }
     else {
         eventMetadata.description = event.name;
     }
-    if (eventMetadata.labels) {
+    if (event.labels) {
         eventMetadata.labels = event.labels;
+    }
+
+    if (event.provider) {
+        eventMetadata.provider = event.provider;
     }
 
     var specInJson
@@ -142,7 +146,7 @@ function fillEventData(eventMetadata, event) {
 }
 function defineEventMetadata() {
     return {
-        "provider": "SAP Hybris",
+        "provider": "Varkes",
         "name": "",
         "description": "",
         "labels": {},

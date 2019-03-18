@@ -17,7 +17,7 @@ topics:
         properties:
           customerUid:
             type: string
-            example: adam@hybris.com
+            example: adam@example.com
             description: Email of a Customer
             title: Customer uid
           storeUid:
@@ -42,7 +42,7 @@ topics:
         properties:
           customerUid:
             type: string
-            example: adam@hybris.com
+            example: adam@example.com
             description: Email of a Customer
             title: Customer uid
           storeUid:

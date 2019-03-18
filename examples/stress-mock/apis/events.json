@@ -19,7 +19,7 @@
                     "properties": {
                         "customerUid": {
                             "type": "string",
-                            "example": "adam@hybris.com",
+                            "example": "adam@example.com",
                             "description": "Email of a Customer",
                             "title": "Customer uid"
                         },
@@ -52,7 +52,7 @@
                     "properties": {
                         "customerUid": {
                             "type": "string",
-                            "example": "adam@hybris.com",
+                            "example": "adam@example.com",
                             "description": "Email of a Customer",
                             "title": "Customer uid"
                         },
