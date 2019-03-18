@@ -1,8 +1,5 @@
-#This is currently similar to our jenkins build, install and build the docker image.
 APP_NAME = varkes-openapi-mock
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
-TAG = $(DOCKER_TAG)
-
 resolve:
 	npm install
 
