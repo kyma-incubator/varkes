@@ -119,34 +119,36 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
         }
         serviceMetadata.api.spec = specInJson
-        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
-        if (api.description) {
-            serviceMetadata.description = api.description;
-        } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
-            serviceMetadata.description = specInJson.info.description;
+
+        if(!api.description && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")){
+            api.description = specInJson.info.description
         }
-        else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
-            serviceMetadata.description = specInJson.info.title;
-        }
-        else {
-            serviceMetadata.description = api.name;
+
+        if (!api.name && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
+            api.name = specInJson.info.title;
         }
     }
     else {
-        if (api.description) {
-            serviceMetadata.description = api.description;
-        } else {
-            serviceMetadata.description = api.name;
-        }
-        serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
         serviceMetadata.api.apiType = "odata";
     }
+
+    if (api.provider) {
+        serviceMetadata.provider = api.provider
+    }
+
+    if (api.description) {
+        serviceMetadata.description = api.description;
+    } else {
+        serviceMetadata.description = api.name;
+    }
+
+    serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
     return serviceMetadata;
 }
 
 function defineServiceMetadata() {
     return {
-        "provider": "SAP Hybris",
+        "provider": "Varkes",
         "name": "ec-mock-service-4",
         "description": "",
         "api": {
