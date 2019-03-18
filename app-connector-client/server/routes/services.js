@@ -119,11 +119,12 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     serviceMetadata.api.targetUrl = hostname;
     if (api.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
-    if (api.authtype != "none") {
-        serviceMetadata.api.credentials[api.authtype] = AUTH_ENDPOINTS[api.authtype]
+
+    else if (api.auth && api.auth != "none") {
+        serviceMetadata.api.credentials[api.auth] = AUTH_ENDPOINTS[api.auth]
     }
 
-    if (api.authtype == "oauth")
+    if (api.auth == "oauth")
         serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
 
     if (!api.type || api.type != "odata") {

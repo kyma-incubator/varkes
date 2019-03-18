@@ -62,10 +62,7 @@ function configValidation(configJson) {
             {
                 var api = apis[i - 1];
 
-                if (!api.authtype) {
-                    error_message += "\napi " + (api.name ? api.name : "number " + i) + ": missing attribute 'authtype', authtype is mandatory";
-                }
-                else if (!(api.authtype == "oauth" || api.authtype == "none" || api.authtype == "basic")) {
+                if (api.auth && !(api.auth == "oauth" || api.auth == "none" || api.auth == "basic")) {
                     error_message += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'authtype' should be one of three values [oauth, basic, none]";
                 }
 
