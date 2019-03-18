@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "Schools Webservices"
+  description: "Simple API to manage schools"
   version: "2.0"
   title: "Schools Webservices"
 basePath: "/api2"

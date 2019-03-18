@@ -34,7 +34,7 @@
                         "code"
                     ],
                     "properties": {
-                        "customerUid": {
+                        "code": {
                             "type": "string",
                             "example": "123A",
                             "description": "Unique code of the school",

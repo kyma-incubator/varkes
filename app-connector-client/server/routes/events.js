@@ -73,7 +73,7 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
             }
 
         } catch (error) {
-            var message = "Registration of Event API " + event.name + "failed: " + JSON.stringify(error)
+            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error)
             LOGGER.error(message)
             error_message += "\n" + message
         }
