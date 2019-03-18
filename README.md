@@ -7,7 +7,7 @@
 
 ## Overview
 
-Varkes (Greek for “small boats”) is a framework which mocks applications. This "small boat" allows you to mock even a complex application (a "big ship") and develop your functionality in an easy way. Instead of setting up and deploying an often complex application, you simply pair the mock with Kyma to develop and experiment with it. When you are done, simply switch the "ships" to connent and work with the target application. 
+Varkes (Greek for “small boats”) is a framework which mocks applications. This "small boat" allows you to mock even a complex application (a "big ship") and develop your functionality in an easy way. Instead of setting up and deploying an often complex application, you simply pair the mock with Kyma to develop and experiment with it. When you are done, simply switch the "ships" to connect to and work with the target application. 
 
 Varkes framework provides the following node modules to make the application mocks work:
 
