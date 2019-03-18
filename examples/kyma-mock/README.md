@@ -24,7 +24,7 @@ Navigate to `http://localhost:10000/metadata/console` to see the metadata api co
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/develop/varkes-example-kyma-mock:latest
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-kyma-mock:0.1.0
 ```
 
 and to deploy the mock

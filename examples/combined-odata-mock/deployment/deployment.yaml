@@ -14,7 +14,7 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - image: eu.gcr.io/kyma-project/incubator/develop/varkes-example-combined-odata-mock:latest
+      - image: eu.gcr.io/kyma-project/incubator/varkes-example-combined-odata-mock:0.1.0
         imagePullPolicy: Always
         name: example-combined-odata-mock
         ports:
