@@ -12,12 +12,18 @@ After startup, you have access to:
 - rest API - http://localhost:10000/metadata
 - console - http://localhost:10000/console
 
-## Run mock
+## Development
 
-To run it local, specify the [varkes config](https://github.com/kyma-incubator/varkes/blob/master/app-connector-client/test/varkes_config.json) file:
+To run the Client locally, use an empty configuration:
 ```
 npm install
-node server/server <varkes_config.json>
+
+```
+To run it locally with debug logs enabled, and an example configuration from the test suite, run:
+
+```
+npm run start:dev
+
 ```
 
 After startup, you have access to:
@@ -27,10 +33,6 @@ After startup, you have access to:
 
 
 ## Documentation
-You can access OpenAPI documentation using `localhost:10000/metadata` or `swagger.yaml` file.
-
-## Tests
-- To run tests on a Kyma, provide the token URL as an environment variable. Set the `TOKENURL` to Kyma token.
-- Once you set the token, run `npm test` to test the project.
+You can access OpenAPI documentation using `localhost:10000/metadata` or the [api.yaml](server/resources/api.yaml) file.
 
 

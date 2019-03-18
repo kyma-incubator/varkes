@@ -11,7 +11,7 @@ The OpenAPI mock mocks the application APIs based on the OpenAPI specification.
 
 The OpenAPI mock brings you the following features:
 
-- OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference OpenAPI files.  You can also create your custom implementation for responses or errors.
+- OpenAPI Mock uses [Swagger-Express-Middleware](https://github.com/BigstickCarpet/swagger-express-middleware) to parse, validate, and dereference OpenAPI files.  You can also create your custom implementation for responses or errors. See [this document](https://github.com/APIDevTools/swagger-express-middleware/blob/master/docs/middleware/mock.md) to learn how the API mock reacts to incoming requests.
 
 - Records every request made to the node: The mock uses [morgan](https://www.npmjs.com/package/morgan)logging framework to create  a `requests.log` file. This file contains the called URLs, the request header, and the request body if exists.
 
@@ -20,13 +20,19 @@ The OpenAPI mock brings you the following features:
 - Returns a dummy OAuth2 token: By calling the '/authorizationserver/oauth/token' endpoint and adding the OAuth2 requirements as query parameters you can get a dummy OAuth2 token.
 
 
-## Run mock
+## Development
 
 
-To run the mock locally, specify the [varkes config](https://github.com/kyma-incubator/varkes/blob/master/openapi-mock/test/varkes_config.json) file:
+To run the OpenAPI mock locally, use an empty configuration:
 ```
 npm install
-node server/server <varkes_config.json>
+
+```
+To run it locally with debug logs enabled, and an example configuration from the test suite, run:
+
+```
+npm run start:dev
+
 ```
 
 
