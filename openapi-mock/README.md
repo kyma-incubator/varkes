@@ -15,17 +15,15 @@ The OpenAPI mock brings you the following features:
 
 - Records every request made to the node: The mock uses [morgan](https://www.npmjs.com/package/morgan)logging framework to create  a `requests.log` file. This file contains the called URLs, the request header, and the request body if exists.
 
-- Returns the OpenAPI specification as metadata: By calling '/metadata' you can see the OpenAPI specification in `text` or `x-yaml` format.
+- Returns the OpenAPI specification as metadata: Call '/metadata' to see the OpenAPI specification in `text` or `x-yaml` format.
 
-- Returns a dummy OAuth2 token: By calling the '/authorizationserver/oauth/token' endpoint and adding the OAuth2 requirements as query parameters you can get a dummy OAuth2 token.
 
 
 ## Development
 
-
 To run the OpenAPI mock locally, use an empty configuration:
 ```
-npm install
+npm start
 
 ```
 To run it locally with debug logs enabled, and an example configuration from the test suite, run:
@@ -34,6 +32,11 @@ To run it locally with debug logs enabled, and an example configuration from the
 npm run start:dev
 
 ```
+
+After the startup, you have access to:
+
+- rest API - `http://localhost:10000/myApiBasePath/metadata`
+- console - `http://localhost:10000/myApiBasePath/console`
 
 
 

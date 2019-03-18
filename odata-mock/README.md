@@ -15,25 +15,23 @@ The OData mock brings you the following features:
 
 - Records every request made to the node: Uses the [morgan](https://www.npmjs.com/package/morgan) logging framework to create `requests.log` file. This file contains the called URLs, the header of the request and the body of the request if exists.
 
-- Returns the OData specification as metadata: Call `/odata/$metadata` to see the OData edmx specification being use in xml format.
-
-
-After startup, you have access to:
-- odata API - `http://localhost:10000/odata/`
-- odata metadata - `http://localhost:10000/odata/$metadata`
-- rest API - `http://localhost:10000/api/console`
+- Returns the OData specification as metadata: Call `/odata/$metadata` to see the OData `edmx` specification used in `xml` format.
 
 
 ## Development
 
-To run the Odata mock locally, use an empty configuration:
+To run the Odata mock locally with an empty configuration, use:
 ```
-npm install
+npm start
 
 ```
-To run it locally with debug logs enabled, and an example configuration from the test suite, run:
+To run it locally with debug logs enabled and an example configuration from the test suite, use:
 
 ```
 npm run start:dev
 
 ```
+After the startup, you have access to:
+- odata API - `http://localhost:10000/odata/`
+- odata metadata - `http://localhost:10000/odata/$metadata`
+- rest API - `http://localhost:10000/api/console`

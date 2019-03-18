@@ -7,30 +7,25 @@
 
 App Connector Client provides an interface to pair your application with Kyma, register APIs and send Events.
 
-After startup, you have access to:
-- UI - http://localhost:10000
-- rest API - http://localhost:10000/metadata
-- console - http://localhost:10000/console
+After the startup, you have access to:
+
+- UI - `http://localhost:10000`
+- rest API - `http://localhost:10000/metadata`
+- console -`http://localhost:10000/console`
 
 ## Development
 
-To run the Client locally, use an empty configuration:
+To run the Client locally with an empty configuration, use:
 ```
-npm install
+npm start
 
 ```
-To run it locally with debug logs enabled, and an example configuration from the test suite, run:
+To run it locally with debug logs enabled and an example configuration from the test suite, use:
 
 ```
 npm run start:dev
 
 ```
-
-After startup, you have access to:
-- UI - `http://localhost:10000`
-- rest API - `http://localhost:10000/metadata`
-- console - `http://localhost:10000/console`
-
 
 ## Documentation
 You can access OpenAPI documentation using `localhost:10000/metadata` or the [api.yaml](server/resources/api.yaml) file.
