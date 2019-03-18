@@ -4,11 +4,13 @@
         {
             "baseurl": "/api2",
             "specification": "apis/schools.yaml",
-            "name": "schools"
+            "name": "Schools API",
+            "description": "Simple API to manage schools"
         },
         {
             "baseurl": "/api1",
-            "name": "courses",
+            "name": "Courses API",
+            "description": "Simple API to manage courses",
             "metadata": "/courseMetadata",
             "specification": "apis/courses.yaml",
             "oauth": "/coursesOauth/token"
@@ -17,11 +19,8 @@
     "events": [
         {
             "specification": "apis/events.json",
-            "name": "events",
-            "description": "All Events v1",
-            "labels": {
-                "label1": "value1"
-            }
+            "name": "School events",
+            "description": "Events related to schools for demo purpose"
         }
     ]
 }

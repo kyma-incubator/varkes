@@ -120,12 +120,11 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
         }
         serviceMetadata.api.spec = specInJson
 
-        if (!api.description && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
-            api.description = specInJson.info.description
-        }
-
-        if (!api.name && specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
-            api.name = specInJson.info.title;
+        if (!api.description) {
+            if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
+                api.description = specInJson.info.description
+            } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title"))
+                api.description = specInJson.info.title;
         }
     }
     else {
