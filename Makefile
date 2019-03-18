@@ -13,7 +13,7 @@ ci-pr: resolve validate
 ci-master: resolve validate
 
 .PHONY: ci-release
-ci-release: npm-publish docker-push
+ci-release: npm-publish docker-build docker-push
 
 resolve:
 	npx lerna bootstrap --hoist
@@ -31,6 +31,11 @@ clean:
 
 test:
 	echo $(DOCKER_TAG)
+
+docker-build:
+	#call docker-push in sub makefiles with docker parameter
+	npx lerna exec --no-bail -- make docker-build DOCKER_TAG=$(DOCKER_TAG)
+
 docker-push:
 	#call docker-push in sub makefiles with docker parameter
 	npx lerna exec --no-bail -- make docker-push DOCKER_TAG=$(DOCKER_TAG)
