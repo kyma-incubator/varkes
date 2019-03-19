@@ -31,7 +31,6 @@ function configValidation(configJson) {
         for (var i = 1; i <= events.length; i++) {
             {
                 var event = events[i - 1];
-
                 if (!event.name) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
@@ -63,15 +62,12 @@ function configValidation(configJson) {
             if (api.auth && !(api.auth == "oauth" || api.auth == "none" || api.auth == "basic")) {
                 error_message += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'auth' should be one of three values [oauth, basic, none]";
             }
-
-
         }
     }
     if (configJson.logo && !configJson.logo.match(/^.+\.(svg)$/)) {
         error_message += "\nlogo image must be in svg format"
     }
     if (error_message != "") {
-
         throw new Error("Validation of configuration failed: " + error_message);
     }
 }
