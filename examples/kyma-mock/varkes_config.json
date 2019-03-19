@@ -4,18 +4,18 @@
         {
             "baseurl": "/connector",
             "specification": "apis/connector.yaml",
-            "authtype": "none",
+            "auth": "none",
             "name": "Kyma Connector"
         },
         {
             "baseurl": "/events",
-            "authtype": "none",
+            "auth": "none",
             "specification": "apis/events.yaml",
             "name": "Kyma Events"
         },
         {
             "baseurl": "/metadata",
-            "authtype": "none",
+            "auth": "none",
             "specification": "apis/metadata.yaml",
             "name": "Kyma Metadata"
         }

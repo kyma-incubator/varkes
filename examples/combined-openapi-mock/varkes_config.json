@@ -5,7 +5,7 @@
             "baseurl": "/api2",
             "specification": "apis/schools.yaml",
             "name": "Schools API",
-            "authtype": "basic"
+            "auth": "basic"
         },
         {
             "baseurl": "/api1",
@@ -13,7 +13,7 @@
             "description": "Simple API to manage courses",
             "metadata": "/courseMetadata",
             "specification": "apis/courses.yaml",
-            "authtype": "oauth",
+            "auth": "oauth",
             "oauth": "/coursesOauth/token"
         }
     ],

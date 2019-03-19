@@ -5,7 +5,7 @@
             "name": "services",
             "metadata": "/services/metadata",
             "specification": "apis/services.xml",
-            "authtype": "none",
+            "auth": "none",
             "type": "odata"
         }
     ]
