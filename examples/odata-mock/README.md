@@ -22,7 +22,7 @@ Navigate to `http://localhost:10000/odata/` to browse odata API
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-odata-mock:0.1.0
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-odata-mock:latest
 ```
 
 ## Run in Kyma

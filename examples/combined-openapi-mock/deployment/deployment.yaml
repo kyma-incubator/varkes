@@ -14,7 +14,7 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - image: eu.gcr.io/kyma-project/incubator/varkes-example-combined-openapi-mock:0.1.0
+      - image: eu.gcr.io/kyma-project/incubator/varkes-example-combined-openapi-mock:latest
         imagePullPolicy: Always
         name: example-combined-openapi-mock
         ports:

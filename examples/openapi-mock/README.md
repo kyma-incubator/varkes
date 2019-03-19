@@ -20,7 +20,7 @@ Navigate to `http://localhost:10000/console` to see the console
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-openapi-mock:0.1.0
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-openapi-mock:latest
 ```
 
 ## Run in Kyma

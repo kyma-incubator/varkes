@@ -19,7 +19,7 @@ Navigate to `http://localhost:10000/api[3,..,152]/console` to see the console of
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-stress-mock:0.1.0
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-stress-mock:latest
 ```
 
 ## Run in Kyma

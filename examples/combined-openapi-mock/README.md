@@ -23,7 +23,7 @@ Navigate to `http://localhost:10000/api2/console` to see the console of the `sch
 
 To run it using docker, call:
 ```
-docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-combined-openapi-mock:0.1.0
+docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-combined-openapi-mock:latest
 ```
 
 ## Run in Kyma
