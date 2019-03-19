@@ -14,10 +14,10 @@ const events = require("./routes/events")
 var apis = require("./routes/apis")
 var keys = require("./keys")
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
-module.exports = function (varkesConfigPath = null, nodePortParam = null) {
+module.exports = function (varkesConfigPath = null, nodePortParam = null, currentPath = "") {
     var app = express()
     app.use(bodyParser.json());
-    var varkesConfig = config(varkesConfigPath)
+    var varkesConfig = config(varkesConfigPath, path.dirname(path.resolve(currentPath, varkesConfigPath)))
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
     } else {

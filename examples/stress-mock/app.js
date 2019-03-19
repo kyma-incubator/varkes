@@ -22,9 +22,9 @@ var runAsync = async () => {
     }
     fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config))
     try {
-        app.use(await connectorApp("./generated/varkes_config.json"))
-        app.use(await odataApp.init("./generated/varkes_config.json"))
-        app.use(await openapiApp("./generated/varkes_config.json"))
+        app.use(await connectorApp("./generated/varkes_config.json", null, __dirname))
+        app.use(await odataApp.init("./generated/varkes_config.json", __dirname))
+        app.use(await openapiApp("./generated/varkes_config.json", __dirname))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
@@ -41,14 +41,14 @@ function generateConfig() {
         "events": []
     }
     var openapi = {
-        "specification": "apis/schools.yaml"
+        "specification": "../apis/schools.yaml"
     };
     var odataapi = {
-        "specification": "apis/services.xml",
+        "specification": "../apis/services.xml",
         "type": "odata"
     }
     var event = {
-        "specification": "apis/events.json",
+        "specification": "../apis/events.json",
         "description": "All Events v1",
         "labels": {
             "label1": "value1"

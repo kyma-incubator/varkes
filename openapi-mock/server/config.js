@@ -15,13 +15,14 @@ module.exports = function (varkesConfigPath, currentDirectory) {
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig), "utf-8")
         varkesConfig.apis.map(api => {
-            api.specification = path.resolve(currentDirectory, api.specification)
+            api.specification = path.resolve(path.dirname(endpointConfig), api.specification)
             if (api.added_endpoints) {
                 api.added_endpoints.map(ae => {
-                    ae.filePath = path.resolve(currentDirectory, ae.filePath)
+                    ae.filePath = path.resolve(path.dirname(endpointConfig), ae.filePath)
                 })
             }
         })
+        console.log(varkesConfig)
 
         configValidation(varkesConfig)
     } else {
