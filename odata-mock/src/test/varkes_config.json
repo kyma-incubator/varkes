@@ -5,6 +5,7 @@
             "name": "services",
             "metadata": "/services/metadata",
             "specification": "services.xml",
+            "auth": "none",
             "type": "odata"
         }
     ]

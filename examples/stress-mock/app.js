@@ -41,10 +41,12 @@ function generateConfig() {
         "events": []
     }
     var openapi = {
-        "specification": "apis/schools.yaml"
+        "specification": "apis/schools.yaml",
+        "auth": "basic",
     };
     var odataapi = {
         "specification": "apis/services.xml",
+        "auth": "basic",
         "type": "odata"
     }
     var event = {
