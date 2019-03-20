@@ -16,7 +16,7 @@ var runAsync = async () => {
     }
 
     try {
-        app.use(await connectorApp(configPath))
+        app.use(await connectorApp.init(configPath))
         app.listen(10000, function () {
             LOGGER.info("Started application on port %d", 10000)
         });

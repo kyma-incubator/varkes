@@ -11,9 +11,9 @@ var runAsync = async () => {
     if (process.argv.length > 2) {
         configPath = process.argv[2]
     }
-    
+
     try {
-        app.use(await openapiApp(configPath))
+        app.use(await openapiApp.init(configPath))
         app.listen(10000, function () {
             LOGGER.info("Started application on port %d", 10000)
         });
