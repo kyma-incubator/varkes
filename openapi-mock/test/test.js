@@ -7,7 +7,7 @@ const express = require('express')
 
 describe('controllers', function () {
   it('should work', function (done) {
-    mock('varkes_config.json', __dirname).then(function (mock) {
+    mock.init('varkes_config.json', __dirname).then(function (mock) {
       var app = express()
       app.get('/api1/pets/:petId', function (req, res, next) {
         res.body = {

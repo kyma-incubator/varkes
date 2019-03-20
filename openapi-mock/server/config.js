@@ -22,7 +22,6 @@ module.exports = function (varkesConfigPath, currentDirectory) {
                 })
             }
         })
-        console.log(varkesConfig)
 
         configValidation(varkesConfig)
     } else {

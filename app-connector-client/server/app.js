@@ -14,7 +14,7 @@ const events = require("./routes/events")
 var apis = require("./routes/apis")
 var keys = require("./keys")
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
-module.exports = function (varkesConfigPath = null, nodePortParam = null, currentPath = "") {
+function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     var app = express()
     app.use(bodyParser.json());
     var varkesConfig = config(varkesConfigPath, path.dirname(path.resolve(currentPath, varkesConfigPath)))
@@ -51,4 +51,8 @@ module.exports = function (varkesConfigPath = null, nodePortParam = null, curren
     return new Promise(function (resolve, reject) {
         resolve(app)
     });
+}
+
+module.exports = {
+    init: init
 }

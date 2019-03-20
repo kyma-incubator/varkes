@@ -13,7 +13,7 @@ ci-pr: resolve validate
 ci-master: resolve validate
 
 .PHONY: ci-release
-ci-release: npm-publish docker-build docker-push
+ci-release: resolve npm-publish docker-build docker-push
 
 resolve:
 	npx lerna bootstrap --hoist
