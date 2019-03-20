@@ -1,9 +1,9 @@
 <p align="center">
- <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo_medium.png" width="235">
+ <img src="../logos/logo.svg" width="150">
 </p>
 
 # App Connector Client
-[![npm version](https://badge.fury.io/js/varkes-app-connector-client.svg)](https://badge.fury.io/js/varkes-app-connector-client)
+[![npm version](https://badge.fury.io/js/%40varkes%2Fapp-connector-client.svg)](https://badge.fury.io/js/%40varkes%2Fapp-connector-client)
 
 App Connector Client provides an interface to pair your application with Kyma, register APIs and send Events.
 
