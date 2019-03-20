@@ -11,7 +11,10 @@ function config(varkesConfigPath: string, currentPath: string): VarkesConfigType
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(currentPath, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig))
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
+        varkesConfig.apis.map((api: any) => {
+            api.specification = path.resolve(path.dirname(endpointConfig), api.specification)
+        })
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")

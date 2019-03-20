@@ -120,7 +120,7 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     if (api.baseurl)
         serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
 
-    else if (api.auth && api.auth != "none") {
+    if (api.auth && api.auth != "none") {
         serviceMetadata.api.credentials[api.auth] = AUTH_ENDPOINTS[api.auth]
     }
 

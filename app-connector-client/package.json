@@ -5,7 +5,7 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node server/server",
-    "start:dev": "export DEBUG=true && node server/server test/varkes_config.json",
+    "start:dev": "export DEBUG=true && node server/server ../test/varkes_config.json",
     "test": "nyc mocha --exit"
   },
   "publishConfig": {
