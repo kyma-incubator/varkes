@@ -7,23 +7,21 @@ const fs = require("fs")
 const LOGGER = require("./logger").logger
 const path = require("path")
 const bodyParser = require('body-parser');
-const CONFIG = require("./config.json")
 const expressWinston = require('express-winston');
 const connector = require("./routes/connector");
 const events = require("./routes/events")
-var apis = require("./routes/apis")
-var keys = require("./keys")
+const apis = require("./routes/apis")
+const connection = require("./connection")
+
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
+
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
+
+    var varkesConfig = config(varkesConfigPath, currentPath)
+    connection.init()
+    
     var app = express()
     app.use(bodyParser.json());
-    var varkesConfig = config(varkesConfigPath, currentPath)
-    if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
-        CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
-    } else {
-        keys.generatePrivateKey()
-    }
-
     app.use(expressWinston.logger(LOGGER))
 
     app.use("/apis", apis.router())

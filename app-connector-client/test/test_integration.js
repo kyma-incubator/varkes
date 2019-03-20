@@ -27,9 +27,7 @@ describe("should work", () => {
 
         await request(server)  //* Make sure we are connected to kyma
             .post("/connection")
-            .send(
-                { "url": tokenURL }
-            )
+            .send({ "url": tokenURL, "register": true })
             .set('Accept', 'application/json').
             expect(200)
 
@@ -53,6 +51,30 @@ describe("should work", () => {
                 .get("/metadata")
                 .expect(200)
         })
+        it('404 everything else', function testPath() {
+            return request(server)
+                .get('/foo/bar')
+                .expect(404);
+        });
+    });
+
+    describe('bundled apis', function () {
+        it('apis contains schools and courses', function testSlash() {
+            return request(server)
+                .get('/apis')
+                .expect(200)
+                .expect(/"name":"schools"/)
+                .expect(/"name":"courses"/)
+        });
+
+        it('events contains events1 and events2', function testSlash() {
+            return request(server)
+                .get('/apis')
+                .expect(200)
+                .expect(/"name":"events1"/)
+                .expect(/"name":"events2"/)
+        });
+
         it('404 everything else', function testPath() {
             return request(server)
                 .get('/foo/bar')
@@ -124,6 +146,11 @@ describe("should work", () => {
                 .get("/connection")
                 .expect(200)
         })
+        it("can get logo", () => {
+            return request(server)
+                .get("/logo")
+                .expect(200)
+        })
     })
     describe("test controllers", () => {
         it('should return 200', () => {
@@ -164,9 +191,7 @@ function createService(server) {
     return new Promise((resolve, reject) => {
         request(server)
             .post("/apis/")
-            .send(
-                JSON.parse(fs.readFileSync(serviceMetadata))
-            )
+            .send(JSON.parse(fs.readFileSync(serviceMetadata)))
             .set("Accept", "application/json")
             .expect(200)
             .end((err, res) => {

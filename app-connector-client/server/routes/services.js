@@ -24,12 +24,11 @@ module.exports = {
     getAllAPI: getAllAPI
 }
 
-async function createServicesFromConfig(localKyma, hostname, apisConfig, registeredApis) {
+async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
 
     var error_message = ""
-    var promises = []
     for (var i = 0; i < apisConfig.length; i++) {
         var api = apisConfig[i]
         var serviceMetadata = defineServiceMetadata()
@@ -38,16 +37,15 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
             if (registeredApis.length > 0)
                 reg_api = registeredApis.find(x => x.name == api.name);
             if (!reg_api) {
-                promises.push(createService(localKyma, serviceMetadata, api, hostname))
+                await createService(serviceMetadata, api, hostname)
                 LOGGER.debug("Registered API successful: %s", api.name)
             }
             else {
-                promises.push(updateService(localKyma, serviceMetadata, api, reg_api.id, hostname));
+                await updateService(serviceMetadata, api, reg_api.id, hostname)
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
-            await Promise.all(promises);
         } catch (error) {
-            var message = "Registration of API " + api.name + "failed: " + error.message
+            var message = "Registration of API " + api.name + " failed: " + error.message
             LOGGER.error(message)
             error_message += "\n" + message
         }
@@ -58,11 +56,11 @@ async function createServicesFromConfig(localKyma, hostname, apisConfig, registe
     return registeredApis;
 }
 
-function createService(localKyma, serviceMetadata, api, hostname) {
+function createService(serviceMetadata, api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         serviceMetadata = fillServiceMetadata(serviceMetadata, api, hostname);
-        apis.createAPI(localKyma, serviceMetadata, function (err, httpResponse, body) {
+        apis.createAPI(serviceMetadata, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -78,11 +76,11 @@ function createService(localKyma, serviceMetadata, api, hostname) {
     })
 }
 
-function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
+function updateService(serviceMetadata, api, api_id, hostname) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
         serviceMetadata = fillServiceMetadata(serviceMetadata, api, hostname);
-        apis.updateAPI(localKyma, serviceMetadata, api_id, function (err, httpResponse, body) {
+        apis.updateAPI(serviceMetadata, api_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -98,10 +96,10 @@ function updateService(localKyma, serviceMetadata, api, api_id, hostname) {
     })
 }
 
-function getAllAPI(localKyma) {
+function getAllAPI() {
     LOGGER.debug("Get all API ")
     return new Promise((resolve, reject) => {
-        apis.getAllAPIs(localKyma, function (error, httpResponse, body) {
+        apis.getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 reject(error);
             } else if (httpResponse.statusCode >= 400) {
@@ -146,7 +144,7 @@ function fillServiceMetadata(serviceMetadata, api, hostname) {
     else {
         serviceMetadata.api.apiType = "odata";
     }
-
+    
     if (api.provider) {
         serviceMetadata.provider = api.provider
     }

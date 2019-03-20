@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const CONFIG = require("../config.json")
-const path = require("path")
+const connection = require("../connection")
 const request = require("request")
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-var express = require("express")
-const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+const express = require("express")
 const openapiSampler = require('openapi-sampler');
-var refParser = require('json-schema-ref-parser');
+const refParser = require('json-schema-ref-parser');
+
 module.exports = {
     router: router,
     updateAPI: updateAPI,
@@ -24,7 +22,7 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        getAllAPIs(req.query.localKyma, function (error, httpResponse, body) {
+        getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
@@ -39,49 +37,49 @@ function getAll(req, res) {
     }
 };
 
-function getAllAPIs(localKyma, cb) {
+function getAllAPIs(cb) {
     request({
-        url: CONFIG.URLs.metadataUrl,
+        url: connection.info().metadataUrl,
         method: "GET",
         agentOptions: {
-            cert: fs.readFileSync(certFile),
-            key: fs.readFileSync(keyFile)
+            cert: fs.readFileSync(connection.info().certificate),
+            key: fs.readFileSync(connection.privateKey())
         },
-        rejectUnauthorized: !localKyma
+        rejectUnauthorized: !connection.info().insecure
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
 };
 
-function createAPI(localKyma, serviceMetadata, cb) {
+function createAPI(serviceMetadata, cb) {
     request.post({
-        url: CONFIG.URLs.metadataUrl,
+        url: connection.info().metadataUrl,
         headers: {
             "Content-Type": "application/json"
         },
         json: serviceMetadata,
         agentOptions: {
-            cert: fs.readFileSync(certFile),
-            key: fs.readFileSync(keyFile)
+            cert: fs.readFileSync(connection.info().certificate),
+            key: fs.readFileSync(connection.privateKey())
         },
-        rejectUnauthorized: !localKyma
+        rejectUnauthorized: !connection.info().insecure
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
 };
 
-function updateAPI(localKyma, serviceMetadata, api_id, cb) {
+function updateAPI(serviceMetadata, api_id, cb) {
     request.put({
-        url: `${CONFIG.URLs.metadataUrl}/${api_id}`,
+        url: `${connection.info().metadataUrl}/${api_id}`,
         headers: {
             "Content-Type": "application/json"
         },
         json: serviceMetadata,
         agentOptions: {
-            cert: fs.readFileSync(certFile),
-            key: fs.readFileSync(keyFile)
+            cert: fs.readFileSync(connection.info().certificate),
+            key: fs.readFileSync(connection.privateKey())
         },
-        rejectUnauthorized: !localKyma
+        rejectUnauthorized: !connection.info().insecure
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
@@ -93,7 +91,7 @@ function create(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        createAPI(req.query.localKyma, req.body, function (error, httpResponse, body) {
+        createAPI(req.body, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
@@ -115,12 +113,12 @@ function get(req, res) {
         res.status(400).send({ error: err })
     } else {
         request.get({
-            url: `${CONFIG.URLs.metadataUrl}/${req.params.api}`,
+            url: `${connection.info().metadataUrl}/${req.params.api}`,
             agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
+                cert: fs.readFileSync(connection.info().certificate),
+                key: fs.readFileSync(connection.privateKey())
             },
-            rejectUnauthorized: !req.query.localKyma
+            rejectUnauthorized: !connection.info().insecure
         }, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting API: %s", error)
@@ -165,7 +163,7 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        updateAPI(req.query.localKyma, req.body, req.params.api,
+        updateAPI(req.body, req.params.api,
             function (error, httpResponse, body) {
                 if (error) {
                     LOGGER.error("Error while updating API: %s", error)
@@ -188,12 +186,12 @@ function deleteApi(req, res) {
         res.status(400).send({ error: err })
     } else {
         request.delete({
-            url: `${CONFIG.URLs.metadataUrl}/${req.params.api}`,
+            url: `${connection.info().metadataUrl}/${req.params.api}`,
             agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
+                cert: fs.readFileSync(connection.info().certificate),
+                key: fs.readFileSync(connection.privateKey())
             },
-            rejectUnauthorized: !req.query.localKyma
+            rejectUnauthorized: !connection.info().insecure
         }, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while deleting API: %s", error)
@@ -210,7 +208,7 @@ function deleteApi(req, res) {
 }
 
 function assureConnected() {
-    if (CONFIG.URLs.metadataUrl == "") {
+    if (!connection.isEstablished()) {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null

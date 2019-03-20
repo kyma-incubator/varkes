@@ -4,14 +4,10 @@
 const express = require('express')
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-const path = require("path")
-const CONFIG = require("../config.json")
+const connection = require("../connection")
 const apis = require("./apis");
 const request = require("request")
 const yaml = require('js-yaml');
-
-const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
 
 module.exports = {
     router: router,
@@ -24,16 +20,16 @@ function sendEvent(req, res) {
         res.status(400).send({ error: err })
     } else {
         request.post({
-            url: CONFIG.URLs.eventsUrl,
+            url: connection.info().eventsUrl,
             headers: {
                 "Content-Type": "application/json"
             },
             json: req.body,
             agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
+                cert: fs.readFileSync(connection.info().certificate),
+                key: fs.readFileSync(connection.privateKey())
             },
-            rejectUnauthorized: !req.params.localKyma
+            rejectUnauthorized: !connection.info().insecure
         }, (error, httpResponse, body) => {
             if (error) {
                 LOGGER.error("Error while Sending Event: %s", error)
@@ -51,7 +47,7 @@ function sendEvent(req, res) {
     }
 }
 
-async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
+async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
@@ -65,11 +61,11 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
                 reg_api = registeredApis.find(x => x.name == event.name);
             if (!reg_api) {
                 LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createEvent(localKyma, eventMetadata, event)
+                await createEvent(eventMetadata, event)
             }
             else {
                 LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateEvent(localKyma, eventMetadata, event, reg_api.id)
+                await updateEvent(eventMetadata, event, reg_api.id)
             }
 
         } catch (error) {
@@ -83,11 +79,11 @@ async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
     }
 }
 
-function createEvent(localKyma, eventMetadata, event) {
+function createEvent(eventMetadata, event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         eventMetadata = fillEventData(eventMetadata, event);
-        apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
+        apis.createAPI(eventMetadata, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -101,11 +97,11 @@ function createEvent(localKyma, eventMetadata, event) {
 
     })
 }
-async function updateEvent(localKyma, eventMetadata, event, event_id) {
+async function updateEvent(eventMetadata, event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         eventMetadata = fillEventData(eventMetadata, event)
-        apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
+        apis.updateAPI(eventMetadata, event_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -164,7 +160,7 @@ function router() {
 
 function assureConnected() {
 
-    if (CONFIG.URLs.metadataUrl == "") {
+    if (connection.info().metadataUrl == "") {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null
