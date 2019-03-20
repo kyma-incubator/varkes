@@ -11,7 +11,7 @@ function config(varkesConfigPath: string, currentPath: string): VarkesConfigType
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(currentPath, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = require(endpointConfig)
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig))
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")

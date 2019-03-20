@@ -18,7 +18,8 @@ async function init(varkesConfigPath: string, currentPath = "") {
   app.varkesConfig = varkesConfig
 
   LOGGER.info("Parsing specifications and generating models")
-  var bootConfig = await generateBootConfig(varkesConfig, currentPath)
+  //get the absolute path of varkesconfig after resolving so that subfiles can be referenced from varkesConfig.
+  var bootConfig = await generateBootConfig(varkesConfig, path.dirname(path.resolve(currentPath, varkesConfigPath)))
 
   LOGGER.info("Booting loopback middleware")
 

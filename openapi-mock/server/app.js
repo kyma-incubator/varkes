@@ -6,9 +6,9 @@ const bodyParser = require('body-parser');
 const mock = require("./mock");
 const express = require("express");
 const config = require('./config.js')
-
-module.exports = async function (varkesConfigPath, currentDirectory = "") {
+async function init(varkesConfigPath, currentDirectory = "") {
   var app = express()
+
   var varkesConfig = config(varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
@@ -16,3 +16,4 @@ module.exports = async function (varkesConfigPath, currentDirectory = "") {
   return app;
 }
 
+module.exports = { init: init }

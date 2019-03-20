@@ -8,12 +8,18 @@ const check_api = require('check_api');
 const yaml = require('js-yaml');
 const pretty_yaml = require('json-to-pretty-yaml');
 
-module.exports = function (varkesConfigPath) {
+module.exports = function (varkesConfigPath, currentDirectory) {
     var varkesConfig
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(varkesConfigPath);
         LOGGER.info("Using configuration %s", endpointConfig);
-        varkesConfig = require(endpointConfig);
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig));
+        varkesConfig.apis.map(element => {
+            element.specification = path.resolve(currentDirectory, element.specification)
+        })
+        varkesConfig.events.map(element => {
+            element.specification = path.resolve(currentDirectory, element.specification)
+        })
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
@@ -24,7 +30,6 @@ module.exports = function (varkesConfigPath) {
 
 function configValidation(configJson) {
     var error_message = "";
-
     var events = configJson.events;
     var apis = configJson.apis
     if (events) {

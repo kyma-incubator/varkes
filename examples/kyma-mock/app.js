@@ -14,7 +14,7 @@ var runAsync = async () => {
 
     try {
         customizeMock(app)
-        app.use(await openapiApp("./varkes_config.json", __dirname))
+        app.use(await openapiApp.init("./varkes_config.json", __dirname))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
