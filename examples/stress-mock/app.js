@@ -45,6 +45,7 @@ function generateConfig() {
     };
     var odataapi = {
         "specification": "../apis/services.xml",
+
         "type": "odata"
     }
     var event = {

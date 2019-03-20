@@ -1,9 +1,9 @@
 <p align="center">
- <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo_medium.png" width="235">
+ <img src="../logos/logo.svg" width="150">
 </p>
 
 # OData Mock
-[![npm version](https://badge.fury.io/js/varkes-odata-mock.svg)](https://badge.fury.io/js/varkes-odata-mock)
+[![npm version](https://badge.fury.io/js/%40varkes%2Fodata-mock.svg)](https://badge.fury.io/js/%40varkes%2Fodata-mock)
 
 The OData mock mocks the application APIs based on the OData specification.
 

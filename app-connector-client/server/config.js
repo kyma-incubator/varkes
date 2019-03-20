@@ -31,11 +31,11 @@ module.exports = function (varkesConfigPath, currentDirectory) {
 function configValidation(configJson) {
     var error_message = "";
     var events = configJson.events;
+    var apis = configJson.apis
     if (events) {
         for (var i = 1; i <= events.length; i++) {
             {
                 var event = events[i - 1];
-
                 if (!event.name) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory";
                 }
@@ -58,6 +58,14 @@ function configValidation(configJson) {
                         }
                     })
                 }
+            }
+        }
+    }
+    if (apis) {
+        for (var i = 1; i <= apis.length; i++) {
+            var api = apis[i - 1];
+            if (api.auth && !(api.auth == "oauth" || api.auth == "none" || api.auth == "basic")) {
+                error_message += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'auth' should be one of three values [oauth, basic, none]";
             }
         }
     }

@@ -4,6 +4,7 @@
         {
             "name": "services",
             "specification": "apis/services.xml",
+            "auth": "basic",
             "type": "odata"
         }
     ],

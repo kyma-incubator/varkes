@@ -29,6 +29,7 @@
         {
             "baseurl": "/entity",
             "metadata": "/metadata",
+            "auth": "oauth",
             "oauth": "/authorizationserver/oauth/token",
             "specification": "schools.json",
             "name": "schools",
@@ -43,9 +44,11 @@
         {
             "baseurl": "/entity/v1",
             "metadata": "/metadata",
+            "auth": "basic",
             "name": "courses",
             "specification": "courses.yaml",
             "oauth": "/authorizationserver/oauth/token"
+
         }
     ]
 }
