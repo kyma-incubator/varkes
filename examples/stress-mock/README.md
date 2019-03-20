@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="../../logos/logo.svg" width="150">
+</p>
+
 # stress-mock example
 
 This example is to test the application-mock capability of registering over 300 apis to kyma, kyma ability to handle that many request and the ability of the openapi-mock and odata-mock serve these apis.

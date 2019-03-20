@@ -1,9 +1,9 @@
 <p align="center">
- <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo_medium.png" width="235">
+ <img src="../logos/logo.svg" width="150">
 </p>
 
 # OpenAPI Mock
-[![npm version](https://badge.fury.io/js/varkes-openapi-mock.svg)](https://badge.fury.io/js/varkes-openapi-mock)
+[![npm version](https://badge.fury.io/js/%40varkes%2Fopenapi-mock.svg)](https://badge.fury.io/js/%40varkes%2Fopenapi-mock)
 
 The OpenAPI mock mocks the application APIs based on the OpenAPI specification.
 
