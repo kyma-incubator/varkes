@@ -11,14 +11,14 @@ const pretty_yaml = require('json-to-pretty-yaml');
 module.exports = function (varkesConfigPath, currentDirectory) {
     var varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(varkesConfigPath);
+        var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig);
-        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig));
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"));
         varkesConfig.apis.map(element => {
-            element.specification = path.resolve(currentDirectory, element.specification)
+            element.specification = path.resolve(path.dirname(endpointConfig), element.specification)
         })
         varkesConfig.events.map(element => {
-            element.specification = path.resolve(currentDirectory, element.specification)
+            element.specification = path.resolve(path.dirname(endpointConfig), element.specification)
         })
         configValidation(varkesConfig)
     } else {

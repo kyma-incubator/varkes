@@ -13,7 +13,7 @@ module.exports = function (varkesConfigPath, currentDirectory) {
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
-        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig), "utf-8")
+        varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
         varkesConfig.apis.map(api => {
             api.specification = path.resolve(path.dirname(endpointConfig), api.specification)
             if (api.added_endpoints) {

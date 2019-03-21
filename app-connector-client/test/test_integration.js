@@ -20,7 +20,7 @@ describe("should work", () => {
         await kyma.then(app => {
             kymaServer = app.listen(port)
         })
-        await mock.init("./test/varkes_config.json").then((mock) => {
+        await mock.init("varkes_config.json", __dirname).then((mock) => {
             server = express()
             server.use(mock)
         })

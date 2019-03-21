@@ -17,7 +17,7 @@ const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     var app = express()
     app.use(bodyParser.json());
-    var varkesConfig = config(varkesConfigPath, path.dirname(path.resolve(currentPath, varkesConfigPath)))
+    var varkesConfig = config(varkesConfigPath, currentPath)
     if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
         CONFIG.URLs = JSON.parse(fs.readFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile)))
     } else {
