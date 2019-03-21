@@ -13,8 +13,8 @@ const privateKeyFile = path.resolve(keysDirectory, "app.key")
 
 // global connection state, not thread-safe for now
 var connection
-var privateKey
-var certificate
+var privateKeyData
+var certificateData
 
 module.exports = {
     init: init,
@@ -33,10 +33,10 @@ function init() {
     }
 
     if (fs.existsSync(privateKeyFile)) {
-        privateKey = fs.readFileSync(privateKeyFile, "utf-8")
+        privateKeyData = fs.readFileSync(privateKeyFile, "utf-8")
         LOGGER.info("Found existing private key: %s", privateKeyFile)
     } else {
-        privateKey = generatePrivateKey(privateKeyFile)
+        privateKeyData = generatePrivateKey(privateKeyFile)
     }
     
 
@@ -46,13 +46,14 @@ function init() {
     }
 
     if (fs.existsSync(crtFile)) {
-        certificate = fs.readFileSync(crtFile, "utf-8")
+        certificateData = fs.readFileSync(crtFile, "utf-8")
         LOGGER.info("Found existing certificate: %s", crtFile)
     }
 }
 
 function establish(connData, crtData) {
     connection = connData
+    certificateData = crtData
     fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), "utf8")
     fs.writeFileSync(crtFile, crtData, "utf8")
     LOGGER.debug("Wrote connection file to '%s' using value '%s'", connFile, JSON.stringify(connection, null, 2))
@@ -80,11 +81,11 @@ function destroy() {
 
 function certificate() {
     assureEstablished()
-    return certificate
+    return certificateData
 }
 
 function privateKey() {
-    return privateKey
+    return privateKeyData
 }
 
 function secure() {
@@ -94,11 +95,11 @@ function secure() {
 
 function generatePrivateKey(filePath) {
     LOGGER.debug("Generating new private key: %s", filePath)
-    var keys = forge.pki.rsa.generateKeyPair(2048);
-    const privateKey = forge.pki.privateKeyToPem(keys.privateKey)
-    fs.writeFileSync(filePath, privateKey)
+    var keys = forge.pki.rsa.generateKeyPair(2048)
+    const key = forge.pki.privateKeyToPem(keys.privateKey)
+    fs.writeFileSync(filePath, key)
     LOGGER.info("Generated new private key: %s", filePath)
-    return privateKey
+    return key
 }
 
 function assureEstablished() {

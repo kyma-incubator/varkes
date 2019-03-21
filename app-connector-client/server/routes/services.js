@@ -2,23 +2,13 @@
 'use strict'
 
 const LOGGER = require("../logger").logger
-const yaml = require('js-yaml');
+const yaml = require('js-yaml')
 const fs = require("fs")
-const apis = require("./apis");
+const apis = require("./apis")
 
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-var AUTH_ENDPOINTS = {
-    "oauth": {
-        "url": "http://localhost/oauth/validate",
-        "clientId": "string",
-        "clientSecret": "string"
-    },
-    "basic": {
-        "username": "admin",
-        "password": "nimda"
-    }
-}
+
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI
@@ -31,17 +21,16 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
     var error_message = ""
     for (var i = 0; i < apisConfig.length; i++) {
         var api = apisConfig[i]
-        var serviceMetadata = defineServiceMetadata()
         try {
-            var reg_api;
+            var reg_api
             if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == api.name);
+                reg_api = registeredApis.find(x => x.name == api.name)
             if (!reg_api) {
-                await createService(serviceMetadata, api, hostname)
+                await createService(api, hostname)
                 LOGGER.debug("Registered API successful: %s", api.name)
             }
             else {
-                await updateService(serviceMetadata, api, reg_api.id, hostname)
+                await updateService(api, reg_api.id, hostname)
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
         } catch (error) {
@@ -51,48 +40,48 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
         }
     }
     if (error_message != "") {
-        throw new Error(error_message);
+        throw new Error(error_message)
     }
-    return registeredApis;
+    return registeredApis
 }
 
-function createService(serviceMetadata, api, hostname) {
+function createService(api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
-        serviceMetadata = fillServiceMetadata(serviceMetadata, api, hostname);
-        apis.createAPI(serviceMetadata, function (err, httpResponse, body) {
+        var serviceData = fillServiceMetadata(api, hostname)
+        apis.createAPI(serviceData, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
+                    reject(err)
                 }
                 else {
                     resolve(body)
                 }
             }
-        });
+        })
     })
 }
 
-function updateService(serviceMetadata, api, api_id, hostname) {
+function updateService(api, api_id, hostname) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
-        serviceMetadata = fillServiceMetadata(serviceMetadata, api, hostname);
-        apis.updateAPI(serviceMetadata, api_id, function (err, httpResponse, body) {
+        var serviceData = fillServiceMetadata(api, hostname)
+        apis.updateAPI(serviceData, api_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
+                    reject(err)
                 }
                 else {
                     resolve(body)
                 }
             }
-        });
+        })
     })
 }
 
@@ -101,10 +90,10 @@ function getAllAPI() {
     return new Promise((resolve, reject) => {
         apis.getAllAPIs(function (error, httpResponse, body) {
             if (error) {
-                reject(error);
+                reject(error)
             } else if (httpResponse.statusCode >= 400) {
-                var err = new Error(body.error);
-                reject(err);
+                var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
+                reject(err)
             } else {
                 resolve(JSON.parse(body))
             }
@@ -112,62 +101,69 @@ function getAllAPI() {
     })
 }
 
-function fillServiceMetadata(serviceMetadata, api, hostname) {
-    serviceMetadata.name = api.name;
-    serviceMetadata.api.targetUrl = hostname;
-    if (api.baseurl)
-        serviceMetadata.api.targetUrl = serviceMetadata.api.targetUrl + api.baseurl;
-
-    if (api.auth && api.auth != "none") {
-        serviceMetadata.api.credentials[api.auth] = AUTH_ENDPOINTS[api.auth]
+function fillServiceMetadata(api, hostname) {
+    var targetUrl = hostname
+    if ((!api.type || api.type == "openapi") && api.baseurl) {
+        targetUrl = hostname + api.baseurl
+    }
+    if (api.type == "odata") {
+        targetUrl = hostname + "/odata"
     }
 
-    if (api.auth == "oauth")
-        serviceMetadata.api.credentials.oauth.url = serviceMetadata.api.targetUrl + (api.oauth ? api.oauth : OAUTH);
+    var specificationUrl = targetUrl + (api.metadata ? api.metadata : METADATA)
+    if (api.type == "odata") {
+        specificationUrl = targetUrl + "/$metadata"
+    }
 
-    if (!api.type || api.type != "odata") {
+    var apiData = {
+        targetUrl: targetUrl,
+        credentials: {},
+        specificationUrl: specificationUrl
+    }
+
+    if (api.auth == "oauth") {
+        apiData.credentials.oauth = {
+            url: apiData.targetUrl + (api.oauth ? api.oauth : OAUTH),
+            clientId: "admin",
+            clientSecret: "nimda"
+        }
+    }
+
+    if (api.auth == "basic") {
+        apiData.credentials.basic = {
+            username: "admin",
+            password: "nimda"
+        }
+    }
+
+    if (api.type == "odata") {
+        apiData.apiType = "odata"
+    }
+
+    if (!api.type || api.type == "openapi") {
         var specInJson
         if (api.specification.endsWith(".json")) {
             specInJson = JSON.parse(fs.readFileSync(api.specification))
         } else {
-            specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
+            specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
         }
-        serviceMetadata.api.spec = specInJson
+        apiData.spec = specInJson
 
         if (!api.description) {
             if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
                 api.description = specInJson.info.description
             } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title"))
-                api.description = specInJson.info.title;
+                api.description = specInJson.info.title
         }
     }
-    else {
-        serviceMetadata.api.apiType = "odata";
-    }
-    
-    if (api.provider) {
-        serviceMetadata.provider = api.provider
+
+    var serviceData = {
+        provider: api.provider ? api.provider : "Varkes",
+        name: api.name,
+        description: api.description ? api.description : api.name,
+        labels: api.labels ? api.labels : {},
+        api: apiData
     }
 
-    if (api.description) {
-        serviceMetadata.description = api.description;
-    } else {
-        serviceMetadata.description = api.name;
-    }
-
-    serviceMetadata.api.specificationUrl = serviceMetadata.api.targetUrl + (api.metadata ? api.metadata : METADATA);
-    return serviceMetadata;
-}
-
-function defineServiceMetadata() {
-    return {
-        "provider": "Varkes",
-        "name": "ec-mock-service-4",
-        "description": "",
-        "api": {
-            "targetUrl": "http://localhost/target",
-            "credentials": {},
-            "spec": {}
-        }
-    }
+    return serviceData
 }

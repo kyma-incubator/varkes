@@ -34,7 +34,7 @@ function getAll(req, res) {
             }
         })
     }
-};
+}
 
 function getAllAPIs(cb) {
     request({
@@ -46,9 +46,9 @@ function getAllAPIs(cb) {
         },
         rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body);
-    });
-};
+        cb(error, httpResponse, body)
+    })
+}
 
 function createAPI(serviceMetadata, cb) {
     request.post({
@@ -63,9 +63,9 @@ function createAPI(serviceMetadata, cb) {
         },
         rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body);
-    });
-};
+        cb(error, httpResponse, body)
+    })
+}
 
 function updateAPI(serviceMetadata, api_id, cb) {
     request.put({
@@ -80,9 +80,9 @@ function updateAPI(serviceMetadata, api_id, cb) {
         },
         rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body);
-    });
-};
+        cb(error, httpResponse, body)
+    })
+}
 
 function create(req, res) {
     LOGGER.debug("Creating API %s", req.body.name)
@@ -103,7 +103,7 @@ function create(req, res) {
             }
         })
     }
-};
+}
 
 function get(req, res) {
     LOGGER.debug("Get API %s", req.params.api)
@@ -140,13 +140,13 @@ function get(req, res) {
                                     schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
                                 }
                             })
-                            body.events.spec = schema;
+                            body.events.spec = schema
                             res.status(httpResponse.statusCode).type("json").send(body)
                         })
                         .catch(function (err) {
                             LOGGER.error("Error while getting API: %s", err)
                             res.status(500).send({ error: err.message })
-                        });
+                        })
                 }
                 else {
                     res.status(httpResponse.statusCode).type("json").send(body)
@@ -154,7 +154,7 @@ function get(req, res) {
             }
         })
     }
-};
+}
 
 function update(req, res) {
     LOGGER.debug("Update API %s", req.params.api)
@@ -176,7 +176,7 @@ function update(req, res) {
                 }
             })
     }
-};
+}
 
 function deleteApi(req, res) {
     LOGGER.debug("Delete API %s", req.params.api)
@@ -222,5 +222,5 @@ function router() {
     apiRouter.put("/:api", update)
     apiRouter.delete("/:api", deleteApi)
 
-    return apiRouter;
+    return apiRouter
 }

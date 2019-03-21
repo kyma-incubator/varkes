@@ -5,9 +5,9 @@ const express = require('express')
 const LOGGER = require("../logger").logger
 const fs = require("fs")
 const connection = require("../connection")
-const apis = require("./apis");
+const apis = require("./apis")
 const request = require("request")
-const yaml = require('js-yaml');
+const yaml = require('js-yaml')
 
 module.exports = {
     router: router,
@@ -51,23 +51,21 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
-    var eventMetadata = defineEventMetadata()
     var error_message = ""
     for (var i = 0; i < eventsConfig.length; i++) {
-        var event = eventsConfig[i];
+        var event = eventsConfig[i]
         try {
-            var reg_api;
+            var reg_api
             if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == event.name);
+                reg_api = registeredApis.find(x => x.name == event.name)
             if (!reg_api) {
                 LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createEvent(eventMetadata, event)
+                await createEvent(event)
             }
             else {
                 LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateEvent(eventMetadata, event, reg_api.id)
+                await updateEvent(event, reg_api.id)
             }
-
         } catch (error) {
             var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error)
             LOGGER.error(message)
@@ -75,21 +73,21 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
         }
     }
     if (error_message != "") {
-        throw new Error(error_message);
+        throw new Error(error_message)
     }
 }
 
-function createEvent(eventMetadata, event) {
+function createEvent(event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
-        apis.createAPI(eventMetadata, function (err, httpResponse, body) {
+        var eventData = fillEventData(event)
+        apis.createAPI(eventData, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error(body.error)
+                    reject(err)
                 }
                 resolve(body)
             }
@@ -97,65 +95,48 @@ function createEvent(eventMetadata, event) {
 
     })
 }
-async function updateEvent(eventMetadata, event, event_id) {
+async function updateEvent(event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event)
-        apis.updateAPI(eventMetadata, event_id, function (err, httpResponse, body) {
+        var eventData = fillEventData(event)
+        apis.updateAPI(eventData, event_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error(body.error)
+                    reject(err)
                 }
                 resolve(body)
             }
         })
     })
 }
-function fillEventData(eventMetadata, event) {
-    eventMetadata.name = event.name;
-    if (event.description) {
-        eventMetadata.description = event.description;
-    }
-    else {
-        eventMetadata.description = event.name;
-    }
-    if (event.labels) {
-        eventMetadata.labels = event.labels;
-    }
 
-    if (event.provider) {
-        eventMetadata.provider = event.provider;
-    }
-
+function fillEventData(event) {
     var specInJson
     if (event.specification.endsWith(".json")) {
         specInJson = JSON.parse(fs.readFileSync(event.specification))
     } else {
-        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
+        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
 
-    eventMetadata.events.spec = specInJson;
-    return eventMetadata
-}
-function defineEventMetadata() {
-    return {
-        "provider": "Varkes",
-        "name": "",
-        "description": "",
-        "labels": {},
-        "events": {
-            "spec": {}
+    var serviceData = {
+        provider: event.provider ? event.provider : "Varkes",
+        name: event.name,
+        description: event.description ? event.description : event.name,
+        labels: event.labels ? event.labels : {},
+        events: {
+            spec: specInJson
         }
     }
+    return serviceData
 }
 
 function router() {
     var eventsRouter = express.Router()
     eventsRouter.post("/", sendEvent)
-    return eventsRouter;
+    return eventsRouter
 }
 
 function assureConnected() {

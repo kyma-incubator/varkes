@@ -87,10 +87,10 @@ function key(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        res.contentType('application/octet-stream');
-        res.header('Content-disposition', 'inline; filename=app.key');
+        res.contentType('application/octet-stream')
+        res.header('Content-disposition', 'inline; filename=app.key')
         res.status(200)
-        res.send(connection.privateKey());
+        res.send(connection.privateKey())
     }
 }
 
@@ -99,10 +99,10 @@ function cert(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        res.contentType('application/x-x509-ca-cert');
-        res.header('Content-disposition', 'inline; filename=kyma.crt');
+        res.contentType('application/x-x509-ca-cert')
+        res.header('Content-disposition', 'inline; filename=kyma.crt')
         res.status(200)
-        res.send(connection.certificate());
+        res.send(connection.certificate())
     }
 }
 
@@ -133,7 +133,7 @@ function generateCSR(subject) {
     var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
 
     // create a certification request (CSR)
-    var csr = forge.pki.createCertificationRequest();
+    var csr = forge.pki.createCertificationRequest()
     csr.publicKey = publickey
 
     csr.setSubject(parseSubjectToJsonArray(subject))
@@ -173,8 +173,8 @@ async function connect(req, res) {
         }
 
         if (connectionData.insecure && nodePort) {
-            var result = connectionData.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
-            connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort);
+            var result = connectionData.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/)
+            connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
         }
 
         connection.establish(connectionData, tokenResponse.crt)
@@ -187,7 +187,7 @@ async function connect(req, res) {
                 services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
                 events.createEventsFromConfig(varkesConfig.events, registeredAPIs)
             ]
-            await Promise.all(promises);
+            await Promise.all(promises)
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
         info = createInfo()
@@ -202,8 +202,8 @@ async function connect(req, res) {
 }
 
 function router(config, nodePortParam = null) {
-    varkesConfig = config;
-    nodePort = nodePortParam;
+    varkesConfig = config
+    nodePort = nodePortParam
 
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
@@ -212,5 +212,5 @@ function router(config, nodePortParam = null) {
     connectionRouter.get("/cert", cert)
     connectionRouter.post("/", connect)
 
-    return connectionRouter;
+    return connectionRouter
 }
