@@ -1,0 +1,109 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<br />
+<br />
+<div style="background-color: white">
+  <h2>Connection Overview</h2>
+  <br />
+  <div style="text-align:center">
+    <button (click)=" openModal()" id="connectBtn" class="fd-button">Connect</button>
+    <div id="disconnect_btn" hidden>
+      <button class="fd-button--negative">Diconnect</button>
+    </div>
+  </div>
+  <br />
+</div>
+<br />
+
+<nav class="fd-tabs" role="tablist">
+  <span class="fd-tabs__item">
+    <a class=" fd-tabs__link" aria-controls="apitable" href="#apitable" role="tab">
+      Config APIs
+    </a>
+  </span>
+  <span class="fd-tabs__item" style="margin-left: 80%;">
+    <button class=" fd-button--light">Create new API</button>
+    <button class="fd-button--light">Create new Event</button>
+  </span>
+</nav>
+
+<div class="fd-tabs__panel" aria-expanded="false" id="apitable" role="tabpanel">
+  <table class="fd-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <a href="#" class="fd-has-font-weight-semi">API_name</a>
+        </td>
+        <td>Mocked Open API</td>
+        <td>OpenAPI</td>
+        <td>
+          <button class="fd-button--light fd-button--negative">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="#" class="fd-has-font-weight-semi">API_name</a>
+        </td>
+        <td>Mocked OData API</td>
+        <td>OData</td>
+        <td>
+          <button class="fd-button--light fd-button--negative">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="#" class="fd-has-font-weight-semi">API_name</a>
+        </td>
+        <td>Mocked Event</td>
+        <td>Event</td>
+        <td>
+          <button class="fd-button--light fd-button--negative">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="modalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
+  <div class="fd-modal" role="dialog" style="width:50%">
+    <div class="fd-modal__content" role="document">
+      <div class="fd-modal__header">
+        <h1 class="fd-modal__title">Connect to Kyma</h1>
+        <button (click)="onCloseModalClick()" class="fd-button--light fd-modal__close" aria-label="close"></button>
+      </div>
+      <div class="fd-modal__body">
+        <div class="fd-form__group">
+          <div class="fd-form__item">
+            <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
+            <textarea class="fd-form__control" style="resize: none;" id="token_url"></textarea>
+          </div>
+          <div class="fd-form__item fd-form__item--check">
+            <label class="fd-form__label" for="Ai4ez611">
+              <input type="checkbox" class="fd-form__control" id="Ai4ez611">
+              Insecure Connection
+            </label>
+          </div>
+          <div class="fd-form__item fd-form__item--check">
+            <label class="fd-form__label" for="Ai4ez612">
+              <input type="checkbox" class="fd-form__control" id="Ai4ez612" checked>
+              Auto Register APIs
+            </label>
+          </div>
+        </div>
+      </div>
+      <footer class="fd-modal__footer">
+        <div class="fd-modal__actions">
+          <button (click)="onCloseModalClick()" class="fd-button">Connect</button>
+          <button (click)="onCloseModalClick()" class="fd-button--light">Cancel</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
