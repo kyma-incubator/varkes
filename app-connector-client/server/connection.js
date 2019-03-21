@@ -10,18 +10,21 @@ const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
-const csrFile = path.resolve(keysDirectory, "kyma.csr")
 
-// global connection state
+// global connection state, not thread-safe for now
 var connection
+var privateKey
+var certificate
 
 module.exports = {
     init: init,
     establish: establish,
-    isEstablished: isEstablished,
+    established: established,
     destroy: destroy,
     info: info,
-    privateKey: privateKey
+    privateKey: privateKey,
+    certificate: certificate,
+    secure: secure
 }
 
 function init() {
@@ -30,31 +33,37 @@ function init() {
     }
 
     if (fs.existsSync(privateKeyFile)) {
+        privateKey = fs.readFileSync(privateKeyFile, "utf-8")
         LOGGER.info("Found existing private key: %s", privateKeyFile)
     } else {
-        generatePrivateKey(privateKeyFile)
+        privateKey = generatePrivateKey(privateKeyFile)
     }
+    
 
     if (fs.existsSync(connFile)) {
         connection = JSON.parse(fs.readFileSync(connFile))
         LOGGER.info("Found existing connection info: %s", connFile)
     }
+
+    if (fs.existsSync(crtFile)) {
+        certificate = fs.readFileSync(crtFile, "utf-8")
+        LOGGER.info("Found existing certificate: %s", crtFile)
+    }
 }
 
 function establish(connData, crtData) {
     connection = connData
-    connection.certificate = crtFile
     fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), "utf8")
     fs.writeFileSync(crtFile, crtData, "utf8")
     LOGGER.debug("Wrote connection file to '%s' using value '%s'", connFile, JSON.stringify(connection, null, 2))
-
 }
 
-function isEstablished() {
+function established() {
     return connection && connection.metadataUrl
 }
 
 function info() {
+    assureEstablished()
     return connection
 }
 
@@ -67,13 +76,20 @@ function destroy() {
     if (fs.existsSync(crtFile)) {
         fs.unlinkSync(crtFile)
     }
-    if (fs.existsSync(csrFile)) {
-        fs.unlinkSync(csrFile)
-    }
+}
+
+function certificate() {
+    assureEstablished()
+    return certificate
 }
 
 function privateKey() {
-    return privateKeyFile
+    return privateKey
+}
+
+function secure() {
+    assureEstablished()
+    return !connection.insecure
 }
 
 function generatePrivateKey(filePath) {
@@ -82,4 +98,11 @@ function generatePrivateKey(filePath) {
     const privateKey = forge.pki.privateKeyToPem(keys.privateKey)
     fs.writeFileSync(filePath, privateKey)
     LOGGER.info("Generated new private key: %s", filePath)
+    return privateKey
+}
+
+function assureEstablished() {
+    if (!established()) {
+        throw new Error("Trying to access connection status without having a connection established. Please call connection.established() upfront to assure an available connection status")
+    }
 }

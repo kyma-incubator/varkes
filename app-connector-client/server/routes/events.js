@@ -26,10 +26,10 @@ function sendEvent(req, res) {
             },
             json: req.body,
             agentOptions: {
-                cert: fs.readFileSync(connection.info().certificate),
-                key: fs.readFileSync(connection.privateKey())
+                cert: connection.certificate(),
+                key: connection.privateKey()
             },
-            rejectUnauthorized: !connection.info().insecure
+            rejectUnauthorized: connection.secure()
         }, (error, httpResponse, body) => {
             if (error) {
                 LOGGER.error("Error while Sending Event: %s", error)
@@ -159,8 +159,7 @@ function router() {
 }
 
 function assureConnected() {
-
-    if (connection.info().metadataUrl == "") {
+    if (!connection.established()) {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null

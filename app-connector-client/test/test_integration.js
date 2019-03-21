@@ -35,7 +35,7 @@ describe("should work", () => {
 
     after(() => { //* stop kyma mock after tests
         kymaServer.close(() => {
-            deleteKeysFile()
+            //deleteKeysFile()
         })
     })
 
@@ -56,6 +56,11 @@ describe("should work", () => {
                 .get('/foo/bar')
                 .expect(404);
         });
+        it("can get connection info", () => {
+            return request(server)
+                .get("/connection")
+                .expect(200)
+        })
     });
 
     describe('bundled apis', function () {
@@ -108,6 +113,15 @@ describe("should work", () => {
             })
         })
 
+        it("shows all services", () => {
+            return createService(server).then(serviceId => {
+                request(server)
+                    .get(`/apis`)
+                    .set("Accept", "application/json")
+                    .expect(200)
+            })
+        })
+
         it("updates a specific service", () => {
             return createService(server).then(serviceId => {
                 request(server)
@@ -119,7 +133,6 @@ describe("should work", () => {
 
             })
         })
-
 
         it("handles error when service doesn't exists", () => {
             return request(server)
@@ -141,49 +154,12 @@ describe("should work", () => {
                 .get("/connection/cert")
                 .expect(200)
         })
-        it("can get connection info", () => {
-            return request(server)
-                .get("/connection")
-                .expect(200)
-        })
+
         it("can get logo", () => {
             return request(server)
                 .get("/logo")
                 .expect(200)
         })
-    })
-    describe("test controllers", () => {
-        it('should return 200', () => {
-            return request(server)
-                .get('/metadata')
-                .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            return request(server)
-                .get('/metadata')
-                .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            request(server)
-                .get('/apis')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            return request(server)
-                .get('/connection')
-                .set('Accept', 'application/json')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200)
-        });
     })
 })
 

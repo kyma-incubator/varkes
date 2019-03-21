@@ -4,7 +4,6 @@
 const connection = require("../connection")
 const request = require("request")
 const LOGGER = require("../logger").logger
-const fs = require("fs")
 const express = require("express")
 const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
@@ -42,10 +41,10 @@ function getAllAPIs(cb) {
         url: connection.info().metadataUrl,
         method: "GET",
         agentOptions: {
-            cert: fs.readFileSync(connection.info().certificate),
-            key: fs.readFileSync(connection.privateKey())
+            cert: connection.certificate(),
+            key: connection.privateKey()
         },
-        rejectUnauthorized: !connection.info().insecure
+        rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
@@ -59,10 +58,10 @@ function createAPI(serviceMetadata, cb) {
         },
         json: serviceMetadata,
         agentOptions: {
-            cert: fs.readFileSync(connection.info().certificate),
-            key: fs.readFileSync(connection.privateKey())
+            cert: connection.certificate(),
+            key: connection.privateKey()
         },
-        rejectUnauthorized: !connection.info().insecure
+        rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
@@ -76,10 +75,10 @@ function updateAPI(serviceMetadata, api_id, cb) {
         },
         json: serviceMetadata,
         agentOptions: {
-            cert: fs.readFileSync(connection.info().certificate),
-            key: fs.readFileSync(connection.privateKey())
+            cert: connection.certificate(),
+            key: connection.privateKey()
         },
-        rejectUnauthorized: !connection.info().insecure
+        rejectUnauthorized: connection.secure()
     }, function (error, httpResponse, body) {
         cb(error, httpResponse, body);
     });
@@ -115,10 +114,10 @@ function get(req, res) {
         request.get({
             url: `${connection.info().metadataUrl}/${req.params.api}`,
             agentOptions: {
-                cert: fs.readFileSync(connection.info().certificate),
-                key: fs.readFileSync(connection.privateKey())
+                cert: connection.certificate(),
+                key: connection.privateKey()
             },
-            rejectUnauthorized: !connection.info().insecure
+            rejectUnauthorized: connection.secure()
         }, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting API: %s", error)
@@ -188,10 +187,10 @@ function deleteApi(req, res) {
         request.delete({
             url: `${connection.info().metadataUrl}/${req.params.api}`,
             agentOptions: {
-                cert: fs.readFileSync(connection.info().certificate),
-                key: fs.readFileSync(connection.privateKey())
+                cert: connection.certificate(),
+                key: connection.privateKey()
             },
-            rejectUnauthorized: !connection.info().insecure
+            rejectUnauthorized: connection.secure()
         }, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while deleting API: %s", error)
@@ -208,7 +207,7 @@ function deleteApi(req, res) {
 }
 
 function assureConnected() {
-    if (!connection.isEstablished()) {
+    if (!connection.established()) {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null

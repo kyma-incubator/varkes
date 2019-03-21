@@ -74,27 +74,43 @@ function disconnect(req, res) {
 }
 
 function info(req, res) {
-    if (connection.isEstablished()) {
-        res.status(200).send(createInfo())
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
     } else {
-        res.status(400).send({ error: "Not connected to a Kyma cluster" })
+        res.status(200).send(createInfo())
     }
 }
 
 function key(req, res) {
-    if (fs.existsSync(connection.privateKey())) {
-        res.download(connection.privateKey())
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
     } else {
-        res.status(400).send({ error: "Not connected to a Kyma cluster" })
+        res.contentType('application/octet-stream');
+        res.header('Content-disposition', 'inline; filename=app.key');
+        res.status(200)
+        res.send(connection.privateKey());
     }
 }
 
 function cert(req, res) {
-    if (fs.existsSync(connection.info().certificate)) {
-        res.download(connection.info().certificate)
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
     } else {
-        res.status(400).send({ error: "Not connected to a Kyma cluster" })
+        res.contentType('application/x-x509-ca-cert');
+        res.header('Content-disposition', 'inline; filename=kyma.crt');
+        res.status(200)
+        res.send(connection.certificate());
     }
+}
+
+function assureConnected() {
+    if (!connection.established()) {
+        return "Not connected to a kyma cluster, please re-connect"
+    }
+    return null
 }
 
 function createInfo() {
@@ -113,8 +129,7 @@ function createInfo() {
 
 function generateCSR(subject) {
     LOGGER.debug("Creating CSR using subject %s", subject)
-    var privateKey = fs.readFileSync(connection.privateKey(), 'utf8')
-    var pk = forge.pki.privateKeyFromPem(privateKey)
+    var pk = forge.pki.privateKeyFromPem(connection.privateKey())
     var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
 
     // create a certification request (CSR)
