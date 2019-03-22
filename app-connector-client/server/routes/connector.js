@@ -3,32 +3,27 @@
 
 const request = require("request-promise")
 const fs = require("fs")
-const path = require("path")
 const LOGGER = require("../logger").logger
-const CONFIG = require("../config.json")
 const forge = require("node-forge")
 const url = require("url")
 const services = require("./services")
 const events = require("./events")
 const express = require("express")
+const connection = require("../connection")
 
 var nodePort;
 var varkesConfig;
-
-const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
-const keysDirectory = path.resolve(CONFIG.keyDir)
 
 module.exports = {
     router: router
 }
 
-function callTokenUrl(localKyma, url) {
+function callTokenUrl(insecure, url) {
     LOGGER.debug("Calling token URL '%s'", url)
     return request({
         uri: url,
         method: "GET",
-        rejectUnauthorized: !localKyma,
+        rejectUnauthorized: !insecure,
         resolveWithFullResponse: true
     }).then(function (response) {
         if (response.statusCode !== 200) {
@@ -36,107 +31,116 @@ function callTokenUrl(localKyma, url) {
         }
         LOGGER.debug("Token URL returned '%s'", response.body)
         var result = JSON.parse(response.body)
-        result.localKyma = localKyma
+        result.insecure = insecure
         return result
     })
 }
 
-function generateCSRFromResponse(csrResponse) {
+function generateCSRFromResponse(tokenResponse) {
     return new Promise(function (resolve, reject) {
-        generateCSR(csrResponse.certificate.subject)
-        resolve(csrResponse)
+        tokenResponse.csr = generateCSR(tokenResponse.certificate.subject)
+        resolve(tokenResponse)
     })
 }
 
-function callCSRUrl(csrResponse) {
-    LOGGER.debug("Calling csr URL '%s'", csrResponse.csrUrl)
-    var csrData = fs.readFileSync(`${keysDirectory}/${CONFIG.csrFile}`, "base64")
+function callCSRUrl(tokenResponse) {
+    LOGGER.debug("Calling csr URL '%s'", tokenResponse.csrUrl)
+    var csrData = forge.util.encode64(tokenResponse.csr)
 
     return request.post({
-        uri: csrResponse.csrUrl,
+        uri: tokenResponse.csrUrl,
         body: { csr: csrData },
         json: true,
-        rejectUnauthorized: !csrResponse.localKyma,
+        rejectUnauthorized: !tokenResponse.insecure,
         resolveWithFullResponse: true
     }).then(function (response) {
         if (response.statusCode !== 201) {
             throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
         }
-        LOGGER.debug("CSR URL returned '%s'", JSON.stringify(response.body))
-        var CRT_base64_decoded = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
-
-        fs.writeFileSync(`${keysDirectory}/${CONFIG.crtFile}`, CRT_base64_decoded)
-        LOGGER.debug("Wrote crt file to '%s'", `${keysDirectory}/${CONFIG.crtFile}`)
-        return csrResponse.api
+        LOGGER.debug("CSR URL returned")
+        tokenResponse.crt = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
+        return tokenResponse
     })
 }
 
 function disconnect(req, res) {
     try {
-        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))) {
-            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile))
-        }
-        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))) {
-            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.crtFile))
-        }
-        if (fs.existsSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))) {
-            fs.unlinkSync(path.resolve(CONFIG.keyDir, CONFIG.csrFile))
-        }
-        CONFIG.URLs = {
-            metadataUrl: "",
-            eventsUrl: "",
-            certificatesUrl: ""
-        }
-    } catch (error) { //only triggger if there is an error with unlinkSync
-        res.status(500).send({ error: "There was an internal error while deleting the files." })
-        return //exit function
+        connection.destroy()
+    } catch (error) {
+        res.status(500).send({ error: "There was an internal error while resetting the connection" })
+        return
     }
-    res.status(204).send() //means no error
+    res.status(204).send()
 }
 
 function info(req, res) {
-    info = createInfo(CONFIG.URLs)
-    info ? res.status(200).send(info) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        res.status(200).send(createInfo())
+    }
 }
 
 function key(req, res) {
-    fs.existsSync(keyFile) ? res.download(keyFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        res.contentType('application/octet-stream')
+        res.header('Content-disposition', 'inline; filename=app.key')
+        res.status(200)
+        res.send(connection.privateKey())
+    }
 }
 
 function cert(req, res) {
-    fs.existsSync(certFile) ? res.download(certFile) : res.status(400).send({ error: "Not connected to a Kyma cluster" })
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        res.contentType('application/x-x509-ca-cert')
+        res.header('Content-disposition', 'inline; filename=kyma.crt')
+        res.status(200)
+        res.send(connection.certificate())
+    }
 }
 
-function createInfo(api) {
-    if (api.metadataUrl !== "") {
-        const myURL = new url.URL(api.metadataUrl)
-        var domains = myURL.hostname.split(".")
-        const app = myURL.pathname.split("/")[1]
-        return {
-            domain: domains[1] ? domains[1] : domains[0],
-            app: app,
-            consoleUrl: api.metadataUrl.replace("gateway", "console").replace(app + "/v1/metadata/services", "home/cmf-apps/details/" + app),
-            eventsUrl: api.eventsUrl,
-            metadataUrl: api.metadataUrl
-        }
+function assureConnected() {
+    if (!connection.established()) {
+        return "Not connected to a kyma cluster, please re-connect"
     }
     return null
 }
 
+function createInfo() {
+    var connectionData = connection.info()
+    const myURL = new url.URL(connectionData.metadataUrl)
+    var domains = myURL.hostname.split(".")
+    const app = myURL.pathname.split("/")[1]
+    return {
+        domain: domains[1] ? domains[1] : domains[0],
+        app: app,
+        consoleUrl: connectionData.metadataUrl.replace("gateway", "console").replace(app + "/v1/metadata/services", "home/cmf-apps/details/" + app),
+        eventsUrl: connectionData.eventsUrl,
+        metadataUrl: connectionData.metadataUrl
+    }
+}
+
 function generateCSR(subject) {
     LOGGER.debug("Creating CSR using subject %s", subject)
-    var privateKey = fs.readFileSync(keyFile, 'utf8')
-    var pk = forge.pki.privateKeyFromPem(privateKey)
+    var pk = forge.pki.privateKeyFromPem(connection.privateKey())
     var publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
 
     // create a certification request (CSR)
-    var csr = forge.pki.createCertificationRequest();
+    var csr = forge.pki.createCertificationRequest()
     csr.publicKey = publickey
 
     csr.setSubject(parseSubjectToJsonArray(subject))
     csr.sign(pk)
-    fs.writeFileSync(`${keysDirectory}/${CONFIG.csrFile}`, forge.pki.certificationRequestToPem(csr))
-    LOGGER.debug("Wrote csr file to '%s'", `${keysDirectory}/${CONFIG.csrFile}`)
+    LOGGER.debug("Created csr using subject %s", subject)
+    return forge.pki.certificationRequestToPem(csr)
+
 }
 
 function parseSubjectToJsonArray(subject) {
@@ -153,42 +157,43 @@ function parseSubjectToJsonArray(subject) {
 }
 
 async function connect(req, res) {
-    if (!req.body) res.sendStatus(400);
+    if (!req.body) res.status(400).send({ error: "No connection details provided" })
 
     try {
-        var data = await callTokenUrl(req.query.localKyma, req.body.url)
+        var insecure = req.body.insecure ? true : false
+        var tokenResponse = await callTokenUrl(insecure, req.body.url)
             .then(generateCSRFromResponse)
             .then(callCSRUrl)
 
-        if (req.query.localKyma == true) {
-            var result = data.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/);
-            data.metadataUrl = data.metadataUrl.replace(result[0], result[0] + ":" + nodePort);
+        var connectionData = {
+            insecure: insecure,
+            metadataUrl: tokenResponse.api.metadataUrl,
+            eventsUrl: tokenResponse.api.eventsUrl,
+            certificatesUrl: tokenResponse.api.certificatesUrl
         }
 
-        CONFIG.URLs = data
-        fs.writeFileSync(path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data), "utf8")
-        LOGGER.debug("Wrote api file to '%s' using value '%s'", path.resolve(CONFIG.keyDir, CONFIG.apiFile), JSON.stringify(data))
+        if (connectionData.insecure && nodePort) {
+            var result = connectionData.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/)
+            connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
+        }
+
+        connection.establish(connectionData, tokenResponse.crt)
 
         if (req.body.register) {
             LOGGER.debug("Auto-registering APIs")
             var hostname = req.body.hostname || "http://localhost"
-            var registeredAPIs = await services.getAllAPI(req.query.localKyma)
+            var registeredAPIs = await services.getAllAPI()
             var promises = [
-                services.createServicesFromConfig(req.query.localKyma, hostname, varkesConfig.apis, registeredAPIs),
-                events.createEventsFromConfig(req.query.localKyma, varkesConfig.events, registeredAPIs)
+                services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
+                events.createEventsFromConfig(varkesConfig.events, registeredAPIs)
             ]
-            await Promise.all(promises);
+            await Promise.all(promises)
             LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         }
-        info = createInfo(data)
+        info = createInfo()
         LOGGER.info("Connected to %s", info.domain)
 
-        if (info) {
-            res.status(200).send(info)
-        } else {
-            res.status(400).send({ error: "Not connected to a Kyma cluster" })
-        }
-
+        res.status(200).send(info)
     } catch (error) {
         var message = "There is an error while registering. Please make sure that your token is unique"
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
@@ -197,8 +202,8 @@ async function connect(req, res) {
 }
 
 function router(config, nodePortParam = null) {
-    varkesConfig = config;
-    nodePort = nodePortParam;
+    varkesConfig = config
+    nodePort = nodePortParam
 
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
@@ -207,5 +212,5 @@ function router(config, nodePortParam = null) {
     connectionRouter.get("/cert", cert)
     connectionRouter.post("/", connect)
 
-    return connectionRouter;
+    return connectionRouter
 }

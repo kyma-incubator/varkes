@@ -19,7 +19,7 @@ program
 
 let keyFile, certFile
 
-require("../server/keys").generatePrivateKey()
+require("../server/connection").init()
 
 
 const programToken = program.token;

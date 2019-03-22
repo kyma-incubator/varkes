@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict'
 
-var request = require('supertest');
+var request = require('supertest')
 const mock = require('../server/app')
 const express = require("express")
 const fs = require("fs")
 const path = require("path")
 const kyma = require("@varkes/example-kyma-mock")
-const serviceMetadata = path.resolve("test/service-metadata.json")
+const testAPI = JSON.parse(fs.readFileSync(path.resolve("test/test-api.json")))
 
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
@@ -27,12 +27,9 @@ describe("should work", () => {
 
         await request(server)  //* Make sure we are connected to kyma
             .post("/connection")
-            .send(
-                { "url": tokenURL }
-            )
+            .send({ "url": tokenURL, "register": true })
             .set('Accept', 'application/json').
             expect(200)
-
     })
 
     after(() => { //* stop kyma mock after tests
@@ -41,65 +38,112 @@ describe("should work", () => {
         })
     })
 
-    describe('basic routes', function () {
-        it('responds to /', function testSlash() {
+    describe('basic routes', () => {
+        it('responds to /', () => {
             return request(server)
                 .get('/')
-                .expect(200);
-        });
+                .expect(200)
+        })
 
         it("shows meteadata", () => {
             return request(server)
                 .get("/metadata")
                 .expect(200)
         })
-        it('404 everything else', function testPath() {
+        it('404 everything else', () => {
             return request(server)
                 .get('/foo/bar')
-                .expect(404);
-        });
-    });
+                .expect(404)
+        })
+        it("can get connection info", () => {
+            return request(server)
+                .get("/connection")
+                .expect(200)
+        })
+    })
+
+    describe('bundled apis', () => {
+        it('apis contains schools and courses', () => {
+            return request(server)
+                .get('/apis')
+                .expect(200)
+                .expect(/"provider":"schoolProvider","name":"schools","description":"Schools Webservices","labels":{"label1":"value1"}/)
+                .expect(/"api":{"targetUrl":"http:\/\/localhost\/entity","credentials":{"oauth":{"url":"http:\/\/localhost\/entity\/schoolToken","clientId":"admin","clientSecret":"nimda"}},"specificationUrl":"http:\/\/localhost\/entity\/schoolMetadata",/)
+                .expect(/"provider":"Varkes","name":"courses","description":"Courses Webservices","labels":{}/)
+                .expect(/"api":{"targetUrl":"http:\/\/localhost\/entity\/v1","credentials":{"basic":{"username":"admin","password":"nimda"}},"specificationUrl":"http:\/\/localhost\/entity\/v1\/metadata"/)
+                
+        })
+
+        it('events contains events1 and events2', () => {
+            return request(server)
+                .get('/apis')
+                .expect(200)
+                .expect(/"provider":"myProvider","name":"events1","description":"All Events v1","labels":{"label1":"value1"}/)
+                .expect(/"provider":"Varkes","name":"events2","description":"All Events v2","labels":{}/)
+        })
+
+        it('404 everything else', () => {
+            return request(server)
+                .get('/foo/bar')
+                .expect(404)
+        })
+    })
 
     describe("api endpoints", () => {
-        it("creates a new service", () => {
-            return createService(server)
+        it("creates a new API", () => {
+            return createAPI(server)
         })
 
-        it("deletes a service", () => {
-            return createService(server).then((serviceId) => {
+        it("deletes an API", () => {
+            return createAPI(server).then((api) => {
                 request(server)
-                    .put(`/apis/${serviceId}`).
-                    send(
-                        JSON.parse(fs.readFileSync(serviceMetadata))
-                    ).set("Accept", "application/json")
+                    .put(`/apis/${api}`)
+                    .set("Accept", "application/json")
+                    .send(testAPI)
                     .expect(200)
             })
-
         })
 
-        it("shows a specific service", () => {
-            return createService(server).then(serviceId => {
+        it("shows a specific API", () => {
+            return createAPI(server).then(api => {
                 request(server)
-                    .get(`/apis/${serviceId}`)
+                    .get(`/apis/${api}`)
                     .set("Accept", "application/json")
                     .expect(200)
             })
         })
 
-        it("updates a specific service", () => {
-            return createService(server).then(serviceId => {
+        it("updates a specific API", () => {
+            return createAPI(server).then(api => {
                 request(server)
-                    .put(`/apis/${serviceId}`).
-                    send(
-                        JSON.parse(fs.readFileSync(serviceMetadata))
-                    ).set("Accept", "application/json")
+                    .put(`/apis/${api}`)
+                    .set("Accept", "application/json")
+                    .send(testAPI)
+                    .expect(200)
+            })
+        })
+
+        it("shows all APIs", () => {
+            return createAPI(server).then(() => {
+                request(server)
+                    .get(`/apis`)
+                    .set("Accept", "application/json")
+                    .expect(200)
+            })
+        })
+
+        it("updates a specific API", () => {
+            return createAPI(server).then(api => {
+                request(server)
+                    .put(`/apis/${api}`)
+                    .set("Accept", "application/json")
+                    .send(testAPI)
                     .expect(200)
 
             })
         })
 
-
-        it("handles error when service doesn't exists", () => {
+        it("handles error when API doesn't exists", () => {
             return request(server)
                 .get("/apis/abc-def")
                 .expect(404)
@@ -119,59 +163,28 @@ describe("should work", () => {
                 .get("/connection/cert")
                 .expect(200)
         })
-        it("can get connection info", () => {
+
+        it("can get logo", () => {
             return request(server)
-                .get("/connection")
+                .get("/logo")
                 .expect(200)
         })
     })
-    describe("test controllers", () => {
-        it('should return 200', () => {
-            return request(server)
-                .get('/metadata')
-                .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            return request(server)
-                .get('/metadata')
-                .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            request(server)
-                .get('/apis')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200)
-        });
-
-
-        it('should return 200', () => {
-            return request(server)
-                .get('/connection')
-                .set('Accept', 'application/json')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .expect(200)
-        });
-    })
 })
 
-function createService(server) {
+function createAPI(server) {
     return new Promise((resolve, reject) => {
         request(server)
             .post("/apis/")
-            .send(
-                JSON.parse(fs.readFileSync(serviceMetadata))
-            )
+            .send(testAPI)
             .set("Accept", "application/json")
             .expect(200)
             .end((err, res) => {
-                var serviceId = res.body.id
-                !err ? resolve(serviceId) : reject(err)
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(res.body.id)
+                }
             })
     })
 }
@@ -180,13 +193,8 @@ function deleteKeysFile() {
     const path = "./keys"
     if (fs.existsSync(path)) {
         fs.readdirSync(path).forEach(function (file, index) {
-            var curPath = path + "/" + file;
-            if (fs.lstatSync(curPath).isDirectory()) { // recurse
-                deleteFolderRecursive(curPath);
-            } else { // delete file
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
+            fs.unlinkSync(path + "/" + file)
+        })
+        fs.rmdirSync(path)
     }
-};
+}
