@@ -364,7 +364,7 @@
             type: "get",
             url: "/connection",
             success: function (data) {
-                $("#api-title").html(`Registered to Kyma \n <p> Connected to <a href=${data.consoleUrl} target="_blank" >${data.app}</a> in <b>${data.domain}</b>`)
+                $("#api-title").html(`Registered to Kyma \n <p> Connected to <a href=${data.consoleUrl} target="_blank" >${data.application}</a> in <b>${data.domain}</b>`)
                 changeButtonToDisconnectKyma()
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)

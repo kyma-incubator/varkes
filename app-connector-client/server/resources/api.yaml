@@ -313,6 +313,10 @@ components:
     ConnectionResponse:
       type: "object"
       properties:
+        infoUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to retrieve the infos returned here"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/management/info
         metadataUrl:
           type: "string"
           description: "URL on connected Kyma cluster to manage APIs"
@@ -323,16 +327,28 @@ components:
           example: https://gateway.mycluster.kyma.cx/event-trial/v1/events
         consoleUrl:
           type: "string"
-          description: "URL to reach kyma console"
-          example: https://console.mycluster.kyma.cx/event-trial/v1/metadata/services
+          description: "URL to open application in kyma console"
+          example: https://console.mycluster.kyma.cx/home/cmf-apps/details/event-trial
+        revocationCertUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to revoke client certifactes"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/certificates/revocations
+        renewCertUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to renew client certifactes"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/certificates/renewals
         domain:
           type: "string"
           description: "Domain of the connected Kyma cluster"
           example: prod-cluster
-        app:
+        application:
           type: "string"
           description: "Application name on connected Kyma cluster"
           example: myapp
+        insecure:
+          type: "boolean"
+          description: "The connection to the Kyma cluster is insecure"
+          example: true
 
     ServiceDetails:
       allOf:
