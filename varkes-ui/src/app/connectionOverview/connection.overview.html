@@ -1,0 +1,106 @@
+<br />
+<br />
+<div *ngIf="!connected" style="background-color: white">
+    <h2>Connection Overview</h2>
+    <br />
+    <div style="text-align:center">
+        <button (click)=" openModal()" id="connectBtn" class="fd-button">Connect</button>
+    </div>
+    <br />
+</div>
+<div *ngIf="connected" style="background-color: white">
+    <div class="fd-action-bar">
+        <div class="fd-action-bar__back">
+            <button class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+        </div>
+        <div class="fd-action-bar__header">
+            <h2 class="fd-action-bar__title">
+                Connection Overview
+            </h2>
+        </div>
+        <div class="fd-action-bar__actions">
+            <button class="fd-button--negative fd-button--light" (click)="onDisconnect()">Disconnect</button>
+            <button class="fd-button--light sap-icon--download">private key</button>
+            <button class="fd-button--light sap-icon--download">certificate</button>
+        </div>
+    </div>
+    <div class="fd-container fd-container--fluid" style="background-color: white;">
+        <span class="fd-tabs__item fd-col--1">
+            Connected to<br /><br />
+            Endpoint URL<br /><br />
+            Status
+        </span>
+        <span class="fd-tabs__item fd-col--11">
+            {{connection.application.name}}<br /><br />
+            {{connection.application.url}}<br /><br />
+            <span class="fd-badge fd-badge--success fd-badge--filled">Connected</span>
+        </span>
+    </div>
+</div>
+<br />
+<div *ngIf="!connected" style="background-color: white">
+    <h3>Local API</h3>
+    <api-table></api-table>
+</div>
+<div *ngIf="connected" style="background-color: white">
+    <div class="fd-action-bar">
+        <div class="fd-action-bar__header">
+            <span class="fd-tabs__item fd-col--1">
+                <a class=" fd-tabs__link" aria-controls="apitable" (click)="onLocalAPIClick()" href="#apitable"
+                    role="tab">
+                    Local APIs
+                </a>
+            </span>
+            <span class="fd-tabs__item fd-col--1">
+                <a class=" fd-tabs__link" aria-controls="apitable" (click)="onRemoteAPIClick()" href="#apitable"
+                    role="tab">
+                    Remote APIs
+                </a>
+            </span>
+        </div>
+        <div class="fd-action-bar__actions">
+            <button *ngIf="remote" class="fd-button--standard sap-icon--search"></button>
+            <button *ngIf="remote" class="fd-button--standard sap-icon--filter"></button>
+            <button class="fd-button fd-button--light">Create New API</button>
+            <button class="fd-button fd-button--light">Create New Event</button>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>
+<div *ngIf="modalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
+    <div class="fd-modal" role="dialog" style="width:50%">
+        <div class="fd-modal__content" role="document">
+            <div class="fd-modal__header">
+                <h1 class="fd-modal__title">Connect to Kyma</h1>
+                <button (click)="onCloseModalClick()" class="fd-button--light fd-modal__close"
+                    aria-label="close"></button>
+            </div>
+            <div class="fd-modal__body">
+                <div class="fd-form__group">
+                    <div class="fd-form__item">
+                        <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
+                        <textarea class="fd-form__control" style="resize: none;" id="token_url"></textarea>
+                    </div>
+                    <div class="fd-form__item fd-form__item--check">
+                        <label class="fd-form__label" for="Ai4ez611">
+                            <input type="checkbox" class="fd-form__control" id="Ai4ez611">
+                            Insecure Connection
+                        </label>
+                    </div>
+                    <div class="fd-form__item fd-form__item--check">
+                        <label class="fd-form__label" for="Ai4ez612">
+                            <input type="checkbox" class="fd-form__control" id="Ai4ez612" checked>
+                            Auto Register APIs
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <footer class="fd-modal__footer">
+                <div class="fd-modal__actions">
+                    <button class="fd-button" (click)="onConnect()">Connect</button>
+                    <button (click)="onCloseModalClick()" class="fd-button--light">Cancel</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
