@@ -26,7 +26,7 @@ function getAll(req, res) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
             } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while getting all API: %s", JSON.stringify(body,null,2))
+                LOGGER.error("Error while getting all API: %s", JSON.stringify(body, null, 2))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received all API data")
@@ -95,7 +95,7 @@ function create(req, res) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
             } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while creating API: %s", JSON.stringify(body,null,2))
+                LOGGER.error("Error while creating API: %s", JSON.stringify(body, null, 2))
                 res.status(httpResponse.statusCode).type("json").send(body)
             } else {
                 LOGGER.debug("Received create API data")
