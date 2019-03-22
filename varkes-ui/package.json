@@ -2,7 +2,7 @@
   "name": "varkes-ui-app",
   "version": "0.0.0",
   "scripts": {
-   "buildConfig":"webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/sampleconfig.js --mode production",
+    "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/sampleconfig.js --mode production",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -27,6 +27,7 @@
     "babel-loader": "^8.0.5",
     "core-js": "^2.5.4",
     "fiori-fundamentals": "^1.4.5",
+    "fundamental-ngx": "^0.3.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "webpack": "^4.29.6",

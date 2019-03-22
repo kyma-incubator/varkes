@@ -1,16 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BasicComponent } from './apitable/basicview';
-
+import { ApiTableComponent } from './apitable/apitable';
+import { ConnectionOverviewComponent } from './connectionOverview/connection.overview';
 @NgModule({
   declarations: [
     AppComponent,
-    BasicComponent
+    ConnectionOverviewComponent,
+    ApiTableComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

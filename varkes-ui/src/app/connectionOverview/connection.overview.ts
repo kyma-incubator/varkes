@@ -7,14 +7,23 @@ import {
     SimpleChanges
 } from '@angular/core';
 import LuigiClient from '@kyma-project/luigi-client';
+
 @Component({
-    selector: 'apitable-view',
-    templateUrl: './app.apitable.html'
+    selector: 'connection-overview',
+    templateUrl: './connection.overview.html'
 })
-export class BasicComponent implements OnChanges {
+export class ConnectionOverviewComponent implements OnChanges {
     title = 'varkes-ui-app';
+    public connection = {
+        application: {
+            name: "varkes",
+            url: "varkes-url"
+        }
+    };
     @Input() public modalActive: boolean;
     @Output() private modalClosed: EventEmitter<null>;
+    public connected: boolean;
+    public remote: boolean;
     private luigiClient: LuigiClient;
 
     public constructor() {
@@ -36,5 +45,19 @@ export class BasicComponent implements OnChanges {
         this.modalClosed.emit();
         this.luigiClient.uxManager().removeBackdrop();
         this.modalActive = false;
+    }
+
+    public onConnect() {
+        this.connected = true;
+        this.onCloseModalClick();
+    }
+    public onDisconnect() {
+        this.connected = false;
+    }
+    public onLocalAPIClick() {
+        this.remote = false;
+    }
+    public onRemoteAPIClick() {
+        this.remote = true;
     }
 }
