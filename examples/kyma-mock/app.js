@@ -59,5 +59,22 @@ function customizeMock(app) {
 
         next();
     })
+    app.get("/v1/applications/management/info", (req, res, next) => {
+        var localDomain = req.protocol + "://" + req.headers.host
+        res.send({
+            clientIdentity: { application: 'test' },
+            urls:
+            {
+                eventsUrl: localDomain + "/v1/events",
+                metadataUrl:
+                    localDomain + "/metadata/v1/metadata/services",
+                renewCertUrl:
+                    localDomain + "/v1/applications/certificates/renewals",
+                revocationCertUrl:
+                    localDomain + "/v1/applications/certificates/revocations"
+            }
 
+        })
+        return
+    })
 }
