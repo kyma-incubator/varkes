@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PopoverModule } from 'fundamental-ngx';
 @Component({
     selector: 'api-table',
@@ -6,5 +6,5 @@ import { PopoverModule } from 'fundamental-ngx';
 })
 export class ApiTableComponent {
     title = 'varkes-ui-app';
-
+    @Input() remote;
 }
