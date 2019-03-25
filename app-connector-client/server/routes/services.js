@@ -11,7 +11,8 @@ const METADATA = "/metadata"
 
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
-    getAllAPI: getAllAPI
+    getAllAPI: getAllAPI,
+    fillServiceMetadata: fillServiceMetadata
 }
 
 async function createServicesFromConfig(hostname, apisConfig, registeredApis) {

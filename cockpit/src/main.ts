@@ -3,10 +3,12 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-
+import * as express from 'express';
+var app = express();
 if (environment.production) {
   enableProdMode();
 }
-
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+function init(varkesConfigPath: string, currentPath = "") {
+  app.use('/', AppModule);
+  return app;
+}

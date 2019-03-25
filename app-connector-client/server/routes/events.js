@@ -11,7 +11,8 @@ const yaml = require('js-yaml')
 
 module.exports = {
     router: router,
-    createEventsFromConfig: createEventsFromConfig
+    createEventsFromConfig: createEventsFromConfig,
+    fillEventData: fillEventData
 }
 
 function sendEvent(req, res) {

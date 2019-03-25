@@ -31,6 +31,14 @@ export class ConnectionOverviewComponent implements OnChanges {
     public constructor(private http: Http) {
         this.luigiClient = LuigiClient;
         this.modalClosed = new EventEmitter<null>();
+        this.http.get("/mock/apis")
+            .subscribe(
+                function success(data) {
+                    console.log(JSON.stringify(data));
+                },
+                function error(data) {
+                    console.log(data)
+                });
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

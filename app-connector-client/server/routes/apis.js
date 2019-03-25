@@ -215,6 +215,7 @@ function assureConnected() {
 
 function router() {
     var apiRouter = express.Router()
+
     apiRouter.get("/", getAll)
     apiRouter.post("/", create)
 
