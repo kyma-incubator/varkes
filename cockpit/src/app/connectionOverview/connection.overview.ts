@@ -23,12 +23,14 @@ export class ConnectionOverviewComponent implements OnChanges {
     @Input() public modalActive: boolean;
     @Output() private modalClosed: EventEmitter<null>;
     public connected: boolean;
-    public remote: boolean;
+    @Input() public insecureConnection: boolean;
+    public remote;
     private luigiClient: LuigiClient;
 
     public constructor() {
         this.luigiClient = LuigiClient;
         this.modalClosed = new EventEmitter<null>();
+        console.log('test');
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -38,6 +40,7 @@ export class ConnectionOverviewComponent implements OnChanges {
     }
 
     private openModal() {
+        this.insecureConnection = false;
         this.luigiClient.uxManager().addBackdrop();
         this.modalActive = true;
     }
@@ -59,5 +62,8 @@ export class ConnectionOverviewComponent implements OnChanges {
     }
     public onRemoteAPIClick() {
         this.remote = true;
+    }
+    public oninsecureConnection(target) {
+        this.insecureConnection = target;
     }
 }

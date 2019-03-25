@@ -7,4 +7,11 @@ import { PopoverModule } from 'fundamental-ngx';
 export class ApiTableComponent {
     title = 'varkes-ui-app';
     @Input() remote;
+    public actionList = [];
+    public onOpenActionList(index) {
+        this.actionList[index] = true;
+    }
+    public onCloseActionList(index) {
+        this.actionList[index] = false;
+    }
 }
