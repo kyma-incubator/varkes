@@ -6,6 +6,7 @@ import {
     EventEmitter,
     SimpleChanges
 } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import LuigiClient from '@kyma-project/luigi-client';
 
 @Component({
@@ -27,10 +28,9 @@ export class ConnectionOverviewComponent implements OnChanges {
     public remote;
     private luigiClient: LuigiClient;
 
-    public constructor() {
+    public constructor(private http: Http) {
         this.luigiClient = LuigiClient;
         this.modalClosed = new EventEmitter<null>();
-        console.log('test');
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -50,9 +50,24 @@ export class ConnectionOverviewComponent implements OnChanges {
         this.modalActive = false;
     }
 
-    public onConnect() {
-        this.connected = true;
-        this.onCloseModalClick();
+    public onConnect(url) {
+        var sendData = {
+            url: url,
+            hostname: "localhost:4200",
+            register: false
+        };
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        this.http.post("/connection/?localKyma=" + this.insecureConnection, JSON.stringify(sendData), options)
+            .subscribe(
+                function success(data) {
+                    this.connected = true;
+                    this.onCloseModalClick();
+                },
+                function error(data) {
+                    console.log(data)
+                });
+
     }
     public onDisconnect() {
         this.connected = false;
