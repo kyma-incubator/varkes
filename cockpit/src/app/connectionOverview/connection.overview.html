@@ -33,7 +33,8 @@
         <span class="fd-tabs__item fd-col--11">
             {{connection.application.name}}<br /><br />
             {{connection.application.url}}<br /><br />
-            <span class="fd-badge fd-badge--success fd-badge--filled">Connected</span>
+            <span class="fd-badge fd-badge--success">Connected</span> <span *ngIf="insecureConnection"
+                class="fd-badge fd-badge--warning">Insecure</span>
         </span>
     </div>
 </div>
@@ -45,22 +46,27 @@
 <div *ngIf="connected" style="background-color: white">
     <div class="fd-action-bar">
         <div class="fd-action-bar__header">
-            <span class="fd-tabs__item fd-col--1">
-                <a class=" fd-tabs__link" aria-controls="apitable" (click)="onLocalAPIClick()" href="#apitable"
-                    role="tab">
-                    Local APIs
-                </a>
-            </span>
-            <span class="fd-tabs__item fd-col--1">
-                <a class=" fd-tabs__link" aria-controls="apitable" (click)="onRemoteAPIClick()" href="#apitable"
-                    role="tab">
-                    Remote APIs
-                </a>
-            </span>
+            <ul class="fd-tabs" role="tablist">
+                <li class="fd-tabs__item">
+                    <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{!remote}}
+                        (click)="onLocalAPIClick()" href="#apitable" role="tab">
+                        Local APIs
+                    </a>
+                </li>
+                <li class="fd-tabs__item">
+                    <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{remote}}
+                        (click)="onRemoteAPIClick()" href="#apitable" role="tab">
+                        Remote APIs
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="fd-action-bar__actions">
-            <button *ngIf="remote" class="fd-button--standard sap-icon--search"></button>
-            <button *ngIf="remote" class="fd-button--standard sap-icon--filter"></button>
+        <div *ngIf="!remote" class="fd-action-bar__actions">
+            <button class="fd-button fd-button--light" style="margin-right: 12px">Auto Register</button>
+        </div>
+        <div *ngIf="remote" class="fd-action-bar__actions">
+            <button class="fd-button--standard sap-icon--search"></button>
+            <button class="fd-button--standard sap-icon--filter"></button>
             <button class="fd-button fd-button--light">Create New API</button>
             <button class="fd-button fd-button--light">Create New Event</button>
         </div>
@@ -83,14 +89,9 @@
                     </div>
                     <div class="fd-form__item fd-form__item--check">
                         <label class="fd-form__label" for="Ai4ez611">
-                            <input type="checkbox" class="fd-form__control" id="Ai4ez611">
+                            <input type="checkbox" (click)="oninsecureConnection($event.target.checked)"
+                                class="fd-form__control" id="Ai4ez611">
                             Insecure Connection
-                        </label>
-                    </div>
-                    <div class="fd-form__item fd-form__item--check">
-                        <label class="fd-form__label" for="Ai4ez612">
-                            <input type="checkbox" class="fd-form__control" id="Ai4ez612" checked>
-                            Auto Register APIs
                         </label>
                     </div>
                 </div>
