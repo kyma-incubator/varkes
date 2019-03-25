@@ -62,7 +62,13 @@
             </ul>
         </div>
         <div *ngIf="!remote" class="fd-action-bar__actions">
-            <button class="fd-button fd-button--light" style="margin-right: 12px">Auto Register</button>
+            <button class="fd-button fd-button--light" style="margin-right: 12px">Batch Registeration <span
+                    class="fd-inline-help">
+                    <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
+                        Register all the local apis to kyma
+                    </span>
+                </span></button>
+
         </div>
         <div *ngIf="remote" class="fd-action-bar__actions">
             <button class="fd-button--standard sap-icon--search"></button>
@@ -74,14 +80,14 @@
     <api-table [remote]='remote'></api-table>
 </div>
 <div *ngIf="modalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
-    <div class="fd-modal" role="dialog" style="width:50%">
+    <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
         <div class="fd-modal__content" role="document">
             <div class="fd-modal__header">
                 <h1 class="fd-modal__title">Connect to Kyma</h1>
                 <button (click)="onCloseModalClick()" class="fd-button--light fd-modal__close"
                     aria-label="close"></button>
             </div>
-            <div class="fd-modal__body">
+            <div class="fd-modal__body " style="height:60%;max-height: none;overflow-y:unset ">
                 <div class="fd-form__group">
                     <div class="fd-form__item">
                         <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
@@ -91,8 +97,13 @@
                         <label class="fd-form__label" for="Ai4ez611">
                             <input type="checkbox" (click)="oninsecureConnection($event.target.checked)"
                                 class="fd-form__control" id="Ai4ez611">
-                            Insecure Connection
+                            Insecure Connection &nbsp;
                         </label>
+                        <span class="fd-inline-help">
+                            <span class="fd-inline-help__content fd-inline-help__content--bottom-right">
+                                Connect to kyma without certificate authorization (ex. kyma on minikube)
+                            </span>
+                        </span>
                     </div>
                 </div>
             </div>
