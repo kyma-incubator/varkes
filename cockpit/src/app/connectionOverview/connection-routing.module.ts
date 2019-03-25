@@ -4,7 +4,7 @@ import { ApiTableComponent } from '../apitable/apitable';
 const routes: Routes = [{ path: "apitable", component: ApiTableComponent }];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { useHash: true })],
+    imports: [RouterModule.forRoot(routes, { enableTracing: true, useHash: true })],
     exports: [RouterModule]
 })
 export class ConnectionRoutingModule {

@@ -16,12 +16,5 @@
 <body>
   <app-root></app-root>
 </body>
-<script>
-  $('#actionList').change(function () {
-    console.log("change")
-    $('#actionBtn').popover({ title: "Action", html: true, trigger: "manual", template: "#actionList", placement: "bottom" });
-  })
-
-</script>
 
 </html>

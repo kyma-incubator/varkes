@@ -22,17 +22,14 @@
         <td *ngIf="remote">
           <div class="fd-popover">
             <div class="fd-popover__control">
-              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(1)" (focusout)="onCloseActionList(1)"></button>
+              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"></button>
             </div>
-            <div *ngIf="actionList[1]" class="fd-popover__body">
+            <div id="actionList" hidden class="fd-popover__body">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
-                  </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
-                      href="#">Delete</a></li>
+                  <li><a href="#" class="fd-menu__item fd-button--light">Edit</a></li>
+                  <li><a href="#" class="fd-menu__item">Update</a></li>
+                  <li><a href="#" class="fd-button--negative fd-menu__item">Delete</a></li>
                 </ul>
               </nav>
             </div>
@@ -51,17 +48,14 @@
         <td *ngIf="remote">
           <div class="fd-popover">
             <div class="fd-popover__control">
-              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(2)" (focusout)="onCloseActionList(2)"></button>
+              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"></button>
             </div>
-            <div *ngIf="actionList[2]" class="fd-popover__body">
+            <div id="actionList" hidden class="fd-popover__body">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
-                  </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
-                      href="#">Delete</a></li>
+                  <li><a href="#" class="fd-menu__item fd-button--light">Edit</a></li>
+                  <li><a href="#" class="fd-menu__item">Update</a></li>
+                  <li><a href="#" class="fd-button--negative fd-menu__item">Delete</a></li>
                 </ul>
               </nav>
             </div>
@@ -80,17 +74,14 @@
         <td *ngIf="remote">
           <div class="fd-popover">
             <div class="fd-popover__control">
-              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(3)" (focusout)="onCloseActionList(3)"></button>
+              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"></button>
             </div>
-            <div *ngIf="actionList[3]" class="fd-popover__body">
+            <div id="actionList" hidden class="fd-popover__body">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
-                  </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
-                      href="#">Delete</a></li>
+                  <li><a href="#" class="fd-menu__item fd-button--light">Edit</a></li>
+                  <li><a href="#" class="fd-menu__item">Update</a></li>
+                  <li><a href="#" class="fd-button--negative fd-menu__item">Delete</a></li>
                 </ul>
               </nav>
             </div>
