@@ -38,7 +38,7 @@ function init() {
     } else {
         privateKeyData = generatePrivateKey(privateKeyFile)
     }
-    
+
 
     if (fs.existsSync(connFile)) {
         connection = JSON.parse(fs.readFileSync(connFile))

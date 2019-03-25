@@ -15,6 +15,7 @@ module.exports = {
 }
 
 function sendEvent(req, res) {
+    LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
@@ -36,10 +37,11 @@ function sendEvent(req, res) {
                 res.status(500).send({ error: error.message })
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    LOGGER.error("Error while Sending Event: %s", JSON.stringify(body))
+                    LOGGER.error("Error while Sending Event: %s", JSON.stringify(body, null, 2))
                     res.status(httpResponse.statusCode).type("json").send(body)
                 }
                 else {
+                    LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
                     res.status(httpResponse.statusCode).type("json").send(body)
                 }
             }
@@ -67,7 +69,7 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
                 await updateEvent(event, reg_api.id)
             }
         } catch (error) {
-            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error)
+            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
             LOGGER.error(message)
             error_message += "\n" + message
         }

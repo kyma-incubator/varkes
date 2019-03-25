@@ -19,7 +19,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
     connection.init()
-    
+
     var app = express()
     app.use(bodyParser.json())
     app.use(expressWinston.logger(LOGGER))

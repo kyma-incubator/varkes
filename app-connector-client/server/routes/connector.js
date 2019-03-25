@@ -23,43 +23,55 @@ function callTokenUrl(insecure, url) {
     return request({
         uri: url,
         method: "GET",
+        json: true,
         rejectUnauthorized: !insecure,
         resolveWithFullResponse: true
     }).then(function (response) {
         if (response.statusCode !== 200) {
-            throw new Error("Calling token URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
+            throw new Error("Calling token URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
         }
-        LOGGER.debug("Token URL returned '%s'", response.body)
-        var result = JSON.parse(response.body)
-        result.insecure = insecure
-        return result
+        LOGGER.debug("Token URL returned %s", JSON.stringify(response.body, null, 2))
+        return response.body
     })
 }
 
-function generateCSRFromResponse(tokenResponse) {
-    return new Promise(function (resolve, reject) {
-        tokenResponse.csr = generateCSR(tokenResponse.certificate.subject)
-        resolve(tokenResponse)
-    })
-}
-
-function callCSRUrl(tokenResponse) {
-    LOGGER.debug("Calling csr URL '%s'", tokenResponse.csrUrl)
-    var csrData = forge.util.encode64(tokenResponse.csr)
+function callCSRUrl(csrUrl, csr, insecure) {
+    LOGGER.debug("Calling csr URL '%s'", csrUrl)
+    var csrData = forge.util.encode64(csr)
 
     return request.post({
-        uri: tokenResponse.csrUrl,
+        uri: csrUrl,
         body: { csr: csrData },
         json: true,
-        rejectUnauthorized: !tokenResponse.insecure,
+        rejectUnauthorized: !insecure,
         resolveWithFullResponse: true
     }).then(function (response) {
         if (response.statusCode !== 201) {
-            throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body) + "'")
+            throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
         }
         LOGGER.debug("CSR URL returned")
-        tokenResponse.crt = (Buffer.from(response.body.crt, 'base64').toString("ascii"))
-        return tokenResponse
+        return Buffer.from(response.body.crt, 'base64').toString("ascii")
+    })
+}
+
+function callInfoUrl(infoUrl, crt, privateKey, insecure) {
+    LOGGER.debug("Calling info URL '%s'", infoUrl)
+
+    return request.get({
+        uri: infoUrl,
+        json: true,
+        agentOptions: {
+            cert: crt,
+            key: privateKey
+        },
+        rejectUnauthorized: !insecure,
+        resolveWithFullResponse: true
+    }).then(function (response) {
+        if (response.statusCode !== 200) {
+            throw new Error("Calling Info URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
+        }
+        LOGGER.debug("Got following Info URL returned: %s", JSON.stringify(response.body, null, 2))
+        return response.body
     })
 }
 
@@ -78,7 +90,7 @@ function info(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        res.status(200).send(createInfo())
+        res.status(200).send(connection.info())
     }
 }
 
@@ -111,20 +123,6 @@ function assureConnected() {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null
-}
-
-function createInfo() {
-    var connectionData = connection.info()
-    const myURL = new url.URL(connectionData.metadataUrl)
-    var domains = myURL.hostname.split(".")
-    const app = myURL.pathname.split("/")[1]
-    return {
-        domain: domains[1] ? domains[1] : domains[0],
-        app: app,
-        consoleUrl: connectionData.metadataUrl.replace("gateway", "console").replace(app + "/v1/metadata/services", "home/cmf-apps/details/" + app),
-        eventsUrl: connectionData.eventsUrl,
-        metadataUrl: connectionData.metadataUrl
-    }
 }
 
 function generateCSR(subject) {
@@ -161,15 +159,24 @@ async function connect(req, res) {
 
     try {
         var insecure = req.body.insecure ? true : false
-        var tokenResponse = await callTokenUrl(insecure, req.body.url)
-            .then(generateCSRFromResponse)
-            .then(callCSRUrl)
 
+        var tokenResponse = await callTokenUrl(insecure, req.body.url)
+        var csr = generateCSR(tokenResponse.certificate.subject)
+        var crt = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
+        var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, connection.privateKey(), insecure)
+
+        var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.split(".")
         var connectionData = {
             insecure: insecure,
-            metadataUrl: tokenResponse.api.metadataUrl,
-            eventsUrl: tokenResponse.api.eventsUrl,
-            certificatesUrl: tokenResponse.api.certificatesUrl
+            infoUrl: tokenResponse.api.infoUrl,
+            metadataUrl: infoResponse.urls.metadataUrl,
+            eventsUrl: infoResponse.urls.eventsUrl,
+            certificatesUrl: infoResponse.urls.certificatesUrl,
+            renewCertUrl: infoResponse.urls.renewCertUrl,
+            revocationCertUrl: infoResponse.urls.revocationCertUrl,
+            consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
+            domain: domains[1] ? domains[1] : domains[0],
+            application: infoResponse.clientIdentity.application
         }
 
         if (connectionData.insecure && nodePort) {
@@ -177,28 +184,40 @@ async function connect(req, res) {
             connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
         }
 
-        connection.establish(connectionData, tokenResponse.crt)
+        connection.establish(connectionData, crt)
 
-        if (req.body.register) {
-            LOGGER.debug("Auto-registering APIs")
-            var hostname = req.body.hostname || "http://localhost"
-            var registeredAPIs = await services.getAllAPI()
-            var promises = [
-                services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
-                events.createEventsFromConfig(varkesConfig.events, registeredAPIs)
-            ]
-            await Promise.all(promises)
-            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
-        }
-        info = createInfo()
-        LOGGER.info("Connected to %s", info.domain)
+        LOGGER.info("Connected to %s", connection.info().domain)
 
-        res.status(200).send(info)
     } catch (error) {
-        var message = "There is an error while registering. Please make sure that your token is unique"
+        var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.status(401).send({ error: message })
     }
+
+    try {
+        if (req.body.register) {
+            var hostname = req.body.hostname || "http://localhost"
+            await autoRegister(hostname, varkesConfig)
+            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+        }
+
+        res.status(200).send(connection.info())
+    } catch (error) {
+        var message = "There was a problem with auto-registering the APIs. See the srver logs for more details."
+        LOGGER.error("Failed to auto-register APIs and events: %s", error)
+        res.status(401).send({ error: message })
+    }
+
+}
+
+async function autoRegister(hostname, varkesConfig) {
+    LOGGER.debug("Auto-registering APIs and events")
+    var registeredAPIs = await services.getAllAPI()
+    var promises = [
+        services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
+        events.createEventsFromConfig(varkesConfig.events, registeredAPIs)
+    ]
+    return Promise.all(promises)
 }
 
 function router(config, nodePortParam = null) {
