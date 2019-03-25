@@ -1,5 +1,5 @@
 {
-  "name": "varkes-ui-app",
+  "name": "@varkes/cockpit",
   "version": "0.0.0",
   "scripts": {
     "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/sampleconfig.js --mode production",
