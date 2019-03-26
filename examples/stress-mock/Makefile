@@ -1,4 +1,4 @@
-APP_NAME = varkes-stress-mock
+APP_NAME = varkes-example-stress-mock
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 resolve:
 	npm install
