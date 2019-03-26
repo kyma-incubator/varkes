@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 'use strict'
 
-const mock = require('../server/app')
-const request = require('supertest')
-const express = require('express')
+
+import * as  mock from "../server/app"
+import * as request from "supertest"
+import * as express from "express"
 
 describe('controllers', function () {
   it('should work', function (done) {
-    mock.init('varkes_config.json', __dirname).then(function (mock) {
+    mock.init('varkes_config.json', __dirname).then(function (mock: any) {
       var app = express()
-      app.get('/api1/pets/:petId', function (req, res, next) {
+      app.get('/api1/pets/:petId', (req: any, res: any, next: any) => {
         res.body = {
           success: req.params.petId
         }
@@ -211,6 +212,6 @@ describe('controllers', function () {
       });
 
       done()
-    }).catch(error => done(error))
+    }).catch((error: Error) => done(error))
   }).timeout(5000)
 });

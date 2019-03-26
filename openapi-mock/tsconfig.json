@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "types/*"
+            ]
+        },
+        "target": "es5",
+        "module": "commonjs",
+        "lib": [
+            "es5",
+            "es6",
+            "dom"
+        ],
+        "strict": true,
+        "outDir": "dist",
+        "allowJs": true
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src"
+    ]
+}

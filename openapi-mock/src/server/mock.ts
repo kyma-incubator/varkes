@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 'use strict'
 
-const express = require('express')
-const yaml = require('js-yaml');
-const fs = require('fs');
-const pretty_yaml = require('json-to-pretty-yaml');
-const LOGGER = require("./logger").logger
-const morgan = require('morgan');
-const Converter = require('api-spec-converter');
-const middleware = require('swagger-express-middleware');
-
+import * as express from "express"
+import * as yaml from "js-yaml"
+import * as fs from "fs"
+const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
+import { logger as LOGGER } from "./logger"
+import * as morgan from "morgan"
+import { SwaggerMiddleware } from "swagger-express-middleware";
+const Converter = require("api-spec-converter")
+const middleware = require("swagger-express-middleware")
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
-module.exports = async function (config) {
+async function mock(config: any) {
     var app = express()
     var error_message = "";
     for (var i = 0; i < config.apis.length; i++) {
@@ -42,10 +42,13 @@ module.exports = async function (config) {
 
                 writeSpec(pretty_yaml.stringify(spec), api, i)
 
+
+
                 let myDB = new middleware.MemoryDataStore();
+
                 var middlewares = [];
                 middlewares.push(
-                    middleware(api.specification, app, function (err, middleware) {
+                    middleware(api.specification, app, (_err: Error, middleware: SwaggerMiddleware) => {
                         app.use(
                             middleware.metadata(),
                             middleware.CORS(),
@@ -54,7 +57,7 @@ module.exports = async function (config) {
                             middleware.validateRequest(),
                             middleware.mock(myDB),
                         );
-                        customErrorResponses(app, config)
+                        customErrorResponses(app)
                     })
                 )
                 registerLogger(app);
@@ -72,8 +75,8 @@ module.exports = async function (config) {
     return app
 }
 
-function customErrorResponses(app, config) {
-    app.use(function (err, req, res, next) {
+function customErrorResponses(app: express.Application) {
+    app.use((err: any, req: any, res: any, next: any) => {
         if (!err.status) {
             err.status = 500;
         }
@@ -84,12 +87,12 @@ function customErrorResponses(app, config) {
     });
 }
 
-function loadSpec(api) {
+function loadSpec(api: any) {
     LOGGER.debug("Loading api '%s' from file '%s'", api.name, api.specification);
     return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
 }
 
-function writeSpec(specString, api, index) {
+function writeSpec(specString: string, api: any, index: any) {
     var file_name = DIR_NAME + index + "_" + TMP_FILE;
     LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, file_name, specString.length);
 
@@ -102,14 +105,14 @@ function writeSpec(specString, api, index) {
     api.specification = file_name;
 }
 
-function registerLogger(app) {
-    morgan.token('header', function (req, res) {
+function registerLogger(app: express.Application) {
+    morgan.token('header', (req: any) => {
         if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
             return req.rawHeaders;
         else
             return "-";
     });
-    morgan.token('body', function (req, res) {
+    morgan.token('body', function (req) {
         if (req.body && Object.keys(req.body).length != 0)
             return JSON.stringify(req.body);
         else
@@ -125,10 +128,10 @@ function registerLogger(app) {
     });
 }
 
-function createEndpoints(spec, api) {
+function createEndpoints(spec: any, api: any) {
     if (api.hasOwnProperty("added_endpoints")) {
         LOGGER.debug("Adding new Endpoints for api '%s'", api.name);
-        api.added_endpoints.forEach(function (point) {
+        api.added_endpoints.forEach((point: any) => {
             var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
             if (!spec["paths"].hasOwnProperty(point.url)) {
                 LOGGER.debug("Adding custom endpoint '%s' to '%s'", point.url, api.name)
@@ -137,7 +140,7 @@ function createEndpoints(spec, api) {
         });
     }
 }
-function createOauthEndpoint(api, app) {
+function createOauthEndpoint(api: any, app: express.Application) {
     LOGGER.debug("Adding oauth endpoint '%s%s'", api.baseurl, api.oauth)
     app.post(api.baseurl + api.oauth, function (req, res) {
         if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
@@ -153,12 +156,12 @@ function createOauthEndpoint(api, app) {
     });
 }
 
-async function validateSpec(api, type) {
+async function validateSpec(api: any, type: any) {
     LOGGER.debug("Validating spec of api '%s'", api.name);
     return Converter.getSpec(api.specification, type)
-        .then(function (fromSpec) {
+        .then((fromSpec: any) => {
             return fromSpec.validate()
-        }).then(function (result) {
+        }).then((result: any) => {
             if (result.errors) {
                 throw new Error("Validation error of api '" + api.name + "':" + pretty_yaml.stringify(result.errors));
             }
@@ -168,13 +171,13 @@ async function validateSpec(api, type) {
         });
 }
 
-async function transformSpec(api) {
+async function transformSpec(api: any) {
     LOGGER.debug("Transforming spec of api '%s' to swagger2 format", api.name)
     return Converter.getSpec(api.specification, 'openapi_3')
-        .then(fromSpec => fromSpec.convertTo('swagger_2'))
+        .then((fromSpec: any) => fromSpec.convertTo('swagger_2'))
 }
 
-function createMetadataEndpoint(spec, api, app) {
+function createMetadataEndpoint(spec: any, api: any, app: express.Application) {
     LOGGER.debug("Adding metadata endpoint '%s%s'", api.baseurl, api.metadata)
     app.get(api.baseurl + api.metadata, function (req, res) {
         res.type('text/x-yaml')
@@ -193,7 +196,7 @@ function createMetadataEndpoint(spec, api, app) {
     })
 }
 
-function createConsole(api, app) {
+function createConsole(api: any, app: express.Application) {
     LOGGER.debug("Adding console endpoint '%s%s'", api.baseurl, "/console")
     app.get(api.baseurl + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
@@ -204,3 +207,5 @@ function createConsole(api, app) {
         res.send(html)
     })
 }
+
+export { mock }
