@@ -6,7 +6,7 @@
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
-  "main": "server/app.js",
+  "main": "dist/server/app.js",
   "publishConfig": {
     "access": "public"
   },
@@ -16,22 +16,31 @@
     "express": "^4.16.4",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
-    "path": "^0.12.7",
     "swagger-express-middleware": "^2.0.1",
-    "util": "^0.11.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "js-yaml": "^3.13.0"
   },
   "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/js-yaml": "^3.12.0",
+    "@types/mocha": "^5.2.6",
+    "@types/morgan": "^1.7.35",
+    "@types/supertest": "^2.0.7",
+    "@types/swagger-express-middleware": "^1.0.9",
+    "copyfiles": "^2.1.0",
     "mocha": "^6.0.2",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "typescript": "^3.3.3333"
   },
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
   },
   "scripts": {
-    "start": "node server/server",
-    "start:dev": "export DEBUG=true && node server/server test/varkes_config.json",
-    "test": "mocha"
+    "compile": "tsc && cd src && copyfiles server/resources/* ../dist/ && copyfiles test/*.json ../dist/ && copyfiles test/*.yaml ../dist/ ",
+    "start": "node dist/server/server",
+    "start:dev": "npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
+    "pretest": "npm run compile",
+    "test": "mocha dist/test"
   }
 }

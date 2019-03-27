@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 'use strict'
 
-const path = require("path")
-const fs = require('fs');
-const LOGGER = require("./logger").logger
+import * as path from "path"
+import * as fs from "fs"
+import { logger as LOGGER } from "./logger"
 
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 
-module.exports = function (varkesConfigPath, currentDirectory) {
+function configure(varkesConfigPath: string, currentDirectory: string) {
     var varkesConfig
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
-        varkesConfig.apis.map(api => {
+        varkesConfig.apis.map((api: any) => {
             api.specification = path.resolve(path.dirname(endpointConfig), api.specification)
             if (api.added_endpoints) {
-                api.added_endpoints.map(ae => {
+                api.added_endpoints.map((ae: any) => {
                     ae.filePath = path.resolve(path.dirname(endpointConfig), ae.filePath)
                 })
             }
@@ -31,7 +31,7 @@ module.exports = function (varkesConfigPath, currentDirectory) {
     return varkesConfig
 }
 
-function configValidation(configJson) {
+function configValidation(configJson: any) {
     var error_message = "";
     if (configJson.hasOwnProperty("apis")) {
         for (var i = 1; i <= configJson.apis.length; i++) {
@@ -73,3 +73,5 @@ function configValidation(configJson) {
         throw new Error("Validation of configuration failed: " + error_message);
     }
 }
+
+export { configure }

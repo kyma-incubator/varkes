@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 'use strict'
 
-const openapiApp = require("./app")
-const app = require('express')()
-const LOGGER = require("./logger").logger
-var configPath
+import * as openapiApp from "./app"
+import * as express from "express"
+import { logger as LOGGER } from "./logger"
+const app = express()
+var configPath: string
 
 var runAsync = async () => {
 
@@ -13,7 +14,7 @@ var runAsync = async () => {
     }
 
     try {
-        app.use(await openapiApp.init(configPath))
+        app.use(await openapiApp.init(configPath, __dirname))
         app.listen(10000, function () {
             LOGGER.info("Started application on port %d", 10000)
         });
