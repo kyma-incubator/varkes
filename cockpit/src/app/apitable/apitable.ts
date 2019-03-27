@@ -7,7 +7,6 @@ import { Http } from '@angular/http';
 })
 export class ApiTableComponent implements OnInit, OnChanges {
 
-    title = 'varkes-ui-app';
     @Input() remote;
     public apis;
     public actionList = [];

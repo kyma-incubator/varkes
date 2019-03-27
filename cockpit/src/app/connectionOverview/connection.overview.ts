@@ -14,7 +14,6 @@ import { uxManager } from '@kyma-project/luigi-client';
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnChanges {
-    title = 'varkes-ui-app';
     public apis;
     public connection = {
         application: {

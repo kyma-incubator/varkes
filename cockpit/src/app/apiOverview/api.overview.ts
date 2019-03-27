@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
     templateUrl: './app.apioverview.html'
 })
 export class ApiOverviewComponent {
-    title = 'varkes-ui-app';
     api = {
         name: "provider",
         type: "OData",

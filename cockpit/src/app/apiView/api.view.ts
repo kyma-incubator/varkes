@@ -4,6 +4,5 @@ import { Component } from '@angular/core';
     templateUrl: './app.apiview.html'
 })
 export class ApiViewComponent {
-    title = 'varkes-ui-app';
 
 }

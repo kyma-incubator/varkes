@@ -6,11 +6,12 @@
     "node": ">=4"
   },
   "scripts": {
-    "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/sampleconfig.js --mode production",
+    "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/luigiconfig.js --mode production",
     "ng": "ng",
     "build-tsc": "tsc -p src/server/tscconfig.app.json && copyfiles apis/* ./dist && copyfiles",
     "start": "node dist/server",
     "build": "ng build",
+    "compile": "npm run buildConfig && npm run build && npm run build-tsc",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
