@@ -8,7 +8,6 @@ var app = express();
 if (environment.production) {
   enableProdMode();
 }
-function init(varkesConfigPath: string, currentPath = "") {
-  app.use('/', AppModule);
-  return app;
-}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));

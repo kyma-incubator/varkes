@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ApiTableComponent } from './apitable/apitable';
 import { ConnectionOverviewComponent } from './connectionOverview/connection.overview';
+import { HttpModule } from '@angular/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -12,7 +13,8 @@ import { ConnectionOverviewComponent } from './connectionOverview/connection.ove
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpModule
   ],
   providers: [],
   bootstrap: [AppComponent]

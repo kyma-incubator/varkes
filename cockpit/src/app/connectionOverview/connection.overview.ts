@@ -7,7 +7,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import LuigiClient from '@kyma-project/luigi-client';
+import { uxManager } from '@kyma-project/luigi-client';
 
 @Component({
     selector: 'connection-overview',
@@ -15,6 +15,7 @@ import LuigiClient from '@kyma-project/luigi-client';
 })
 export class ConnectionOverviewComponent implements OnChanges {
     title = 'varkes-ui-app';
+    public apis;
     public connection = {
         application: {
             name: "varkes",
@@ -26,56 +27,44 @@ export class ConnectionOverviewComponent implements OnChanges {
     public connected: boolean;
     @Input() public insecureConnection: boolean;
     public remote;
-    private luigiClient: LuigiClient;
 
     public constructor(private http: Http) {
-        this.luigiClient = LuigiClient;
-        this.modalClosed = new EventEmitter<null>();
-        this.http.get("/mock/apis")
-            .subscribe(
-                function success(data) {
-                    console.log(JSON.stringify(data));
-                },
-                function error(data) {
-                    console.log(data)
-                });
+
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.modalActive.currentValue === true) {
-            this.openModal();
-        }
+
     }
 
     private openModal() {
         this.insecureConnection = false;
-        this.luigiClient.uxManager().addBackdrop();
+        uxManager().addBackdrop();
         this.modalActive = true;
     }
     public onCloseModalClick() {
-        this.modalClosed.emit();
-        this.luigiClient.uxManager().removeBackdrop();
+        uxManager().removeBackdrop();
         this.modalActive = false;
     }
 
     public onConnect(url) {
-        var sendData = {
-            url: url,
-            hostname: "localhost:4200",
-            register: false
-        };
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        this.http.post("/connection/?localKyma=" + this.insecureConnection, JSON.stringify(sendData), options)
-            .subscribe(
-                function success(data) {
-                    this.connected = true;
-                    this.onCloseModalClick();
-                },
-                function error(data) {
-                    console.log(data)
-                });
-
+        // var sendData = {
+        //     url: url,
+        //     hostname: "localhost:4200",
+        //     register: false
+        // };
+        // let headers = new Headers({ 'Content-Type': 'application/json' });
+        // let options = new RequestOptions({ headers: headers });
+        // this.http.post("/connection/?localKyma=" + this.insecureConnection, JSON.stringify(sendData), options)
+        //     .subscribe(
+        //         function success(data) {
+        //             this.connected = true;
+        //             this.onCloseModalClick();
+        //         },
+        //         function error(data) {
+        //             console.log(data)
+        //         });
+        this.connected = true;
+        this.onCloseModalClick();
     }
     public onDisconnect() {
         this.connected = false;

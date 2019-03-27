@@ -25,6 +25,7 @@
     "@babel/preset-env": "^7.3.4",
     "@kyma-project/luigi-client": "^0.4.10",
     "@kyma-project/luigi-core": "^0.4.10",
+    "@types/mocha": "^5.2.6",
     "babel-loader": "^8.0.5",
     "core-js": "^2.5.4",
     "fiori-fundamentals": "^1.4.5",
@@ -33,7 +34,8 @@
     "tslib": "^1.9.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "@varkes/app-connector-client": "^0.2.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

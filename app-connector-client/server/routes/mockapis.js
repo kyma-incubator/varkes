@@ -5,7 +5,7 @@ const services = require("./services")
 const events = require("./events")
 module.exports = {
     router: router,
-    getAllAPIs: getAllAPIs
+    getAll: getAll
 }
 var varkesConfig
 function getAll(req, res) {
@@ -14,23 +14,30 @@ function getAll(req, res) {
     var configApis = varkesConfig.apis;
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
-        apis.push(services.fillServiceMetadata(api, req.params.hostname))
+        var metadata = services.fillServiceMetadata(api, req.params.hostname);
+        if (api.type == "odata") {
+            metadata.type = "OData";
+        }
+        else {
+            metadata.type = "OpenAPI"
+        }
+        apis.push(metadata)
     }
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
         var event = configEvents[i];
-        apis.push(events.fillEventData(event))
+        var metadata = events.fillEventData(event);
+        metadata.type = "Event";
+        apis.push(metadata);
     }
     res.status(200).send(apis);
 }
-
-
 
 
 function router(config) {
     var apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/", getAll)
-    apiRouter.get("/:api", get)
+    //apiRouter.get("/:api", get)
     return apiRouter
 }
