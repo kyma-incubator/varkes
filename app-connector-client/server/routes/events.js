@@ -5,7 +5,7 @@ const express = require('express')
 const LOGGER = require("../logger").logger
 const fs = require("fs")
 const connection = require("../connection")
-const apis = require("./apis")
+const services = require("../services")
 const request = require("request")
 const yaml = require('js-yaml')
 
@@ -84,7 +84,7 @@ function createEvent(event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         var eventData = fillEventData(event)
-        apis.createAPI(eventData, function (err, httpResponse, body) {
+        services.createAPI(eventData, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -102,7 +102,7 @@ async function updateEvent(event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
         var eventData = fillEventData(event)
-        apis.updateAPI(eventData, event_id, function (err, httpResponse, body) {
+        services.updateAPI(eventData, event_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -129,6 +129,7 @@ function fillEventData(event) {
         name: event.name,
         description: event.description ? event.description : event.name,
         labels: event.labels ? event.labels : {},
+        type: "Event",
         events: {
             spec: specInJson
         }
