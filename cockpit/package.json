@@ -1,10 +1,15 @@
 {
   "name": "@varkes/cockpit",
-  "version": "0.0.0",
+  "version": "0.2.2",
+  "main": "dist/server",
+  "engines": {
+    "node": ">=4"
+  },
   "scripts": {
     "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/sampleconfig.js --mode production",
     "ng": "ng",
-    "start": "ng serve",
+    "build-tsc": "tsc -p src/server/tscconfig.app.json && copyfiles apis/* ./dist && copyfiles",
+    "start": "node dist/server",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,7 +30,7 @@
     "@babel/preset-env": "^7.3.4",
     "@kyma-project/luigi-client": "^0.4.10",
     "@kyma-project/luigi-core": "^0.4.10",
-    "@types/mocha": "^5.2.6",
+    "@varkes/app-connector-client": "^0.2.2",
     "babel-loader": "^8.0.5",
     "core-js": "^2.5.4",
     "fiori-fundamentals": "^1.4.5",
@@ -34,28 +39,24 @@
     "tslib": "^1.9.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "zone.js": "~0.8.26",
-    "@varkes/app-connector-client": "^0.2.2"
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
     "@angular/cli": "~7.3.6",
-    "@angular/compiler-cli": "~7.2.0",
-    "@angular/language-service": "~7.2.0",
+    "@angular/compiler-cli": "^7.2.10",
+    "@angular/language-service": "^7.2.10",
     "@types/node": "~8.9.4",
-    "@types/jasmine": "~2.8.8",
-    "@types/jasminewd2": "~2.0.3",
     "codelyzer": "~4.5.0",
-    "jasmine-core": "~2.99.1",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~4.0.0",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~2.0.1",
-    "karma-jasmine": "~1.1.2",
-    "karma-jasmine-html-reporter": "^0.2.2",
+    "copyfiles": "^2.1.0",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
-  }
+  },
+  "license": "Apache-2.0",
+  "description": "Varkes Cockpit",
+  "files": [
+    "dist/**/*"
+  ]
 }
