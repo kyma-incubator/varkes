@@ -17,9 +17,10 @@ async function init(varkesConfigPath: string, currentDirectory = "") {
   app.use(bodyParser.urlencoded({ extended: true }))
 
   registerLogger(app);
-  customErrorResponses(app)
 
   app.use(await mock(varkesConfig))
+
+  customErrorResponses(app)
   return app;
 }
 
