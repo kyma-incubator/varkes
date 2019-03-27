@@ -276,6 +276,22 @@ paths:
       responses:
         "200":
           description: "Successful"
+  /mock/apis:
+    get:
+      tags:
+        - "api"
+      summary: "Gets all mocked apis"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Service"
+        "404":
+          description: "Didn't find resource"
 
 components:
   schemas:

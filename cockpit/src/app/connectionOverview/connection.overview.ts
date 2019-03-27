@@ -47,22 +47,6 @@ export class ConnectionOverviewComponent implements OnChanges {
     }
 
     public onConnect(url) {
-        // var sendData = {
-        //     url: url,
-        //     hostname: "localhost:4200",
-        //     register: false
-        // };
-        // let headers = new Headers({ 'Content-Type': 'application/json' });
-        // let options = new RequestOptions({ headers: headers });
-        // this.http.post("/connection/?localKyma=" + this.insecureConnection, JSON.stringify(sendData), options)
-        //     .subscribe(
-        //         function success(data) {
-        //             this.connected = true;
-        //             this.onCloseModalClick();
-        //         },
-        //         function error(data) {
-        //             console.log(data)
-        //         });
         this.connected = true;
         this.onCloseModalClick();
     }

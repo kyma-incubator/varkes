@@ -38,6 +38,5 @@ function router(config) {
     var apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/", getAll)
-    //apiRouter.get("/:api", get)
     return apiRouter
 }
