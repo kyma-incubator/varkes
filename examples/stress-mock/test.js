@@ -20,7 +20,7 @@ describe('tests stress apis', function () {
             describe('GET schools', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api7/schools')
+                        .get('/api7/v1/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('tests stress apis', function () {
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api7/console')
+                        .get('/api7/v1/console')
                         .expect('Content-Type', 'text/html; charset=utf-8')
                         .expect(200, done)
                 });
@@ -37,7 +37,7 @@ describe('tests stress apis', function () {
             describe('GET api1 metadata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/metadata')
+                        .get('/api1/v1/metadata')
                         .expect('Content-Type', 'text/x-yaml; charset=utf-8')
                         .expect(200, done)
                 });
