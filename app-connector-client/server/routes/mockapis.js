@@ -4,8 +4,7 @@ const express = require("express")
 const services = require("../services")
 const events = require("./events")
 module.exports = {
-    router: router,
-    getAll: getAll
+    router: router
 }
 var varkesConfig
 function getAll(req, res) {

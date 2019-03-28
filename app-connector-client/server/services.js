@@ -11,6 +11,7 @@ const METADATA = "/metadata"
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
+    getAllAPIs, getAllAPIs,
     createAPI: createAPI,
     updateAPI: updateAPI,
     fillServiceMetadata: fillServiceMetadata
@@ -90,7 +91,7 @@ function updateService(api, api_id, hostname) {
 function getAllAPI() {
     LOGGER.debug("Get all API ")
     return new Promise((resolve, reject) => {
-        apis.getAllAPIs(function (error, httpResponse, body) {
+        getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 reject(error)
             } else if (httpResponse.statusCode >= 400) {
@@ -100,6 +101,19 @@ function getAllAPI() {
                 resolve(JSON.parse(body))
             }
         })
+    })
+}
+function getAllAPIs(cb) {
+    request({
+        url: connection.info().metadataUrl,
+        method: "GET",
+        agentOptions: {
+            cert: connection.certificate(),
+            key: connection.privateKey()
+        },
+        rejectUnauthorized: connection.secure()
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body)
     })
 }
 function createAPI(serviceMetadata, cb) {

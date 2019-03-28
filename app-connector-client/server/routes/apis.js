@@ -9,8 +9,7 @@ const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
 const services = require("../services")
 module.exports = {
-    router: router,
-    getAllAPIs: getAllAPIs
+    router: router
 }
 
 function getAll(req, res) {
@@ -19,7 +18,7 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        getAllAPIs(function (error, httpResponse, body) {
+        services.getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
@@ -34,19 +33,7 @@ function getAll(req, res) {
     }
 }
 
-function getAllAPIs(cb) {
-    request({
-        url: connection.info().metadataUrl,
-        method: "GET",
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
+
 
 
 function create(req, res) {
