@@ -12,7 +12,6 @@
     "start": "node dist/server",
     "build": "ng build",
     "compile": "npm run buildConfig && npm run build && npm run build-tsc",
-    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
