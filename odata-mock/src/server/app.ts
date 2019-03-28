@@ -8,7 +8,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
-const explorer=require('loopback-component-explorer')
+const explorer = require('loopback-component-explorer')
 
 async function init(varkesConfigPath: string, currentPath = "") {
   var varkesConfig = config(varkesConfigPath, currentPath)
@@ -16,7 +16,9 @@ async function init(varkesConfigPath: string, currentPath = "") {
 
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     var api = varkesConfig.apis[i]
-    promises.push(bla(api, varkesConfig))
+    if (api.type == "odata") {
+      promises.push(bootLoopback(api, varkesConfig))
+    }
   }
 
   let resultApp = express()
@@ -24,30 +26,29 @@ async function init(varkesConfigPath: string, currentPath = "") {
   for (var i = 0; i < apps.length; i++) {
     resultApp.use(apps[i])
   }
-  
+
   return resultApp
 }
 
-async function bla(api: any, varkesConfig: any) {
-  if (api.type == "odata") {
-    var app = loopback();
-    app.use(bodyParser.json());
-    app.varkesConfig = varkesConfig
+async function bootLoopback(api: any, varkesConfig: any) {
+  var app = loopback();
+  app.use(bodyParser.json());
+  app.varkesConfig = varkesConfig
 
-    LOGGER.info("Parsing specification and generating models for api %s", api.name)
-    var bootConfig = await generateBootConfig(api)
+  LOGGER.debug("Parsing specification and generating models for api %s", api.name)
+  var bootConfig = await generateBootConfig(api)
 
-    LOGGER.info("Booting loopback middleware for api %s", api.name)
+  LOGGER.debug("Booting loopback middleware for api %s", api.name)
 
-    return new Promise(function (resolve, reject) {
-      boot(app, bootConfig, function (err: Error) {
-        if (err) {
-          reject(err);
-        }
-        resolve(app);
-      })
+  return new Promise(function (resolve, reject) {
+    boot(app, bootConfig, function (err: Error) {
+      if (err) {
+        reject(err);
+      }
+      LOGGER.debug("Loopback middleware for api %s is booted", api.name)
+      resolve(app);
     })
-  }
+  })
 }
 
 async function generateBootConfig(api: any) {

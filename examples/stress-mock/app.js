@@ -32,7 +32,7 @@ var runAsync = async () => {
             });
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", error)
+        console.error("Problem while starting application: %s", JSON.stringify(error))
     }
 }
 
@@ -55,6 +55,7 @@ function generateConfig() {
         config.apis.push({
             name: "OData " + i,
             specification: "../apis/services.xml",
+            basepath: "/api" + i +"/odata",
             type: "odata"
         })
     }

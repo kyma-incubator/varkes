@@ -17,8 +17,7 @@ var runAsync = async () => {
             LOGGER.info("Started application on port %d", 10000)
         });
     } catch (error) {
-        LOGGER.error("Problem while starting application: %s", error)
-        throw error
+        LOGGER.error("Problem while starting application: %s", JSON.stringify(error))
     }
 }
 
