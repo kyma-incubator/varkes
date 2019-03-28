@@ -41,10 +41,10 @@ function configValidation(configJson: VarkesConfigType) {
                 error_message += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
             }
             if (api.type == "odata" && !api.basepath) {
-                error_message += "\napi '" + api.name + "': missing attribute 'baseurl', a baseurl is mandatory";
+                error_message += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
             }
-            else if (api.type == "odata" && !api.basepath.match(/^\/[/\\\w\.]+$/)) {
-                error_message += "\napi '" + api.name + "': basepath '" + api.basepath + "' is not matching the pattern '^\\/[/\\\\\w\.]+$'";
+            else if (api.type == "odata" && !api.basepath.match(/^\/([/\\\w\.]+\/)*odata\/[/\\\w\.]+$/)) {
+                error_message += "\napi '" + api.name + "': basepath '" + api.basepath + "' is not matching the pattern '^\/([/\\\w\.]+\/)*odata\/[/\\\w\.]+$'";
             }
         }
     }
