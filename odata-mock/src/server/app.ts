@@ -4,56 +4,72 @@ import { config } from "./config"
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
-const path = require("path")
+const express = require('express')
 const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
-import { VarkesConfigType } from "./types"
-
 
 async function init(varkesConfigPath: string, currentPath = "") {
   var varkesConfig = config(varkesConfigPath, currentPath)
-  var app = loopback();
-  app.use(bodyParser.json());
-  app.varkesConfig = varkesConfig
 
-  LOGGER.info("Parsing specifications and generating models")
-  //get the absolute path of varkesconfig after resolving so that subfiles can be referenced from varkesConfig.
-  var bootConfig = await generateBootConfig(varkesConfig, path.dirname(path.resolve(currentPath, varkesConfigPath)))
+  var promises: Promise<any>[] = [];
 
-  LOGGER.info("Booting loopback middleware")
-
-  return new Promise(function (resolve, reject) {
-    boot(app, bootConfig, function (err: Error) {
-      if (err) {
-        reject(err);
-      }
-      resolve(app);
-    });
-  });
-}
-
-async function generateBootConfig(varkesConfig: VarkesConfigType, currentPath: string) {
-  var parsedModels: any[] = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
-    if (varkesConfig.apis[i].type == "odata") {
-      parsedModels.push(parser.parseEdmx(path.resolve(currentPath, varkesConfig.apis[i].specification)));
+    var api = varkesConfig.apis[i]
+    if (api.type == "odata") {
+      var app = loopback();
+      app.use(bodyParser.json());
+      app.varkesConfig = varkesConfig
+
+      LOGGER.info("Parsing specification and generating models for api %s", api.name)
+      var bootConfig = await generateBootConfig(api)
+
+      LOGGER.info("Booting loopback middleware for api %s", api.name)
+
+      promises.push(
+        new Promise(function (resolve, reject) {
+          boot(app, bootConfig, function (err: Error) {
+            if (err) {
+              reject(err);
+            }
+            resolve(app);
+          })
+        }))
     }
   }
-  parsedModels = await Promise.all(parsedModels)
+
+  let resultApp = express()
+resultApp.get("/",function(req:any,res:any){})
+
+  let apps = await Promise.all(promises)
+  for (var i = 0; i < apps.length; i++) {
+    
+    resultApp.use("/v"+i,apps[i])
+    console.log("XXX"+i+JSON.stringify(apps[i]._router.stack,null,2))
+  }
+  console.log("XXX"+resultApp._router.stack.filter((r: { route: any; }) => r.route).map((r: { route: { path: any; }; }) => r.route.path))
+  return resultApp
+}
+
+async function generateBootConfig(api: any) {
+  var parsedModel = await parser.parseEdmx(api.specification)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config.json", "utf-8"))
+  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config_template.json", "utf-8"))
 
-  parsedModels.forEach(function (parsedModel) {
-
-    parsedModel.modelConfigs.forEach(function (config: any) {
-      bootConfig.models[config.name] = config.value
-    })
-    parsedModel.modelDefs.forEach(function (definition: any) {
-      bootConfig.modelDefinitions.push(definition)
-    })
+  parsedModel.modelConfigs.forEach(function (config: any) {
+    bootConfig.models[config.name] = config.value
   })
+  parsedModel.modelDefs.forEach(function (definition: any) {
+    bootConfig.modelDefinitions.push(definition)
+  })
+
+  let restBasePath = api.basepath.replace("/odata", "/api")
+  bootConfig.components["n-odata-server"].path = api.basepath + "/*"
+  bootConfig.components["loopback-component-explorer"].mountPath = restBasePath + "/console"
+  bootConfig.components["loopback-component-explorer"].basePath = restBasePath 
+  bootConfig.middleware.routes["n-odata-server#odata"].paths.push(api.basepath + "/*")
+  bootConfig.middleware.routes["loopback#rest"].paths.push(restBasePath)
 
   return bootConfig
 }

@@ -3,12 +3,12 @@
 
 import { logger as LOGGER } from "./logger"
 const fs = require("fs");
-
+import {ParsedModels} from "./types"
 Object.defineProperty(exports, "__esModule", { value: true });
 const { parse } = require('odata2openapi');
 
-function parseEdmx(path: string) {
-	return new Promise(function (resolve, reject) {
+function parseEdmx(path: string):Promise<ParsedModels> {
+	return new Promise<ParsedModels>(function (resolve, reject) {
 		fs.readFile(path, "utf8", function (err: Error, data: any) {
 			if (err) reject(err);
 
@@ -24,21 +24,15 @@ function parseEdmx(path: string) {
 	})
 }
 
-function createEntities(service: any) {
-	type resultType = {
-		modelConfigs: any[],
-		modelDefs: any[],
-	}
-
-	let result: resultType = {
+function createEntities(service: any):ParsedModels{
+	let result: ParsedModels = {
 		modelConfigs: [],
 		modelDefs: []
 	}
 
 	service.entityTypes.forEach((entityType: any) => {
-		let jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/modelTemplate.json", "utf8"));
+		let jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/model_template.json", "utf8"));
 		let entityName = entityType.name;
-
 
 		result.modelConfigs.push({ name: entityName, value: { dataSource: "db", public: true } })
 

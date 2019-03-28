@@ -48,12 +48,10 @@
     "routes": {
       "n-odata-server#odata": {
         "paths": [
-          "/odata/*"
         ]
       },
       "loopback#rest": {
         "paths": [
-          "/api"
         ]
       }
     },
@@ -69,10 +67,10 @@
   },
   "components": {
     "loopback-component-explorer": {
-      "mountPath": "/api/console"
+      "mountPath": "XXX"
     },
     "n-odata-server": {
-      "path": "/odata/*",
+      "path": "XXX",
       "odataversion": "2",
       "useViaMiddleware": true
     }

@@ -6,7 +6,7 @@ type eventType = {
     labels: {}
 }
 type apiType = {
-    baseurl: string,
+    basepath: string,
     oauth: string,
     name: string,
     metadata: string,
@@ -20,4 +20,9 @@ type VarkesConfigType = {
     events: eventType[]
 }
 
-export { VarkesConfigType }
+type ParsedModels = {
+    modelConfigs: any[],
+    modelDefs: any[],
+}
+
+export { VarkesConfigType, ParsedModels }

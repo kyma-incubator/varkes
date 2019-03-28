@@ -3,8 +3,15 @@
     "apis": [
         {
             "name": "services",
-            "metadata": "/services/metadata",
+            "basepath": "/mypath/odata/service.svc",
             "specification": "services.xml",
+            "auth": "none",
+            "type": "odata"
+        },
+        {
+            "name": "northwind",
+            "basepath": "/icke/odata/northwind.svc",
+            "specification": "northwind.xml",
             "auth": "none",
             "type": "odata"
         }
