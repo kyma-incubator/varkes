@@ -14,12 +14,13 @@ const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
 async function mock(config: any) {
-    var app = express()
+    var resultApp = express()
     var error_message = "";
     for (var i = 0; i < config.apis.length; i++) {
         var api = config.apis[i];
         if (!api.type || api.type == "openapi") {
             try {
+                let app = express()
                 createOauthEndpoint(api, app);
                 createConsole(api, app);
 
@@ -56,6 +57,7 @@ async function mock(config: any) {
                         );
                     })
                 )
+                resultApp.use(app)
             }
             catch (err) {
                 var message = "Serving API " + api.name + " failed: " + err.message
@@ -67,7 +69,7 @@ async function mock(config: any) {
     if (error_message != "") {
         throw new Error(error_message);
     }
-    return app
+    return resultApp
 }
 
 function loadSpec(api: any) {

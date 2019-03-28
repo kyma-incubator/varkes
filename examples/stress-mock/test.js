@@ -39,7 +39,7 @@ describe('tests stress apis', function () {
             describe('GET schools100', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api30/v1/schools')
+                        .get('/api100/v1/schools')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
