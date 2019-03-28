@@ -45,7 +45,7 @@ function generateConfig() {
 
     for (var i = 1; i < OPENAPI_COUNT + 1; i++) {
         config.apis.push({
-            baseurl: "/api" + i + "/v1",
+            basepath: "/api" + i + "/v1",
             name: "OpenAPI " + i,
             type: "openapi",
             specification: "../apis/schools.yaml"

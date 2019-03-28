@@ -2,13 +2,13 @@
     "name": "Combined OpenAPI-Mock",
     "apis": [
         {
-            "baseurl": "/api2",
+            "basepath": "/api2",
             "specification": "apis/schools.yaml",
             "name": "Schools API",
             "auth": "basic"
         },
         {
-            "baseurl": "/api1",
+            "basepath": "/api1",
             "name": "Courses API",
             "description": "Simple API to manage courses",
             "metadata": "/courseMetadata",

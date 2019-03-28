@@ -2,7 +2,7 @@
     "name": "OpenAPI-Mock",
     "apis": [
         {
-            "baseurl": "/api1",
+            "basepath": "/api1",
             "specification": "apis/courses.yaml",
             "auth": "none",
             "name": "courses"

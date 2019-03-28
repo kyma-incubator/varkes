@@ -152,8 +152,8 @@ function updateAPI(serviceMetadata, api_id, cb) {
 
 function fillServiceMetadata(api, hostname) {
     var targetUrl = hostname
-    if ((!api.type || api.type == "openapi") && api.baseurl) {
-        targetUrl = hostname + api.baseurl
+    if ((!api.type || api.type == "openapi") && api.basepath) {
+        targetUrl = hostname + api.basepath
     }
     if (api.type == "odata") {
         targetUrl = hostname + "/odata"
