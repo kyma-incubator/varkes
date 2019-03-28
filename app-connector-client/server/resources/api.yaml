@@ -290,8 +290,6 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Service"
-        "404":
-          description: "Didn't find resource"
 
 components:
   schemas:
@@ -545,7 +543,11 @@ components:
             name:
               type: "string"
               description: name of the api
-              "example": "schools"
+              example: "schools"
+            type:
+              type: "string"
+              description: type of the api
+              example: "OpenAPI"
             description:
               type: "string"
               description: description of the api

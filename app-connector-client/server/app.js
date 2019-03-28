@@ -13,7 +13,6 @@ const events = require("./routes/events")
 const apis = require("./routes/apis")
 const mockApis = require("./routes/mockapis")
 const connection = require("./connection")
-
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
 
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {

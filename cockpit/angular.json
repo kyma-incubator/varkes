@@ -48,6 +48,16 @@
                 "glob": "luigi-client.js",
                 "input": "node_modules/@kyma-project/luigi-client",
                 "output": "/luigi-client"
+              },
+              {
+                "glob": "jquery.min.js",
+                "input": "node_modules/jquery/dist",
+                "output": "/jquery"
+              },
+              {
+                "glob": "bootstrap.min.js",
+                "input": "node_modules/bootstrap/dist/js",
+                "output": "/bootstrap"
               }
             ],
             "styles": [

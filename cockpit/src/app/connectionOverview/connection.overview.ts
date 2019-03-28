@@ -4,17 +4,19 @@ import {
     Input,
     Output,
     EventEmitter,
-    SimpleChanges
+    SimpleChanges,
+    Injectable,
+    Inject
 } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { uxManager } from '@kyma-project/luigi-client';
-
 @Component({
     selector: 'connection-overview',
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnChanges {
     public apis;
+    public hostname;
     public connection = {
         application: {
             name: "varkes",
@@ -28,7 +30,7 @@ export class ConnectionOverviewComponent implements OnChanges {
     public remote;
 
     public constructor(private http: Http) {
-
+        this.hostname = window.location.origin;
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
