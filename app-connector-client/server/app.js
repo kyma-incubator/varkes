@@ -14,7 +14,7 @@ const apis = require("./routes/apis")
 const mockApis = require("./routes/mockapis")
 const connection = require("./connection")
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
-
+const cors = require("cors")
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
@@ -25,7 +25,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.use(expressWinston.logger(LOGGER))
 
     app.use("/apis", apis.router())
-    app.use("/mock/apis", mockApis.router(varkesConfig))
+    app.use("/mock/apis", cors(), mockApis.router(varkesConfig))
     app.use("/connection", connector.router(varkesConfig, nodePortParam))
     app.use("/events", events.router())
 
