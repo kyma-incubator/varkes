@@ -6,10 +6,10 @@ import * as yaml from "js-yaml"
 import * as fs from "fs"
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 import { logger as LOGGER } from "./logger"
-import * as morgan from "morgan"
 import { SwaggerMiddleware } from "swagger-express-middleware";
 const Converter = require("api-spec-converter")
 const middleware = require("swagger-express-middleware")
+
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
@@ -17,7 +17,6 @@ async function mock(config: any) {
     var app = express()
     var error_message = "";
     for (var i = 0; i < config.apis.length; i++) {
-
         var api = config.apis[i];
         if (!api.type || api.type == "openapi") {
             try {
@@ -42,8 +41,6 @@ async function mock(config: any) {
 
                 writeSpec(pretty_yaml.stringify(spec), api, i)
 
-
-
                 let myDB = new middleware.MemoryDataStore();
 
                 var middlewares = [];
@@ -57,10 +54,8 @@ async function mock(config: any) {
                             middleware.validateRequest(),
                             middleware.mock(myDB),
                         );
-                        customErrorResponses(app)
                     })
                 )
-                registerLogger(app);
             }
             catch (err) {
                 var message = "Serving API " + api.name + " failed: " + err.message
@@ -73,18 +68,6 @@ async function mock(config: any) {
         throw new Error(error_message);
     }
     return app
-}
-
-function customErrorResponses(app: express.Application) {
-    app.use((err: any, req: any, res: any, next: any) => {
-        if (!err.status) {
-            err.status = 500;
-        }
-        LOGGER.debug("Converting error response to JSON")
-        res.status(err.status);
-        res.type('json');
-        res.send({ error: err.message })
-    });
 }
 
 function loadSpec(api: any) {
@@ -103,29 +86,6 @@ function writeSpec(specString: string, api: any, index: any) {
     fs.writeFileSync(file_name, specString);
 
     api.specification = file_name;
-}
-
-function registerLogger(app: express.Application) {
-    morgan.token('header', (req: any) => {
-        if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
-            return req.rawHeaders;
-        else
-            return "-";
-    });
-    morgan.token('body', function (req) {
-        if (req.body && Object.keys(req.body).length != 0)
-            return JSON.stringify(req.body);
-        else
-            return "-";
-    });
-    var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
-    var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
-    app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
-    app.get('/requests', function (req, res, done) {
-        var text = fs.readFileSync("requests.log", "utf8");
-        res.status(200);
-        res.send(text);
-    });
 }
 
 function createEndpoints(spec: any, api: any) {

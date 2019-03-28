@@ -6,6 +6,14 @@
 
 This example is to test the application-mock capability of registering over 300 apis to kyma, kyma ability to handle that many request and the ability of the openapi-mock and odata-mock serve these apis.
 
+At startup the mock will generate a varkes_config.json file and place it to the `./generated` folder. It will generate 100 entries each for OpenAPI, OData and Event APIs using one sample specification loaced in `apis` directory.
+
+The count of APIs can be adjusted via environment variables having these names:
+
+- `OPENAPI` - amount of OpenAPI based APIs to register
+- `ODATA`- amount of OData based APIs to register
+- `EVENT`- amount of AsyncAPI based APIs to register
+
 ## Run local
 
 To run it local run:
