@@ -204,7 +204,7 @@ async function connect(req, res) {
 
         res.status(200).send(connection.info())
     } catch (error) {
-        var message = "There was a problem with auto-registering the APIs. See the srver logs for more details."
+        var message = "There was a problem with auto-registering the APIs. See the server logs for more details."
         LOGGER.error("Failed to auto-register APIs and events: %s", error)
         res.status(401).send({ error: message })
     }

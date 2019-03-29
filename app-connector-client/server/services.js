@@ -156,12 +156,12 @@ function fillServiceMetadata(api, hostname) {
         targetUrl = hostname + api.basepath
     }
     if (api.type == "odata") {
-        targetUrl = hostname + "/odata"
+        targetUrl = hostname
     }
 
     var specificationUrl = targetUrl + (api.metadata ? api.metadata : METADATA)
     if (api.type == "odata") {
-        specificationUrl = targetUrl + "/$metadata"
+        specificationUrl = targetUrl + api.basepath + "/$metadata"
     }
 
     var apiData = {
@@ -187,7 +187,6 @@ function fillServiceMetadata(api, hostname) {
 
     if (api.type == "odata") {
         apiData.apiType = "odata"
-
     }
 
     if (!api.type || api.type == "openapi") {
