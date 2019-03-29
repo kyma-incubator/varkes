@@ -8,12 +8,11 @@ const express = require('express')
 const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
-const explorer = require('loopback-component-explorer')
 
 async function init(varkesConfigPath: string, currentPath = "") {
   var varkesConfig = config(varkesConfigPath, currentPath)
+  
   var promises: Promise<any>[] = [];
-
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     var api = varkesConfig.apis[i]
     if (api.type == "odata") {

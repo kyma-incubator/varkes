@@ -26,7 +26,7 @@ function configure(varkesConfigPath: string, currentDirectory: string) {
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
-        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
+        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/varkes_config_default.json", "utf-8"))
     }
     return varkesConfig
 }

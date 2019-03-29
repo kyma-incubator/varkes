@@ -37,7 +37,7 @@
     "url": "git@github.com:kyma-incubator/varkes.git"
   },
   "scripts": {
-    "compile": "tsc && cd src && copyfiles server/resources/* ../dist/ && copyfiles test/*.json ../dist/ && copyfiles test/*.yaml ../dist/ ",
+    "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",
     "start": "node dist/server/server",
     "start:dev": "npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
     "pretest": "npm run compile",
