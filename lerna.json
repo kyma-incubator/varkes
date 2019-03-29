@@ -3,8 +3,7 @@
     "./app-connector-client",
     "./examples/*",
     "./odata-mock",
-    "./openapi-mock",
-    "./cockpit"
+    "./openapi-mock"
   ],
   "version": "0.2.2"
 }
