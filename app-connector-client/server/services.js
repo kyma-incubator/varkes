@@ -7,7 +7,7 @@ const fs = require("fs")
 const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-
+const request = require("request-promise")
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
