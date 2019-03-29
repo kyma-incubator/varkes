@@ -215,7 +215,7 @@ async function autoRegister(hostname, varkesConfig) {
     var registeredAPIs = await services.getAllAPI()
     var promises = [
         services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
-        events.createEventsFromConfig(varkesConfig.events, registeredAPIs)
+        services.createEventsFromConfig(varkesConfig.events, registeredAPIs)
     ]
     return Promise.all(promises)
 }
