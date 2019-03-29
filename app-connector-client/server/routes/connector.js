@@ -192,6 +192,7 @@ async function connect(req, res) {
         var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
         res.status(401).send({ error: message })
+        return
     }
 
     try {
@@ -207,7 +208,6 @@ async function connect(req, res) {
         LOGGER.error("Failed to auto-register APIs and events: %s", error)
         res.status(401).send({ error: message })
     }
-
 }
 
 async function autoRegister(hostname, varkesConfig) {

@@ -2,10 +2,10 @@ FROM node:11-alpine
 RUN apk --no-cache upgrade
 
 WORKDIR /app
-COPY package*.json ./
+COPY . ./
 
 ENV NODE_ENV=production
-RUN npm install
+#RUN npm install
 COPY . .
 
 EXPOSE 10000
