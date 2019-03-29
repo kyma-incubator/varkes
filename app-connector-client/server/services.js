@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 'use strict'
 
-const LOGGER = require("../logger").logger
+const LOGGER = require("./logger").logger
 const yaml = require('js-yaml')
 const fs = require("fs")
-const apis = require("./apis")
-
+const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-
+const request = require("request-promise")
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
-    getAllAPI: getAllAPI
+    getAllAPI: getAllAPI,
+    getAllAPIs, getAllAPIs,
+    createAPI: createAPI,
+    updateAPI: updateAPI,
+    fillServiceMetadata: fillServiceMetadata
 }
 
 async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
@@ -49,7 +52,7 @@ function createService(api, hostname) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         var serviceData = fillServiceMetadata(api, hostname)
-        apis.createAPI(serviceData, function (err, httpResponse, body) {
+        createAPI(serviceData, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -69,7 +72,7 @@ function updateService(api, api_id, hostname) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
         var serviceData = fillServiceMetadata(api, hostname)
-        apis.updateAPI(serviceData, api_id, function (err, httpResponse, body) {
+        updateAPI(serviceData, api_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
@@ -88,7 +91,7 @@ function updateService(api, api_id, hostname) {
 function getAllAPI() {
     LOGGER.debug("Get all API ")
     return new Promise((resolve, reject) => {
-        apis.getAllAPIs(function (error, httpResponse, body) {
+        getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 reject(error)
             } else if (httpResponse.statusCode >= 400) {
@@ -98,6 +101,52 @@ function getAllAPI() {
                 resolve(JSON.parse(body))
             }
         })
+    })
+}
+function getAllAPIs(cb) {
+    request({
+        url: connection.info().metadataUrl,
+        method: "GET",
+        agentOptions: {
+            cert: connection.certificate(),
+            key: connection.privateKey()
+        },
+        rejectUnauthorized: connection.secure()
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body)
+    })
+}
+function createAPI(serviceMetadata, cb) {
+    request.post({
+        url: connection.info().metadataUrl,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        json: serviceMetadata,
+        agentOptions: {
+            cert: connection.certificate(),
+            key: connection.privateKey()
+        },
+        rejectUnauthorized: connection.secure()
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body)
+    })
+}
+
+function updateAPI(serviceMetadata, api_id, cb) {
+    request.put({
+        url: `${connection.info().metadataUrl}/${api_id}`,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        json: serviceMetadata,
+        agentOptions: {
+            cert: connection.certificate(),
+            key: connection.privateKey()
+        },
+        rejectUnauthorized: connection.secure()
+    }, function (error, httpResponse, body) {
+        cb(error, httpResponse, body)
     })
 }
 
@@ -138,6 +187,7 @@ function fillServiceMetadata(api, hostname) {
 
     if (api.type == "odata") {
         apiData.apiType = "odata"
+
     }
 
     if (!api.type || api.type == "openapi") {
@@ -162,6 +212,7 @@ function fillServiceMetadata(api, hostname) {
         name: api.name,
         description: api.description ? api.description : api.name,
         labels: api.labels ? api.labels : {},
+        type: api.type == "odata" ? "OData" : "OpenAPI",
         api: apiData
     }
 

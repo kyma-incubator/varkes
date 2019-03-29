@@ -276,6 +276,20 @@ paths:
       responses:
         "200":
           description: "Successful"
+  /mock/apis:
+    get:
+      tags:
+        - "api"
+      summary: "Gets all mocked apis"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Service"
 
 components:
   schemas:
@@ -529,7 +543,11 @@ components:
             name:
               type: "string"
               description: name of the api
-              "example": "schools"
+              example: "schools"
+            type:
+              type: "string"
+              description: type of the api
+              example: "OpenAPI"
             description:
               type: "string"
               description: description of the api

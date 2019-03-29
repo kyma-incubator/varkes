@@ -7,12 +7,9 @@ const LOGGER = require("../logger").logger
 const express = require("express")
 const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
-
+const services = require("../services")
 module.exports = {
-    router: router,
-    updateAPI: updateAPI,
-    createAPI: createAPI,
-    getAllAPIs: getAllAPIs
+    router: router
 }
 
 function getAll(req, res) {
@@ -21,7 +18,7 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        getAllAPIs(function (error, httpResponse, body) {
+        services.getAllAPIs(function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while getting all APIs: %s", error)
                 res.status(500).send({ error: error.message })
@@ -36,53 +33,8 @@ function getAll(req, res) {
     }
 }
 
-function getAllAPIs(cb) {
-    request({
-        url: connection.info().metadataUrl,
-        method: "GET",
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
 
-function createAPI(serviceMetadata, cb) {
-    request.post({
-        url: connection.info().metadataUrl,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: serviceMetadata,
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
 
-function updateAPI(serviceMetadata, api_id, cb) {
-    request.put({
-        url: `${connection.info().metadataUrl}/${api_id}`,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: serviceMetadata,
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
 
 function create(req, res) {
     LOGGER.debug("Creating API %s", req.body.name)
@@ -90,7 +42,7 @@ function create(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        createAPI(req.body, function (error, httpResponse, body) {
+        services.createAPI(req.body, function (error, httpResponse, body) {
             if (error) {
                 LOGGER.error("Error while creating API: %s", error)
                 res.status(500).send({ error: error.message })
@@ -162,7 +114,7 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        updateAPI(req.body, req.params.api,
+        services.updateAPI(req.body, req.params.api,
             function (error, httpResponse, body) {
                 if (error) {
                     LOGGER.error("Error while updating API: %s", error)
@@ -215,6 +167,7 @@ function assureConnected() {
 
 function router() {
     var apiRouter = express.Router()
+
     apiRouter.get("/", getAll)
     apiRouter.post("/", create)
 
