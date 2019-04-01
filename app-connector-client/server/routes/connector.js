@@ -2,18 +2,14 @@
 'use strict'
 
 const request = require("request-promise")
-const fs = require("fs")
 const LOGGER = require("../logger").logger
 const forge = require("node-forge")
 const url = require("url")
-const services = require("../services")
-const events = require("./events")
 const express = require("express")
 const connection = require("../connection")
 
 var nodePort;
-var varkesConfig;
-
+var varkesConfig
 module.exports = {
     router: router
 }
@@ -187,6 +183,7 @@ async function connect(req, res) {
         connection.establish(connectionData, crt)
 
         LOGGER.info("Connected to %s", connection.info().domain)
+        res.status(200).send(connection.info())
 
     } catch (error) {
         var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
@@ -195,29 +192,6 @@ async function connect(req, res) {
         return
     }
 
-    try {
-        if (req.body.register) {
-            var hostname = req.body.hostname || "http://localhost"
-            await autoRegister(hostname, varkesConfig)
-            LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
-        }
-
-        res.status(200).send(connection.info())
-    } catch (error) {
-        var message = "There was a problem with auto-registering the APIs. See the server logs for more details."
-        LOGGER.error("Failed to auto-register APIs and events: %s", error)
-        res.status(401).send({ error: message })
-    }
-}
-
-async function autoRegister(hostname, varkesConfig) {
-    LOGGER.debug("Auto-registering APIs and events")
-    var registeredAPIs = await services.getAllAPI()
-    var promises = [
-        services.createServicesFromConfig(hostname, varkesConfig.apis, registeredAPIs),
-        services.createEventsFromConfig(varkesConfig.events, registeredAPIs)
-    ]
-    return Promise.all(promises)
 }
 
 function router(config, nodePortParam = null) {

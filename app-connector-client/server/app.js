@@ -22,6 +22,7 @@ const BATCH_REGISTERATION = "/local/apis/registeration";
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
+
     connection.init()
 
     var app = express()

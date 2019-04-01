@@ -54,7 +54,9 @@
                     id="disconnect_button">
                     Disconnect
                 </button>
-
+                <button hidden class="mdl-layout-title" id="register_button">
+                    Batch Registeration
+                </button>
                 <br>
 
             </nav>
@@ -265,7 +267,6 @@
         var sendData = {
             url: $("#tokenInput").val(),
             hostname: hostname,
-            register: $("#registerMockApp").is(':checked'),
             insecure: $("#insecureConnection").is(':checked')
         }
         $.ajax({
@@ -273,7 +274,6 @@
             url: "/connection",
             data: JSON.stringify(sendData),
             success: function (data) {
-                getAPIs()
                 $('#create_service').show();
                 $('#downloadLinks').show();
                 changeButtonToDisconnectKyma()
@@ -300,6 +300,8 @@
         connectDiv.hide()
         disconnectButton = $("#disconnect_button")
         disconnectButton.removeAttr("hidden")
+        registerButton = $("#register_button")
+        registerButton.removeAttr("hidden")
         $('#downloadLinks').show();
         disconnectButton.click(function () {
             $.ajax({
@@ -307,6 +309,23 @@
                 url: "/connection",
                 success: function (data) {
                     location.reload()
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        window.alert(data.responseText);
+                    }
+                    else {
+                        showGeneralErrorMessage()
+                    }
+                }
+            })
+        })
+        registerButton.click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/local/apis/registeration",
+                success: function (data) {
+                    getAPIs()
                 },
                 error: function (data) {
                     if (data.responseText) {
