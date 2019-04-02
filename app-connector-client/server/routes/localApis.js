@@ -20,7 +20,7 @@ function getAll(req, res) {
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
         var event = configEvents[i];
-        apis.push(events.fillEventData(event));
+        apis.push(services.fillEventData(event));
     }
     res.status(200).send(apis);
 }
