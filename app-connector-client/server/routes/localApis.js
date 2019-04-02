@@ -15,7 +15,7 @@ function getAll(req, res) {
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
 
-        apis.push(services.fillServiceMetadata(api, req.headers.host))
+        apis.push(services.fillServiceMetadata(api, req.body.hostname || req.headers.host))
     }
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
@@ -33,7 +33,7 @@ async function registerAll(req, res) {
     try {
         var registeredAPIs = await services.getAllAPI()
         var promises = [
-            services.createServicesFromConfig(req.headers.host, varkesConfig.apis, registeredAPIs),
+            services.createServicesFromConfig(req.body.hostname || req.headers.host, varkesConfig.apis, registeredAPIs),
             services.createEventsFromConfig(varkesConfig.events, registeredAPIs)
         ]
         await Promise.all(promises);
@@ -54,12 +54,22 @@ function create(req, res) {
         res.status(400).send({ error: err })
     } else {
         let apiName = req.params.apiname;
-        let apis = varkesConfig.apis.concat(varkesConfig.events);
+        let apis = varkesConfig.apis;
+        let events = varkesConfig.apis;
+        let apiFound = false;
         let serviceMetadata;
         for (var i = 0; i < apis.length; i++) {
-            if (apis[i].name == apiName) {
-
-                serviceMetadata = services.fillServiceMetadata(api, req.headers.host);
+            var api = apis[i];
+            if (api.name == apiName) {
+                serviceMetadata = services.fillServiceMetadata(api, req.body.hostname || req.headers.host);
+                apiFound = true;
+                break;
+            }
+        }
+        for (var i = 0; i < events.length && !apiFound; i++) {
+            var event = events[i];
+            if (event.name == apiName) {
+                serviceMetadata = services.fillEventData(event);
                 break;
             }
         }

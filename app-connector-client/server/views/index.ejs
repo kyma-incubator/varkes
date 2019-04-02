@@ -324,6 +324,7 @@
             $.ajax({
                 type: "POST",
                 url: "/local/apis/registeration",
+                data: JSON.stringify({ hostname: hostname }),
                 success: function (data) {
                     getAPIs()
                 },

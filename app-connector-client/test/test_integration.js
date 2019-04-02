@@ -27,9 +27,15 @@ describe("should work", () => {
 
         await request(server)  //* Make sure we are connected to kyma
             .post("/connection")
-            .send({ "url": tokenURL, "register": true })
+            .send({ "url": tokenURL })
             .set('Accept', 'application/json').
             expect(200)
+
+        await request(server) //* Make sure we registered local apis to kyma
+            .post('/local/apis/registeration')
+            .send({ "hostname": "http://localhost" })
+            .set('Accept', 'application/json')
+            .expect(200)
     })
 
     after(() => { //* stop kyma mock after tests
@@ -63,11 +69,6 @@ describe("should work", () => {
     })
 
     describe('bundled apis', () => {
-        it('can register all apis', () => {
-            return request(server)
-                .post('/local/apis/registeration')
-                .expect(200)
-        })
         it('apis contains schools and courses', () => {
             return request(server)
                 .get('/remote/apis')
