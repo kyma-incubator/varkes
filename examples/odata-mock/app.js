@@ -18,7 +18,7 @@ async function runAsync() {
             });
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", error)
+        console.error("Problem while starting application: %s", JSON.stringify(error))
     }
 }
 

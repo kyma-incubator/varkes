@@ -18,7 +18,7 @@ function config(varkesConfigPath: string, currentPath: string): VarkesConfigType
         configValidation(varkesConfig)
     } else {
         LOGGER.info("Using default configuration")
-        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/defaultConfig.json", "utf-8"))
+        varkesConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/varkes_config_default.json", "utf-8"))
     }
     return varkesConfig
 }
@@ -39,6 +39,12 @@ function configValidation(configJson: VarkesConfigType) {
             }
             if (api.type == "odata" && !api.specification.match(/^.+\.xml$/)) {
                 error_message += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
+            }
+            if (api.type == "odata" && !api.basepath) {
+                error_message += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
+            }
+            else if (api.type == "odata" && !api.basepath.match(/^\/([/\\\w\.]+\/)*odata(\/[/\\\w\.]+)*$/)) {
+                error_message += "\napi '" + api.name + "': basepath '" + api.basepath + "' is not matching the pattern '^\/([/\\\w\.]+\/)*odata(\/[/\\\w\.]+)*$'";
             }
         }
     }

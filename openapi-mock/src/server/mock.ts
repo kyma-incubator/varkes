@@ -14,12 +14,13 @@ const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
 async function mock(config: any) {
-    var app = express()
+    var resultApp = express()
     var error_message = "";
     for (var i = 0; i < config.apis.length; i++) {
         var api = config.apis[i];
         if (!api.type || api.type == "openapi") {
             try {
+                let app = express()
                 createOauthEndpoint(api, app);
                 createConsole(api, app);
 
@@ -31,8 +32,8 @@ async function mock(config: any) {
                     writeSpec(specString, api, i)
                     spec = loadSpec(api)
                 }
-                if (api.baseurl) {
-                    spec.basePath = api.baseurl
+                if (api.basepath) {
+                    spec.basePath = api.basepath
                 }
                 await validateSpec(api, 'swagger_2')
 
@@ -56,6 +57,7 @@ async function mock(config: any) {
                         );
                     })
                 )
+                resultApp.use(app)
             }
             catch (err) {
                 var message = "Serving API " + api.name + " failed: " + err.message
@@ -67,7 +69,7 @@ async function mock(config: any) {
     if (error_message != "") {
         throw new Error(error_message);
     }
-    return app
+    return resultApp
 }
 
 function loadSpec(api: any) {
@@ -101,8 +103,8 @@ function createEndpoints(spec: any, api: any) {
     }
 }
 function createOauthEndpoint(api: any, app: express.Application) {
-    LOGGER.debug("Adding oauth endpoint '%s%s'", api.baseurl, api.oauth)
-    app.post(api.baseurl + api.oauth, function (req, res) {
+    LOGGER.debug("Adding oauth endpoint '%s%s'", api.basepath, api.oauth)
+    app.post(api.basepath + api.oauth, function (req, res) {
         if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
             res.type('application/json');
             res.status(200);
@@ -138,18 +140,18 @@ async function transformSpec(api: any) {
 }
 
 function createMetadataEndpoint(spec: any, api: any, app: express.Application) {
-    LOGGER.debug("Adding metadata endpoint '%s%s'", api.baseurl, api.metadata)
-    app.get(api.baseurl + api.metadata, function (req, res) {
+    LOGGER.debug("Adding metadata endpoint '%s%s'", api.basepath, api.metadata)
+    app.get(api.basepath + api.metadata, function (req, res) {
         res.type('text/x-yaml')
         res.status(200)
         res.send(pretty_yaml.stringify(spec))
     });
-    app.get(api.baseurl + api.metadata + ".json", function (req, res) {
+    app.get(api.basepath + api.metadata + ".json", function (req, res) {
         res.type('application/json')
         res.status(200)
         res.send(spec)
     })
-    app.get(api.baseurl + api.metadata + ".yaml", function (req, res) {
+    app.get(api.basepath + api.metadata + ".yaml", function (req, res) {
         res.type('text/x-yaml')
         res.status(200)
         res.send(pretty_yaml.stringify(spec))
@@ -157,10 +159,10 @@ function createMetadataEndpoint(spec: any, api: any, app: express.Application) {
 }
 
 function createConsole(api: any, app: express.Application) {
-    LOGGER.debug("Adding console endpoint '%s%s'", api.baseurl, "/console")
-    app.get(api.baseurl + "/console", function (req, res) {
+    LOGGER.debug("Adding console endpoint '%s%s'", api.basepath, "/console")
+    app.get(api.basepath + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
-        html = html.replace("OPENAPI", api.baseurl + api.metadata + ".json")
+        html = html.replace("OPENAPI", api.basepath + api.metadata + ".json")
         html = html.replace("NAME", api.name)
         res.type("text/html")
         res.status(200)

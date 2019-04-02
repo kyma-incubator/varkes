@@ -7,7 +7,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "compile": "tsc && cd src && copyfiles test/services.xml ../dist/ && copyfiles test/varkes_config.json ../dist/ && copyfiles server/resources/* ../dist/",
+    "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",
     "start": "node dist/server/server.js",
     "start:dev": "npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
     "pretest": "npm run compile",

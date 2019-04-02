@@ -24,7 +24,7 @@
     ],
     "apis": [
         {
-            "baseurl": "/entity",
+            "basepath": "/entity",
             "metadata": "/schoolMetadata",
             "auth": "oauth",
             "oauth": "/schoolToken",
@@ -42,7 +42,7 @@
             }
         },
         {
-            "baseurl": "/entity/v1",
+            "basepath": "/entity/v1",
             "metadata": "/metadata",
             "auth": "basic",
             "name": "courses",

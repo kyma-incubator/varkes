@@ -2,19 +2,19 @@
     "name": "Kyma-Mock",
     "apis": [
         {
-            "baseurl": "/connector",
+            "basepath": "/connector",
             "specification": "apis/connector.yaml",
             "auth": "none",
             "name": "Kyma Connector"
         },
         {
-            "baseurl": "/events",
+            "basepath": "/events",
             "auth": "none",
             "specification": "apis/events.yaml",
             "name": "Kyma Events"
         },
         {
-            "baseurl": "/metadata",
+            "basepath": "/metadata",
             "auth": "none",
             "specification": "apis/metadata.yaml",
             "name": "Kyma Metadata"
