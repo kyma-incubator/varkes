@@ -70,11 +70,6 @@ describe("should work", () => {
     })
 
     describe('bundled apis', () => {
-        it('can register all apis', () => {
-            return request(server)
-                .post('/local/apis/registeration')
-                .expect(200)
-        })
         it('apis contains schools and courses', () => {
             return request(server)
                 .get('/remote/apis')
