@@ -1,6 +1,6 @@
 {
   "name": "@varkes/openapi-mock",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": false,
   "description": "Open API Mock",
   "keywords": [],
@@ -14,11 +14,11 @@
     "api-spec-converter": "^2.7.31",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "js-yaml": "^3.13.0",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
     "swagger-express-middleware": "^2.0.1",
-    "winston": "^3.2.1",
-    "js-yaml": "^3.13.0"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
