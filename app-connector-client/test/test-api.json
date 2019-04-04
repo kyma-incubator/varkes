@@ -1,0 +1,34 @@
+{
+    "provider": "aY",
+    "name": "test-api-4",
+    "description": "testing... 1.2.3.",
+    "api": {
+        "targetUrl": "http://localhost/target",
+        "credentials": {
+            "oauth": {
+                "url": "http://localhost/oauth/validate",
+                "clientId": "string",
+                "clientSecret": "string"
+            }
+        },
+        "spec": {}
+    },
+    "events": {
+        "spec": {}
+    },
+    "documentation": {
+        "displayName": "string",
+        "description": "string",
+        "type": "string",
+        "tags": [
+            "string"
+        ],
+        "docs": [
+            {
+                "title": "string",
+                "type": "string",
+                "source": "string"
+            }
+        ]
+    }
+}

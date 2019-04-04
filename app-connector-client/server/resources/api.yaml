@@ -9,13 +9,6 @@ paths:
       tags:
         - "connection"
       summary: "Connects the mock to a Kyma cluster"
-      parameters:
-        - in: "query"
-          name: "localKyma"
-          description: "Connected Kyma cluster is running in minikube?"
-          required: false
-          schema:
-            type: "boolean"
       requestBody:
         description: "Connection details of the Kyma cluster"
         required: true
@@ -119,13 +112,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/EventDetails"
-      parameters:
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "200":
           description: "Successful operation"
@@ -151,13 +137,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ServiceDetails"
-      parameters:
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "200":
           description: "Successful operation"
@@ -175,13 +154,6 @@ paths:
       tags:
         - "api"
       summary: "Gets all registered apis on connected Kyma cluster"
-      parameters:
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "200":
           description: "Successful operation"
@@ -210,12 +182,6 @@ paths:
           schema:
             type: "string"
             format: "uuid"
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "200":
           description: "Successful operation"
@@ -254,12 +220,6 @@ paths:
           schema:
             type: "string"
             format: "uuid"
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "200":
           description: "Successful operation"
@@ -291,12 +251,6 @@ paths:
           schema:
             type: "string"
             format: "uuid"
-        - in: "query"
-          name: "localKyma"
-          description: "deployment to local kyma"
-          required: true
-          schema:
-            type: "boolean"
       responses:
         "204":
           description: "Successful operation"
@@ -322,6 +276,20 @@ paths:
       responses:
         "200":
           description: "Successful"
+  /mock/apis:
+    get:
+      tags:
+        - "api"
+      summary: "Gets all mocked apis"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Service"
 
 components:
   schemas:
@@ -336,6 +304,10 @@ components:
           type: "boolean"
           description: Defines whether you want to auto register your APIs to Kyma while registering
           example: true
+        insecure:
+          type: "boolean"
+          description: "Connected Kyma cluster is running in minikube?"
+          example: false
         hostname:
           type: "string"
           example: "http://localhost:10000"
@@ -355,6 +327,10 @@ components:
     ConnectionResponse:
       type: "object"
       properties:
+        infoUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to retrieve the infos returned here"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/management/info
         metadataUrl:
           type: "string"
           description: "URL on connected Kyma cluster to manage APIs"
@@ -365,16 +341,28 @@ components:
           example: https://gateway.mycluster.kyma.cx/event-trial/v1/events
         consoleUrl:
           type: "string"
-          description: "URL to reach kyma console"
-          example: https://console.mycluster.kyma.cx/event-trial/v1/metadata/services
+          description: "URL to open application in kyma console"
+          example: https://console.mycluster.kyma.cx/home/cmf-apps/details/event-trial
+        revocationCertUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to revoke client certifactes"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/certificates/revocations
+        renewCertUrl:
+          type: "string"
+          description: "URL on connected Kyma cluster to renew client certifactes"
+          example: https://gateway.mycluster.kyma.cx/v1/applications/certificates/renewals
         domain:
           type: "string"
           description: "Domain of the connected Kyma cluster"
           example: prod-cluster
-        app:
+        application:
           type: "string"
           description: "Application name on connected Kyma cluster"
           example: myapp
+        insecure:
+          type: "boolean"
+          description: "The connection to the Kyma cluster is insecure"
+          example: true
 
     ServiceDetails:
       allOf:
@@ -555,7 +543,11 @@ components:
             name:
               type: "string"
               description: name of the api
-              "example": "schools"
+              example: "schools"
+            type:
+              type: "string"
+              description: type of the api
+              example: "OpenAPI"
             description:
               type: "string"
               description: description of the api

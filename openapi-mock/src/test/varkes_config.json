@@ -1,0 +1,43 @@
+{
+    "name": "openapi-mock",
+    "apis": [
+        {
+            "basepath": "/api1",
+            "specification": "pets_openapi.yaml",
+            "auth": "none",
+            "name": "pets openapi yaml"
+        },
+        {
+            "basepath": "/api2",
+            "specification": "pets_openapi.json",
+            "auth": "none",
+            "name": "pets openapi json"
+        },
+        {
+            "basepath": "/api3",
+            "specification": "pets_swagger.yaml",
+            "auth": "none",
+            "name": "pets swagger yaml"
+        },
+        {
+            "basepath": "/api4",
+            "specification": "pets_swagger.json",
+            "auth": "none",
+            "name": "pets swagger json"
+        },
+        {
+            "basepath": "/api5",
+            "metadata": "/mymetadata",
+            "name": "courses",
+            "specification": "courses.yaml",
+            "auth": "none",
+            "oauth": "/myoauth/token",
+            "added_endpoints": [
+                {
+                    "filePath": "Endpoint_template.yaml",
+                    "url": "/trial_endpoint"
+                }
+            ]
+        }
+    ]
+}

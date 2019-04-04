@@ -19,7 +19,7 @@ program
 
 let keyFile, certFile
 
-require("../server/keys").generatePrivateKey()
+require("../server/connection").init()
 
 
 const programToken = program.token;
@@ -74,7 +74,7 @@ function createSingleService(hostname, endpoints, endpointCount) {
 
     var element = endpoints.apis[endpointCount]
     serviceMetadata.name = endpoints.name + "-" + Math.random().toString(36).substring(2, 5);
-    serviceMetadata.api.targetUrl = hostname + element.baseurl
+    serviceMetadata.api.targetUrl = hostname + element.basepath
     serviceMetadata.api.credentials.oauth.url = hostname + element.oauth
 
     request.post({

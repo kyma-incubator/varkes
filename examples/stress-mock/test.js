@@ -6,39 +6,42 @@ const exampleApp = require("./app.js")
 
 describe('tests stress apis', function () {
     it('should work', function (done) {
+        this.timeout(20000);
         exampleApp.then(function (app) {
 
-            describe('GET Advertisements via odata', function () {
+            describe('GET Advertisements via odata1', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/Advertisements')
+                        .get('/api1/odata/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
             });
-            describe('GET schools', function () {
+            describe('GET Advertisements via odata100', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api7/schools')
+                        .get('/api100/odata/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
             });
-            describe('GET console', function () {
+            describe('GET schools1', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api7/console')
-                        .expect('Content-Type', 'text/html; charset=utf-8')
+                        .get('/api1/v1/schools')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
             });
-            describe('GET api1 metadata', function () {
+            describe('GET schools100', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api1/metadata')
-                        .expect('Content-Type', 'text/x-yaml; charset=utf-8')
+                        .get('/api100/v1/schools')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
                 });
             });

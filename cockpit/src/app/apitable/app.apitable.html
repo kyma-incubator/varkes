@@ -1,0 +1,44 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div *ngIf="isDataAvailable" class="fd-tabs__panel" aria-expanded="true" id="apitable" role="tabpanel">
+  <table class="fd-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let api of apis; index as i" id="api{{i}}">
+        <td>
+          <a href="#" class="fd-has-font-weight-semi">{{api.name}}</a>
+        </td>
+        <td>{{api.description}}</td>
+        <td>{{api.type}}</td>
+        <td *ngIf="!remote">
+          <button class="fd-button--light">Register</button>
+        </td>
+        <td *ngIf="remote">
+          <div class="fd-popover">
+            <div class="fd-popover__control">
+              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
+                (focus)="onOpenActionList(1)" (focusout)="onCloseActionList(1)"></button>
+            </div>
+            <div *ngIf="actionList[1]" class="fd-popover__body">
+              <nav class="fd-menu">
+                <ul class="fd-menu__list">
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
+                  </li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
+                      href="#">Delete</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

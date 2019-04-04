@@ -201,7 +201,7 @@
         $.ajax(
             {
                 type: "get",
-                url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
+                url: "/apis",
                 success: function (data) {
                     data.forEach(element => {
                         if (element.id && element.id != "") {
@@ -224,7 +224,7 @@
     function createService() {
         $.ajax({
             type: "POST",
-            url: "/apis/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/apis",
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -245,7 +245,7 @@
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
-            url: "/apis/" + `${serviceId}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/apis/" + `${serviceId}`,
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -265,11 +265,12 @@
         var sendData = {
             url: $("#tokenInput").val(),
             hostname: hostname,
-            register: $("#registerMockApp").is(':checked')
+            register: $("#registerMockApp").is(':checked'),
+            insecure: $("#insecureConnection").is(':checked')
         }
         $.ajax({
             type: "POST",
-            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/connection",
             data: JSON.stringify(sendData),
             success: function (data) {
                 getAPIs()
@@ -321,7 +322,7 @@
     function showService(serviceID) {
         $.ajax({
             type: "get",
-            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/apis/" + `${serviceID}`,
             success: function (data) {
                 data.id = serviceID
                 parseAPIEventsToComboBox(data)
@@ -337,7 +338,7 @@
         })
         $.ajax({
             type: "get",
-            url: "/apis/" + `${serviceID}` + "/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/apis/" + `${serviceID}`,
             success: function (data) {
                 data.id = serviceID
                 $("#serviceJSON").val(JSON.stringify(data))
@@ -361,9 +362,9 @@
     function getConnectionInfo() {
         $.ajax({
             type: "get",
-            url: "/connection/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/connection",
             success: function (data) {
-                $("#api-title").html(`Registered to Kyma \n <p> Connected to <a href=${data.consoleUrl} target="_blank" >${data.app}</a> in <b>${data.domain}</b>`)
+                $("#api-title").html(`Registered to Kyma \n <p> Connected to <a href=${data.consoleUrl} target="_blank" >${data.application}</a> in <b>${data.domain}</b>`)
                 changeButtonToDisconnectKyma()
                 if (data.metadataUrl)
                     $('#metadata_url').val(data.metadataUrl)
@@ -399,7 +400,7 @@
         //send event to kyma
         $.ajax({
             type: "POST",
-            url: "/events/?localKyma=" + $("#insecureConnection").is(':checked'),
+            url: "/events",
             data: JSON.stringify(event),
             success: function (data) {
                 $("#events ul").append(`${data["event-id"]}`)
@@ -441,7 +442,7 @@
     // set json
     var json = {
         "provider": "Varkes",
-        "name": "ec-mock-service-4",
+        "name": "test-api-4",
         "description": "testing... 1.2.3.",
         "api": {
             "targetUrl": "http://localhost/target",

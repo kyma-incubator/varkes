@@ -1,0 +1,119 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "cockpit": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "assets",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/cockpit",
+            "index": "src/angular.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/app",
+              "src/index.html",
+              "src/logout.html",
+              {
+                "glob": "fiori-fundamentals.min.css",
+                "input": "node_modules/fiori-fundamentals/dist",
+                "output": "/fiori-fundamentals"
+              },
+              {
+                "glob": "fonts/**",
+                "input": "node_modules/fiori-fundamentals/dist",
+                "output": "/fiori-fundamentals"
+              },
+              {
+                "glob": "SAP-icons.*",
+                "input": "node_modules/fiori-fundamentals/dist",
+                "output": "/fiori-fundamentals"
+              },
+              {
+                "glob": "**",
+                "input": "node_modules/@kyma-project/luigi-core",
+                "output": "/luigi-core"
+              },
+              {
+                "glob": "luigi-client.js",
+                "input": "node_modules/@kyma-project/luigi-client",
+                "output": "/luigi-client"
+              },
+              {
+                "glob": "jquery.min.js",
+                "input": "node_modules/jquery/dist",
+                "output": "/jquery"
+              },
+              {
+                "glob": "bootstrap.min.js",
+                "input": "node_modules/bootstrap/dist/js",
+                "output": "/bootstrap"
+              }
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/fiori-fundamentals/dist/fiori-fundamentals.min.css"
+            ],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cockpit:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "cockpit"
+}

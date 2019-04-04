@@ -2,10 +2,18 @@
     "name": "Combined OData-Mock",
     "apis": [
         {
-            "name": "services",
-            "specification": "apis/services.xml",
+            "name": "Product Service",
+            "specification": "apis/products.xml",
             "auth": "basic",
-            "type": "odata"
+            "type": "odata",
+            "basepath":"/odata/product.svc"
+        },
+        {
+            "name": "Northwind Service",
+            "specification": "apis/northwind.xml",
+            "auth": "basic",
+            "type": "odata",
+            "basepath":"/odata/northwind.svc"
         }
     ],
     "events": [

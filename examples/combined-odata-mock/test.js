@@ -11,7 +11,16 @@ describe('test app', function () {
             describe('GET Advertisements via API', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/Advertisements')
+                        .get('/api/product.svc/Advertisements')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .expect(200, done)
+                });
+            });
+            describe('GET Categories via API', function () {
+                it('should return 200', function (done) {
+                    request(app)
+                        .get('/api/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -20,7 +29,16 @@ describe('test app', function () {
             describe('GET Advertisements via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/Advertisements')
+                        .get('/odata/product.svc/Advertisements')
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', 'application/json; charset=utf-8')
+                        .expect(200, done)
+                });
+            });
+            describe('GET Categories via odata', function () {
+                it('should return 200', function (done) {
+                    request(app)
+                        .get('/odata/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -35,10 +53,18 @@ describe('test app', function () {
                 });
             });
 
-            describe('GET loopback console', function () {
+            describe('GET product console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/console/')
+                        .get('/api/product.svc/console/')
+                        .expect('Content-Type', 'text/html; charset=UTF-8')
+                        .expect(200, done)
+                });
+            });
+            describe('GET northwind console', function () {
+                it('should return 200', function (done) {
+                    request(app)
+                        .get('/api/northwind.svc/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });

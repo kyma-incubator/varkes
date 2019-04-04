@@ -4,46 +4,45 @@
 const express = require('express')
 const LOGGER = require("../logger").logger
 const fs = require("fs")
-const path = require("path")
-const CONFIG = require("../config.json")
-const apis = require("./apis");
+const connection = require("../connection")
+const services = require("../services")
 const request = require("request")
-const yaml = require('js-yaml');
-
-const keyFile = path.resolve(CONFIG.keyDir, CONFIG.keyFile)
-const certFile = path.resolve(CONFIG.keyDir, CONFIG.crtFile)
+const yaml = require('js-yaml')
 
 module.exports = {
     router: router,
-    createEventsFromConfig: createEventsFromConfig
+    createEventsFromConfig: createEventsFromConfig,
+    fillEventData: fillEventData
 }
 
 function sendEvent(req, res) {
+    LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
         request.post({
-            url: CONFIG.URLs.eventsUrl,
+            url: connection.info().eventsUrl,
             headers: {
                 "Content-Type": "application/json"
             },
             json: req.body,
             agentOptions: {
-                cert: fs.readFileSync(certFile),
-                key: fs.readFileSync(keyFile)
+                cert: connection.certificate(),
+                key: connection.privateKey()
             },
-            rejectUnauthorized: !req.params.localKyma
+            rejectUnauthorized: connection.secure()
         }, (error, httpResponse, body) => {
             if (error) {
                 LOGGER.error("Error while Sending Event: %s", error)
                 res.status(500).send({ error: error.message })
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    LOGGER.error("Error while Sending Event: %s", JSON.stringify(body))
+                    LOGGER.error("Error while Sending Event: %s", JSON.stringify(body, null, 2))
                     res.status(httpResponse.statusCode).type("json").send(body)
                 }
                 else {
+                    LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
                     res.status(httpResponse.statusCode).type("json").send(body)
                 }
             }
@@ -51,49 +50,47 @@ function sendEvent(req, res) {
     }
 }
 
-async function createEventsFromConfig(localKyma, eventsConfig, registeredApis) {
+async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
 
-    var eventMetadata = defineEventMetadata()
     var error_message = ""
     for (var i = 0; i < eventsConfig.length; i++) {
-        var event = eventsConfig[i];
+        var event = eventsConfig[i]
         try {
-            var reg_api;
+            var reg_api
             if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == event.name);
+                reg_api = registeredApis.find(x => x.name == event.name)
             if (!reg_api) {
                 LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createEvent(localKyma, eventMetadata, event)
+                await createEvent(event)
             }
             else {
                 LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateEvent(localKyma, eventMetadata, event, reg_api.id)
+                await updateEvent(event, reg_api.id)
             }
-
         } catch (error) {
-            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error)
+            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
             LOGGER.error(message)
             error_message += "\n" + message
         }
     }
     if (error_message != "") {
-        throw new Error(error_message);
+        throw new Error(error_message)
     }
 }
 
-function createEvent(localKyma, eventMetadata, event) {
+function createEvent(event) {
     LOGGER.debug("Auto-register Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event);
-        apis.createAPI(localKyma, eventMetadata, function (err, httpResponse, body) {
+        var eventData = fillEventData(event)
+        services.createAPI(eventData, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error(body.error)
+                    reject(err)
                 }
                 resolve(body)
             }
@@ -101,70 +98,53 @@ function createEvent(localKyma, eventMetadata, event) {
 
     })
 }
-async function updateEvent(localKyma, eventMetadata, event, event_id) {
+async function updateEvent(event, event_id) {
     LOGGER.debug("Auto-update Event API '%s'", event.name)
     return new Promise((resolve, reject) => {
-        eventMetadata = fillEventData(eventMetadata, event)
-        apis.updateAPI(localKyma, eventMetadata, event_id, function (err, httpResponse, body) {
+        var eventData = fillEventData(event)
+        services.updateAPI(eventData, event_id, function (err, httpResponse, body) {
             if (err) {
                 reject(err)
             } else {
                 if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error);
-                    reject(err);
+                    var err = new Error(body.error)
+                    reject(err)
                 }
                 resolve(body)
             }
         })
     })
 }
-function fillEventData(eventMetadata, event) {
-    eventMetadata.name = event.name;
-    if (event.description) {
-        eventMetadata.description = event.description;
-    }
-    else {
-        eventMetadata.description = event.name;
-    }
-    if (event.labels) {
-        eventMetadata.labels = event.labels;
-    }
 
-    if (event.provider) {
-        eventMetadata.provider = event.provider;
-    }
-
+function fillEventData(event) {
     var specInJson
     if (event.specification.endsWith(".json")) {
         specInJson = JSON.parse(fs.readFileSync(event.specification))
     } else {
-        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'));
+        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
 
-    eventMetadata.events.spec = specInJson;
-    return eventMetadata
-}
-function defineEventMetadata() {
-    return {
-        "provider": "Varkes",
-        "name": "",
-        "description": "",
-        "labels": {},
-        "events": {
-            "spec": {}
+    var serviceData = {
+        provider: event.provider ? event.provider : "Varkes",
+        name: event.name,
+        description: event.description ? event.description : event.name,
+        labels: event.labels ? event.labels : {},
+        type: "Event",
+        events: {
+            spec: specInJson
         }
     }
+    return serviceData
 }
 
 function router() {
     var eventsRouter = express.Router()
     eventsRouter.post("/", sendEvent)
-    return eventsRouter;
+    return eventsRouter
 }
 
 function assureConnected() {
-
-    if (CONFIG.URLs.metadataUrl == "") {
+    if (!connection.established()) {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null
