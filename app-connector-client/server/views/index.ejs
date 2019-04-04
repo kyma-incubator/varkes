@@ -19,7 +19,7 @@
 
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
-              mdl-layout--fixed-header">
+                  mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row" style="background-color: rgb(250, 250, 250)">
                 <image width="50" height="50" id="app-logo" srcset="/logo" />
@@ -41,9 +41,6 @@
                     <div>
                         <input id="insecureConnection" type="checkbox" name="insecureConnection">Insecure Connection<br>
                     </div>
-                    <div>
-                        <input id="registerMockApp" type="checkbox" name="registerMockApp">Auto Register APIs<br>
-                    </div>
 
                     <br />
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
@@ -54,8 +51,15 @@
                     id="disconnect_button">
                     Disconnect
                 </button>
-                <button hidden class="mdl-layout-title" id="register_button">
+                <br>
+                <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                    id="register_button">
                     Batch Registeration
+                </button>
+                <br>
+                <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                    id="reload_button" onclick="getAPIs()">
+                    Reload
                 </button>
                 <br>
 
@@ -181,7 +185,7 @@
     }
     function deleteService(serviceID) {
         $.ajax({
-            url: `/apis/${serviceID}`,
+            url: `/remote/apis/${serviceID}`,
             type: "DELETE",
             success: function (data) {
                 getAPIs()
@@ -203,20 +207,20 @@
         $.ajax(
             {
                 type: "get",
-                url: "/apis",
+                url: "/remote/apis",
                 success: function (data) {
                     data.forEach(element => {
                         if (element.id && element.id != "") {
                             $("#apis ul").append
                                 (`
-                                            <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
-                            
-                               ${element.name}
-                            
-                                            </a>`)
+                                                <a href="#" onClick=showService('${element.id}') class="mdl-navigation__link">
+                                
+                                   ${element.name}
+                                
+                                                </a>`)
                         }
                     });
-                    getConnectionInfo()
+                    //getConnectionInfo()
                 }
             }
         ).fail(function (xhr, options, error) {
@@ -226,7 +230,7 @@
     function createService() {
         $.ajax({
             type: "POST",
-            url: "/apis",
+            url: "/remote/apis",
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -247,7 +251,7 @@
     function updateService(serviceId) {
         $.ajax({
             type: "PUT",
-            url: "/apis/" + `${serviceId}`,
+            url: "/remote/apis/" + `${serviceId}`,
             data: JSON.stringify(editor.get()),
             success: function (data) {
                 getAPIs()
@@ -281,6 +285,7 @@
                     $('#metadata_url').val(data.metadataUrl)
                 if (data.eventsUrl)
                     $('#event_url').val(data.eventsUrl)
+                getAPIs();
             },
             error: function (data) {
                 if (data.responseText) {
@@ -298,10 +303,13 @@
     function changeButtonToDisconnectKyma() {
         connectDiv = $("#kymaConnect")
         connectDiv.hide()
+
         disconnectButton = $("#disconnect_button")
         disconnectButton.removeAttr("hidden")
         registerButton = $("#register_button")
         registerButton.removeAttr("hidden")
+        reloadButton = $("#reload_button")
+        reloadButton.removeAttr("hidden")
         $('#downloadLinks').show();
         disconnectButton.click(function () {
             $.ajax({
@@ -342,7 +350,7 @@
     function showService(serviceID) {
         $.ajax({
             type: "get",
-            url: "/apis/" + `${serviceID}`,
+            url: "/remote/apis/" + `${serviceID}`,
             success: function (data) {
                 data.id = serviceID
                 parseAPIEventsToComboBox(data)
@@ -358,7 +366,7 @@
         })
         $.ajax({
             type: "get",
-            url: "/apis/" + `${serviceID}`,
+            url: "/remote/apis/" + `${serviceID}`,
             success: function (data) {
                 data.id = serviceID
                 $("#serviceJSON").val(JSON.stringify(data))
