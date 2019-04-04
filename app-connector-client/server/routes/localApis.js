@@ -69,7 +69,7 @@ async function registerAll(req, res) {
     }
     catch (error) {
         var message = "There is an error while registering all APIs."
-        LOGGER.error("Failed to register all APIs: %s", error.stack)
+        LOGGER.error("Failed to register all APIs: %s", JSON.stringify(error))
         res.status(500).send({ error: message })
     }
 }
