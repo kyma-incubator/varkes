@@ -26,13 +26,13 @@
     </div>
     <div class="fd-container fd-container--fluid" style="background-color: white;">
         <span class="fd-tabs__item fd-col--1">
-            Connected to<br /><br />
-            Endpoint URL<br /><br />
+            Application<br /><br />
+            Domain<br /><br />
             Status
         </span>
-        <span class="fd-tabs__item fd-col--11">
-            {{connection.application.name}}<br /><br />
-            {{connection.application.url}}<br /><br />
+        <span class="fd-tabs__item fd-col--2">
+            {{connection.application}}<br /><br />
+            {{connection.domain}}<br /><br />
             <span class="fd-badge fd-badge--success">Connected</span> <span *ngIf="insecureConnection"
                 class="fd-badge fd-badge--warning">Insecure</span>
         </span>
@@ -62,8 +62,8 @@
             </ul>
         </div>
         <div *ngIf="!remote" class="fd-action-bar__actions">
-            <button class="fd-button fd-button--light" style="margin-right: 12px">Batch Registeration <span
-                    class="fd-inline-help">
+            <button class="fd-button fd-button--light" style="margin-right: 12px" (click)="onBatchRegisteration()">Batch
+                Registeration <span class="fd-inline-help">
                     <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
                         Register all the local apis to kyma
                     </span>
@@ -91,7 +91,7 @@
                 <div class="fd-form__group">
                     <div class="fd-form__item">
                         <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
-                        <textarea class="fd-form__control" style="resize: none;" id="token_url"></textarea>
+                        <textarea class="fd-form__control" style="resize: none;" #token_url></textarea>
                     </div>
                     <div class="fd-form__item fd-form__item--check">
                         <label class="fd-form__label" for="Ai4ez611">
@@ -109,7 +109,7 @@
             </div>
             <footer class="fd-modal__footer">
                 <div class="fd-modal__actions">
-                    <button class="fd-button" (click)="onConnect()">Connect</button>
+                    <button class="fd-button" (click)="onConnect(token_url.value)">Connect</button>
                     <button (click)="onCloseModalClick()" class="fd-button--light">Cancel</button>
                 </div>
             </footer>

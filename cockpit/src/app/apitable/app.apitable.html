@@ -15,7 +15,7 @@
           <a href="#" class="fd-has-font-weight-semi">{{api.name}}</a>
         </td>
         <td>{{api.description}}</td>
-        <td>{{api.type}}</td>
+        <td>{{api.labels.type}}</td>
         <td *ngIf="!remote">
           <button class="fd-button--light">Register</button>
         </td>
@@ -23,16 +23,19 @@
           <div class="fd-popover">
             <div class="fd-popover__control">
               <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(1)" (focusout)="onCloseActionList(1)"></button>
+                (focus)="onOpenActionList(i)" (focusout)="onCloseActionList(i)"></button>
             </div>
-            <div *ngIf="actionList[1]" class="fd-popover__body">
+            <div *ngIf="actionList[i]" class="fd-popover__body">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><button
+                      class="fd-button--compact fd-button--light">Open</button>
                   </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
-                      href="#">Delete</a></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><button
+                      class="fd-button--compact fd-button--light">Update</button></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><button
+                      class="fd-button--compact fd-button--light fd-button--negative">Delete</button></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"></li>
                 </ul>
               </nav>
             </div>

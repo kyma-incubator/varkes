@@ -1,7 +1,5 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { PopoverModule } from 'fundamental-ngx';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Http } from '@angular/http';
-import { hostname } from 'os';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
@@ -11,6 +9,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     @Input() remote;
     @Input() hostname;
     public apis;
+    public info;
     public actionList = [];
     public isDataAvailable;
     public constructor(private http: Http) {
@@ -23,15 +22,17 @@ export class ApiTableComponent implements OnInit, OnChanges {
 
     }
     ngOnChanges(changes: SimpleChanges): void {
-
-    }
-    public ngOnInit() {
-        this.http.get(this.hostname + "/mock/apis")
+        this.apis = [];
+        this.info = window['info'];
+        this.http.get(this.hostname + (this.remote ? this.info.url.remoteApis : this.info.url.localApis))
             .subscribe(
                 data => {
                     this.apis = JSON.parse(data["_body"]);
                     this.isDataAvailable = true;
                 });
+    }
+    public ngOnInit() {
+
     }
     public onOpenActionList(index) {
         this.actionList[index] = true;
