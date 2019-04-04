@@ -42,7 +42,7 @@ async function registerAll(req, res) {
     }
     catch (error) {
         var message = "There is an error while registering to kyma. Usually that is caused by an invalid or expired token URL."
-        LOGGER.error("Failed to connect to kyma cluster: %s", error)
+        LOGGER.error("Failed to connect to kyma cluster: %s", JSON.stringify(error))
         res.status(401).send({ error: message })
     }
 }

@@ -29,6 +29,8 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var app = express()
     app.use(bodyParser.json())
+    app.use(cors())
+    app.options('*', cors())
     app.use(expressWinston.logger(LOGGER))
     app.use(cors());
     app.use(REMOTE_APIS_URL, remoteApis.router())
@@ -43,6 +45,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
         res.render('index', { appName: varkesConfig.name })
     })
     app.get("/info", function (req, res) {
+
         var info = {
             appName: varkesConfig.name,
             links: {
