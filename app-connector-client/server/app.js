@@ -48,6 +48,9 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
         var info = {
             appName: varkesConfig.name,
+            connected: connection.established(),
+            insecure: connection.established() ? connection.secure() : false,
+            connection: connection.established() ? connection.info() : {},
             links: {
                 logo: LOGO_URL,
                 localApis: LOCAL_APIS_URL,
