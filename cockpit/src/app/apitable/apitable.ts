@@ -7,7 +7,7 @@ import { Http } from '@angular/http';
 export class ApiTableComponent implements OnInit, OnChanges {
 
     @Input() remote;
-    @Input() hostname;
+    public hostname;
     public apis;
     public info;
     public actionList = [];
@@ -40,4 +40,5 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public onCloseActionList(index) {
         this.actionList[index] = false;
     }
+
 }
