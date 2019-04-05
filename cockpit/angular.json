@@ -24,6 +24,8 @@
               "src/app",
               "src/index.html",
               "src/logout.html",
+              "src/json.editor.min.js",
+              "src/jsoneditor.min.css",
               {
                 "glob": "fiori-fundamentals.min.css",
                 "input": "node_modules/fiori-fundamentals/dist",
