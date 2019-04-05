@@ -1,2 +1,4 @@
-<api-overview></api-overview>
-<spec-view></spec-view>
+<div *ngIf='loadView'>
+    <api-overview [api]='api' [remote]='remote'></api-overview>
+    <spec-view [spec]='api'></spec-view>
+</div>
