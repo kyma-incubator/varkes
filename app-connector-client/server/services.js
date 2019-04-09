@@ -8,8 +8,6 @@ const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
 const request = require("request-promise")
-var success_count = 0;
-var failed_count = 0;
 var apis_success = [];
 var apis_failed = [];
 module.exports = {
@@ -29,8 +27,6 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
         return
 
     var error_message = ""
-    success_count = 0;
-    failed_count = 0;
     apis_success = [];
     apis_failed = [];
     for (var i = 0; i < apisConfig.length; i++) {
@@ -47,7 +43,6 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
                 await updateService(api, reg_api.id, false, hostname)
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
-            success_count++;
             apis_success.push(api.name);
 
 
@@ -55,7 +50,6 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
             var message = "Registration of API " + api.name + " failed: " + error.message
             LOGGER.error(message)
             error_message += "\n" + message
-            failed_count++;
             apis_failed.push(api.name);
         }
     }
@@ -84,13 +78,11 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
                 LOGGER.debug("Updated Event API successful: %s", event.name)
                 await updateService(event, reg_api.id, true)
             }
-            success_count++;
             apis_success.push(event.name)
         } catch (error) {
             var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
             LOGGER.error(message)
             error_message += "\n" + message
-            failed_count++;
             apis_failed.push(event.name);
         }
     }
@@ -100,8 +92,8 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
 }
 function getStatus() {
     return {
-        "success_count": success_count,
-        "failed_count": failed_count,
+        "success_count": apis_success.length,
+        "failed_count": apis_failed.length,
         "apis_success": apis_success,
         "apis_failed": apis_failed
     }

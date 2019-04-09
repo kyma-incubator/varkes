@@ -46,6 +46,10 @@ async function registerAll(req, res) {
         res.status(401).send({ error: message })
     }
 }
+function getStatus(req, res) {
+    LOGGER.debug("Getting Registration Status")
+    res.status(200).send(services.getStatus());
+}
 function create(req, res) {
     LOGGER.debug("Create Local API %s", req.params.api)
 
@@ -98,7 +102,8 @@ function router(config) {
     var apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/", getAll)
-    apiRouter.post("/registeration", registerAll)
+    apiRouter.post("/registration", registerAll)
+    apiRouter.get("/registration", getStatus)
     apiRouter.post("/:apiname/register", create)
     return apiRouter
 }
