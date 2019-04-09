@@ -1,9 +1,15 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 @Component({
     selector: 'spec-view',
-    template: '<json-editor [options]="editorOptions" [spec]="spec"></json-editor>'
+    templateUrl: './app.specview.html'
 })
-export class SpecViewComponent {
-    @Input() spec: any;
+export class SpecViewComponent implements OnInit {
 
+    @Input() text;
+    options: any = { maxLines: 1000, printMargin: false };
+
+    ngOnInit() {
+
+    }
 }
