@@ -15,19 +15,17 @@ After the startup, you have access to:
 
 ## Development
 
+Make sure you have first executed `make resolve` from the project root!
+
 To run the Client locally with an empty configuration, use:
 ```
 npm start
-
 ```
 To run it locally with debug logs enabled and an example configuration from the test suite, use:
 
 ```
 npm run start:dev
-
 ```
 
 ## Documentation
 You can access OpenAPI documentation using `localhost:10000/metadata` or the [api.yaml](server/resources/api.yaml) file.
-
-
