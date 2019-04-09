@@ -12,7 +12,7 @@
     <tbody>
       <tr *ngFor="let api of apis; index as i" id="api{{i}}">
         <td>
-          <a href="#" class="fd-has-font-weight-semi">{{api.name}}</a>
+          <a routerLink="/apiview/{{api.id}}/{{remote}}" class="fd-has-font-weight-semi">{{api.name}}</a>
         </td>
         <td>{{api.description}}</td>
         <td>{{api.labels.type}}</td>
@@ -25,7 +25,7 @@
               <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
                 (focus)="onOpenActionList(i)"></button>
             </div>
-            <div *ngIf="actionList[i]" class="fd-popover__body">
+            <div *ngIf="actionList[i]" class="fd-popover__body fd-has-padding-tiny">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
                   <li class="fd-menu__item fd-button--compact fd-button--light"><a
