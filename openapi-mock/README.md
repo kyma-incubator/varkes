@@ -21,16 +21,16 @@ The OpenAPI mock brings you the following features:
 
 ## Development
 
+Make sure you have first executed `make resolve` from the project root!
+
 To run the OpenAPI mock locally, use an empty configuration:
 ```
 npm start
-
 ```
 To run it locally with debug logs enabled, and an example configuration from the test suite, run:
 
 ```
 npm run start:dev
-
 ```
 
 After the startup, you have access to:

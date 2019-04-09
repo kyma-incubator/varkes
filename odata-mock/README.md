@@ -20,16 +20,16 @@ The OData mock brings you the following features:
 
 ## Development
 
+Make sure you have first executed `make resolve` from the project root!
+
 To run the Odata mock locally with an empty configuration, use:
 ```
 npm start
-
 ```
 To run it locally with debug logs enabled and an example configuration from the test suite, use:
 
 ```
 npm run start:dev
-
 ```
 After the startup, you have access to:
 - odata API - `http://localhost:10000/odata/`
