@@ -32,7 +32,7 @@ describe("should work", () => {
             expect(200)
 
         await request(server) //* Make sure we registered local apis to kyma
-            .post('/local/apis/registeration')
+            .post('/local/apis/registration')
             .send({ "hostname": "http://localhost" })
             .set('Accept', 'application/json')
             .expect(200)

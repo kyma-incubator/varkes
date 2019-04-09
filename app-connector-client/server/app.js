@@ -45,7 +45,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.get("/info", function (req, res) {
         var info = {
             appName: varkesConfig.name,
-            url: {
+            links: {
                 logo: LOGO_URL,
                 localApis: LOCAL_APIS_URL,
                 remoteApis: REMOTE_APIS_URL,

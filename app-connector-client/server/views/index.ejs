@@ -54,7 +54,7 @@
                 <br>
                 <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
                     id="register_button">
-                    Batch Registeration
+                    Batch Registration
                 </button>
                 <br>
                 <button hidden class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
@@ -331,7 +331,7 @@
         registerButton.click(function () {
             $.ajax({
                 type: "POST",
-                url: "/local/apis/registeration",
+                url: "/local/apis/registration",
                 data: JSON.stringify({ hostname: hostname }),
                 success: function (data) {
                     getAPIs()

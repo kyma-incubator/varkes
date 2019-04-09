@@ -10,6 +10,10 @@ const METADATA = "/metadata"
 const request = require("request-promise")
 var apis_success = [];
 var apis_failed = [];
+var apis = [];
+const DONE_PROGRESS = "Done";
+const IN_PROGRESS = "In Progress";
+var progress = DONE_PROGRESS
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
@@ -25,7 +29,8 @@ module.exports = {
 async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
-
+    progress = IN_PROGRESS
+    apis = apis.concat(apisConfig);
     var error_message = ""
     apis_success = [];
     apis_failed = [];
@@ -62,7 +67,7 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
 async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (!eventsConfig)
         return
-
+    apis = apis.concat(eventsConfig);
     var error_message = ""
     for (var i = 0; i < eventsConfig.length; i++) {
         var event = eventsConfig[i]
@@ -89,13 +94,16 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (error_message != "") {
         throw new Error(error_message)
     }
+    progress = DONE_PROGRESS;
 }
 function getStatus() {
     return {
         "success_count": apis_success.length,
         "failed_count": apis_failed.length,
         "apis_success": apis_success,
-        "apis_failed": apis_failed
+        "apis_failed": apis_failed,
+        "apis": apis,
+        "progress": progress
     }
 }
 function createService(api, isEvent, hostname) {

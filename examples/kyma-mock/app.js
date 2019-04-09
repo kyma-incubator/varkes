@@ -22,7 +22,7 @@ var runAsync = async () => {
             })
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", JSON.stringify(error))
+        console.error("Problem while starting application: %s", error)
     }
 }
 
