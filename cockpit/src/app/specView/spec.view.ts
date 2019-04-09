@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { read } from 'fs';
 
 @Component({
     selector: 'spec-view',
