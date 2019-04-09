@@ -8,6 +8,7 @@ import { ApiViewComponent } from './apiView/api.view';
 import { ApiOverviewComponent } from './apiOverview/api.overview';
 import { HttpModule } from '@angular/http';
 import { SpecViewComponent } from './specView/spec.view';
+import { AceEditorModule } from 'ng2-ace-editor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +21,7 @@ import { SpecViewComponent } from './specView/spec.view';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgJsonEditorModule,
+    AceEditorModule,
     HttpModule
   ],
   providers: [],

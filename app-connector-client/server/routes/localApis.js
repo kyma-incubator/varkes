@@ -14,8 +14,9 @@ function getAll(req, res) {
     var configApis = varkesConfig.apis;
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
-
-        apis.push(services.fillServiceMetadata(api, req.body.hostname || req.headers.host))
+        let metadata = services.fillServiceMetadata(api, req.body.hostname || req.headers.host)
+        metadata.id = api.name;
+        apis.push(metadata)
     }
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
@@ -23,6 +24,21 @@ function getAll(req, res) {
         apis.push(services.fillEventData(event));
     }
     res.status(200).send(apis);
+}
+function getLocalApi(req, res) {
+    LOGGER.debug("Getting Local API")
+    let apiname = req.params.apiname;
+    let api = varkesConfig.apis.find(x => x.name == apiname);
+    if (api) {
+        let serviceMetadata = services.fillServiceMetadata(api, req.headers.host)
+        serviceMetadata.id = apiname;
+        res.status(200).send(serviceMetadata);
+    }
+    else {
+        let message = "api " + apiname + " does not exist";
+        LOGGER.error(message);
+        res.status(404).send({ error: message })
+    }
 }
 async function registerAll(req, res) {
     LOGGER.debug("Registering all Local APIs")
@@ -104,6 +120,7 @@ function router(config) {
     apiRouter.get("/", getAll)
     apiRouter.post("/registration", registerAll)
     apiRouter.get("/registration", getStatus)
+    apiRouter.get("/:apiname", getLocalApi)
     apiRouter.post("/:apiname/register", create)
     return apiRouter
 }
