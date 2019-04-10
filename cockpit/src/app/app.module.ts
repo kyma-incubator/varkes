@@ -9,6 +9,8 @@ import { ApiOverviewComponent } from './apiOverview/api.overview';
 import { HttpModule } from '@angular/http';
 import { SpecViewComponent } from './specView/spec.view';
 import { AceEditorModule } from 'ng2-ace-editor';
+import { ClickOutsideModule } from 'ng-click-outside';
+import { SendEventViewComponent } from './sendEventView/send.eventview';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,13 +18,15 @@ import { AceEditorModule } from 'ng2-ace-editor';
     ApiTableComponent,
     ApiViewComponent,
     ApiOverviewComponent,
-    SpecViewComponent
+    SpecViewComponent,
+    SendEventViewComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AceEditorModule,
-    HttpModule
+    HttpModule,
+    ClickOutsideModule
   ],
   providers: [],
   bootstrap: [AppComponent]

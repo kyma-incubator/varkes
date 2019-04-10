@@ -10,9 +10,6 @@
 </div>
 <div *ngIf="connected" style="background-color: white">
     <div class="fd-action-bar">
-        <div class="fd-action-bar__back">
-            <button class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
-        </div>
         <div class="fd-action-bar__header">
             <h2 class="fd-action-bar__title">
                 Connection Overview
@@ -27,12 +24,12 @@
     <div class="fd-container fd-container--fluid" style="background-color: white;">
         <span class="fd-tabs__item fd-col--1">
             Application<br /><br />
-            Domain<br /><br />
+            Cluster<br /><br />
             Status
         </span>
         <span class="fd-tabs__item fd-col--2">
-            {{connection.application}}<br /><br />
-            {{connection.domain}}<br /><br />
+            <a href="{{connection.consoleUrl}}" target="_blank">{{connection.application}}</a><br /><br />
+            <a href="{{consoleUrl}}" target="_blank">{{connection.domain}}</a><br /><br />
             <span class="fd-badge fd-badge--success">Connected</span> <span *ngIf="insecureConnection"
                 class="fd-badge fd-badge--warning">Insecure</span>
         </span>
@@ -41,7 +38,7 @@
 <br />
 <div *ngIf="!connected" style="background-color: white">
     <h3>Local API</h3>
-    <api-table [remote]='false'></api-table>
+    <api-table [remote]='false' [connected]='connected'></api-table>
 </div>
 <div *ngIf="connected" style="background-color: white">
     <div class="fd-action-bar">
@@ -63,7 +60,7 @@
         </div>
         <div *ngIf="!remote" class="fd-action-bar__actions">
             <button class="fd-button fd-button--light" style="margin-right: 12px" (click)="onBatchRegisteration()">Batch
-                Registeration <span class="fd-inline-help">
+                Registration <span class="fd-inline-help">
                     <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
                         Register all the local apis to kyma
                     </span>
@@ -77,7 +74,7 @@
             <button class="fd-button fd-button--light">Create New Event</button>
         </div>
     </div>
-    <api-table [remote]='remote'></api-table>
+    <api-table [remote]='remote' [connected]='connected'></api-table>
 </div>
 <div *ngIf="modalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
     <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
