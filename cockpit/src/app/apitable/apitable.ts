@@ -28,7 +28,6 @@ export class ApiTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         this.apis = [];
         this.info = window['info'];
-
         this.http.get(this.hostname + (this.remote ? this.info.links.remoteApis : this.info.links.localApis))
             .subscribe(
                 success => {

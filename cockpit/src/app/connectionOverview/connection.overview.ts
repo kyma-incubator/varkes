@@ -10,7 +10,6 @@ import { uxManager } from '@kyma-project/luigi-client';
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnInit {
-
     public apis;
     public hostname;
     public info;
