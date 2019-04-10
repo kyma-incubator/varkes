@@ -1,5 +1,6 @@
 <div *ngIf='loadView'>
-    <api-overview [api]='api' [remote]='remote'></api-overview>
+    <api-overview [api]='api' [remote]='remote' [event]='event' [readonly]='!update'></api-overview>
     <br />
-    <spec-view [text]='spec'></spec-view>
+    <send-event-view *ngIf='event' [event]='spec'></send-event-view>
+    <spec-view [text]='spec' [readonly]='!update'></spec-view>
 </div>

@@ -21,7 +21,9 @@ function getAll(req, res) {
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
         var event = configEvents[i];
-        apis.push(services.fillEventData(event));
+        let metadata = services.fillEventData(event)
+        metadata.id = event.name;
+        apis.push(metadata);
     }
     res.status(200).send(apis);
 }
@@ -35,9 +37,17 @@ function getLocalApi(req, res) {
         res.status(200).send(serviceMetadata);
     }
     else {
-        let message = "api " + apiname + " does not exist";
-        LOGGER.error(message);
-        res.status(404).send({ error: message })
+        api = varkesConfig.events.find(x => x.name == apiname);
+        if (api) {
+            let eventMetadata = services.fillEventData(api)
+            eventMetadata.id = apiname;
+            res.status(200).send(eventMetadata);
+        }
+        else {
+            let message = "api " + apiname + " does not exist";
+            LOGGER.error(message);
+            res.status(404).send({ error: message })
+        }
     }
 }
 async function registerAll(req, res) {
