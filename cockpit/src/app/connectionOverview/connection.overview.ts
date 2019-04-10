@@ -11,7 +11,6 @@ import { ServiceInstancesService } from '../service-instances/service-instances.
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnInit {
-
     public apis;
     public baseUrl;
     public info;
