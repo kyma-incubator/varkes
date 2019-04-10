@@ -40,6 +40,7 @@
     "fiori-fundamentals": "^1.4.8",
     "fundamental-ngx": "^0.3.1",
     "jquery": "^3.3.1",
+    "ng-click-outside": "^4.0.0",
     "ng2-ace-editor": "^0.3.9",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",

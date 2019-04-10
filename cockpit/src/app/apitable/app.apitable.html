@@ -17,22 +17,21 @@
         <td>{{api.description}}</td>
         <td>{{api.labels.type}}</td>
         <td *ngIf="!remote">
-          <button class="fd-button--light">Register</button>
+          <button *ngIf="connected" class="fd-button--light">Register</button>
         </td>
         <td *ngIf="remote">
-          <div class="fd-popover">
+          <div class="fd-popover" (clickOutside)="onCloseActionList(i)" [excludeBeforeClick]="true">
             <div class="fd-popover__control">
-              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(i)"></button>
+              <button id="actionBtn" (click)="onOpenActionList(i)" class="fd-button--light sap-icon--overflow"
+                aria-label="More"></button>
             </div>
             <div *ngIf="actionList[i]" class="fd-popover__body fd-has-padding-tiny">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
                   <li class="fd-menu__item fd-button--compact fd-button--light"><a
-                      routerLink="/apiview/{{api.id}}/{{remote}}">Open</a>
-                  </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a>Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown">Delete</a></li>
+                      routerLink="/apiview/{{api.id}}/{{remote}}/true">Update</a></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a routerLink="/"
+                      (click)="deleteApi(api)" style="color: brown">Delete</a></li>
                 </ul>
               </nav>
             </div>

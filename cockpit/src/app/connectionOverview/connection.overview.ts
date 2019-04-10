@@ -1,10 +1,6 @@
 import {
     Component,
-    OnChanges,
     Input,
-    Output,
-    EventEmitter,
-    SimpleChanges,
     OnInit
 } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
@@ -13,17 +9,17 @@ import { uxManager } from '@kyma-project/luigi-client';
     selector: 'connection-overview',
     templateUrl: './connection.overview.html'
 })
-export class ConnectionOverviewComponent implements OnChanges, OnInit {
+export class ConnectionOverviewComponent implements OnInit {
     public apis;
     public hostname;
     public info;
     public url;
     public connection;
     @Input() public modalActive: boolean;
-    @Output() private modalClosed: EventEmitter<null>;
     public connected: boolean;
     @Input() public insecureConnection: boolean;
     public remote;
+    public consoleUrl;
     public constructor(private http: Http) {
         if (window["config"] && window["config"].domain) {
             this.hostname = window["config"].domain;
@@ -36,12 +32,11 @@ export class ConnectionOverviewComponent implements OnChanges, OnInit {
         this.info = window['info'];
         this.connected = this.info.connected;
         this.insecureConnection = this.info.insecure;
+        console.log("insecure connection " + this.insecureConnection)
         this.connection = this.info.connection;
+        this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[a-zA-z0-9.]+\//)[0];
+        console.log("con " + this.consoleUrl);
     }
-    public ngOnChanges(changes: SimpleChanges): void {
-
-    }
-
     public openModal() {
         this.insecureConnection = false;
         uxManager().addBackdrop();
@@ -61,7 +56,7 @@ export class ConnectionOverviewComponent implements OnChanges, OnInit {
         console.log(url);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        this.http.post(this.hostname + this.info.url.connection, JSON.stringify(sendData), options)
+        this.http.post(this.hostname + this.info.links.connection, JSON.stringify(sendData), options)
             .subscribe(
                 data => {
                     this.connected = true;
@@ -73,7 +68,7 @@ export class ConnectionOverviewComponent implements OnChanges, OnInit {
                 });
     }
     public onDisconnect() {
-        this.http.delete(this.hostname + this.info.url.connection)
+        this.http.delete(this.hostname + this.info.links.connection)
             .subscribe(
                 data => {
                     this.connected = false;
@@ -95,10 +90,10 @@ export class ConnectionOverviewComponent implements OnChanges, OnInit {
     public onBatchRegisteration() {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        this.http.post(this.hostname + this.info.url.registeration.batch, { hostname: this.hostname }, options)
+        this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
             .subscribe(
                 data => {
-
+                    console.log("started registeration");
                 },
                 function error(data) {
                     window.alert(data);

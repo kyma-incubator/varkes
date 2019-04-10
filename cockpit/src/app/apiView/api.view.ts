@@ -13,6 +13,9 @@ export class ApiViewComponent implements OnInit {
     public loadView;
     public info;
     public hostname;
+    public event;
+    public update;
+    public eventExample;
     constructor(private http: Http, private route: ActivatedRoute) {
         if (window["config"] && window["config"].domain) {
             this.hostname = window["config"].domain;
@@ -26,29 +29,36 @@ export class ApiViewComponent implements OnInit {
     public ngOnInit() {
         this.route.params.subscribe(params => {
             this.apiId = params.id;
-            console.log(params.remote)
             this.remote = params.remote == "true";
-            console.log(params.remote);
+            this.update = params.update == "true";
             if (this.remote) {
-                this.http.get(this.hostname + this.info.url.remoteApis + "/" + this.apiId)
+                this.http.get(this.hostname + this.info.links.remoteApis + "/" + this.apiId)
                     .subscribe(
                         data => {
-                            this.api = JSON.parse(data["_body"]);
-                            this.spec = JSON.stringify(this.api.api, null, '\t');
-                            this.loadView = true;
+                            this.fillSpec(data);
                         });
             }
             else {
-                this.http.get(this.hostname + this.info.url.localApis + "/" + this.apiId)
+                this.http.get(this.hostname + this.info.links.localApis + "/" + this.apiId)
                     .subscribe(
                         data => {
-                            this.api = JSON.parse(data["_body"]);
-                            this.spec = JSON.stringify(this.api.api, null, '\t');
-                            this.loadView = true;
+                            this.fillSpec(data);
                         });
             }
 
         });
+    }
+
+    private fillSpec(data) {
+        this.api = JSON.parse(data["_body"]);
+        if (this.api.events) {
+            this.spec = JSON.stringify(this.api.events.spec, null, '\t');
+            this.event = true;
+        }
+        else {
+            this.spec = JSON.stringify(this.api.api, null, '\t');
+        }
+        this.loadView = true;
     }
 
 }

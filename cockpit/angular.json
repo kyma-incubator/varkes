@@ -63,6 +63,11 @@
                 "glob": "mode-json.js",
                 "input": "node_modules/ace-builds/src-min",
                 "output": "/"
+              },
+              {
+                "glob": "worker-json.js",
+                "input": "node_modules/ace-builds/src-min",
+                "output": "/"
               }
             ],
             "styles": [

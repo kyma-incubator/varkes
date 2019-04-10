@@ -12,6 +12,10 @@ const routes: Routes = [{
     }]
 }, {
   path: "apiview/:id/:remote", component: ApiViewComponent
+}, {
+  path: "apiview/:id", component: ApiViewComponent
+}, {
+  path: "apiview/:id/:remote/:update", component: ApiViewComponent
 }];
 
 @NgModule({

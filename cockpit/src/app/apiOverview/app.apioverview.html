@@ -1,12 +1,16 @@
 <div style="background-color: white">
   <div class="fd-action-bar">
     <div class="fd-action-bar__back">
-      <button class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+      <button routerLink="/" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
     </div>
     <div class="fd-action-bar__header">
       <h1 class="fd-action-bar__title">
         {{api.name}}
       </h1>
+    </div>
+    <div class="fd-action-bar__actions">
+      <button *ngIf="!readonly" class=" fd-button--primary fd-button--l" (click)="updateApi()">Update</button>
+      <button *ngIf="event" class=" fd-button--primary fd-button--l" (click)="sendEvent()">Send Event</button>
     </div>
   </div>
   <br />
@@ -15,19 +19,31 @@
       Name<br /><br />
       Description
     </span>
-    <span class="fd-tabs__item fd-col--3">
+    <span class="fd-tabs__item fd-col--4">
       {{api.name}}<br /><br />
       {{api.description}}
+    </span>
+    <span *ngIf="!event" class="fd-tabs__item fd-col--1">
+      TargetUrl<br /><br />
+      SpecUrl
+    </span>
+    <span *ngIf="!event" class="fd-tabs__item fd-col--4">
+      {{api.api.targetUrl}}<br /><br />
+      {{api.api.specificationUrl}}
     </span>
     <span class="fd-tabs__item fd-col--1">
       Type<br /><br />
       Status
     </span>
-    <span class="fd-tabs__item fd-col--7">
+    <span class="fd-tabs__item fd-col--1">
       {{api.labels.type}}<br /><br />
       <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
       <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
     </span>
   </div>
   <br />
+</div>
+
+<div *ngIf="loading" class="fd-spinner" hidden aria-label="Loading">
+
 </div>
