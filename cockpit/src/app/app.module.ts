@@ -11,6 +11,7 @@ import { SpecViewComponent } from './specView/spec.view';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { SendEventViewComponent } from './sendEventView/send.eventview';
+import { CreateApiViewComponent } from './createApi/create.api.view';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +20,8 @@ import { SendEventViewComponent } from './sendEventView/send.eventview';
     ApiViewComponent,
     ApiOverviewComponent,
     SpecViewComponent,
-    SendEventViewComponent
+    SendEventViewComponent,
+    CreateApiViewComponent
   ],
   imports: [
     BrowserModule,

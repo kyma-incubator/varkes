@@ -15,13 +15,13 @@ export class SendEventViewComponent implements OnInit {
 
     ngOnInit() {
         this.event = JSON.parse(this.event);
-        this.topics = Object.keys(this.event.topics);
-        console.log("topics " + this.topics);
+        this.topics = Object.keys(this.event.events.spec.topics);
     }
 
     public fillEditor(topic) {
-        console.log("topic " + topic);
-        this.topic = JSON.stringify(this.event.topics[topic].example, null, '\t');
+        this.topic = JSON.stringify(this.event.events.spec.topics[topic].example, null, '\t');
+        this.showTopics = false;
+        document.getElementById("selectedTopic").innerHTML = topic;
     }
     public onOpenDropDown() {
         this.showTopics = true;

@@ -10,6 +10,8 @@ export class ApiOverviewComponent {
     @Input() remote;
     @Input() event;
     @Input() readonly;
+    public alert;
+    public alertMessage;
     public loading: boolean;
     public info;
     public hostname;
@@ -28,15 +30,14 @@ export class ApiOverviewComponent {
         let options = new RequestOptions({ headers: headers });
         var editor = ace.edit("specEditor");
         this.api.api = JSON.parse(editor.getValue());
-        console.log(this.api.api);
         this.http.put(this.hostname + this.info.links.remoteApis + "/" + this.api.id, JSON.stringify(this.api), options)
             .subscribe(
-                data => {
-                    console.log(data);
+                success => {
                     this.loading = false;
                 },
-                function error(data) {
-                    window.alert(data);
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                     this.loading = false;
                 });
     }
@@ -44,18 +45,28 @@ export class ApiOverviewComponent {
         this.loading = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        var editor = ace.edit("specEditor");
-        this.api.api = JSON.parse(editor.getValue());
-        console.log(this.api.api);
-        this.http.post(this.hostname + this.info.links.events + "/" + this.api.id, JSON.stringify(this.api), options)
+        var editor = ace.edit("eventTopicEditor");
+        let eventTime = new Date().toISOString();
+        let eventType = document.getElementById("selectedTopic").innerHTML;
+        var version = eventType.substring(eventType.lastIndexOf(".") + 1)
+        let eventData = {
+            "event-type": eventType,
+            "event-type-version": version, //event types normally end with .v1
+            "event-time": eventTime,
+            "data": editor.getValue()
+        }
+        this.http.post(this.hostname + this.info.links.events, eventData, options)
             .subscribe(
-                data => {
-                    console.log(data);
+                success => {
                     this.loading = false;
                 },
-                function error(data) {
-                    window.alert(data);
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                     this.loading = false;
                 });
+    }
+    public closeAlert() {
+        this.alert = false;
     }
 }
