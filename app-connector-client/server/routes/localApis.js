@@ -57,6 +57,7 @@ async function registerAll(req, res) {
         res.status(400).send({ error: err })
     }
     try {
+        services.initBatchRegistration();
         var registeredAPIs = await services.getAllAPI()
         var promises = [
             services.createServicesFromConfig(req.body.hostname || req.headers.host, varkesConfig.apis, registeredAPIs),
@@ -68,7 +69,7 @@ async function registerAll(req, res) {
     }
     catch (error) {
         var message = "There is an error while registering to kyma. Usually that is caused by an invalid or expired token URL."
-        LOGGER.error("Failed to connect to kyma cluster: %s", JSON.stringify(error))
+        LOGGER.error("Failed to connect to kyma cluster: %s", error.stack)
         res.status(401).send({ error: message })
     }
 }
@@ -76,8 +77,8 @@ function getStatus(req, res) {
     LOGGER.debug("Getting Registration Status")
     res.status(200).send(services.getStatus());
 }
-function create(req, res) {
-    LOGGER.debug("Create Local API %s", req.params.api)
+async function create(req, res) {
+    LOGGER.debug("Create Local API %s", req.params.apiname)
 
     var err = assureConnected()
     if (err) {
@@ -103,19 +104,42 @@ function create(req, res) {
                 break;
             }
         }
-        services.createAPI(serviceMetadata,
-            function (error, httpResponse, body) {
-                if (error) {
-                    LOGGER.error("Error while updating API: %s", error)
-                    res.status(500).send({ error: error.message })
-                } else if (httpResponse.statusCode >= 400) {
-                    LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
-                    res.status(httpResponse.statusCode).type("json").send(body)
-                } else {
-                    LOGGER.debug("Received API data")
-                    res.status(httpResponse.statusCode).type("json").send(body)
-                }
-            })
+        var registeredAPIs = await services.getAllAPI();
+        var reg_api
+        if (registeredAPIs.length > 0)
+            reg_api = registeredAPIs.find(x => x.name == api.name)
+        if (!reg_api) {
+            services.createAPI(serviceMetadata,
+                function (error, httpResponse, body) {
+                    if (error) {
+                        LOGGER.error("Error while updating API: %s", error)
+                        res.status(500).send({ error: error.message })
+                    } else if (httpResponse.statusCode >= 400) {
+                        LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
+                        res.status(httpResponse.statusCode).type("json").send(body)
+                    } else {
+                        LOGGER.debug("Received API data")
+                        res.status(httpResponse.statusCode).type("json").send(body)
+                    }
+                })
+        }
+        else {
+            services.updateAPI(serviceMetadata, reg_api.id,
+                function (error, httpResponse, body) {
+                    if (error) {
+                        LOGGER.error("Error while updating API: %s", error)
+                        res.status(500).send({ error: error.message })
+                    } else if (httpResponse.statusCode >= 400) {
+                        LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
+                        res.status(httpResponse.statusCode).type("json").send(body)
+                    } else {
+                        LOGGER.debug("Received API data")
+                        res.status(httpResponse.statusCode).type("json").send(body)
+                    }
+                })
+            LOGGER.debug("Updated API successful: %s", api.name)
+        }
+
     }
 }
 function assureConnected() {

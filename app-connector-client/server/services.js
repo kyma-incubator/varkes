@@ -13,7 +13,6 @@ var apis_failed = [];
 var apis = [];
 const DONE_PROGRESS = "Done";
 const IN_PROGRESS = "In Progress";
-var progress = DONE_PROGRESS
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
@@ -23,17 +22,20 @@ module.exports = {
     fillServiceMetadata: fillServiceMetadata,
     getStatus: getStatus,
     createEventsFromConfig: createEventsFromConfig,
-    fillEventData: fillEventData
+    fillEventData: fillEventData,
+    initBatchRegistration: initBatchRegistration
 }
 
+function initBatchRegistration() {
+    apis_success = [];
+    apis_failed = [];
+    apis = [];
+}
 async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
     if (!apisConfig)
         return
-    progress = IN_PROGRESS
     apis = apis.concat(apisConfig);
     var error_message = ""
-    apis_success = [];
-    apis_failed = [];
     for (var i = 0; i < apisConfig.length; i++) {
         var api = apisConfig[i]
         try {
@@ -49,7 +51,6 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
             apis_success.push(api.name);
-
 
         } catch (error) {
             var message = "Registration of API " + api.name + " failed: " + error.message
@@ -94,7 +95,6 @@ async function createEventsFromConfig(eventsConfig, registeredApis) {
     if (error_message != "") {
         throw new Error(error_message)
     }
-    progress = DONE_PROGRESS;
 }
 function getStatus() {
     return {
@@ -103,7 +103,16 @@ function getStatus() {
         "apis_success": apis_success,
         "apis_failed": apis_failed,
         "apis": apis,
-        "progress": progress
+        "progress": getProgress(),
+        "done": getProgress() == DONE_PROGRESS
+    }
+}
+function getProgress() {
+    if (apis_success.length + apis_failed.length == apis.length) {
+        return DONE_PROGRESS;
+    }
+    else {
+        return IN_PROGRESS;
     }
 }
 function createService(api, isEvent, hostname) {
