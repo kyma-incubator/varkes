@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
@@ -9,7 +9,10 @@ export class ApiTableComponent implements OnInit, OnChanges {
     @Input() remote;
     @Input() connected;
     public hostname;
+    public loadInd
     public apis;
+    public alert;
+    public alertMessage;
     public info;
     public actionList = [];
     public isDataAvailable;
@@ -25,11 +28,16 @@ export class ApiTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         this.apis = [];
         this.info = window['info'];
+
         this.http.get(this.hostname + (this.remote ? this.info.links.remoteApis : this.info.links.localApis))
             .subscribe(
-                data => {
-                    this.apis = JSON.parse(data["_body"]);
+                success => {
+                    this.apis = JSON.parse(success["_body"]);
                     this.isDataAvailable = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                 });
     }
     public ngOnInit() {
@@ -41,12 +49,35 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public onCloseActionList(index) {
         this.actionList[index] = false;
     }
-    deleteApi(api) {
+    public deleteApi(api, i: number) {
         this.http.delete(this.hostname + this.info.links.remoteApis + "/" + api.id)
             .subscribe(
-                data => {
+                success => {
                     this.actionList = [];
+                    this.apis.splice(i, 1);
                     this.isDataAvailable = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                 });
+    }
+    public registerApi(api) {
+        this.loadInd = true;
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        this.http.post(this.hostname + this.info.links.localApis + "/" + api.id + "/register", {}, options)
+            .subscribe(
+                success => {
+                    this.loadInd = false;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                    this.loadInd = false;
+                });
+    }
+    public closeAlert() {
+        this.alert = false;
     }
 }

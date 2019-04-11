@@ -161,7 +161,7 @@ async function connect(req, res) {
         var crt = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
         var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, connection.privateKey(), insecure)
 
-        var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.split(".")
+        var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
         var connectionData = {
             insecure: insecure,
             infoUrl: tokenResponse.api.infoUrl,
@@ -171,7 +171,7 @@ async function connect(req, res) {
             renewCertUrl: infoResponse.urls.renewCertUrl,
             revocationCertUrl: infoResponse.urls.revocationCertUrl,
             consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
-            domain: domains[1] ? domains[1] : domains[0],
+            domain: domains,
             application: infoResponse.clientIdentity.application
         }
 

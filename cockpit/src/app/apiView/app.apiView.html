@@ -1,6 +1,12 @@
 <div *ngIf='loadView'>
-    <api-overview [api]='api' [remote]='remote' [event]='event' [readonly]='!update'></api-overview>
+    <div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
+        <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
+        {{alertMessage}}
+        <br />
+    </div>
+
+    <api-overview [api]='api' [remote]='remote' [event]='event' [readonly]='!remote'></api-overview>
     <br />
-    <send-event-view *ngIf='event' [event]='spec'></send-event-view>
-    <spec-view [text]='spec' [readonly]='!update'></spec-view>
+    <send-event-view *ngIf='event && remote' [event]='spec'></send-event-view>
+    <spec-view [text]='spec' [readonly]='!remote'></spec-view>
 </div>

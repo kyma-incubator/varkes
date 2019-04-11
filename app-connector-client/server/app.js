@@ -57,7 +57,9 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
                 remoteApis: REMOTE_APIS_URL,
                 connection: CONNECTION,
                 registration: BATCH_REGISTRATION,
-                events: EVENTS_URL
+                events: EVENTS_URL,
+                key: CONNECTION + "/key",
+                cert: CONNECTION + "/cert"
             }
         }
         res.status(200).send(info);

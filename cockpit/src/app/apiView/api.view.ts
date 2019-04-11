@@ -13,6 +13,8 @@ export class ApiViewComponent implements OnInit {
     public loadView;
     public info;
     public hostname;
+    public alert;
+    public alertMessage;
     public event;
     public update;
     public eventExample;
@@ -34,15 +36,23 @@ export class ApiViewComponent implements OnInit {
             if (this.remote) {
                 this.http.get(this.hostname + this.info.links.remoteApis + "/" + this.apiId)
                     .subscribe(
-                        data => {
-                            this.fillSpec(data);
+                        success => {
+                            this.fillSpec(success);
+                        },
+                        error => {
+                            this.alertMessage = error;
+                            this.alert = true;
                         });
             }
             else {
                 this.http.get(this.hostname + this.info.links.localApis + "/" + this.apiId)
                     .subscribe(
-                        data => {
-                            this.fillSpec(data);
+                        success => {
+                            this.fillSpec(success);
+                        },
+                        error => {
+                            this.alertMessage = error;
+                            this.alert = true;
                         });
             }
 
@@ -52,13 +62,15 @@ export class ApiViewComponent implements OnInit {
     private fillSpec(data) {
         this.api = JSON.parse(data["_body"]);
         if (this.api.events) {
-            this.spec = JSON.stringify(this.api.events.spec, null, '\t');
+            this.spec = JSON.stringify(this.api, null, '\t');
             this.event = true;
         }
         else {
-            this.spec = JSON.stringify(this.api.api, null, '\t');
+            this.spec = JSON.stringify(this.api, null, '\t');
         }
         this.loadView = true;
     }
-
+    public closeAlert() {
+        this.alert = false;
+    }
 }

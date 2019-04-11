@@ -15,7 +15,15 @@ export class ConnectionOverviewComponent implements OnInit {
     public info;
     public url;
     public connection;
-    @Input() public modalActive: boolean;
+    public alert;
+    public alertMessage;
+    public keyUrl;
+    public searchInd;
+    public certUrl;
+    public loadInd;
+    public status;
+    @Input() public connectionModalActive: boolean;
+    public statusModalActive: boolean;
     public connected: boolean;
     @Input() public insecureConnection: boolean;
     public remote;
@@ -40,13 +48,16 @@ export class ConnectionOverviewComponent implements OnInit {
     public openModal() {
         this.insecureConnection = false;
         uxManager().addBackdrop();
-        this.modalActive = true;
+        this.connectionModalActive = true;
     }
-    public onCloseModalClick() {
+    public onConnectionCloseModalClick() {
         uxManager().removeBackdrop();
-        this.modalActive = false;
+        this.connectionModalActive = false;
     }
-
+    public onStatusCloseModalClick() {
+        uxManager().removeBackdrop();
+        this.statusModalActive = false;
+    }
     public onConnect(url) {
         var sendData = {
             url: url,
@@ -58,23 +69,25 @@ export class ConnectionOverviewComponent implements OnInit {
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.hostname + this.info.links.connection, JSON.stringify(sendData), options)
             .subscribe(
-                data => {
+                success => {
                     this.connected = true;
-                    this.connection = JSON.parse(data["_body"]);
-                    this.onCloseModalClick();
+                    this.connection = JSON.parse(success["_body"]);
+                    this.onConnectionCloseModalClick();
                 },
-                function error(data) {
-                    window.alert(data);
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                 });
     }
     public onDisconnect() {
         this.http.delete(this.hostname + this.info.links.connection)
             .subscribe(
-                data => {
+                success => {
                     this.connected = false;
                 },
-                function error(data) {
-                    window.alert(data);
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                 });
 
     }
@@ -92,11 +105,46 @@ export class ConnectionOverviewComponent implements OnInit {
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
             .subscribe(
-                data => {
-                    console.log("started registeration");
+                success => {
                 },
-                function error(data) {
-                    window.alert(data);
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
                 });
+    }
+    public getStatus() {
+        this.loadInd = true;
+        this.http.get(this.hostname + this.info.links.registration)
+            .subscribe(
+                success => {
+                    this.loadInd = false;
+                    this.status = JSON.parse(success["_body"]);
+                    uxManager().addBackdrop();
+                    this.statusModalActive = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                    this.loadInd = false;
+                });
+    }
+    public downloadKey() {
+        window.location.href = this.hostname + this.info.links.key;
+    }
+    public downloadCert() {
+        window.location.href = this.hostname + this.info.links.cert;
+    }
+    public closeAlert() {
+        this.alert = false;
+    }
+    public searchApis() {
+        this.apis = this.apis.find(x => x.name == document.getElementById("search-1").innerHTML);
+        this.remote = true;
+    }
+    public openSearch() {
+        this.searchInd = true;
+    }
+    public closeSearch() {
+        this.searchInd = false;
     }
 }
