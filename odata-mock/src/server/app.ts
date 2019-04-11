@@ -56,7 +56,7 @@ async function generateBootConfig(api: any) {
   var parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config_template.json", "utf-8"))
+  var bootConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "resources/boot_config_template.json"), "utf-8"))
 
   parsedModel.modelConfigs.forEach(function (config: any) {
     bootConfig.models[config.name] = config.value
@@ -99,6 +99,7 @@ async function generateBootConfig(api: any) {
     bootConfig.dataSources[dataSourceName].file = "data/" + dataSourceName + ".json"
   }
 
+  bootConfig.bootScripts = [path.resolve(__dirname, "routes.js")]
   return bootConfig
 }
 
