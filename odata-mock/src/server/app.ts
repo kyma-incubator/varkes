@@ -69,12 +69,15 @@ async function generateBootConfig(api: any) {
     bootConfig.modelDefinitions.push(definition)
   })
 
+  bootConfig.appRootDir = __dirname
+  bootConfig.appConfigRootDir = __dirname
+
   let restBasePath = api.basepath.replace("/odata", "/api")
   bootConfig.components["loopback-component-explorer"] = {
     mountPath: restBasePath + "/console",
     basePath: restBasePath
   }
-  bootConfig.components[path.join(__dirname, "odata-server")] = {
+  bootConfig.components["./odata-server"] = {
     path: api.basepath + "/*",
     odataversion: "2",
     useViaMiddleware: false
@@ -86,12 +89,16 @@ async function generateBootConfig(api: any) {
 
   bootConfig.dataSources[dataSourceName] = {
     name: dataSourceName,
-    connector: "memory",
-    file: "data/" + dataSourceName + ".json"
+    connector: "memory"
   }
-  if (!fs.existsSync("./data")){
-    fs.mkdirSync("./data");
-}
+
+  if (api.persistence) {
+    if (!fs.existsSync("./data")) {
+      fs.mkdirSync("./data");
+    }
+    bootConfig.dataSources[dataSourceName].file = "data/" + dataSourceName + ".json"
+  }
+
   return bootConfig
 }
 

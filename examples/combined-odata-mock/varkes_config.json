@@ -6,14 +6,16 @@
             "specification": "apis/products.xml",
             "auth": "basic",
             "type": "odata",
-            "basepath":"/odata/product.svc"
+            "basepath": "/odata/product.svc",
+            "persistence": true
         },
         {
             "name": "Northwind Service",
             "specification": "apis/northwind.xml",
             "auth": "basic",
             "type": "odata",
-            "basepath":"/odata/northwind.svc"
+            "basepath": "/odata/northwind.svc",
+            "persistence": true
         }
     ],
     "events": [

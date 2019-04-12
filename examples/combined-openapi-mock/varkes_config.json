@@ -5,7 +5,8 @@
             "basepath": "/api2",
             "specification": "apis/schools.yaml",
             "name": "Schools API",
-            "auth": "basic"
+            "auth": "basic",
+            "persistence": true
         },
         {
             "basepath": "/api1",
@@ -14,7 +15,8 @@
             "metadata": "/courseMetadata",
             "specification": "apis/courses.yaml",
             "auth": "oauth",
-            "oauth": "/coursesOauth/token"
+            "oauth": "/coursesOauth/token",
+            "persistence": true
         }
     ],
     "events": [
