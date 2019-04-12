@@ -14,7 +14,8 @@ Luigi.setConfig({
         label: 'Home',
         pathSegment: 'home',
         viewUrl: '/angular.html',
-        hideSideNav: true
+        hideSideNav: true,
+        hideFromNav: true
       }
     ]
   },
