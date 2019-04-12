@@ -52,7 +52,7 @@ async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
 
 
         } catch (error) {
-            var message = "Registration of API " + api.name + " failed: " + error.message
+            var message = "Registration of API " + api.name + " failed: " + JSON.stringify(error.message)
             LOGGER.error(message)
             error_message += "\n" + message
             apis_failed.push(api.name);
@@ -242,30 +242,33 @@ function updateAPI(serviceMetadata, api_id, cb) {
 }
 
 function fillServiceMetadata(api, hostname) {
-    var targetUrl = hostname
-    if ((!api.type || api.type == "openapi") && api.basepath) {
-        targetUrl = hostname + api.basepath
-    }
-    if (api.type == "odata") {
-        targetUrl = hostname
+    var apiUrl = hostname
+    var apiUrlWithBasepath = hostname
+    if (api.basepath) {
+        apiUrlWithBasepath = hostname + api.basepath
     }
 
-    var specificationUrl = targetUrl + (api.metadata ? api.metadata : METADATA)
+    var specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
     if (api.type == "odata") {
-        specificationUrl = targetUrl + api.basepath + "/$metadata"
+        specificationUrl = apiUrlWithBasepath + "/$metadata"
     }
 
     var apiData = {
-        targetUrl: targetUrl,
+        targetUrl: api.registerBasepath ? apiUrlWithBasepath : apiUrl,
         credentials: {},
         specificationUrl: specificationUrl
     }
 
     if (api.auth == "oauth") {
         apiData.credentials.oauth = {
-            url: apiData.targetUrl + (api.oauth ? api.oauth : OAUTH),
+            url: apiUrlWithBasepath + (api.oauth ? api.oauth : OAUTH),
             clientId: "admin",
             clientSecret: "nimda"
+        }
+        if (api.csrf) {
+            apiData.credentials.oauth["csrfInfo"] = {
+                tokenEndpointURL: apiUrlWithBasepath
+            }
         }
     }
 
@@ -273,6 +276,11 @@ function fillServiceMetadata(api, hostname) {
         apiData.credentials.basic = {
             username: "admin",
             password: "nimda"
+        }
+        if (api.csrf) {
+            apiData.credentials.basic["csrfInfo"] = {
+                tokenEndpointURL: apiUrlWithBasepath
+            }
         }
     }
 

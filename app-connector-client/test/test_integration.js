@@ -75,7 +75,7 @@ describe("should work", () => {
                 .get('/remote/apis')
                 .expect(200)
                 .expect(/"provider":"schoolProvider","name":"schools","description":"Schools Webservices","labels":{"label1":"value1"}/)
-                .expect(/"api":{"targetUrl":"http:\/\/localhost\/entity","credentials":{"oauth":{"url":"http:\/\/localhost\/entity\/schoolToken","clientId":"admin","clientSecret":"nimda"}},"specificationUrl":"http:\/\/localhost\/entity\/schoolMetadata",/)
+                .expect(/"api":{"targetUrl":"http:\/\/localhost","credentials":{"oauth":{"url":"http:\/\/localhost\/entity\/schoolToken","clientId":"admin","clientSecret":"nimda","csrfInfo":{"tokenEndpointURL":"http:\/\/localhost\/entity"}}},"specificationUrl":"http:\/\/localhost\/entity\/schoolMetadata",/)
                 .expect(/"provider":"Varkes","name":"courses","description":"Courses Webservices","labels":{}/)
                 .expect(/"api":{"targetUrl":"http:\/\/localhost\/entity\/v1","credentials":{"basic":{"username":"admin","password":"nimda"}},"specificationUrl":"http:\/\/localhost\/entity\/v1\/metadata"/)
 
