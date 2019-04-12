@@ -55,6 +55,7 @@ describe("should work", () => {
             return request(server)
                 .get("/metadata")
                 .expect(200)
+                .expect('Content-Type', 'text/yaml; charset=UTF-8')
         })
         it('404 everything else', () => {
             return request(server)
