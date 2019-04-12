@@ -1,0 +1,18 @@
+{
+    "provider": "Varkes",
+    "name": "courses",
+    "description": "Courses Webservices",
+    "labels": {},
+    "type": "OpenAPI",
+    "api": {
+        "targetUrl": "http://(localhost|.+)/entity/v1",
+        "credentials": {
+            "basic": {
+                "username": "admin",
+                "password": "nimda"
+            }
+        },
+        "specificationUrl": "http://(localhost|.+)/entity/v1/metadata"
+    },
+    "id":".*"
+}
