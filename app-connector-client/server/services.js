@@ -304,7 +304,10 @@ function fillServiceMetadata(api, hostname) {
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
         }
-        apiData.spec = specInJson
+
+        if (api.registerSpec != false) {
+            apiData.spec = specInJson
+        }
 
         if (!api.description) {
             if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {

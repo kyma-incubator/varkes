@@ -14,8 +14,8 @@ function getAll(req, res) {
     var configApis = varkesConfig.apis;
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
-        let metadata = services.fillServiceMetadata(api, req.body.hostname || req.headers.host)
-        metadata.id = api.name;
+        let metadata = services.fillServiceMetadata(api, getOrigin(req))
+        metadata.id = "" + i
         apis.push(metadata)
     }
     var configEvents = varkesConfig.events;
@@ -32,7 +32,7 @@ function getLocalApi(req, res) {
     let apiname = req.params.apiname;
     let api = varkesConfig.apis.find(x => x.name == apiname);
     if (api) {
-        let serviceMetadata = services.fillServiceMetadata(api, req.headers.host)
+        let serviceMetadata = services.fillServiceMetadata(api, getOrigin(req))
         serviceMetadata.id = apiname;
         res.status(200).send(serviceMetadata);
     }
@@ -50,6 +50,9 @@ function getLocalApi(req, res) {
         }
     }
 }
+function getOrigin(req) {
+    return req.body.hostname || req.protocol + "://" + req.headers.host
+}
 async function registerAll(req, res) {
     LOGGER.debug("Registering all Local APIs")
     var err = assureConnected()
@@ -60,7 +63,7 @@ async function registerAll(req, res) {
         services.initBatchRegistration();
         var registeredAPIs = await services.getAllAPI()
         var promises = [
-            services.createServicesFromConfig(req.body.hostname || req.headers.host, varkesConfig.apis, registeredAPIs),
+            services.createServicesFromConfig(getOrigin(req), varkesConfig.apis, registeredAPIs),
             services.createEventsFromConfig(varkesConfig.events, registeredAPIs)
         ]
         await Promise.all(promises);
@@ -92,7 +95,7 @@ async function create(req, res) {
         for (var i = 0; i < apis.length; i++) {
             var api = apis[i];
             if (api.name == apiName) {
-                serviceMetadata = services.fillServiceMetadata(api, req.body.hostname || req.headers.host);
+                serviceMetadata = services.fillServiceMetadata(api, getOrigin(req));
                 apiFound = true;
                 break;
             }

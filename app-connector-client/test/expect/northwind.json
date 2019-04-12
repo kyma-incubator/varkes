@@ -1,0 +1,14 @@
+{
+    "provider": "Varkes",
+    "name": "northwind",
+    "description": "northwind",
+    "labels": {},
+    "type": "OData",
+    "api": {
+        "targetUrl": "http://(localhost|.+)/northwind/odata/northwind.svc",
+        "credentials": {},
+        "specificationUrl": "http://(localhost|.+)/northwind/odata/northwind.svc/[\\$]metadata",
+        "apiType": "odata"
+    },
+    "id":".*"
+}

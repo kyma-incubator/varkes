@@ -33,11 +33,6 @@ function getAll(req, res) {
     }
 }
 
-
-
-
-
-
 function get(req, res) {
     LOGGER.debug("Get API %s", req.params.api)
     var err = assureConnected()
