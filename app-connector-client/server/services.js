@@ -242,19 +242,19 @@ function updateAPI(serviceMetadata, api_id, cb) {
 }
 
 function fillServiceMetadata(api, hostname) {
-    var apiUrl = hostname
-    var apiUrlWithBasepath = hostname
+    let apiUrl = hostname
+    let apiUrlWithBasepath = hostname
     if (api.basepath) {
         apiUrlWithBasepath = hostname + api.basepath
     }
 
-    var specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
+    let specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
     if (api.type == "odata") {
         specificationUrl = apiUrlWithBasepath + "/$metadata"
     }
 
-    var apiData = {
-        targetUrl: api.registerBasepath ? apiUrlWithBasepath : apiUrl,
+    let apiData = {
+        targetUrl: api.registerBasepath != false ? apiUrlWithBasepath : apiUrl,
         credentials: {},
         specificationUrl: specificationUrl
     }
