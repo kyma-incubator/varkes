@@ -9,14 +9,6 @@ const fs = require('fs');
 module.exports = function (app: any) {
     registerLogger(app);
     var apis = app.varkesConfig.apis;
-    apis.forEach(function (api: any) {
-        app.get(api.metadata ? api.metadata : "/metadata", function (req: any, res: any, next: any) {
-            var spec = fs.readFileSync(api.specification, 'utf-8');
-            res.status(200);
-            res.type("text/xml");
-            res.send(spec);
-        });
-    });
 
     function modifyResponseBody(req: any, res: any, next: any) {
         var oldSend = res.send;
