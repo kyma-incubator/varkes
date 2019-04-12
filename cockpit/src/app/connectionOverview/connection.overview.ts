@@ -10,6 +10,7 @@ import { uxManager } from '@kyma-project/luigi-client';
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnInit {
+
     public apis;
     public hostname;
     public info;
@@ -36,14 +37,16 @@ export class ConnectionOverviewComponent implements OnInit {
             this.hostname = window.location.origin;
         }
     }
+
     ngOnInit() {
         this.info = window['info'];
         this.connected = this.info.connected;
         this.insecureConnection = this.info.insecure;
-        console.log("insecure connection " + this.insecureConnection)
-        this.connection = this.info.connection;
-        this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[a-zA-z0-9.]+\//)[0];
-        console.log("con " + this.consoleUrl);
+        console.log("connected " + this.connected)
+        if (this.connected) {
+            this.connection = this.info.connection;
+            this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[a-zA-z0-9.]+\//)[0];
+        }
     }
     public openModal() {
         this.insecureConnection = false;
@@ -73,6 +76,8 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = true;
                     this.connection = JSON.parse(success["_body"]);
                     this.onConnectionCloseModalClick();
+                    window['info'].connection = this.connection;
+                    window['info'].connected = true;
                 },
                 error => {
                     this.alertMessage = error;
