@@ -11,6 +11,7 @@ import { ServiceInstancesService } from '../service-instances/service-instances.
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnInit {
+
     public apis;
     public baseUrl;
     public info;
@@ -78,6 +79,8 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.insecureConnection = this.connection.insecure;
                     this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.onConnectionCloseModalClick();
+                    window['info'].connection = this.connection;
+                    window['info'].connected = true;
                 },
                 error => {
                     this.connected = false;
