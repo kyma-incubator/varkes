@@ -41,9 +41,9 @@ async function registerAll(req, res) {
         res.status(200).send(connection.info())
     }
     catch (error) {
-        var message = "There is an error while registering to kyma. Usually that is caused by an invalid or expired token URL."
-        LOGGER.error("Failed to connect to kyma cluster: %s", error)
-        res.status(401).send({ error: message })
+        var message = "There is an error while registering all APIs."
+        LOGGER.error("Failed to register all APIs: %s", error)
+        res.status(500).send({ error: message })
     }
 }
 function getStatus(req, res) {
