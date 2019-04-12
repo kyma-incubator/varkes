@@ -42,7 +42,10 @@ async function mock(config: any) {
 
                 writeSpec(pretty_yaml.stringify(spec), api, i)
 
-                let myDB = new middleware.MemoryDataStore();
+                if (!fs.existsSync("./data")) {
+                    fs.mkdirSync("./data");
+                }
+                let myDB = new middleware.FileDataStore("./data");
 
                 var middlewares = [];
                 middlewares.push(

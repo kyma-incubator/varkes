@@ -21,10 +21,10 @@ describe('test app', function () {
                 });
             });
 
-            describe('GET Categorys via API', function () {
+            describe('GET Summary_of_Sales_by_Years via API', function () {
                 it('should return response 200', function (done) {
                     request(app)
-                        .get('/northwind/api/northwind.svc/Categorys')
+                        .get('/northwind/api/northwind.svc/Summary_of_Sales_by_Years')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -41,10 +41,10 @@ describe('test app', function () {
                 });
             });
 
-            describe('GET non-existing Category via API', function () {
+            describe('GET non-existing Summary_of_Sales_by_Years via API', function () {
                 it('should return response 200', function (done) {
                     request(app)
-                        .get('/northwind/api/northwind.svc/Categorys/10')
+                        .get('/northwind/api/northwind.svc/Summary_of_Sales_by_Years/10')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(404, done)
@@ -83,19 +83,18 @@ describe('test app', function () {
                 });
             });
 
-            describe('POST/GET Category via API', function () {
+            describe('POST/GET Summary_of_Sales_by_Years via API', function () {
                 it('should return response 200', function () {
                     return new Promise((resolve, reject) => {
                         request(app)
-                            .post('/northwind/api/northwind.svc/Categorys')
+                            .post('/northwind/api/northwind.svc/Summary_of_Sales_by_Years')
                             .send({
-                                CategoryID: 0,
-                                CategoryName: "string",
-                                Description: "string"
+                                "OrderID": 0,
+                                "Subtotal": 0
                             })
                             .set('Accept', 'application/json')
                             .expect('Content-Type', 'application/json; charset=utf-8')
-                            .expect(/"CategoryID":0/)
+                            .expect(/"id":1/)
                             .expect(200)
                             .end((err: any, res: any) => {
                                 if (err) {
@@ -106,10 +105,10 @@ describe('test app', function () {
                             })
                     }).then(() => {
                         return request(app)
-                            .get('/northwind/api/northwind.svc/Categorys/1')
+                            .get('/northwind/api/northwind.svc/Summary_of_Sales_by_Years/1')
                             .set('Accept', 'application/json')
                             .expect('Content-Type', 'application/json; charset=utf-8')
-                            .expect(/"CategoryID":0/)
+                            .expect(/"id":1/)
                             .expect(200)
                     })
                 });
@@ -125,10 +124,10 @@ describe('test app', function () {
                 });
             });
 
-            describe('GET Categorys via odata', function () {
+            describe('GET Summary_of_Sales_by_Years via odata', function () {
                 it('should return response 200', function (done) {
                     request(app)
-                        .get('/northwind/odata/northwind.svc/Categorys')
+                        .get('/northwind/odata/northwind.svc/Summary_of_Sales_by_Years')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
