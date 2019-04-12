@@ -2,8 +2,9 @@
     "provider": "Varkes",
     "name": "courses",
     "description": "Courses Webservices",
-    "labels": {},
-    "type": "OpenAPI",
+    "labels": {
+        "type": "OpenAPI"
+    },
     "api": {
         "targetUrl": "http://(localhost|.+)/entity/v1",
         "credentials": {
@@ -14,5 +15,5 @@
         },
         "specificationUrl": "http://(localhost|.+)/entity/v1/metadata"
     },
-    "id":".*"
+    "id": ".*"
 }

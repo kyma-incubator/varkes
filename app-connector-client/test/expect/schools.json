@@ -3,9 +3,9 @@
     "name": "schools",
     "description": "Schools Webservices",
     "labels": {
-        "label1": "value1"
+        "label1": "value1",
+        "type": "OpenAPI"
     },
-    "type": "OpenAPI",
     "api": {
         "targetUrl": "http://(localhost|.+)",
         "credentials": {
