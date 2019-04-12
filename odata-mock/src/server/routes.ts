@@ -3,7 +3,7 @@
 
 const bodyParser = require('body-parser');
 const morgan = require('morgan')
-import { logger as LOGGER } from "../logger"
+import { logger as LOGGER } from "./logger"
 const fs = require('fs');
 
 module.exports = function (app: any) {
