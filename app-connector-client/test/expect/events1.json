@@ -3,9 +3,9 @@
     "name": "events1",
     "description": "All Events v1",
     "labels": {
-        "label1": "value1"
+        "label1": "value1",
+        "type": "AsyncApi"
     },
-    "type": "Event",
     "events": {
         "spec": {
             "asyncapi": ".*",

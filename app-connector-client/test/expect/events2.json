@@ -2,8 +2,9 @@
     "provider": "Varkes",
     "name": "events2",
     "description": "All Events v2",
-    "labels": {},
-    "type": "Event",
+    "labels": {
+        "type": "AsyncApi"
+    },
     "events": {
         "spec": {
             "asyncapi": ".*",
@@ -49,5 +50,5 @@
             }
         }
     },
-    "id":".*"
+    "id": ".*"
 }
