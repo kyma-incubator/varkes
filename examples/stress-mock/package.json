@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "test": "mocha",
-    "start": "node . 10000"
+    "start:dev": "npm run clean && export DEBUG=true && node . 10000",
+    "start": "node . 10000",
+    "clean": "rm -r logs || true && rm -r generated || true && rm -r keys || true"
   },
   "publishConfig": {
     "access": "public"
@@ -20,8 +22,8 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "mocha": "^6.0.2",
-    "supertest": "^3.4.2"
+    "mocha": "^6.1.3",
+    "supertest": "^4.0.2"
   },
   "repository": {
     "type": "ssh",
