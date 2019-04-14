@@ -1,5 +1,5 @@
 <p align="center">
- <img src="../logos/logo.svg" width="150">
+ <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo.svg" width="150">
 </p>
 
 # App Connector Client
