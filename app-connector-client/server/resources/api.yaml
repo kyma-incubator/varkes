@@ -399,26 +399,18 @@ components:
     Status:
       type: "object"
       properties:
-        success_count:
+        successCount:
           type: "integer"
           example: 0
           description: "The number of apis successfully registered"
-        failed_count:
+        failedCount:
           type: "integer"
           example: 0
           description: "The number of apis failed to register"
-        apis_success:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Service"
-        apis_failed:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Service"
-        apis:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Service"
+        apisCount:
+          type: "integer"
+          example: 0
+          description: "The number of apis"
         progress:
           type: "string"
           example: "Done"
@@ -427,6 +419,10 @@ components:
           type: "boolean"
           example: true
           description: "if the progress label is the done label"
+        errorMessage:
+          type: "string"
+          example: "Failed to register api <apiname>: "
+          description: "error messages of the failed apis"
     ConnectionDetails:
       type: "object"
       properties:
