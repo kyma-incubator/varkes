@@ -128,6 +128,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 success => {
                     this.loadInd = false;
                     this.status = JSON.parse(success["_body"]);
+                    console.log("status " + this.status.errorMessage);
                     uxManager().addBackdrop();
                     this.statusModalActive = true;
                 },
