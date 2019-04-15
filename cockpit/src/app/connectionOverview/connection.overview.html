@@ -150,12 +150,17 @@
                     aria-label="close"></button>
             </div>
             <div class="fd-modal__body">
-                Successful Registration: <b>{{status.success_count}}</b><br />
+                Successful Registration: <b>{{status.successCount}}</b><br />
                 <br />
-                Failed Registration: <b>{{status.failed_count}}</b><br />
+                Failed Registration: <b>{{status.failedCount}}</b><br />
                 <br />
-                Progress: <b> <span *ngIf="status.done" class="fd-badge fd-badge--success">{{status.progress}}</span>
-                    <span *ngIf="!status.done" class="fd-badge fd-badge--warning">{{status.progress}}</span></b><br />
+                Progress: <span *ngIf="status.done" class="fd-badge fd-badge--success">{{status.progress}}</span>
+                <span *ngIf="!status.done" class="fd-badge fd-badge--warning">{{status.progress}}</span><br />
+                <br />
+                <div *ngIf="status.errorMessage">
+                    Errors:<br />
+                    <textarea class="fd-form__control" style="resize: none" readonly>{{status.errorMessage}}</textarea>
+                </div>
             </div>
         </div>
     </div>
