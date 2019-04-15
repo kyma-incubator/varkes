@@ -1,0 +1,54 @@
+{
+    "provider": "Varkes",
+    "name": "events2",
+    "description": "All Events v2",
+    "labels": {
+        "type": "AsyncApi"
+    },
+    "events": {
+        "spec": {
+            "asyncapi": ".*",
+            "info": {
+                "title": "events",
+                "version": "v1",
+                "description": "Events v1"
+            },
+            "topics": {
+                ".*": {
+                    "subscribe": {
+                        "summary": "Customer Register Event v2",
+                        "payload": {
+                            "type": "object",
+                            "required": [
+                                "storeUid",
+                                "customerId",
+                                "customerUid"
+                            ],
+                            "properties": {
+                                "customerUid": {
+                                    "type": "string",
+                                    "example": ".*",
+                                    "description": "Email of a Customer",
+                                    "title": "Customer uid"
+                                },
+                                "storeUid": {
+                                    "type": "string",
+                                    "example": "4caad296",
+                                    "description": "Unique id of a Store",
+                                    "title": "StoreUid"
+                                },
+                                "customerId": {
+                                    "type": "string",
+                                    "example": "0ed118f9474e",
+                                    "description": "Unique id of a Customer",
+                                    "title": "Customer uid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "id": ".*"
+}

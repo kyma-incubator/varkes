@@ -8,10 +8,11 @@ const express = require('express')
 const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
+const path = require("path")
 
 async function init(varkesConfigPath: string, currentPath = "") {
   var varkesConfig = config(varkesConfigPath, currentPath)
-  
+
   var promises: Promise<any>[] = [];
   for (var i = 0; i < varkesConfig.apis.length; i++) {
     var api = varkesConfig.apis[i]
@@ -51,25 +52,54 @@ async function bootLoopback(api: any, varkesConfig: any) {
 }
 
 async function generateBootConfig(api: any) {
-  var parsedModel = await parser.parseEdmx(api.specification)
+  let dataSourceName = api.name.replace(/\s/g, '')
+  var parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(__dirname + "/resources/boot_config_template.json", "utf-8"))
+  var bootConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "resources/boot_config_template.json"), "utf-8"))
 
   parsedModel.modelConfigs.forEach(function (config: any) {
     bootConfig.models[config.name] = config.value
   })
+  bootConfig.models["ACL"] = {
+    dataSource: dataSourceName,
+    public: false
+  }
   parsedModel.modelDefs.forEach(function (definition: any) {
     bootConfig.modelDefinitions.push(definition)
   })
 
-  let restBasePath = api.basepath.replace("/odata", "/api")
-  bootConfig.components["n-odata-server"].path = api.basepath + "/*"
-  bootConfig.components["loopback-component-explorer"].mountPath = restBasePath + "/console"
-  bootConfig.components["loopback-component-explorer"].basePath = restBasePath
-  bootConfig.middleware.routes["n-odata-server#odata"].paths.push(api.basepath + "/*")
-  bootConfig.middleware.routes["loopback#rest"].paths.push(restBasePath)
+  bootConfig.appRootDir = __dirname
+  bootConfig.appConfigRootDir = __dirname
 
+  let restBasePath = api.basepath.replace("/odata", "/api")
+  bootConfig.components["loopback-component-explorer"] = {
+    mountPath: restBasePath + "/console",
+    basePath: restBasePath
+  }
+  bootConfig.components["./odata-server"] = {
+    path: api.basepath + "/*",
+    odataversion: "2",
+    useViaMiddleware: false
+  }
+
+  bootConfig.middleware.routes["n-odata-server#odata"].paths = [api.basepath + "/*"]
+  bootConfig.middleware.routes["loopback#rest"].paths = [restBasePath]
+  bootConfig.middleware["initial:before"]["loopback#favicon"].params = path.join(__dirname, "resources/favicon.ico")
+
+  bootConfig.dataSources[dataSourceName] = {
+    name: dataSourceName,
+    connector: "memory"
+  }
+
+  if (api.persistence) {
+    if (!fs.existsSync("./data")) {
+      fs.mkdirSync("./data");
+    }
+    bootConfig.dataSources[dataSourceName].file = "data/" + dataSourceName + ".json"
+  }
+
+  bootConfig.bootScripts = [path.resolve(__dirname, "routes.js")]
   return bootConfig
 }
 
