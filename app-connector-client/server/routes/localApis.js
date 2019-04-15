@@ -1,8 +1,6 @@
-const request = require("request")
 const LOGGER = require("../logger").logger
 const express = require("express")
 const services = require("../services")
-const events = require("./events")
 const connection = require("../connection")
 module.exports = {
     router: router
@@ -15,7 +13,7 @@ function getAll(req, res) {
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
         let metadata = services.fillServiceMetadata(api, getOrigin(req))
-        metadata.id = "" + i
+        metadata.id = api.name
         apis.push(metadata)
     }
     var configEvents = varkesConfig.events;
@@ -60,19 +58,14 @@ async function registerAll(req, res) {
         res.status(400).send({ error: err })
     }
     try {
-        services.initBatchRegistration();
-        var registeredAPIs = await services.getAllAPI()
-        var promises = [
-            services.createServicesFromConfig(getOrigin(req), varkesConfig.apis, registeredAPIs),
-            services.createEventsFromConfig(varkesConfig.events, registeredAPIs)
-        ]
-        await Promise.all(promises);
-        LOGGER.debug("Auto-registered %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+        let registeredAPIs = await services.getAllAPI()
+        services.createServicesFromConfig(getOrigin(req), varkesConfig, registeredAPIs)
+        LOGGER.debug("Auto-registereing %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         res.status(200).send(connection.info())
     }
     catch (error) {
         var message = "There is an error while registering all APIs."
-        LOGGER.error("Failed to register all APIs: %s", JSON.stringify(error))
+        LOGGER.error("Failed to register all APIs: %s", error.stack)
         res.status(500).send({ error: message })
     }
 }

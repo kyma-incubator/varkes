@@ -33,7 +33,7 @@
             "specification": "schools.json",
             "name": "schools",
             "provider": "schoolProvider",
-            "registerSpec": false,
+            "registerSpec": true,
             "added_endpoints": [
                 {
                     "filePath": "Endpoint_template.yaml",
@@ -50,15 +50,8 @@
             "auth": "basic",
             "name": "courses",
             "specification": "courses.yaml",
-            "registerSpec": false,
+            "registerSpec": true,
             "oauth": "/authorizationserver/oauth/token"
-        },
-        {
-            "name": "northwind",
-            "basepath": "/northwind/odata/northwind.svc",
-            "specification": "northwind.xml",
-            "auth": "none",
-            "type": "odata"
         }
     ]
 }

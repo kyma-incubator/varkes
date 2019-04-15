@@ -8,11 +8,12 @@ const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
 const request = require("request-promise")
-var apis_success = [];
-var apis_failed = [];
-var apis = [];
+var apiSucceedCount = 0;
+var apisFailedCount = 0;
+var apisCount = 0;
 const DONE_PROGRESS = "Done";
 const IN_PROGRESS = "In Progress";
+var regErrorMessage = ""
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
@@ -21,94 +22,89 @@ module.exports = {
     updateAPI: updateAPI,
     fillServiceMetadata: fillServiceMetadata,
     getStatus: getStatus,
-    createEventsFromConfig: createEventsFromConfig,
-    fillEventData: fillEventData,
-    initBatchRegistration: initBatchRegistration
+    fillEventData: fillEventData
 }
 
-function initBatchRegistration() {
-    apis_success = [];
-    apis_failed = [];
-    apis = [];
-}
-async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
-    if (!apisConfig)
+function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
+    if (!varkesConfig.apis)
         return
-    apis = apis.concat(apisConfig);
-    var error_message = ""
-    for (var i = 0; i < apisConfig.length; i++) {
-        var api = apisConfig[i]
-        try {
-            var reg_api
-            if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == api.name)
-            if (!reg_api) {
-                await createService(api, false, hostname)
+    apiSucceedCount = 0;
+    apisFailedCount = 0;
+    apisCount = 0;
+    apisCount += varkesConfig.apis.length;
+    varkesConfig.apis.forEach((api) => {
+        var reg_api
+        if (registeredApis.length > 0)
+            reg_api = registeredApis.find(x => x.name == api.name)
+        if (!reg_api) {
+            createService(api, false, hostname).then(() => {
+                apiSucceedCount++;
                 LOGGER.debug("Registered API successful: %s", api.name)
-            }
-            else {
-                await updateService(api, reg_api.id, false, hostname)
+            }).catch((err) => {
+                apisFailedCount++;
+                var message = "Registration of API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            });
+        }
+        else {
+            updateService(api, reg_api.id, false, hostname).then(() => {
+                apiSucceedCount++;
                 LOGGER.debug("Updated API successful: %s", api.name)
-            }
-            apis_success.push(api.name);
-
-        } catch (error) {
-            var message = "Registration of API " + api.name + " failed: " + JSON.stringify(error.message)
-            LOGGER.error(message)
-            error_message += "\n" + message
-            apis_failed.push(api.name);
+            }).catch((err) => {
+                apisFailedCount++;
+                var message = "Updating API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            });
         }
-    }
-    if (error_message != "") {
-        throw new Error(error_message)
-    }
-    return registeredApis
-}
+    });
+    if (!varkesConfig.events)
+        return;
+    apisCount += varkesConfig.events.length;
+    varkesConfig.events.forEach((event) => {
+        var reg_api
+        if (registeredApis.length > 0)
+            reg_api = registeredApis.find(x => x.name == event.name)
+        if (!reg_api) {
 
-async function createEventsFromConfig(eventsConfig, registeredApis) {
-    if (!eventsConfig)
-        return
-    apis = apis.concat(eventsConfig);
-    var error_message = ""
-    for (var i = 0; i < eventsConfig.length; i++) {
-        var event = eventsConfig[i]
-        try {
-            var reg_api
-            if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == event.name)
-            if (!reg_api) {
+            createService(event, true).then(() => {
+                apiSucceedCount++;
                 LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createService(event, true)
-            }
-            else {
-                LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateService(event, reg_api.id, true)
-            }
-            apis_success.push(event.name)
-        } catch (error) {
-            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
-            LOGGER.error(message)
-            error_message += "\n" + message
-            apis_failed.push(event.name);
+            }).catch((err) => {
+                apisFailedCount++;
+                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            });;
         }
-    }
-    if (error_message != "") {
-        throw new Error(error_message)
-    }
+        else {
+
+            updateService(event, reg_api.id, true).then(() => {
+                apiSucceedCount++;
+                LOGGER.debug("Updated Event API successful: %s", event.name)
+            }).catch((err) => {
+                apisFailedCount++;
+                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            });
+        }
+
+    });
 }
 function getStatus() {
     return {
-        "success_count": apis_success.length,
-        "failed_count": apis_failed.length,
-        "apis_success": apis_success,
-        "apis_failed": apis_failed,
-        "apis": apis,
+        "successCount": apiSucceedCount,
+        "failedCount": apisFailedCount,
+        "apisCount": apisCount,
         "progress": getProgress(),
-        "done": getProgress() == DONE_PROGRESS
+        "done": getProgress() == DONE_PROGRESS,
+        "errorMessage": regErrorMessage
     }
 }
 function getProgress() {
-    if (apis_success.length + apis_failed.length == apis.length) {
+    if (apiSucceedCount + apisFailedCount == apisCount) {
         return DONE_PROGRESS;
     }
     else {
@@ -127,16 +123,15 @@ function createService(api, isEvent, hostname) {
         }
 
         createAPI(serviceData, function (err, httpResponse, body) {
-            if (err) {
+            if (!err && httpResponse.statusCode < 400) {
+                resolve(body)
+            }
+            else {
+                if (!err) {
+                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
+                }
                 reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
-                    reject(err)
-                }
-                else {
-                    resolve(body)
-                }
+
             }
         })
     })
@@ -153,16 +148,14 @@ function updateService(api, api_id, isEvent, hostname) {
             serviceData = fillServiceMetadata(api, hostname)
         }
         updateAPI(serviceData, api_id, function (err, httpResponse, body) {
-            if (err) {
+            if (!err && httpResponse.statusCode < 400) {
+                resolve(body)
+            }
+            else {
+                if (!err) {
+                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
+                }
                 reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
-                    reject(err)
-                }
-                else {
-                    resolve(body)
-                }
             }
         })
     })

@@ -32,7 +32,6 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.use(cors())
     app.options('*', cors())
     app.use(expressWinston.logger(LOGGER))
-    app.use(cors());
     app.use(REMOTE_APIS_URL, remoteApis.router())
     app.use(LOCAL_APIS_URL, localApis.router(varkesConfig))
     app.use(CONNECTION, connector.router(varkesConfig, nodePortParam))
