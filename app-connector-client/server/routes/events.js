@@ -3,16 +3,10 @@
 
 const express = require('express')
 const LOGGER = require("../logger").logger
-const fs = require("fs")
 const connection = require("../connection")
-const services = require("../services")
 const request = require("request")
-const yaml = require('js-yaml')
-
 module.exports = {
-    router: router,
-    createEventsFromConfig: createEventsFromConfig,
-    fillEventData: fillEventData
+    router: router
 }
 
 function sendEvent(req, res) {
@@ -48,93 +42,6 @@ function sendEvent(req, res) {
             }
         })
     }
-}
-
-async function createEventsFromConfig(eventsConfig, registeredApis) {
-    if (!eventsConfig)
-        return
-
-    var error_message = ""
-    for (var i = 0; i < eventsConfig.length; i++) {
-        var event = eventsConfig[i]
-        try {
-            var reg_api
-            if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == event.name)
-            if (!reg_api) {
-                LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createEvent(event)
-            }
-            else {
-                LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateEvent(event, reg_api.id)
-            }
-        } catch (error) {
-            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
-            LOGGER.error(message)
-            error_message += "\n" + message
-        }
-    }
-    if (error_message != "") {
-        throw new Error(error_message)
-    }
-}
-
-function createEvent(event) {
-    LOGGER.debug("Auto-register Event API '%s'", event.name)
-    return new Promise((resolve, reject) => {
-        var eventData = fillEventData(event)
-        services.createAPI(eventData, function (err, httpResponse, body) {
-            if (err) {
-                reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error)
-                    reject(err)
-                }
-                resolve(body)
-            }
-        })
-
-    })
-}
-async function updateEvent(event, event_id) {
-    LOGGER.debug("Auto-update Event API '%s'", event.name)
-    return new Promise((resolve, reject) => {
-        var eventData = fillEventData(event)
-        services.updateAPI(eventData, event_id, function (err, httpResponse, body) {
-            if (err) {
-                reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error(body.error)
-                    reject(err)
-                }
-                resolve(body)
-            }
-        })
-    })
-}
-
-function fillEventData(event) {
-    var specInJson
-    if (event.specification.endsWith(".json")) {
-        specInJson = JSON.parse(fs.readFileSync(event.specification))
-    } else {
-        specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
-    }
-
-    var serviceData = {
-        provider: event.provider ? event.provider : "Varkes",
-        name: event.name,
-        description: event.description ? event.description : event.name,
-        labels: event.labels ? event.labels : {},
-        type: "Event",
-        events: {
-            spec: specInJson
-        }
-    }
-    return serviceData
 }
 
 function router() {

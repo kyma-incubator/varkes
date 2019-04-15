@@ -36,26 +36,7 @@ function getAll(req, res) {
 
 
 
-function create(req, res) {
-    LOGGER.debug("Creating API %s", req.body.name)
-    var err = assureConnected()
-    if (err) {
-        res.status(400).send({ error: err })
-    } else {
-        services.createAPI(req.body, function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while creating API: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while creating API: %s", JSON.stringify(body, null, 2))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received create API data")
-                res.status(httpResponse.statusCode).type("json").send(body)
-            }
-        })
-    }
-}
+
 
 function get(req, res) {
     LOGGER.debug("Get API %s", req.params.api)
@@ -157,7 +138,26 @@ function deleteApi(req, res) {
         })
     }
 }
-
+function create(req, res) {
+    LOGGER.debug("Creating API %s", req.body.name)
+    var err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        services.createAPI(req.body, function (error, httpResponse, body) {
+            if (error) {
+                LOGGER.error("Error while creating API: %s", error)
+                res.status(500).send({ error: error.message })
+            } else if (httpResponse.statusCode >= 400) {
+                LOGGER.error("Error while creating API: %s", JSON.stringify(body, null, 2))
+                res.status(httpResponse.statusCode).type("json").send(body)
+            } else {
+                LOGGER.debug("Received create API data")
+                res.status(httpResponse.statusCode).type("json").send(body)
+            }
+        })
+    }
+}
 function assureConnected() {
     if (!connection.established()) {
         return "Not connected to a kyma cluster, please re-connect"
@@ -170,7 +170,6 @@ function router() {
 
     apiRouter.get("/", getAll)
     apiRouter.post("/", create)
-
     apiRouter.get("/:api", get)
     apiRouter.put("/:api", update)
     apiRouter.delete("/:api", deleteApi)

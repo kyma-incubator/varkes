@@ -1,9 +1,10 @@
-**/node_modules
-keys/
+node_modules
+keys
 *.log
 kyma-responses
 deployments
 index.js
-**/generated
+generated
 .nyc_output
 dist
+data

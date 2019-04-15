@@ -5,14 +5,13 @@
     "./boot"
   ],
   "dataSources": {
-    "db": {
-      "name": "db",
-      "connector": "memory"
-    }
+    
   },
   "middleware": {
     "initial:before": {
-      "loopback#favicon": {}
+      "loopback#favicon": {
+        
+      }
     },
     "initial": {
       "compression": {},
@@ -66,20 +65,10 @@
     }
   },
   "components": {
-    "loopback-component-explorer": {
-      "mountPath": "XXX"
-    },
-    "n-odata-server": {
-      "path": "XXX",
-      "odataversion": "2",
-      "useViaMiddleware": true
-    }
+
   },
   "modelDefinitions": [],
   "models": {
-    "ACL": {
-      "dataSource": "db",
-      "public": false
-    }
+
   }
 }

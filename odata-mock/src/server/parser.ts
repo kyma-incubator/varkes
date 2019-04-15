@@ -3,18 +3,18 @@
 
 import { logger as LOGGER } from "./logger"
 const fs = require("fs");
-import {ParsedModels} from "./types"
+import { ParsedModels } from "./types"
 Object.defineProperty(exports, "__esModule", { value: true });
 const { parse } = require('odata2openapi');
 
-function parseEdmx(path: string):Promise<ParsedModels> {
+function parseEdmx(path: string, dataSourceName: string): Promise<ParsedModels> {
 	return new Promise<ParsedModels>(function (resolve, reject) {
 		fs.readFile(path, "utf8", function (err: Error, data: any) {
 			if (err) reject(err);
 
 			parse(data)
 				.then((service: any) => {
-					let result = createEntities(service);
+					let result = createEntities(service, dataSourceName);
 					resolve(result);
 				}).catch((error: Error) => {
 					LOGGER.error("Error while parsing API '%s'", path)
@@ -24,7 +24,7 @@ function parseEdmx(path: string):Promise<ParsedModels> {
 	})
 }
 
-function createEntities(service: any):ParsedModels{
+function createEntities(service: any, dataSourceName: string): ParsedModels {
 	let result: ParsedModels = {
 		modelConfigs: [],
 		modelDefs: []
@@ -34,7 +34,7 @@ function createEntities(service: any):ParsedModels{
 		let jsonTemplate = JSON.parse(fs.readFileSync(__dirname + "/resources/model_template.json", "utf8"));
 		let entityName = entityType.name;
 
-		result.modelConfigs.push({ name: entityName, value: { dataSource: "db", public: true } })
+		result.modelConfigs.push({ name: entityName, value: { dataSource: dataSourceName, public: true } })
 
 		jsonTemplate.definition.name = entityName;
 		jsonTemplate.definition.plural = entityName + "s";

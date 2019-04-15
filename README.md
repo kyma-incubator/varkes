@@ -35,7 +35,7 @@ To create Docker images of examples, use the `release` branch, where the npm ins
 This project is maintained by Lerna. To start developing perform these steps:
 
 1. If you don't have lerna, install it by running `npm install -g lerna`.
-2. Clone this repo and run `lerna bootstrap --hoist` to install dependencies and link local dependencies.
+2. Clone this repo and run `make resolve` in the project root to install dependencies and link local dependencies.
 3. Introduce your changes and commit freely. There is no need to update the package versions in dependent subprojects.
 
 To increase the version number, run `lerna version --no-git-tag-version`, stating the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the `package.json` of subprojects.

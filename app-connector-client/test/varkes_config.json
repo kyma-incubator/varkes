@@ -28,6 +28,8 @@
             "metadata": "/schoolMetadata",
             "auth": "oauth",
             "oauth": "/schoolToken",
+            "csrf": true,
+            "registerBasepath": false,
             "specification": "schools.json",
             "name": "schools",
             "provider": "schoolProvider",
