@@ -51,6 +51,7 @@ function getLocalApi(req, res) {
 function getOrigin(req) {
     return req.body.hostname || req.protocol + "://" + req.headers.host
 }
+
 async function registerAll(req, res) {
     LOGGER.debug("Registering all Local APIs")
     var err = assureConnected()
@@ -82,7 +83,7 @@ async function create(req, res) {
     } else {
         let apiName = req.params.apiname;
         let apis = varkesConfig.apis;
-        let events = varkesConfig.apis;
+        let events = varkesConfig.events;
         let apiFound = false;
         let serviceMetadata;
         for (var i = 0; i < apis.length; i++) {
@@ -103,7 +104,7 @@ async function create(req, res) {
         var registeredAPIs = await services.getAllAPI();
         var reg_api
         if (registeredAPIs.length > 0)
-            reg_api = registeredAPIs.find(x => x.name == api.name)
+            reg_api = registeredAPIs.find(x => x.name == serviceMetadata.name)
         if (!reg_api) {
             services.createAPI(serviceMetadata,
                 function (error, httpResponse, body) {
