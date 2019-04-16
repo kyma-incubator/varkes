@@ -23,7 +23,7 @@ module.exports = {
     fillEventData: fillEventData
 }
 
-function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
+function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
     if (!varkesConfig.apis)
         return
     apiSucceedCount = 0;
@@ -36,7 +36,7 @@ function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == api.name)
         if (!reg_api) {
-            createService(api, false, hostname).then(() => {
+            createService(api, false, baseUrl).then(() => {
                 apiSucceedCount++;
                 LOGGER.debug("Registered API successful: %s", api.name)
             }).catch((err) => {
@@ -47,7 +47,7 @@ function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
             });
         }
         else {
-            updateService(api, reg_api.id, false, hostname).then(() => {
+            updateService(api, reg_api.id, false, baseUrl).then(() => {
                 apiSucceedCount++;
                 LOGGER.debug("Updated API successful: %s", api.name)
             }).catch((err) => {
@@ -99,7 +99,7 @@ function getStatus() {
         "errorMessage": regErrorMessage
     }
 }
-function createService(api, isEvent, hostname) {
+function createService(api, isEvent, baseUrl) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         let serviceData;
@@ -107,7 +107,7 @@ function createService(api, isEvent, hostname) {
             serviceData = fillEventData(api)
         }
         else {
-            serviceData = fillServiceMetadata(api, hostname)
+            serviceData = fillServiceMetadata(api, baseUrl)
         }
         console.log("*****create****")
         console.log("serviceData " + JSON.stringify(serviceData));
@@ -126,7 +126,7 @@ function createService(api, isEvent, hostname) {
     })
 }
 
-function updateService(api, api_id, isEvent, hostname) {
+function updateService(api, api_id, isEvent, baseUrl) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
         let serviceData;
@@ -134,7 +134,7 @@ function updateService(api, api_id, isEvent, hostname) {
             serviceData = fillEventData(api)
         }
         else {
-            serviceData = fillServiceMetadata(api, hostname)
+            serviceData = fillServiceMetadata(api, baseUrl)
         }
         console.log("*****update****")
         console.log("serviceData " + JSON.stringify(serviceData));
@@ -234,11 +234,11 @@ function updateAPI(serviceMetadata, api_id, cb) {
     })
 }
 
-function fillServiceMetadata(api, hostname) {
-    let apiUrl = hostname
-    let apiUrlWithBasepath = hostname
+function fillServiceMetadata(api, baseUrl) {
+    let apiUrl = baseUrl
+    let apiUrlWithBasepath = baseUrl
     if (api.basepath) {
-        apiUrlWithBasepath = hostname + api.basepath
+        apiUrlWithBasepath = baseUrl + api.basepath
     }
 
     let specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)

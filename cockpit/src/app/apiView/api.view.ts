@@ -12,7 +12,7 @@ export class ApiViewComponent implements OnInit {
     public spec;
     public loadView;
     public info;
-    public hostname;
+    public baseUrl;
     public alert;
     public alertMessage;
     public event;
@@ -20,10 +20,10 @@ export class ApiViewComponent implements OnInit {
     public eventExample;
     constructor(private http: Http, private route: ActivatedRoute) {
         if (window["config"] && window["config"].domain) {
-            this.hostname = window["config"].domain;
+            this.baseUrl = window["config"].domain;
         }
         else {
-            this.hostname = window.location.origin;
+            this.baseUrl = window.location.origin;
         }
         this.info = window["info"]
     }
@@ -34,7 +34,7 @@ export class ApiViewComponent implements OnInit {
             this.remote = params.remote == "true";
             this.update = params.update == "true";
             if (this.remote) {
-                this.http.get(this.hostname + this.info.links.remoteApis + "/" + this.apiId)
+                this.http.get(this.baseUrl + this.info.links.remoteApis + "/" + this.apiId)
                     .subscribe(
                         success => {
                             this.fillSpec(success);
@@ -45,7 +45,7 @@ export class ApiViewComponent implements OnInit {
                         });
             }
             else {
-                this.http.get(this.hostname + this.info.links.localApis + "/" + this.apiId)
+                this.http.get(this.baseUrl + this.info.links.localApis + "/" + this.apiId)
                     .subscribe(
                         success => {
                             this.fillSpec(success);

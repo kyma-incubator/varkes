@@ -12,7 +12,7 @@ import { uxManager } from '@kyma-project/luigi-client';
 export class ConnectionOverviewComponent implements OnInit {
 
     public apis;
-    public hostname;
+    public baseUrl;
     public info;
     public url;
     public connection;
@@ -31,16 +31,16 @@ export class ConnectionOverviewComponent implements OnInit {
     public consoleUrl;
     public constructor(private http: Http) {
         if (window["config"] && window["config"].domain) {
-            this.hostname = window["config"].domain;
+            this.baseUrl = window["config"].domain;
         }
         else {
-            this.hostname = window.location.origin;
+            this.baseUrl = window.location.origin;
         }
     }
 
     ngOnInit() {
         this.info = window['info'];
-        this.http.get(this.hostname + this.info.links.connection)
+        this.http.get(this.baseUrl + this.info.links.connection)
             .subscribe(
                 success => {
                     this.connection = JSON.parse(success["_body"]);
@@ -68,13 +68,13 @@ export class ConnectionOverviewComponent implements OnInit {
     public onConnect(url) {
         var sendData = {
             url: url,
-            hostname: this.hostname,
+            baseUrl: this.baseUrl,
             insecure: this.insecureConnection
         };
         console.log(url);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        this.http.post(this.hostname + this.info.links.connection, JSON.stringify(sendData), options)
+        this.http.post(this.baseUrl + this.info.links.connection, JSON.stringify(sendData), options)
             .subscribe(
                 success => {
                     this.connected = true;
@@ -89,7 +89,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 });
     }
     public onDisconnect() {
-        this.http.delete(this.hostname + this.info.links.connection)
+        this.http.delete(this.baseUrl + this.info.links.connection)
             .subscribe(
                 success => {
                     this.connected = false;
@@ -112,7 +112,7 @@ export class ConnectionOverviewComponent implements OnInit {
     public onBatchRegisteration() {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
+        this.http.post(this.baseUrl + this.info.links.registration, { baseUrl: this.baseUrl }, options)
             .subscribe(
                 success => {
                 },
@@ -123,7 +123,7 @@ export class ConnectionOverviewComponent implements OnInit {
     }
     public getStatus() {
         this.loadInd = true;
-        this.http.get(this.hostname + this.info.links.registration)
+        this.http.get(this.baseUrl + this.info.links.registration)
             .subscribe(
                 success => {
                     this.loadInd = false;
@@ -138,10 +138,10 @@ export class ConnectionOverviewComponent implements OnInit {
                 });
     }
     public downloadKey() {
-        window.location.href = this.hostname + this.info.links.connection + this.connection.key;
+        window.location.href = this.baseUrl + this.info.links.connection + this.connection.key;
     }
     public downloadCert() {
-        window.location.href = this.hostname + this.info.links.connection + this.connection.cert;
+        window.location.href = this.baseUrl + this.info.links.connection + this.connection.cert;
     }
     public closeAlert() {
         this.alert = false;

@@ -14,14 +14,14 @@ export class ApiOverviewComponent {
     public alertMessage;
     public loading: boolean;
     public info;
-    public hostname;
+    public baseUrl;
     constructor(private http: Http) {
         this.info = window['info'];
         if (window["config"] && window["config"].domain) {
-            this.hostname = window["config"].domain;
+            this.baseUrl = window["config"].domain;
         }
         else {
-            this.hostname = window.location.origin;
+            this.baseUrl = window.location.origin;
         }
     }
     public updateApi() {
@@ -30,7 +30,7 @@ export class ApiOverviewComponent {
         let options = new RequestOptions({ headers: headers });
         var editor = ace.edit("specEditor");
         this.api.api = JSON.parse(editor.getValue());
-        this.http.put(this.hostname + this.info.links.remoteApis + "/" + this.api.id, JSON.stringify(this.api), options)
+        this.http.put(this.baseUrl + this.info.links.remoteApis + "/" + this.api.id, JSON.stringify(this.api), options)
             .subscribe(
                 success => {
                     this.loading = false;
@@ -55,7 +55,7 @@ export class ApiOverviewComponent {
             "event-time": eventTime,
             "data": editor.getValue()
         }
-        this.http.post(this.hostname + this.info.links.events, eventData, options)
+        this.http.post(this.baseUrl + this.info.links.events, eventData, options)
             .subscribe(
                 success => {
                     this.loading = false;

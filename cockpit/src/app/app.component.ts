@@ -9,14 +9,14 @@ export class AppComponent {
   public info;
   public loadViews;
   public constructor(private http: Http) {
-    let hostname;
+    let baseUrl;
     if (window["config"] && window["config"].domain) {
-      hostname = window["config"].domain;
+      baseUrl = window["config"].domain;
     }
     else {
-      hostname = window.location.origin;
+      baseUrl = window.location.origin;
     }
-    this.http.get(hostname + "/info")
+    this.http.get(baseUrl + "/info")
       .subscribe(
         data => {
           window['info'] = JSON.parse(data["_body"]);

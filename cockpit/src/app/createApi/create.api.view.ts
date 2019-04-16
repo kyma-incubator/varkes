@@ -11,16 +11,16 @@ export class CreateApiViewComponent implements OnInit {
     public event: boolean;
     public text;
     public info;
-    public hostname;
+    public baseUrl;
     public loadInd;
     options: any = { maxLines: 1000, printMargin: false };
     public constructor(private http: Http, private route: ActivatedRoute) {
         this.info = window['info'];
         if (window["config"] && window["config"].domain) {
-            this.hostname = window["config"].domain;
+            this.baseUrl = window["config"].domain;
         }
         else {
-            this.hostname = window.location.origin;
+            this.baseUrl = window.location.origin;
         }
     }
     ngOnInit() {
@@ -39,7 +39,7 @@ export class CreateApiViewComponent implements OnInit {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         var editor = ace.edit("apiEditor");
-        this.http.post(this.hostname + this.info.links.remoteApis, editor.getValue(), options)
+        this.http.post(this.baseUrl + this.info.links.remoteApis, editor.getValue(), options)
             .subscribe(
                 data => {
                     this.loadInd = false;

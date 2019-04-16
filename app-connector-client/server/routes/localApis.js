@@ -49,7 +49,10 @@ function getLocalApi(req, res) {
     }
 }
 function getOrigin(req) {
-    return req.body.hostname || req.protocol + "://" + req.headers.host
+    if (req.body.baseUrl && !req.body.baseUrl.match(/http(s)?:\/\//)) {
+        return req.protocol + req.body.baseUrl
+    }
+    return req.body.baseUrl || req.protocol + "://" + req.headers.host
 }
 
 async function registerAll(req, res) {
