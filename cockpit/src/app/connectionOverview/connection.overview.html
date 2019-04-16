@@ -154,8 +154,8 @@
                 <br />
                 Failed Registration: <b>{{status.failedCount}}</b><br />
                 <br />
-                Progress: <span *ngIf="status.done" class="fd-badge fd-badge--success">{{status.progress}}</span>
-                <span *ngIf="!status.done" class="fd-badge fd-badge--warning">{{status.progress}}</span><br />
+                Progress: <span *ngIf="status.inProgress" class="fd-badge fd-badge--warning">InProgress</span>
+                <span *ngIf="!status.inProgress" class="fd-badge fd-badge--success">Done</span><br />
                 <br />
                 <div *ngIf="status.errorMessage">
                     Errors:<br />

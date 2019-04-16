@@ -148,10 +148,10 @@ function assureConnected() {
 function router(config) {
     var apiRouter = express.Router()
     varkesConfig = config
-    apiRouter.get("/", getAll)
+    apiRouter.get("/apis", getAll)
     apiRouter.post("/registration", registerAll)
     apiRouter.get("/registration", getStatus)
-    apiRouter.get("/:apiname", getLocalApi)
-    apiRouter.post("/:apiname/register", create)
+    apiRouter.get("/apis/:apiname", getLocalApi)
+    apiRouter.post("/apis/:apiname/register", create)
     return apiRouter
 }

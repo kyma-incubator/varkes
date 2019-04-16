@@ -16,11 +16,11 @@ const connection = require("./connection")
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
 const cors = require("cors")
 const LOGO_URL = "/logo";
-const LOCAL_APIS_URL = "/local/apis";
+const LOCAL_APIS_URL = "/local";
 const REMOTE_APIS_URL = "/remote/apis";
 const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
-const BATCH_REGISTRATION = "/local/apis/registration";
+const BATCH_REGISTRATION = "/local/registration";
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
@@ -47,18 +47,13 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
         var info = {
             appName: varkesConfig.name,
-            connected: connection.established(),
-            insecure: connection.established() ? !connection.secure() : false,
-            connection: connection.established() ? connection.info() : {},
             links: {
                 logo: LOGO_URL,
-                localApis: LOCAL_APIS_URL,
+                localApis: LOCAL_APIS_URL + "/apis",
                 remoteApis: REMOTE_APIS_URL,
                 connection: CONNECTION,
                 registration: BATCH_REGISTRATION,
-                events: EVENTS_URL,
-                key: CONNECTION + "/key",
-                cert: CONNECTION + "/cert"
+                events: EVENTS_URL
             }
         }
         res.status(200).send(info);

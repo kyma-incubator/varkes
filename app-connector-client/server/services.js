@@ -11,8 +11,6 @@ const request = require("request-promise")
 var apiSucceedCount = 0;
 var apisFailedCount = 0;
 var apisCount = 0;
-const DONE_PROGRESS = "Done";
-const IN_PROGRESS = "In Progress";
 var regErrorMessage = ""
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
@@ -32,6 +30,7 @@ function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
     apisFailedCount = 0;
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
+    regErrorMessage = "";
     varkesConfig.apis.forEach((api) => {
         var reg_api
         if (registeredApis.length > 0)
@@ -67,7 +66,6 @@ function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == event.name)
         if (!reg_api) {
-
             createService(event, true).then(() => {
                 apiSucceedCount++;
                 LOGGER.debug("Registered Event API successful: %s", event.name)
@@ -79,7 +77,6 @@ function createServicesFromConfig(hostname, varkesConfig, registeredApis) {
             });;
         }
         else {
-
             updateService(event, reg_api.id, true).then(() => {
                 apiSucceedCount++;
                 LOGGER.debug("Updated Event API successful: %s", event.name)
@@ -98,17 +95,8 @@ function getStatus() {
         "successCount": apiSucceedCount,
         "failedCount": apisFailedCount,
         "apisCount": apisCount,
-        "progress": getProgress(),
-        "done": getProgress() == DONE_PROGRESS,
+        "inProgress": apisCount != (apiSucceedCount + apisFailedCount),
         "errorMessage": regErrorMessage
-    }
-}
-function getProgress() {
-    if (apiSucceedCount + apisFailedCount == apisCount) {
-        return DONE_PROGRESS;
-    }
-    else {
-        return IN_PROGRESS;
     }
 }
 function createService(api, isEvent, hostname) {
@@ -121,7 +109,8 @@ function createService(api, isEvent, hostname) {
         else {
             serviceData = fillServiceMetadata(api, hostname)
         }
-
+        console.log("*****create****")
+        console.log("serviceData " + JSON.stringify(serviceData));
         createAPI(serviceData, function (err, httpResponse, body) {
             if (!err && httpResponse.statusCode < 400) {
                 resolve(body)
@@ -147,6 +136,8 @@ function updateService(api, api_id, isEvent, hostname) {
         else {
             serviceData = fillServiceMetadata(api, hostname)
         }
+        console.log("*****update****")
+        console.log("serviceData " + JSON.stringify(serviceData));
         updateAPI(serviceData, api_id, function (err, httpResponse, body) {
             if (!err && httpResponse.statusCode < 400) {
                 resolve(body)
