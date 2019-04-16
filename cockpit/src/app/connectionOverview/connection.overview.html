@@ -1,167 +1,152 @@
-<br />
 <div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
-    <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
-    {{alertMessage}}
-    <br />
+  <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
+  {{alertMessage}}
+  <br />
 </div>
-<div *ngIf="!connected" style="background-color: white">
-    <h2>Connection Overview</h2>
-    <br />
-    <div style="text-align:center">
-        <button (click)=" openModal()" id="connectBtn" class="fd-button">Connect</button>
-    </div>
-    <br />
-</div>
-<div *ngIf="connected" style="background-color: white">
-    <div class="fd-action-bar">
+
+<ng-container *ngIf="!connected">
+  <header class="fd-page__header fd-has-background-color-background-2">
+    <section class="fd-section">
+      <div class="fd-action-bar">
         <div class="fd-action-bar__header">
-            <h2 class="fd-action-bar__title">
-                Connection Overview
-            </h2>
+          <h1 class="fd-action-bar__title">Connection Overview</h1>
         </div>
         <div class="fd-action-bar__actions">
-            <button class="fd-button--negative fd-button--light" (click)="onDisconnect()">Disconnect</button>
-            <button class="fd-button--light sap-icon--download" (click)="downloadKey()">
-                private key</button>
-            <button class="fd-button--light sap-icon--download" (click)="downloadCert()">
-                certificate</button>
+          <button (click)=" openModal()" id="connectBtn"  class="fd-button--main fd-button--l">Connect</button>
         </div>
-    </div>
-    <div class="fd-container fd-container--fluid" style="background-color: white;">
-        <span class="fd-tabs__item fd-col--1">
-            Application<br /><br />
-            Cluster<br /><br />
-            Status
-        </span>
-        <span class="fd-tabs__item fd-col--2">
-            <a href="{{connection.consoleUrl}}" target="_blank">{{connection.application}}</a><br /><br />
-            <a href="{{consoleUrl}}" target="_blank">{{connection.domain}}</a><br /><br />
-            <span class="fd-badge fd-badge--success">Connected</span> <span *ngIf="insecureConnection"
-                class="fd-badge fd-badge--warning">Insecure</span>
-        </span>
-    </div>
-</div>
-<br />
-<div *ngIf="!connected" style="background-color: white">
-    <h3>Local API</h3>
-    <api-table [remote]='false' [connected]='connected'></api-table>
-</div>
-<div *ngIf="connected" style="background-color: white">
-    <div class="fd-action-bar">
-        <div class="fd-action-bar__header">
-            <ul class="fd-tabs" role="tablist">
-                <li class="fd-tabs__item">
-                    <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{!remote}}
-                        (click)="onLocalAPIClick()" href="#apitable" role="tab">
-                        Local APIs
-                    </a>
-                </li>
-                <li class="fd-tabs__item">
-                    <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{remote}}
-                        (click)="onRemoteAPIClick()" href="#apitable" role="tab">
-                        Remote APIs
-                    </a>
-                </li>
-            </ul>
+      </div>
+    </section>
+  </header>
+  
+  <section class="fd-section">
+    <div class="fd-panel">
+      <div class="fd-panel__header">
+        <div class="fd-panel__head">
+          <h3 class="fd-panel__title">Local API</h3>
         </div>
-        <div *ngIf="!remote" class="fd-action-bar__actions">
-            <button class="fd-button fd-button--light" style="margin-right: 12px" (click)="onBatchRegisteration()">Batch
-                Registration <span class="fd-inline-help">
-                    <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
-                        Register all the local apis to kyma
-                    </span>
-                </span></button>
-            <button class="fd-button fd-button--light" style="margin-right: 12px" (click)="getStatus()">Registration
-                Status <span class="fd-inline-help">
-                    <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
-                        Shows the progress of the batch registration
-                    </span>
-                </span></button>
+      </div>
+      <div class="fd-panel__body fd-panel__body--bleed">
+        <api-table [remote]='false' [connected]='connected'></api-table>
+      </div>
+    </div>
+  </section>
+</ng-container>
 
+<ng-container *ngIf="connected">
+  <header class="fd-page__header fd-has-background-color-background-2">
+    <section class="fd-section">
+      <div class="fd-action-bar">
+        <div class="fd-action-bar__header">
+          <h1 class="fd-action-bar__title">
+            Connection Overview
+          </h1>
         </div>
-        <div *ngIf="remote" class="fd-action-bar__actions">
-            <button *ngIf="!searchInd" class="fd-button--standard sap-icon--search" (click)="openSearch()"></button>
-            <div *ngIf="searchInd" class="fd-form__group" (clickOutside)="closeSearch()" [excludeBeforeClick]="true">
-                <div class="fd-form__item">
-                    <label class="fd-form__label" for="">Search input</label>
-                    <div class="fd-input-group">
-                        <input class="" type="search" id="search-1" name="" value="Search Term"
-                            placeholder="Enter Term.." (keyup)="searchApis()">
-                        <span class="fd-input-group__addon fd-input-group__addon--button">
-                            <button class="fd-input-group__button fd-input-group__button--clear" aria-label="Clear"
-                                onclick="document.getElementById('search-1').value = '';"></button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <button class="fd-button--standard sap-icon--filter"></button>
-            <button class="fd-button fd-button--light" routerLink="/createapi/false">Create New API</button>
-            <button class="fd-button fd-button--light" routerLink="/createapi/true">Create New Event</button>
+        <div class="fd-action-bar__actions">
+          <button class="fd-button fd-button--negative" (click)="onDisconnect()">Disconnect</button>
+          <button class="fd-button sap-icon--download" (click)="downloadKey()">private key</button>
+          <button class="fd-button sap-icon--download" (click)="downloadCert()">certificate</button>
         </div>
+      </div>
+    </section>
+  </header>
+   
+  <section class="fd-section">
+    <div class="fd-panel">
+      <div class="fd-panel__header">
+        <div class="fd-panel__head">
+          <h3 class="fd-panel__title">
+            General information
+          </h3>
+        </div>
+      </div>
+      <div class="fd-panel__body fd-panel__body--bleed">
+        <table class="fd-table fd-table--no-borders">
+          <tbody>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Application</td>
+              <td>
+                <a href="{{connection.consoleUrl}}" target="_blank">{{connection.application}} <span class="sap-icon--action sap-icon--s"></span></a>
+              </td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Cluster</td>
+              <td>
+                <a href="{{consoleUrl}}" target="_blank">{{connection.domain}} <span class="sap-icon--action sap-icon--s"></span></a>
+              </td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
+              <td>
+                <span class="fd-badge fd-badge--success">Connected</span> 
+                <span *ngIf="insecureConnection" class="fd-badge fd-badge--warning">Insecure</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="fd-section">
+    <div class="fd-action-bar">
+      <div class="fd-action-bar__header">
+        <ul class="fd-tabs" role="tablist">
+          <li class="fd-tabs__item">
+            <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{!remote}}
+              (click)="onLocalAPIClick()" href="#apitable" role="tab">
+              Local APIs
+            </a>
+          </li>
+          <li class="fd-tabs__item">
+            <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{remote}}
+              (click)="onRemoteAPIClick()" href="#apitable" role="tab">
+              Remote APIs
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
     <api-table [remote]='remote' [connected]='connected'></api-table>
-</div>
+  </section>
+</ng-container>
+
 <div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
 
 </div>
 <div *ngIf="connectionModalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
-    <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
-        <div class="fd-modal__content" role="document">
-            <div class="fd-modal__header">
-                <h1 class="fd-modal__title">Connect to Kyma</h1>
-                <button (click)="onConnectionCloseModalClick()" class="fd-button--light fd-modal__close"
-                    aria-label="close"></button>
-            </div>
-            <div class="fd-modal__body " style="height:60%;max-height: none;overflow-y:unset ">
-                <div class="fd-form__group">
-                    <div class="fd-form__item">
-                        <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
-                        <textarea class="fd-form__control" style="resize: none;" #token_url></textarea>
-                    </div>
-                    <div class="fd-form__item fd-form__item--check">
-                        <label class="fd-form__label" for="Ai4ez611">
-                            <input type="checkbox" (click)="oninsecureConnection($event.target.checked)"
-                                class="fd-form__control" id="Ai4ez611">
-                            Insecure Connection &nbsp;
-                        </label>
-                        <span class="fd-inline-help">
-                            <span class="fd-inline-help__content fd-inline-help__content--bottom-right">
-                                Connect to kyma without certificate authorization (ex. kyma on minikube)
-                            </span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <footer class="fd-modal__footer">
-                <div class="fd-modal__actions">
-                    <button class="fd-button" (click)="onConnect(token_url.value)">Connect</button>
-                    <button (click)="onConnectionCloseModalClick()" class="fd-button--light">Cancel</button>
-                </div>
-            </footer>
+  <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
+    <div class="fd-modal__content" role="document">
+      <div class="fd-modal__header">
+        <h1 class="fd-modal__title">Connect to Kyma</h1>
+        <button (click)="onConnectionCloseModalClick()" class="fd-button--light fd-modal__close"
+          aria-label="close"></button>
+      </div>
+      <div class="fd-modal__body " style="height:60%;max-height: none;overflow-y:unset ">
+        <div class="fd-form__group">
+          <div class="fd-form__item">
+            <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
+            <textarea class="fd-form__control" style="resize: none;" #token_url></textarea>
+          </div>
+          <div class="fd-form__item fd-form__item--check">
+            <label class="fd-form__label" for="Ai4ez611">
+              <input type="checkbox" (click)="oninsecureConnection($event.target.checked)"
+                class="fd-form__control" id="Ai4ez611">
+              Insecure Connection &nbsp;
+            </label>
+            <span class="fd-inline-help">
+              <span class="fd-inline-help__content fd-inline-help__content--bottom-right">
+                Connect to kyma without certificate authorization (ex. kyma on minikube)
+              </span>
+            </span>
+          </div>
         </div>
-    </div>
-</div>
-<div *ngIf="statusModalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
-    <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
-        <div class="fd-modal__content" role="document">
-            <div class="fd-modal__header">
-                <h1 class="fd-modal__title">Registration Status</h1>
-                <button (click)="onStatusCloseModalClick()" class="fd-button--light fd-modal__close"
-                    aria-label="close"></button>
-            </div>
-            <div class="fd-modal__body">
-                Successful Registration: <b>{{status.successCount}}</b><br />
-                <br />
-                Failed Registration: <b>{{status.failedCount}}</b><br />
-                <br />
-                Progress: <span *ngIf="status.done" class="fd-badge fd-badge--success">{{status.progress}}</span>
-                <span *ngIf="!status.done" class="fd-badge fd-badge--warning">{{status.progress}}</span><br />
-                <br />
-                <div *ngIf="status.errorMessage">
-                    Errors:<br />
-                    <textarea class="fd-form__control" style="resize: none" readonly>{{status.errorMessage}}</textarea>
-                </div>
-            </div>
+      </div>
+      <footer class="fd-modal__footer">
+        <div class="fd-modal__actions">
+          <button class="fd-button" (click)="onConnect(token_url.value)">Connect</button>
+          <button (click)="onConnectionCloseModalClick()" class="fd-button--light">Cancel</button>
         </div>
+      </footer>
     </div>
+  </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { uxManager } from '@kyma-project/luigi-client';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
@@ -16,6 +17,9 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public info;
     public actionList = [];
     public isDataAvailable;
+    public status;
+    public searchInd;
+    public statusModalActive: boolean;
     public constructor(private http: Http) {
         if (window["config"] && window["config"].domain) {
             this.hostname = window["config"].domain;
@@ -79,5 +83,55 @@ export class ApiTableComponent implements OnInit, OnChanges {
     }
     public closeAlert() {
         this.alert = false;
+    }
+
+
+    public onStatusCloseModalClick() {
+        uxManager().removeBackdrop();
+        this.statusModalActive = false;
+    }
+
+    public onBatchRegisteration() {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
+            .subscribe(
+                success => {
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                });
+    }
+
+    public getStatus() {
+        this.loadInd = true;
+        this.http.get(this.hostname + this.info.links.registration)
+            .subscribe(
+                success => {
+                    this.loadInd = false;
+                    this.status = JSON.parse(success["_body"]);
+                    console.log("status " + this.status.errorMessage);
+                    uxManager().addBackdrop();
+                    this.statusModalActive = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                    this.loadInd = false;
+                });
+    }
+
+    public searchApis() {
+        this.apis = this.apis.find(x => x.name == document.getElementById("search-1").innerHTML);
+        this.remote = true;
+    }
+
+    public openSearch() {
+        this.searchInd = true;
+    }
+
+    public closeSearch() {
+        this.searchInd = false;
     }
 }
