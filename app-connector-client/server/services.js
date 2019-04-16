@@ -109,8 +109,6 @@ function createService(api, isEvent, baseUrl) {
         else {
             serviceData = fillServiceMetadata(api, baseUrl)
         }
-        console.log("*****create****")
-        console.log("serviceData " + JSON.stringify(serviceData));
         createAPI(serviceData, function (err, httpResponse, body) {
             if (!err && httpResponse.statusCode < 400) {
                 resolve(body)
@@ -136,8 +134,6 @@ function updateService(api, api_id, isEvent, baseUrl) {
         else {
             serviceData = fillServiceMetadata(api, baseUrl)
         }
-        console.log("*****update****")
-        console.log("serviceData " + JSON.stringify(serviceData));
         updateAPI(serviceData, api_id, function (err, httpResponse, body) {
             if (!err && httpResponse.statusCode < 400) {
                 resolve(body)

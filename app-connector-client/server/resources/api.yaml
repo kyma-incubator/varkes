@@ -274,7 +274,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Service"
-  /local/apis/registration:
+  /local/registration:
     get:
       tags:
         - "api"
@@ -371,6 +371,19 @@ paths:
       responses:
         "200":
           description: "Successful"
+          
+  /info:
+    get:
+      tags:
+        - "misc"
+      summary: "Returns the app-connector-client endpoints"
+      responses:
+        "200":
+          description: "Successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Info"
   /console:
     get:
       tags:
@@ -396,6 +409,42 @@ paths:
 
 components:
   schemas:
+    Info:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          example: "varkes"
+          description: "The name of the application"
+        links:
+          type: "object"
+          properties:
+            logo:
+              type: "string"
+              example: "/logo"
+              description: "url for getting the application logo"
+            localApis:
+              type: "string"
+              example: "/local/apis"
+              description: "url for getting local apis"
+            remoteApis:
+              type: "string"
+              example: "/remote/apis"
+              description: "url for getting remote apis"
+            connection:
+              type: "string"
+              example: "/connection"
+              description: "url for getting kyma connection info"
+            registration:
+              type: "string"
+              example: "/local/registration"
+              description: "url for batch registration"
+            events:
+              type: "string"
+              example: "/events"
+              description: "url for sending events"
+            
+            
     Status:
       type: "object"
       properties:
@@ -411,14 +460,10 @@ components:
           type: "integer"
           example: 0
           description: "The number of apis"
-        progress:
-          type: "string"
-          example: "Done"
-          description: "The status of the progress as a label"
-        done:
+        inProgress:
           type: "boolean"
           example: true
-          description: "if the progress label is the done label"
+          description: "shows wheather the registration is still in progress or not"
         errorMessage:
           type: "string"
           example: "Failed to register api <apiname>: "
