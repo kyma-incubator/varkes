@@ -1,7 +1,7 @@
 {
   "name": "@varkes/cockpit",
-  "version": "0.2.2",
-  "main": "dist/app",
+  "version": "0.4.0",
+  "main": "dist/app.js",
   "engines": {
     "node": ">=4"
   },
@@ -37,6 +37,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
+    "express": "^4.16.4",
     "fiori-fundamentals": "^1.4.8",
     "fundamental-ngx": "^0.3.1",
     "jquery": "^3.3.1",

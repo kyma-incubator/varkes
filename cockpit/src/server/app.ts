@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as path from 'path';
 const app = express();
 
-function init(domain: string = null) {
+async function init(domain: string = null) {
     app.use(express.static(path.resolve(__dirname + "/cockpit")));
 
     var config = {

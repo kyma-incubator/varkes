@@ -4,7 +4,7 @@
 const openapiApp = require("@varkes/openapi-mock")
 const connectorApp = require("@varkes/app-connector-client")
 const app = require('express')()
-
+const cockpitApp = require("@varkes/cockpit");
 var runAsync = async () => {
     var port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
@@ -14,6 +14,7 @@ var runAsync = async () => {
     try {
         app.use(await openapiApp.init("./varkes_config.json"))
         app.use(await connectorApp.init("./varkes_config.json"))
+        app.use(await cockpitApp.init())
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)

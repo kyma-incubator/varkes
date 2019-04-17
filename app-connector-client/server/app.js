@@ -37,12 +37,6 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.use(CONNECTION, connector.router(varkesConfig, nodePortParam))
     app.use(EVENTS_URL, events.router())
 
-    app.set('view engine', 'ejs')
-    app.set('views', path.join(__dirname, '/views/'))
-    app.use(express.static(path.resolve(__dirname, 'views/static/')))
-    app.get("/", function (req, res) {
-        res.render('index', { appName: varkesConfig.name })
-    })
     app.get("/info", function (req, res) {
 
         var info = {

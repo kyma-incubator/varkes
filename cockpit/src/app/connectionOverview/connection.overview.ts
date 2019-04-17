@@ -80,6 +80,7 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = true;
                     this.connection = JSON.parse(success["_body"]);
                     this.insecureConnection = this.connection.insecure;
+                    this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.onConnectionCloseModalClick();
                 },
                 error => {

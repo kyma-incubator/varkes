@@ -25,6 +25,6 @@ Luigi.setConfig({
      * For path routing, set to false
      * For hash routing, set to true
      */
-    useHashRouting: true
+    useHashRouting: false
   }
 });

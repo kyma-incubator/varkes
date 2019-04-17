@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Http } from '@angular/http';
 @Component({
     selector: 'api-view',
-    templateUrl: './app.apiview.html'
+    templateUrl: './app.apiView.html'
 })
 export class ApiViewComponent implements OnInit {
     public remote;
