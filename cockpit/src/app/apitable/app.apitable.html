@@ -2,8 +2,9 @@
 <div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
   <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
   {{alertMessage}}
-  <br />
 </div>
+<br />
+
 <div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
 
 </div>
@@ -14,7 +15,7 @@
             <h3 class="fd-panel__title">APIs</h3>
         </div>
         <div class="fd-panel__actions">
-          <ng-container *ngIf="!remote">
+          <ng-container *ngIf="!remote && connected">
             <button class="fd-button fd-button--light" (click)="onBatchRegisteration()">
               Batch Registration 
               <span class="fd-inline-help">
