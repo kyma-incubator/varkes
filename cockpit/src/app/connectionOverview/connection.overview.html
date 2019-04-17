@@ -18,18 +18,7 @@
     </section>
   </header>
   
-  <section class="fd-section">
-    <div class="fd-panel">
-      <div class="fd-panel__header">
-        <div class="fd-panel__head">
-          <h3 class="fd-panel__title">Local API</h3>
-        </div>
-      </div>
-      <div class="fd-panel__body fd-panel__body--bleed">
-        <api-table [remote]='false' [connected]='connected'></api-table>
-      </div>
-    </div>
-  </section>
+  <api-table [remote]='false' [connected]='connected'></api-table>
 </ng-container>
 
 <ng-container *ngIf="connected">
@@ -87,27 +76,7 @@
     </div>
   </section>
 
-  <section class="fd-section">
-    <div class="fd-action-bar">
-      <div class="fd-action-bar__header">
-        <ul class="fd-tabs" role="tablist">
-          <li class="fd-tabs__item">
-            <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{!remote}}
-              (click)="onLocalAPIClick()" href="#apitable" role="tab">
-              Local APIs
-            </a>
-          </li>
-          <li class="fd-tabs__item">
-            <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{remote}}
-              (click)="onRemoteAPIClick()" href="#apitable" role="tab">
-              Remote APIs
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <api-table [remote]='remote' [connected]='connected'></api-table>
-  </section>
+  <api-table [remote]='remote' [connected]='connected'></api-table>
 </ng-container>
 
 <div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">

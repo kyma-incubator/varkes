@@ -11,7 +11,6 @@ import { uxManager } from '@kyma-project/luigi-client';
 })
 export class ConnectionOverviewComponent implements OnInit {
 
-    public apis;
     public hostname;
     public info;
     public url;
@@ -19,9 +18,12 @@ export class ConnectionOverviewComponent implements OnInit {
     public alert;
     public alertMessage;
     public keyUrl;
+    public searchInd;
     public certUrl;
     public loadInd;
+    public status;
     @Input() public connectionModalActive: boolean;
+    public statusModalActive: boolean;
     public connected: boolean;
     @Input() public insecureConnection: boolean;
     public remote;
@@ -53,6 +55,10 @@ export class ConnectionOverviewComponent implements OnInit {
     public onConnectionCloseModalClick() {
         uxManager().removeBackdrop();
         this.connectionModalActive = false;
+    }
+    public onStatusCloseModalClick() {
+        uxManager().removeBackdrop();
+        this.statusModalActive = false;
     }
     public onConnect(url) {
         var sendData = {
@@ -98,8 +104,35 @@ export class ConnectionOverviewComponent implements OnInit {
     public oninsecureConnection(target) {
         this.insecureConnection = target;
     }
-    
-   
+    public onBatchRegisteration() {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
+            .subscribe(
+                success => {
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                });
+    }
+    public getStatus() {
+        this.loadInd = true;
+        this.http.get(this.hostname + this.info.links.registration)
+            .subscribe(
+                success => {
+                    this.loadInd = false;
+                    this.status = JSON.parse(success["_body"]);
+                    console.log("status " + this.status.errorMessage);
+                    uxManager().addBackdrop();
+                    this.statusModalActive = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                    this.loadInd = false;
+                });
+    }
     public downloadKey() {
         window.location.href = this.hostname + this.info.links.key;
     }

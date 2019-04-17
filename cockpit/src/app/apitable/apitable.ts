@@ -134,4 +134,11 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public closeSearch() {
         this.searchInd = false;
     }
+
+    public onLocalAPIClick() {
+        this.remote = false;
+    }
+    public onRemoteAPIClick() {
+        this.remote = true;
+    }
 }
