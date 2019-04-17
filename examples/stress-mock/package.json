@@ -19,6 +19,7 @@
     "@varkes/app-connector-client": "^0.4.0",
     "@varkes/odata-mock": "^0.4.0",
     "@varkes/openapi-mock": "^0.4.0",
+    "@varkes/cockpit": "^0.4.0",
     "express": "^4.16.4"
   },
   "devDependencies": {

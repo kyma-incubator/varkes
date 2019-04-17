@@ -7,8 +7,7 @@
             "auth": "basic",
             "type": "odata",
             "basepath": "/odata/product.svc",
-            "persistence": true,
-            "registerSpec": true
+            "persistence": true
         },
         {
             "name": "Northwind Service",
@@ -16,8 +15,7 @@
             "auth": "basic",
             "type": "odata",
             "basepath": "/odata/northwind.svc",
-            "persistence": true,
-            "registerSpec": true
+            "persistence": true
         }
     ],
     "events": [

@@ -13,9 +13,9 @@ var runAsync = async () => {
     }
 
     try {
-        app.use(await cockpitApp.init())
         app.use(await odataApp.init("./varkes_config.json"))
         app.use(await connectorApp.init("./varkes_config.json"))
+        app.use(await cockpitApp.init())
         app.use(cors())
         app.options('*', cors())
         if (port)
