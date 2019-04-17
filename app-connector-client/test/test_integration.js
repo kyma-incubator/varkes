@@ -82,7 +82,6 @@ describe("should work", () => {
                 .expect(200)
                 .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
                 .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
-                .expect(new RegExp(JSON.stringify(northwindAPI), "g"))
         })
 
         it('local apis contains schools and courses and northwind', () => {
@@ -91,7 +90,6 @@ describe("should work", () => {
                 .expect(200)
                 .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
                 .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
-                .expect(new RegExp(JSON.stringify(northwindAPI), "g"))
         })
 
         it('registered events contains events1 and events2', () => {
