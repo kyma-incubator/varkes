@@ -52,6 +52,13 @@
             "specification": "courses.yaml",
             "registerSpec": true,
             "oauth": "/authorizationserver/oauth/token"
+        },
+        {
+            "name": "northwind",
+            "basepath": "/northwind/odata/northwind.svc",
+            "specification": "northwind.xml",
+            "auth": "none",
+            "type": "odata"
         }
     ]
 }
