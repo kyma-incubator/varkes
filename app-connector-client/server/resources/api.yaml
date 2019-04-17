@@ -125,7 +125,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /apis:
+  /remote/apis:
     post:
       tags:
         - "api"
@@ -169,7 +169,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /apis/{Id}:
+  /remote/apis/{Id}:
     get:
       tags:
         - "api"
@@ -260,6 +260,109 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /local/apis:
+    get:
+      tags:
+        - "api"
+      summary: "Gets all local apis bundled from the config file"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Service"
+  /local/registration:
+    get:
+      tags:
+        - "api"
+      summary: "Gets the status of the batch registration"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Status"
+    post:
+      tags:
+        - "api"
+      summary: "Batch registration action"
+      responses:
+        "200":
+          description: "Currently connected application and cluster"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectionResponse"
+        "401":
+          description: "Error with connection to Kyma cluster"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /local/apis/{apiname}:
+    get:
+      tags:
+        - "api"
+      summary: "Gets all local apis bundled from the config file"
+      parameters:
+        - in: "path"
+          name: "apiname"
+          description: "Name of a API"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Service"
+        "404":
+          description: "no Api with that name"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /local/apis/{apiname}/register:
+    post:
+      tags:
+        - "api"
+      summary: "Gets all local apis bundled from the config file"
+      parameters:
+        - in: "path"
+          name: "apiname"
+          description: "Name of a API"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceDetails"
+        "404":
+          description: "API with the requested name could not be found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: "You are not connected to a Kyma instance."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /metadata:
     get:
       tags:
@@ -268,6 +371,19 @@ paths:
       responses:
         "200":
           description: "Successful"
+          
+  /info:
+    get:
+      tags:
+        - "misc"
+      summary: "Returns the app-connector-client endpoints"
+      responses:
+        "200":
+          description: "Successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Info"
   /console:
     get:
       tags:
@@ -293,6 +409,65 @@ paths:
 
 components:
   schemas:
+    Info:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          example: "varkes"
+          description: "The name of the application"
+        links:
+          type: "object"
+          properties:
+            logo:
+              type: "string"
+              example: "/logo"
+              description: "url for getting the application logo"
+            localApis:
+              type: "string"
+              example: "/local/apis"
+              description: "url for getting local apis"
+            remoteApis:
+              type: "string"
+              example: "/remote/apis"
+              description: "url for getting remote apis"
+            connection:
+              type: "string"
+              example: "/connection"
+              description: "url for getting kyma connection info"
+            registration:
+              type: "string"
+              example: "/local/registration"
+              description: "url for batch registration"
+            events:
+              type: "string"
+              example: "/events"
+              description: "url for sending events"
+            
+            
+    Status:
+      type: "object"
+      properties:
+        successCount:
+          type: "integer"
+          example: 0
+          description: "The number of apis successfully registered"
+        failedCount:
+          type: "integer"
+          example: 0
+          description: "The number of apis failed to register"
+        apisCount:
+          type: "integer"
+          example: 0
+          description: "The number of apis"
+        inProgress:
+          type: "boolean"
+          example: true
+          description: "shows wheather the registration is still in progress or not"
+        errorMessage:
+          type: "string"
+          example: "Failed to register api <apiname>: "
+          description: "error messages of the failed apis"
     ConnectionDetails:
       type: "object"
       properties:

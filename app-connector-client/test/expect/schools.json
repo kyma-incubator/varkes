@@ -1,0 +1,24 @@
+{
+    "provider": "schoolProvider",
+    "name": "schools",
+    "description": "Schools Webservices",
+    "labels": {
+        "label1": "value1",
+        "type": "OpenAPI"
+    },
+    "api": {
+        "targetUrl": "http://(localhost|.+)",
+        "credentials": {
+            "oauth": {
+                "url": "http://(localhost|.+)/entity/schoolToken",
+                "clientId": "admin",
+                "clientSecret": "nimda",
+                "csrfInfo": {
+                    "tokenEndpointURL": "http://(localhost|.+)/entity"
+                }
+            }
+        },
+        "specificationUrl": "http://(localhost|.+)/entity/schoolMetadata"
+    },
+    "id":".*"
+}

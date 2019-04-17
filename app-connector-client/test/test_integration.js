@@ -7,7 +7,13 @@ const express = require("express")
 const fs = require("fs")
 const path = require("path")
 const kyma = require("@varkes/example-kyma-mock")
+
 const testAPI = JSON.parse(fs.readFileSync(path.resolve("test/test-api.json")))
+const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/schools.json")))
+const coursesAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/courses.json")))
+const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/northwind.json")))
+const events1API = JSON.parse(fs.readFileSync(path.resolve("test/expect/events1.json")))
+const events2API = JSON.parse(fs.readFileSync(path.resolve("test/expect/events2.json")))
 
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
@@ -32,8 +38,8 @@ describe("should work", () => {
             expect(200)
 
         await request(server) //* Make sure we registered local apis to kyma
-            .post('/local/apis/registration')
-            .send({ "hostname": "http://localhost" })
+            .post('/local/registration')
+            .send({ "baseUrl": "http://localhost" })
             .set('Accept', 'application/json')
             .expect(200)
     })
@@ -70,29 +76,58 @@ describe("should work", () => {
     })
 
     describe('bundled apis', () => {
-        it('apis contains schools and courses', () => {
+        it('registered apis contains schools and courses and northwind', () => {
             return request(server)
                 .get('/remote/apis')
                 .expect(200)
-                .expect(/"provider":"schoolProvider","name":"schools","description":"Schools Webservices","labels":{"label1":"value1"}/)
-                .expect(/"api":{"targetUrl":"http:\/\/localhost","credentials":{"oauth":{"url":"http:\/\/localhost\/entity\/schoolToken","clientId":"admin","clientSecret":"nimda","csrfInfo":{"tokenEndpointURL":"http:\/\/localhost\/entity"}}},"specificationUrl":"http:\/\/localhost\/entity\/schoolMetadata",/)
-                .expect(/"provider":"Varkes","name":"courses","description":"Courses Webservices","labels":{}/)
-                .expect(/"api":{"targetUrl":"http:\/\/localhost\/entity\/v1","credentials":{"basic":{"username":"admin","password":"nimda"}},"specificationUrl":"http:\/\/localhost\/entity\/v1\/metadata"/)
-
+                .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
+                .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
         })
 
-        it('events contains events1 and events2', () => {
+        it('local apis contains schools and courses and northwind', () => {
+            return request(server)
+                .get('/local/apis')
+                .expect(200)
+                .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
+                .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
+        })
+
+        it('registered events contains events1 and events2', () => {
             return request(server)
                 .get('/remote/apis')
                 .expect(200)
-                .expect(/"provider":"myProvider","name":"events1","description":"All Events v1","labels":{"label1":"value1"}/)
-                .expect(/"provider":"Varkes","name":"events2","description":"All Events v2","labels":{}/)
+            //.expect(new RegExp(JSON.stringify(events1API), "g"))
+            //.expect(new RegExp(JSON.stringify(events2API), "g"))
+        })
+
+        it('local events contains events1 and events2', () => {
+            return request(server)
+                .get('/local/apis')
+                .expect(200)
+            //.expect(new RegExp(JSON.stringify(events1API), "g"))
+            //.expect(new RegExp(JSON.stringify(events2API), "g"))
         })
 
         it('404 everything else', () => {
             return request(server)
                 .get('/foo/bar')
                 .expect(404)
+        })
+    })
+
+    describe("events endpoints", () => {
+        it("sends event", () => {
+            return request(server)
+                .post('/events')
+                .send({
+                    "event-type": "customer.created.v1",
+                    "event-type-version": "v1",
+                    "event-time": "2019-03-04T14:19:29.450Z",
+                    "data": {
+                        "customerUid": "icke"
+                    }
+                })
+                .expect(200)
         })
     })
 

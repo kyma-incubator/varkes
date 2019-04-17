@@ -1,4 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
+<div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
+  <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
+  {{alertMessage}}
+  <br />
+</div>
+<div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
+
+</div>
 <div *ngIf="isDataAvailable" class="fd-tabs__panel" aria-expanded="true" id="apitable" role="tabpanel">
   <table class="fd-table">
     <thead>
@@ -12,27 +20,26 @@
     <tbody>
       <tr *ngFor="let api of apis; index as i" id="api{{i}}">
         <td>
-          <a href="#" class="fd-has-font-weight-semi">{{api.name}}</a>
+          <a routerLink="/apiview/{{api.id}}/{{remote}}" class="fd-has-font-weight-semi">{{api.name}}</a>
         </td>
         <td>{{api.description}}</td>
-        <td>{{api.type}}</td>
+        <td>{{api.labels.type}}</td>
         <td *ngIf="!remote">
-          <button class="fd-button--light">Register</button>
+          <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
         </td>
         <td *ngIf="remote">
-          <div class="fd-popover">
+          <div class="fd-popover" (clickOutside)="onCloseActionList(i)" [excludeBeforeClick]="true">
             <div class="fd-popover__control">
-              <button id="actionBtn" class="fd-button--light sap-icon--overflow" aria-label="More"
-                (focus)="onOpenActionList(1)" (focusout)="onCloseActionList(1)"></button>
+              <button id="actionBtn" (click)="onOpenActionList(i)" class="fd-button--light sap-icon--overflow"
+                aria-label="More"></button>
             </div>
-            <div *ngIf="actionList[1]" class="fd-popover__body">
+            <div *ngIf="actionList[i]" class="fd-popover__body fd-has-padding-tiny">
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Edit</a>
-                  </li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a href="#">Update</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a style="color: brown"
-                      href="#">Delete</a></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a
+                      routerLink="/apiview/{{api.id}}/{{remote}}">Edit</a></li>
+                  <li class="fd-menu__item fd-button--compact fd-button--light"><a (click)="deleteApi(api,i)"
+                      style="color: brown">Delete</a></li>
                 </ul>
               </nav>
             </div>
