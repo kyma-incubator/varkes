@@ -54,7 +54,7 @@ describe("should work", () => {
         it('responds to /', () => {
             return request(server)
                 .get('/')
-                .expect(200)
+                .expect(404)
         })
 
         it("shows meteadata", () => {
