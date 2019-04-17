@@ -16,7 +16,7 @@ ci-master: resolve validate
 ci-release: resolve npm-publish docker-build docker-push
 
 resolve:
-	npx lerna bootstrap --hoist
+	npx lerna bootstrap
 	npx lerna run compile
 
 validate:

@@ -3,9 +3,6 @@ IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 resolve:
 	npm install
 
-validate:
-	npm test
-
 docker-build:
 	docker build -t $(APP_NAME):latest .
 
