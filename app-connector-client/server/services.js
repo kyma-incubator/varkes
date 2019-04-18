@@ -53,7 +53,7 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
             }).catch((err) => {
                 apisFailedCount++;
                 var message = "Updating API '" + api.name + "' failed: " + JSON.stringify(err.message);
-                regErrorMessage += message + "\n";
+                regErrorMessage += "- " + message + "\n\n";
                 LOGGER.error(message)
             });
         }
@@ -236,7 +236,6 @@ function fillServiceMetadata(api, baseUrl) {
     if (api.basepath) {
         apiUrlWithBasepath = baseUrl + api.basepath
     }
-
     let specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
     if (api.type == "odata") {
         specificationUrl = apiUrlWithBasepath + "/$metadata"

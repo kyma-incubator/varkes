@@ -1,7 +1,7 @@
 {
   "name": "@varkes/cockpit",
-  "version": "0.2.2",
-  "main": "dist/app",
+  "version": "0.4.0",
+  "main": "dist/app.js",
   "engines": {
     "node": ">=4"
   },
@@ -11,9 +11,7 @@
     "build-tsc": "tsc -p src/server/tscconfig.app.json",
     "start": "node dist/server",
     "build": "ng build",
-    "compile": "npm run buildConfig && npm run build && npm run build-tsc",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "compile": "npm run buildConfig && npm run build && npm run build-tsc"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +35,7 @@
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
+    "express": "^4.16.4",
     "fiori-fundamentals": "^1.4.8",
     "fundamental-ngx": "^0.3.1",
     "jquery": "^3.3.1",

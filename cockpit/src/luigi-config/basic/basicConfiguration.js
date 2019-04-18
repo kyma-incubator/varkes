@@ -11,8 +11,7 @@ Luigi.setConfig({
   navigation: {
     nodes: [
       {
-        label: 'Home',
-        pathSegment: 'home',
+        pathSegment: '',
         viewUrl: '/angular.html',
         hideSideNav: true,
         hideFromNav: true
@@ -25,6 +24,6 @@ Luigi.setConfig({
      * For path routing, set to false
      * For hash routing, set to true
      */
-    useHashRouting: true
+    useHashRouting: false
   }
 });
