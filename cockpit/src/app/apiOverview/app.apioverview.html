@@ -34,8 +34,8 @@
       SpecUrl
     </span>
     <span *ngIf="!event" class="fd-tabs__item fd-col--4">
-      {{api.api.targetUrl}}<br /><br />
-      {{api.api.specificationUrl}}
+      <a href="{{api.api.targetUrl}}" target="_blank">{{api.api.targetUrl}}</a><br /><br />
+      <a href="{{api.api.specificationUrl}}" target="_blank">{{api.api.specificationUrl}}</a>
     </span>
     <span class="fd-tabs__item fd-col--1">
       Type<br /><br />

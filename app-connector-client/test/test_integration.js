@@ -76,7 +76,7 @@ describe("should work", () => {
     })
 
     describe('bundled apis', () => {
-        it('registered apis contains schools and courses and northwind', () => {
+        it('registered apis contains schools and courses', () => {
             return request(server)
                 .get('/remote/apis')
                 .expect(200)
@@ -84,7 +84,7 @@ describe("should work", () => {
                 .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
         })
 
-        it('local apis contains schools and courses and northwind', () => {
+        it('local apis contains schools and courses', () => {
             return request(server)
                 .get('/local/apis')
                 .expect(200)
