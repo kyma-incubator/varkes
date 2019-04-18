@@ -33,7 +33,6 @@
             "specification": "schools.json",
             "name": "schools",
             "provider": "schoolProvider",
-            "registerSpec": false,
             "added_endpoints": [
                 {
                     "filePath": "Endpoint_template.yaml",
@@ -50,7 +49,6 @@
             "auth": "basic",
             "name": "courses",
             "specification": "courses.yaml",
-            "registerSpec": false,
             "oauth": "/authorizationserver/oauth/token"
         }
     ]

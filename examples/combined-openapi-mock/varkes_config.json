@@ -6,8 +6,7 @@
             "specification": "apis/schools.yaml",
             "name": "Schools API",
             "auth": "basic",
-            "persistence": true,
-            "registerSpec": true
+            "persistence": true
         },
         {
             "basepath": "/api1",
@@ -17,8 +16,7 @@
             "specification": "apis/courses.yaml",
             "auth": "oauth",
             "oauth": "/coursesOauth/token",
-            "persistence": true,
-            "registerSpec": true
+            "persistence": true
         }
     ],
     "events": [
