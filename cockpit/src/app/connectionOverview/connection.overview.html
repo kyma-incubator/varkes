@@ -32,49 +32,37 @@
         </div>
         <div class="fd-action-bar__actions">
           <button class="fd-button fd-button--negative" (click)="onDisconnect()">Disconnect</button>
-          <button class="fd-button sap-icon--download" (click)="downloadKey()">private key</button>
-          <button class="fd-button sap-icon--download" (click)="downloadCert()">certificate</button>
+          <button class="fd-button--light sap-icon--download" (click)="downloadKey()">private key</button>
+          <button class="fd-button--light sap-icon--download" (click)="downloadCert()">certificate</button>
         </div>
       </div>
+
+      <table class="fd-table fd-table--no-borders">
+        <tbody>
+          <tr>
+            <td class="y-fd-table--col-2 fd-has-color-text-4">Application</td>
+            <td>
+              <a href="{{connection.consoleUrl}}" target="_blank">{{connection.application}} <span class="sap-icon--action sap-icon--s"></span></a>
+            </td>
+          </tr>
+          <tr>
+            <td class="y-fd-table--col-2 fd-has-color-text-4">Cluster</td>
+            <td>
+              <a href="{{consoleUrl}}" target="_blank">{{connection.domain}} <span class="sap-icon--action sap-icon--s"></span></a>
+            </td>
+          </tr>
+          <tr>
+            <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
+            <td>
+              <span class="fd-badge fd-badge--success">Connected</span> 
+              <span *ngIf="insecureConnection" class="fd-badge fd-badge--warning">Insecure</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
+        
   </header>
-   
-  <section class="fd-section">
-    <div class="fd-panel">
-      <div class="fd-panel__header">
-        <div class="fd-panel__head">
-          <h3 class="fd-panel__title">
-            General information
-          </h3>
-        </div>
-      </div>
-      <div class="fd-panel__body fd-panel__body--bleed">
-        <table class="fd-table fd-table--no-borders">
-          <tbody>
-            <tr>
-              <td class="y-fd-table--col-2 fd-has-color-text-4">Application</td>
-              <td>
-                <a href="{{connection.consoleUrl}}" target="_blank">{{connection.application}} <span class="sap-icon--action sap-icon--s"></span></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="y-fd-table--col-2 fd-has-color-text-4">Cluster</td>
-              <td>
-                <a href="{{consoleUrl}}" target="_blank">{{connection.domain}} <span class="sap-icon--action sap-icon--s"></span></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
-              <td>
-                <span class="fd-badge fd-badge--success">Connected</span> 
-                <span *ngIf="insecureConnection" class="fd-badge fd-badge--warning">Insecure</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
   <api-table [remote]='remote' [connected]='connected'></api-table>
 </ng-container>

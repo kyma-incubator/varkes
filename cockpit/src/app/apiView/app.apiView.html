@@ -6,7 +6,6 @@
     </div>
 
     <api-overview [api]='api' [remote]='remote' [event]='event' [readonly]='!remote'></api-overview>
-
     <send-event-view *ngIf='event && remote' [event]='spec'></send-event-view>
     <spec-view [text]='spec' [readonly]='!remote'></spec-view>
 </div>

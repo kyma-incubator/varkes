@@ -20,40 +20,41 @@
         <button *ngIf="event && remote" class=" fd-button--primary fd-button--l" (click)="sendEvent()">Send Event</button>
       </div>
     </div>
+    <table class="fd-table fd-table--no-borders">
+      <tbody>
+        <tr>
+          <td class="y-fd-table--col-2 fd-has-color-text-4">Name</td>
+          <td>{{api.name}}</td>
+        </tr>
+        <tr>
+          <td class="y-fd-table--col-2 fd-has-color-text-4">Description</td>
+          <td>{{api.description}}</td>
+        </tr>
+        <ng-container *ngIf="!event">
+          <tr>
+            <td class="y-fd-table--col-2 fd-has-color-text-4">TargetUrl</td>
+            <td>{{api.api.targetUrl}}</td>
+          </tr>
+          <tr>
+            <td class="y-fd-table--col-2 fd-has-color-text-4">SpecUrl</td>
+            <td>{{api.api.specificationUrl}}</td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td class="y-fd-table--col-2 fd-has-color-text-4">Type</td>
+          <td>{{api.labels.type}}</td>
+        </tr>
+        <tr>
+          <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
+          <td>
+            <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
+            <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 </header>
-
-<section class="fd-section">
-  <table class="fd-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <ng-container *ngIf="!event">
-          <th>TargetUrl</th>
-          <th>SpecUrl</th>
-        </ng-container>
-        <th>Type</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="fd-has-font-weight-bold">{{api.name}}</td>
-        <td>{{api.description}}</td>
-        <ng-container *ngIf="!event">
-          <td>{{api.api.targetUrl}}</td>
-          <td>{{api.api.specificationUrl}}</td>
-        </ng-container>
-        <td>{{api.labels.type}}</td>
-        <td>
-          <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
-          <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</section>
 
 <div *ngIf="loading" class="fd-spinner" hidden aria-label="Loading">
 

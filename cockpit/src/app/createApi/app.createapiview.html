@@ -20,11 +20,11 @@
   </section>
 </header>
 
-<div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
-</div>
-
 <section class="fd-section">
-  <div class="fd-panel">
+  <div class="fd-panel" [attr.aria-busy]="loadInd ? 'true' : 'false'">
+    <div class="fd-spinner" [attr.aria-hidden]="loadInd ? 'false' : 'true'" aria-label="Loading">
+        <div></div>
+    </div>
     <div class="fd-panel__header">
       <div class="fd-panel__head">
         <h3 class="fd-panel__title">Code</h3>

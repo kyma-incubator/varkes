@@ -108,6 +108,23 @@
     .fd-tabs {
       margin-bottom: -(fd-space('small'));
     }
+
+    .fd-table {
+      &--no-borders {
+        tr {
+          &:hover,
+          .is-hover {
+            background-color: transparent;
+          }
+
+          td {
+            &:first-child {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+    }
   }
 } 
 
@@ -127,5 +144,17 @@
     &:first-child {
       padding-left: 0;
     }
+  }
+}
+
+//Loading spinner
+.is-busy,
+[aria-busy='true'] {
+  &:before {
+    z-index: 5;
+  }
+
+  .fd-spinner {
+    z-index: 6;
   }
 }

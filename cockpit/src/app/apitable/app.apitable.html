@@ -85,7 +85,7 @@
               <th>Name</th>
               <th>Description</th>
               <th>Type</th>
-              <th class="y-fd-table--col-1"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -99,23 +99,9 @@
                 <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
               </td>
               <td *ngIf="remote">
-                <div class="fd-popover" (clickOutside)="onCloseActionList(i)" [excludeBeforeClick]="true">
-                  <div class="fd-popover__control">
-                    <button id="actionBtn" (click)="onOpenActionList(i)" class="fd-button--light sap-icon--overflow"
-                      aria-label="More"></button>
-                  </div>
-                  <div *ngIf="actionList[i]" class="fd-popover__body fd-popover__body--right">
-                    <nav class="fd-menu">
-                      <ul class="fd-menu__list">
-                        <li class="fd-menu__item">
-                          <a routerLink="/apiview/{{api.id}}/{{remote}}">Update</a>
-                        </li>
-                        <li class="fd-menu__item">
-                          <a (click)="deleteApi(api,i)">Delete</a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
+                <div class="fd-has-text-align-right">
+                  <a routerLink="/apiview/{{api.id}}/{{remote}}" class="fd-has-margin-left-small fd-has-margin-right-small"><span class="sap-icon--refresh sap-icon--m"></span></a>
+                  <a (click)="deleteApi(api,i)" href="javascript:void(null)" class="fd-has-margin-left-small fd-has-margin-right-small fd-has-color-status-3"><span class="sap-icon--delete sap-icon--m"></span></a>
                 </div>
               </td>
             </tr>
