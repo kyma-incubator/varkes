@@ -19,7 +19,6 @@
     "@varkes/app-connector-client": "^0.4.0",
     "@varkes/cockpit": "^0.4.0",
     "@varkes/odata-mock": "^0.4.0",
-    "cors": "^2.8.5",
     "express": "^4.16.4"
   },
   "devDependencies": {

@@ -3,8 +3,8 @@
 
 const openapiApp = require("@varkes/openapi-mock")
 const connectorApp = require("@varkes/app-connector-client")
-const app = require('express')()
 const cockpitApp = require("@varkes/cockpit");
+const app = require('express')()
 var runAsync = async () => {
     var port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
