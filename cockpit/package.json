@@ -13,7 +13,9 @@
     "build": "ng build",
     "compile": "npm run buildConfig && npm run build && npm run build-tsc"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@angular/animations": "~7.2.0",
     "@angular/common": "~7.2.0",
@@ -60,6 +62,10 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
   },
   "license": "Apache-2.0",
   "description": "Varkes Cockpit",
