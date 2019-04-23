@@ -67,9 +67,6 @@
   <api-table [remote]='remote' [connected]='connected'></api-table>
 </ng-container>
 
-<div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
-
-</div>
 <div *ngIf="connectionModalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
   <div class="fd-modal" role="dialog" style="height:60%;width: 45%;max-width:none">
     <div class="fd-modal__content" role="document">

@@ -116,23 +116,6 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.alert = true;
                 });
     }
-    public getStatus() {
-        this.loadInd = true;
-        this.http.get(this.hostname + this.info.links.registration)
-            .subscribe(
-                success => {
-                    this.loadInd = false;
-                    this.status = JSON.parse(success["_body"]);
-                    console.log("status " + this.status.errorMessage);
-                    uxManager().addBackdrop();
-                    this.statusModalActive = true;
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                    this.loadInd = false;
-                });
-    }
     public downloadKey() {
         window.location.href = this.hostname + this.info.links.key;
     }
