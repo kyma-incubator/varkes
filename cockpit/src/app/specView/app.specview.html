@@ -1,9 +1,20 @@
 <section class="fd-section">
-  <div class="fd-panel">
+  <div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
+    <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
+    {{alertMessage}}
+    <br />
+  </div>
+  <div class="fd-panel" [attr.aria-busy]="loading ? 'true' : 'false'">
+    <div class="fd-spinner" [attr.aria-hidden]="loading ? 'false' : 'true'" aria-label="Loading">
+      <div></div>
+    </div>
     <div class="fd-panel__header">
-        <div class="fd-panel__head">
-            <h3 class="fd-panel__title">Spec</h3>
-        </div>
+      <div class="fd-panel__head">
+        <h3 class="fd-panel__title">Spec</h3>
+      </div>
+      <div class="fd-panel__actions">
+        <button *ngIf="!readonly && event" class=" fd-button--primary fd-button--l" (click)="updateApi()">Update</button>
+      </div>
     </div>
     <div class="fd-panel__body">
       <div id="specEditor" ace-editor [(text)]='text' [mode]="'json'" [theme]="'eclipse'" [options]="options"

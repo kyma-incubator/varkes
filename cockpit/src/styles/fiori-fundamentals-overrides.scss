@@ -158,3 +158,10 @@
     z-index: 6;
   }
 }
+
+//Inline help
+.fd-inline-help {
+  &:before {
+    line-height: 1.3;
+  }
+}
