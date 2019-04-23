@@ -32,17 +32,8 @@ export class ApiTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         this.apis = [];
         this.info = window['info'];
-        
-        this.http.get(this.hostname + (this.remote ? this.info.links.remoteApis : this.info.links.localApis))
-            .subscribe(
-                success => {
-                    this.apis = JSON.parse(success["_body"]);
-                    this.isDataAvailable = true;
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                });
+        this.getApis(this.remote);
+
     }
     public ngOnInit() {
 
@@ -136,8 +127,23 @@ export class ApiTableComponent implements OnInit, OnChanges {
 
     public onLocalAPIClick() {
         this.remote = false;
+        this.getApis(false);
     }
     public onRemoteAPIClick() {
         this.remote = true;
+        this.getApis(true);
+    }
+    private getApis(remote: boolean) {
+        this.isDataAvailable = false;
+        this.http.get(this.hostname + (remote ? this.info.links.remoteApis : this.info.links.localApis))
+            .subscribe(
+                success => {
+                    this.apis = JSON.parse(success["_body"]);
+                    this.isDataAvailable = true;
+                },
+                error => {
+                    this.alertMessage = error;
+                    this.alert = true;
+                });
     }
 }
