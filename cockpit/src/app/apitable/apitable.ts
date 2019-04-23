@@ -19,6 +19,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public isDataAvailable;
     public status;
     public searchInd;
+    public batchStart;
     public statusModalActive: boolean;
     public constructor(private http: Http) {
         if (window["config"] && window["config"].domain) {
@@ -82,15 +83,18 @@ export class ApiTableComponent implements OnInit, OnChanges {
         this.statusModalActive = false;
     }
     public onBatchRegisteration() {
+        this.batchStart = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
             .subscribe(
                 success => {
+                    this.batchStart = false;
                 },
                 error => {
                     this.alertMessage = error;
                     this.alert = true;
+                    this.batchStart = false;
                 });
     }
 

@@ -118,6 +118,9 @@
           }
 
           td {
+            padding-top: fd-space('tiny');
+            padding-bottom: fd-space('tiny');
+
             &:first-child {
               padding-left: 0;
             }
