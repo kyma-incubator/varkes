@@ -95,12 +95,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 });
 
     }
-    public onLocalAPIClick() {
-        this.remote = false;
-    }
-    public onRemoteAPIClick() {
-        this.remote = true;
-    }
+    
     public oninsecureConnection(target) {
         this.insecureConnection = target;
     }

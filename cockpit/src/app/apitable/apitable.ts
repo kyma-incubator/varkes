@@ -32,7 +32,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         this.apis = [];
         this.info = window['info'];
-
+        
         this.http.get(this.hostname + (this.remote ? this.info.links.remoteApis : this.info.links.localApis))
             .subscribe(
                 success => {
@@ -90,7 +90,6 @@ export class ApiTableComponent implements OnInit, OnChanges {
         uxManager().removeBackdrop();
         this.statusModalActive = false;
     }
-
     public onBatchRegisteration() {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
