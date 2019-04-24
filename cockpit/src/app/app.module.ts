@@ -12,6 +12,7 @@ import { AceEditorModule } from 'ng2-ace-editor';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { SendEventViewComponent } from './sendEventView/send.eventview';
 import { CreateApiViewComponent } from './createApi/create.api.view';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { CreateApiViewComponent } from './createApi/create.api.view';
     AppRoutingModule,
     AceEditorModule,
     HttpModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

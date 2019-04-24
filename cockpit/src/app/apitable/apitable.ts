@@ -17,10 +17,12 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public info;
     public actionList = [];
     public isDataAvailable;
+    public done:boolean;
     public status;
     public searchInd;
     public batchStart;
     public statusModalActive: boolean;
+    public initial = true;
     public constructor(private http: Http) {
         if (window["config"] && window["config"].domain) {
             this.hostname = window["config"].domain;
@@ -84,6 +86,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     }
     public onBatchRegisteration() {
         this.batchStart = true;
+        this.initial = false;
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.hostname + this.info.links.registration, { hostname: this.hostname }, options)
@@ -105,6 +108,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                 success => {
                     this.loadInd = false;
                     this.status = JSON.parse(success["_body"]);
+                    this.done = this.status.done;
                     console.log("status " + this.status.errorMessage);
                     uxManager().addBackdrop();
                     this.statusModalActive = true;

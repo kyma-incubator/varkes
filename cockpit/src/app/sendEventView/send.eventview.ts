@@ -19,6 +19,11 @@ export class SendEventViewComponent implements OnInit {
     public info;
     public alert;
     public alertMessage;
+    public ariaExpanded = false;
+    public ariaHidden = true;
+    private filteredTopics = [];
+    public topicName;
+    public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
 
     constructor(private http: Http) {
@@ -34,6 +39,7 @@ export class SendEventViewComponent implements OnInit {
     ngOnInit() {
         this.event = JSON.parse(this.event);
         this.topics = Object.keys(this.event.events.spec.topics);
+        this.filteredTopicsNames = this.topics;
     }
 
     public fillEditor(topic) {
@@ -76,5 +82,33 @@ export class SendEventViewComponent implements OnInit {
 
     public closeAlert() {
         this.alert = false;
+    }
+
+    public toggleDropDown() {
+        this.ariaExpanded = !this.ariaExpanded;
+        this.ariaHidden = !this.ariaHidden;
+    }
+
+    public openDropDown(event: Event) {
+        event.stopPropagation();
+        this.ariaExpanded = true;
+        this.ariaHidden = false;
+    }
+
+    public closeDropDown() {
+        this.ariaExpanded = false;
+        this.ariaHidden = true;
+    }
+
+    public selectedTopic(topic) {
+        this.topicName = topic.label;
+    }
+    filterTopicsNames() {
+        this.filteredTopicsNames = [];
+        this.topics.forEach(element => {
+          if (element.includes(this.topicName.toLowerCase())) {
+            this.filteredTopicsNames.push(element);
+          }
+        });
     }
 }

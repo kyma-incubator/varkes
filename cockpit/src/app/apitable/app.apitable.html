@@ -37,27 +37,21 @@
         </div>
         <div class="fd-panel__actions">
           <ng-container *ngIf="!remote && connected">
-            <button class="fd-button fd-button--light" (click)="onBatchRegisteration()" [attr.disabled]="batchStart ? '' : null">
+            <button class="fd-button fd-button--light" (click)="onBatchRegisteration()" [attr.disabled]="batchStart ? '' : null" title="Register all the local apis to kyma">
               Batch Registration 
               <ng-container *ngIf="batchStart">
                 <span class="sap-icon--synchronize sap-icon--m sap-icon--animate-spin"></span>
               </ng-container>
-              <ng-container *ngIf="!batchStart">
-                <span class="fd-inline-help">
-                  <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
-                    Register all the local apis to kyma
-                  </span>
-                </span>
-              </ng-container>
             </button>
-            <button class="fd-button fd-button--light" (click)="getStatus()">
-              Registration Status 
-              <span class="fd-inline-help">
-                <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
-                  Shows the progress of the batch registration
-                </span>
-              </span>
-            </button>
+            <button class="fd-button sap-icon--hint" 
+                    (click)="getStatus()" 
+                    title="Shows the progress of the batch registration" 
+                    [ngClass]="{
+                      'fd-button--medium': !initial && !done, 
+                      'fd-button--positive': !initial && done , 
+                      'fd-button--standard': initial
+                    }"
+            ></button>
           </ng-container>
 
           <ng-container *ngIf="remote">
