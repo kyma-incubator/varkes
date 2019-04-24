@@ -41,19 +41,13 @@ export class SendEventViewComponent implements OnInit {
         this.topics = Object.keys(this.event.events.spec.topics);
         this.filteredTopicsNames = this.topics;
     }
-
-    public fillEditor(topic) {
-        this.topic = JSON.stringify(this.event.events.spec.topics[topic].example, null, '\t');
-        this.showTopics = false;
-        document.getElementById("selectedTopic").innerHTML = topic;
-    }
     public onOpenDropDown() {
         this.showTopics = true;
     }
     public onCloseDropDown() {
         this.showTopics = false;
     }
-    
+
     public sendEvent() {
         this.loading = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -101,14 +95,17 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public selectedTopic(topic) {
-        this.topicName = topic.label;
+        this.topicName = topic;
+        this.topic = JSON.stringify(this.event.events.spec.topics[topic].example, null, '\t');
+        this.showTopics = false;
+        document.getElementById("selectedTopic").innerHTML = topic;
     }
     filterTopicsNames() {
         this.filteredTopicsNames = [];
         this.topics.forEach(element => {
-          if (element.includes(this.topicName.toLowerCase())) {
-            this.filteredTopicsNames.push(element);
-          }
+            if (element.includes(this.topicName.toLowerCase())) {
+                this.filteredTopicsNames.push(element);
+            }
         });
     }
 }
