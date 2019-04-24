@@ -100,12 +100,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 });
 
     }
-    public onLocalAPIClick() {
-        this.remote = false;
-    }
-    public onRemoteAPIClick() {
-        this.remote = true;
-    }
+
     public oninsecureConnection(target) {
         this.insecureConnection = target;
     }
@@ -121,23 +116,6 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.alert = true;
                 });
     }
-    public getStatus() {
-        this.loadInd = true;
-        this.http.get(this.baseUrl + this.info.links.registration)
-            .subscribe(
-                success => {
-                    this.loadInd = false;
-                    this.status = JSON.parse(success["_body"]);
-                    console.log("status " + this.status.errorMessage);
-                    uxManager().addBackdrop();
-                    this.statusModalActive = true;
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                    this.loadInd = false;
-                });
-    }
     public downloadKey() {
         window.location.href = this.baseUrl + this.info.links.connection + this.connection.key;
     }
@@ -146,21 +124,5 @@ export class ConnectionOverviewComponent implements OnInit {
     }
     public closeAlert() {
         this.alert = false;
-    }
-    public searchApis() {
-        this.apis = this.apis.find(x => x.name == document.getElementById("search-1").innerHTML);
-        this.remote = true;
-    }
-    public openSearch() {
-        this.searchInd = true;
-    }
-    public closeSearch() {
-        this.searchInd = false;
-    }
-    public showNewApi() {
-        linkManager().navigate('/createapi/false');
-    }
-    public showNewEvent() {
-        linkManager().navigate('/createapi/true');
     }
 }

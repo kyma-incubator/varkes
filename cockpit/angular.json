@@ -71,8 +71,7 @@
               }
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/fiori-fundamentals/dist/fiori-fundamentals.min.css"
+              "src/styles.scss"
             ],
             "scripts": [
               "node_modules/ace-builds/src-min/ace.js",
@@ -128,5 +127,10 @@
       }
     }
   },
-  "defaultProject": "cockpit"
+  "defaultProject": "cockpit",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
