@@ -18,25 +18,6 @@
     </div>
     <div class="fd-panel__filters">
       <div class="fd-panel__actions">
-        <div class="fd-dropdown fd-has-display-block">
-          <div class="fd-popover" (clickOutside)="onCloseDropDown()" [excludeBeforeClick]="true">
-            <div class="fd-popover__control">
-              <button id="selectedTopic" class="fd-dropdown__control fd-button" (click)="onOpenDropDown()">
-                Select
-              </button>
-            </div>
-            <div *ngIf="showTopics" class="fd-popover__body">
-              <nav class="fd-menu">
-                <ul class="fd-menu__list">
-                  <li class="fd-menu__item" *ngFor="let topic of topics; index as i" id="topic{{i}}"><span
-                      (click)="fillEditor(topic)">{{topic}}</span>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </div>
-
         <div class="fd-dropdown fd-has-display-block" (clickOutside)="closeDropDown()" excludeBeforeClick="true">
           <div class="fd-popover fd-has-display-block">
             <div class="fd-popover__control">
