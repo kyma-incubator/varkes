@@ -212,3 +212,16 @@
   overflow: auto;
   max-height: 300px;
 }
+
+//Registration status
+.y-fd-pannel {
+  &_actions-width-status {
+    align-items: center;
+
+    .y-fd-button-status {
+      max-height: 25px;
+      height: 25px;
+      min-width: 25px;
+    }
+  }
+}
