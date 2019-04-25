@@ -9,7 +9,7 @@ xhttp.onreadystatechange = function () {
         backdropDisabled: false,
         header: {
           title: 'Varkes',
-          logo: config.domain + '/logo',
+          logo: (config.domain ? config.domain : '') + '/logo',
         }
       },
       navigation: {
