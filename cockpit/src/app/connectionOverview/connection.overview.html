@@ -95,8 +95,8 @@
                 </div>
             </div>
             <button class="fd-button--standard sap-icon--filter"></button>
-            <button class="fd-button fd-button--light" routerLink="/createapi/false">Create New API</button>
-            <button class="fd-button fd-button--light" routerLink="/createapi/true">Create New Event</button>
+            <button class="fd-button fd-button--light" (click)="showNewApi()">Create New API</button>
+            <button class="fd-button fd-button--light" (click)="showNewEvent()">Create New Event</button>
         </div>
     </div>
     <api-table [remote]='remote' [connected]='connected'></api-table>

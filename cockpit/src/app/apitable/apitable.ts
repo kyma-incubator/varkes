@@ -1,12 +1,14 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
+import { linkManager } from '@kyma-project/luigi-client';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
 })
 export class ApiTableComponent implements OnInit, OnChanges {
 
-    @Input() remote;
+    @Input() remote: boolean;
     @Input() connected;
     public baseUrl;
     public loadInd
@@ -16,19 +18,13 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public info;
     public actionList = [];
     public isDataAvailable;
-    public constructor(private http: Http) {
-        if (window["config"] && window["config"].domain) {
-            this.baseUrl = window["config"].domain;
-        }
-        else {
-            this.baseUrl = window.location.origin;
-        }
+    public constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
 
     }
-    ngOnChanges(changes: SimpleChanges): void {
+    async ngOnChanges(changes: SimpleChanges) {
         this.apis = [];
-        this.info = window['info'];
-
+        this.info = await this.serviceInstance.getInfo();
+        this.baseUrl = this.serviceInstance.getBaseUrl();
         this.http.get(this.baseUrl + (this.remote ? this.info.links.remoteApis : this.info.links.localApis))
             .subscribe(
                 success => {
@@ -79,5 +75,8 @@ export class ApiTableComponent implements OnInit, OnChanges {
     }
     public closeAlert() {
         this.alert = false;
+    }
+    public showApiDetails(apiId) {
+        linkManager().navigate('/apiview/' + apiId + "/" + (this.remote == true));
     }
 }

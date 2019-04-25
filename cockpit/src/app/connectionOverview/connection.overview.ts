@@ -4,12 +4,14 @@ import {
     OnInit
 } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { uxManager } from '@kyma-project/luigi-client';
+import { uxManager, linkManager } from '@kyma-project/luigi-client';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
 @Component({
     selector: 'connection-overview',
     templateUrl: './connection.overview.html'
 })
 export class ConnectionOverviewComponent implements OnInit {
+
 
     public apis;
     public baseUrl;
@@ -29,17 +31,13 @@ export class ConnectionOverviewComponent implements OnInit {
     @Input() public insecureConnection: boolean;
     public remote;
     public consoleUrl;
-    public constructor(private http: Http) {
-        if (window["config"] && window["config"].domain) {
-            this.baseUrl = window["config"].domain;
-        }
-        else {
-            this.baseUrl = window.location.origin;
-        }
+    public constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
+
     }
 
-    ngOnInit() {
-        this.info = window['info'];
+    async ngOnInit() {
+        this.baseUrl = this.serviceInstance.getBaseUrl();
+        this.info = await this.serviceInstance.getInfo();
         this.http.get(this.baseUrl + this.info.links.connection)
             .subscribe(
                 success => {
@@ -156,5 +154,11 @@ export class ConnectionOverviewComponent implements OnInit {
     }
     public closeSearch() {
         this.searchInd = false;
+    }
+    public showNewApi() {
+        linkManager().navigate('/createapi/false');
+    }
+    public showNewEvent() {
+        linkManager().navigate('/createapi/true');
     }
 }

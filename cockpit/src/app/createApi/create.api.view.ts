@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as ace from 'ace-builds';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
+import { linkManager } from '@kyma-project/luigi-client';
 @Component({
     selector: 'create-api-view',
     templateUrl: './app.createapiview.html'
@@ -14,16 +16,11 @@ export class CreateApiViewComponent implements OnInit {
     public baseUrl;
     public loadInd;
     options: any = { maxLines: 1000, printMargin: false };
-    public constructor(private http: Http, private route: ActivatedRoute) {
-        this.info = window['info'];
-        if (window["config"] && window["config"].domain) {
-            this.baseUrl = window["config"].domain;
-        }
-        else {
-            this.baseUrl = window.location.origin;
-        }
+    public constructor(private http: Http, private route: ActivatedRoute, private serviceInstance: ServiceInstancesService) {
     }
-    ngOnInit() {
+    async ngOnInit() {
+        this.info = await this.serviceInstance.getInfo();
+        this.baseUrl = this.serviceInstance.getBaseUrl();
         this.route.params.subscribe(params => {
             this.event = params.event == "true";
             if (this.event) {
@@ -48,6 +45,9 @@ export class CreateApiViewComponent implements OnInit {
                     window.alert(data);
                     this.loadInd = false;
                 });
+    }
+    public goBack() {
+        linkManager().navigate('/');
     }
     private createEventExample() {
         return {

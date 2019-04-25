@@ -20,7 +20,7 @@
     <tbody>
       <tr *ngFor="let api of apis; index as i" id="api{{i}}">
         <td>
-          <a routerLink="/apiview/{{api.id}}/{{remote}}" class="fd-has-font-weight-semi">{{api.name}}</a>
+          <a (click)="showApiDetails(api.id)" class="fd-has-font-weight-semi">{{api.name}}</a>
         </td>
         <td>{{api.description}}</td>
         <td>{{api.labels.type}}</td>
@@ -37,7 +37,7 @@
               <nav class="fd-menu">
                 <ul class="fd-menu__list">
                   <li class="fd-menu__item fd-button--compact fd-button--light"><a
-                      routerLink="/apiview/{{api.id}}/{{remote}}">Edit</a></li>
+                      (click)="showApiDetails(api.id)">Edit</a></li>
                   <li class="fd-menu__item fd-button--compact fd-button--light"><a (click)="deleteApi(api,i)"
                       style="color: brown">Delete</a></li>
                 </ul>

@@ -24,68 +24,74 @@ module.exports = {
 }
 
 function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
-    if (!varkesConfig.apis)
-        return
+    if (!varkesConfig.apis && !varkesConfig.events)
+        return;
     apiSucceedCount = 0;
     apisFailedCount = 0;
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
     regErrorMessage = "";
-    varkesConfig.apis.forEach((api) => {
+    varkesConfig.apis.forEach(async (api) => {
         var reg_api
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == api.name)
-        if (!reg_api) {
-            createService(api, false, baseUrl).then(() => {
+        try {
+            if (!reg_api) {
+                await createService(api, false, baseUrl)
                 apiSucceedCount++;
                 LOGGER.debug("Registered API successful: %s", api.name)
-            }).catch((err) => {
+            }
+            else {
+                await updateService(api, reg_api.id, false, baseUrl)
+                apiSucceedCount++;
+                LOGGER.debug("Updated API successful: %s", api.name)
+            }
+        }
+        catch (err) {
+            if (!reg_api) {
                 apisFailedCount++;
                 var message = "Registration of API '" + api.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
-            });
-        }
-        else {
-            updateService(api, reg_api.id, false, baseUrl).then(() => {
-                apiSucceedCount++;
-                LOGGER.debug("Updated API successful: %s", api.name)
-            }).catch((err) => {
+            }
+            else {
                 apisFailedCount++;
                 var message = "Updating API '" + api.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += "- " + message + "\n\n";
                 LOGGER.error(message)
-            });
+            }
         }
     });
-    if (!varkesConfig.events)
-        return;
     apisCount += varkesConfig.events.length;
-    varkesConfig.events.forEach((event) => {
+    varkesConfig.events.forEach(async (event) => {
         var reg_api
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == event.name)
-        if (!reg_api) {
-            createService(event, true).then(() => {
+        try {
+            if (!reg_api) {
+                await createService(event, true)
                 apiSucceedCount++;
                 LOGGER.debug("Registered Event API successful: %s", event.name)
-            }).catch((err) => {
-                apisFailedCount++;
-                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
-                regErrorMessage += message + "\n";
-                LOGGER.error(message)
-            });;
-        }
-        else {
-            updateService(event, reg_api.id, true).then(() => {
+            }
+            else {
+                await updateService(event, reg_api.id, true);
                 apiSucceedCount++;
                 LOGGER.debug("Updated Event API successful: %s", event.name)
-            }).catch((err) => {
+            }
+        }
+        catch (err) {
+            if (!reg_api) {
                 apisFailedCount++;
                 var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
-            });
+            }
+            else {
+                apisFailedCount++;
+                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            }
         }
 
     });
