@@ -1,6 +1,6 @@
 {
   "name": "@varkes/example-openapi-mock",
-  "version": "0.4.0",
+  "version": "0.5.1",
   "description": "Standalone example of varkes openapi-mock",
   "main": "app.js",
   "private": true,
@@ -16,7 +16,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@varkes/openapi-mock": "^0.4.0",
+    "@varkes/openapi-mock": "^0.5.1",
     "express": "^4.16.4"
   },
   "devDependencies": {

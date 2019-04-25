@@ -1,0 +1,71 @@
+{
+    "provider": "schoolProvider",
+    "name": "schools",
+    "description": "Schools Webservices",
+    "labels": {
+        "label1": "value1",
+        "type": "OpenAPI"
+    },
+    "api": {
+        "targetUrl": "http://(localhost|.+)",
+        "credentials": {
+            "oauth": {
+                "url": "http://(localhost|.+)/entity/schoolToken",
+                "clientId": "admin",
+                "clientSecret": "nimda",
+                "csrfInfo": {
+                    "tokenEndpointURL": "http://(localhost|.+)/entity"
+                }
+            }
+        },
+        "specificationUrl": "http://(localhost|.+)/entity/schoolMetadata",
+        "spec": {
+            "openapi": "3.0.0",
+            "info": {
+                "description": "Schools Webservices",
+                "version": "2.0",
+                "title": "Schools Webservices"
+            },
+            "basePath": "/entity",
+            "paths": {
+                "/schools": {
+                    "get": {
+                        "summary": "Get a list of available schools.",
+                        "description": "Lists all available schools.",
+                        "responses": {
+                            "200": {
+                                "description": "OK",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "schools": {
+                                            "type": "array",
+                                            "items": {
+                                                "areacode": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "401": {
+                                "description": "Unauthorized"
+                            },
+                            "403": {
+                                "description": "Forbidden"
+                            },
+                            "404": {
+                                "description": "Not Found"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "id": ".*"
+}

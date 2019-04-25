@@ -8,12 +8,10 @@ const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
 const request = require("request-promise")
-var apis_success = [];
-var apis_failed = [];
-var apis = [];
-const DONE_PROGRESS = "Done";
-const IN_PROGRESS = "In Progress";
-var progress = DONE_PROGRESS
+var apiSucceedCount = 0;
+var apisFailedCount = 0;
+var apisCount = 0;
+var regErrorMessage = ""
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
     getAllAPI: getAllAPI,
@@ -22,91 +20,92 @@ module.exports = {
     updateAPI: updateAPI,
     fillServiceMetadata: fillServiceMetadata,
     getStatus: getStatus,
-    createEventsFromConfig: createEventsFromConfig,
     fillEventData: fillEventData
 }
 
-async function createServicesFromConfig(hostname, apisConfig, registeredApis) {
-    if (!apisConfig)
-        return
-    progress = IN_PROGRESS
-    apis = apis.concat(apisConfig);
-    var error_message = ""
-    apis_success = [];
-    apis_failed = [];
-    for (var i = 0; i < apisConfig.length; i++) {
-        var api = apisConfig[i]
+function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
+    if (!varkesConfig.apis && !varkesConfig.events)
+        return;
+    apiSucceedCount = 0;
+    apisFailedCount = 0;
+    apisCount = 0;
+    apisCount += varkesConfig.apis.length;
+    regErrorMessage = "";
+    varkesConfig.apis.forEach(async (api) => {
+        var reg_api
+        if (registeredApis.length > 0)
+            reg_api = registeredApis.find(x => x.name == api.name)
         try {
-            var reg_api
-            if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == api.name)
             if (!reg_api) {
-                await createService(api, false, hostname)
+                await createService(api, false, baseUrl)
+                apiSucceedCount++;
                 LOGGER.debug("Registered API successful: %s", api.name)
             }
             else {
-                await updateService(api, reg_api.id, false, hostname)
+                await updateService(api, reg_api.id, false, baseUrl)
+                apiSucceedCount++;
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
-            apis_success.push(api.name);
-
-
-        } catch (error) {
-            var message = "Registration of API " + api.name + " failed: " + JSON.stringify(error.message)
-            LOGGER.error(message)
-            error_message += "\n" + message
-            apis_failed.push(api.name);
         }
-    }
-    if (error_message != "") {
-        throw new Error(error_message)
-    }
-    return registeredApis
-}
-
-async function createEventsFromConfig(eventsConfig, registeredApis) {
-    if (!eventsConfig)
-        return
-    apis = apis.concat(eventsConfig);
-    var error_message = ""
-    for (var i = 0; i < eventsConfig.length; i++) {
-        var event = eventsConfig[i]
-        try {
-            var reg_api
-            if (registeredApis.length > 0)
-                reg_api = registeredApis.find(x => x.name == event.name)
+        catch (err) {
             if (!reg_api) {
-                LOGGER.debug("Registered Event API successful: %s", event.name)
-                await createService(event, true)
+                apisFailedCount++;
+                var message = "Registration of API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
             }
             else {
-                LOGGER.debug("Updated Event API successful: %s", event.name)
-                await updateService(event, reg_api.id, true)
+                apisFailedCount++;
+                var message = "Updating API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += "- " + message + "\n\n";
+                LOGGER.error(message)
             }
-            apis_success.push(event.name)
-        } catch (error) {
-            var message = "Registration of Event API " + event.name + " failed: " + JSON.stringify(error, null, 2)
-            LOGGER.error(message)
-            error_message += "\n" + message
-            apis_failed.push(event.name);
         }
-    }
-    if (error_message != "") {
-        throw new Error(error_message)
-    }
-    progress = DONE_PROGRESS;
+    });
+    apisCount += varkesConfig.events.length;
+    varkesConfig.events.forEach(async (event) => {
+        var reg_api
+        if (registeredApis.length > 0)
+            reg_api = registeredApis.find(x => x.name == event.name)
+        try {
+            if (!reg_api) {
+                await createService(event, true)
+                apiSucceedCount++;
+                LOGGER.debug("Registered Event API successful: %s", event.name)
+            }
+            else {
+                await updateService(event, reg_api.id, true);
+                apiSucceedCount++;
+                LOGGER.debug("Updated Event API successful: %s", event.name)
+            }
+        }
+        catch (err) {
+            if (!reg_api) {
+                apisFailedCount++;
+                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            }
+            else {
+                apisFailedCount++;
+                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                regErrorMessage += message + "\n";
+                LOGGER.error(message)
+            }
+        }
+
+    });
 }
 function getStatus() {
     return {
-        "success_count": apis_success.length,
-        "failed_count": apis_failed.length,
-        "apis_success": apis_success,
-        "apis_failed": apis_failed,
-        "apis": apis,
-        "progress": progress
+        "successCount": apiSucceedCount,
+        "failedCount": apisFailedCount,
+        "apisCount": apisCount,
+        "inProgress": apisCount != (apiSucceedCount + apisFailedCount),
+        "errorMessage": regErrorMessage
     }
 }
-function createService(api, isEvent, hostname) {
+function createService(api, isEvent, baseUrl) {
     LOGGER.debug("Auto-register API '%s'", api.name)
     return new Promise((resolve, reject) => {
         let serviceData;
@@ -114,26 +113,24 @@ function createService(api, isEvent, hostname) {
             serviceData = fillEventData(api)
         }
         else {
-            serviceData = fillServiceMetadata(api, hostname)
+            serviceData = fillServiceMetadata(api, baseUrl)
         }
-
         createAPI(serviceData, function (err, httpResponse, body) {
-            if (err) {
+            if (!err && httpResponse.statusCode < 400) {
+                resolve(body)
+            }
+            else {
+                if (!err) {
+                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
+                }
                 reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
-                    reject(err)
-                }
-                else {
-                    resolve(body)
-                }
+
             }
         })
     })
 }
 
-function updateService(api, api_id, isEvent, hostname) {
+function updateService(api, api_id, isEvent, baseUrl) {
     LOGGER.debug("Auto-update API '%s'", api.name)
     return new Promise((resolve, reject) => {
         let serviceData;
@@ -141,19 +138,17 @@ function updateService(api, api_id, isEvent, hostname) {
             serviceData = fillEventData(api)
         }
         else {
-            serviceData = fillServiceMetadata(api, hostname)
+            serviceData = fillServiceMetadata(api, baseUrl)
         }
         updateAPI(serviceData, api_id, function (err, httpResponse, body) {
-            if (err) {
+            if (!err && httpResponse.statusCode < 400) {
+                resolve(body)
+            }
+            else {
+                if (!err) {
+                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
+                }
                 reject(err)
-            } else {
-                if (httpResponse.statusCode >= 400) {
-                    var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
-                    reject(err)
-                }
-                else {
-                    resolve(body)
-                }
             }
         })
     })
@@ -166,13 +161,13 @@ function fillEventData(event) {
     } else {
         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
-
+    let labels = event.labels ? event.labels : {};
+    labels["type"] = "AsyncApi";
     var serviceData = {
         provider: event.provider ? event.provider : "Varkes",
         name: event.name,
         description: event.description ? event.description : event.name,
-        labels: event.labels ? event.labels : {},
-        type: "Event",
+        labels: labels,
         events: {
             spec: specInJson
         }
@@ -241,13 +236,12 @@ function updateAPI(serviceMetadata, api_id, cb) {
     })
 }
 
-function fillServiceMetadata(api, hostname) {
-    let apiUrl = hostname
-    let apiUrlWithBasepath = hostname
+function fillServiceMetadata(api, baseUrl) {
+    let apiUrl = baseUrl
+    let apiUrlWithBasepath = baseUrl
     if (api.basepath) {
-        apiUrlWithBasepath = hostname + api.basepath
+        apiUrlWithBasepath = baseUrl + api.basepath
     }
-
     let specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
     if (api.type == "odata") {
         specificationUrl = apiUrlWithBasepath + "/$metadata"
@@ -295,7 +289,10 @@ function fillServiceMetadata(api, hostname) {
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
         }
-        apiData.spec = specInJson
+
+        if (api.registerSpec != false) {
+            apiData.spec = specInJson
+        }
 
         if (!api.description) {
             if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
@@ -304,13 +301,13 @@ function fillServiceMetadata(api, hostname) {
                 api.description = specInJson.info.title
         }
     }
-
+    let labels = api.labels ? api.labels : {};
+    labels["type"] = api.type == "odata" ? "OData" : "OpenAPI"
     var serviceData = {
         provider: api.provider ? api.provider : "Varkes",
         name: api.name,
         description: api.description ? api.description : api.name,
-        labels: api.labels ? api.labels : {},
-        type: api.type == "odata" ? "OData" : "OpenAPI",
+        labels: labels,
         api: apiData
     }
 

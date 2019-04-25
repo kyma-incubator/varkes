@@ -1,0 +1,28 @@
+<div style="background-color: white">
+  <div class="fd-action-bar">
+    <div class="fd-action-bar__back">
+      <button (click)="goBack()" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+    </div>
+    <div class="fd-action-bar__header">
+      <h1 *ngIf='!event' class="fd-action-bar__title">
+        Create API
+      </h1>
+      <h1 *ngIf='event' class="fd-action-bar__title">
+        Create Event
+      </h1>
+    </div>
+    <div class="fd-action-bar__actions">
+      <button *ngIf="!event" class=" fd-button--primary fd-button--l" (click)="createApi()">Create API</button>
+      <button *ngIf="event" class=" fd-button--primary fd-button--l" (click)="createApi()">Create Event</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
+
+</div>
+<br />
+<div style="background-color: white">
+  <div id="apiEditor" ace-editor [(text)]='text' [mode]="'json'" [theme]="'eclipse'" [options]="options"
+    [readOnly]="false" [autoUpdateContent]="true" style="min-height: 200px; width:100%; overflow: auto;">
+  </div>
+</div>

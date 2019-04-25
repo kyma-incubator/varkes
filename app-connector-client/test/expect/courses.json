@@ -1,0 +1,66 @@
+{
+    "provider": "Varkes",
+    "name": "courses",
+    "description": "Courses Webservices",
+    "labels": {
+        "type": "OpenAPI"
+    },
+    "api": {
+        "targetUrl": "http://(localhost|.+)/entity/v1",
+        "credentials": {
+            "basic": {
+                "username": "admin",
+                "password": "nimda"
+            }
+        },
+        "specificationUrl": "http://(localhost|.+)/entity/v1/metadata",
+        "spec": {
+            "openapi": "3.0.0",
+            "info": {
+                "description": "Courses Webservices",
+                "version": "2.0",
+                "title": "Courses Webservices"
+            },
+            "basePath": "/entity/v1",
+            "paths": {
+                "/courses": {
+                    "get": {
+                        "summary": "Get a list of available courses.",
+                        "description": "Lists all available courses.",
+                        "responses": {
+                            "200": {
+                                "description": "OK",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "courses": {
+                                            "type": "array",
+                                            "items": {
+                                                "code": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "401": {
+                                "description": "Unauthorized"
+                            },
+                            "403": {
+                                "description": "Forbidden"
+                            },
+                            "404": {
+                                "description": "Not Found"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "id": ".*"
+}

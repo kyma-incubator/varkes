@@ -7,7 +7,8 @@ const forge = require("node-forge")
 const url = require("url")
 const express = require("express")
 const connection = require("../connection")
-
+const KEY_URL = "/key";
+const CERT_URL = "/cert";
 var nodePort;
 var varkesConfig
 module.exports = {
@@ -161,7 +162,7 @@ async function connect(req, res) {
         var crt = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
         var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, connection.privateKey(), insecure)
 
-        var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.split(".")
+        var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
         var connectionData = {
             insecure: insecure,
             infoUrl: tokenResponse.api.infoUrl,
@@ -171,8 +172,10 @@ async function connect(req, res) {
             renewCertUrl: infoResponse.urls.renewCertUrl,
             revocationCertUrl: infoResponse.urls.revocationCertUrl,
             consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
-            domain: domains[1] ? domains[1] : domains[0],
-            application: infoResponse.clientIdentity.application
+            domain: domains,
+            application: infoResponse.clientIdentity.application,
+            key: KEY_URL,
+            cert: CERT_URL
         }
 
         if (connectionData.insecure && nodePort) {
@@ -201,8 +204,8 @@ function router(config, nodePortParam = null) {
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)
-    connectionRouter.get("/key", key)
-    connectionRouter.get("/cert", cert)
+    connectionRouter.get(KEY_URL, key)
+    connectionRouter.get(CERT_URL, cert)
     connectionRouter.post("/", connect)
 
     return connectionRouter

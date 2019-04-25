@@ -13,7 +13,7 @@ var runAsync = async () => {
         })
     }
     catch (err) {
-
+        console.log("Error while starting the application: " + err.message);
     }
 }
 
