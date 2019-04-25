@@ -1,11 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import * as ace from 'ace-builds';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
+import { linkManager } from '@kyma-project/luigi-client';
 @Component({
     selector: 'api-overview',
     templateUrl: './app.apioverview.html'
 })
-export class ApiOverviewComponent {
+export class ApiOverviewComponent implements OnInit {
     @Input() api;
     @Input() remote;
     @Input() event;
@@ -15,22 +17,18 @@ export class ApiOverviewComponent {
     public loading: boolean;
     public info;
     public baseUrl;
-    constructor(private http: Http) {
-        this.info = window['info'];
-        if (window["config"] && window["config"].domain) {
-            this.baseUrl = window["config"].domain;
-        }
-        else {
-            this.baseUrl = window.location.origin;
-        }
+    constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
+    }
+    public async ngOnInit() {
+        this.info = await this.serviceInstance.getInfo();
+        this.baseUrl = this.serviceInstance.getBaseUrl();
     }
     public updateApi() {
         this.loading = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         var editor = ace.edit("specEditor");
-        this.api.api = JSON.parse(editor.getValue());
-        this.http.put(this.baseUrl + this.info.links.remoteApis + "/" + this.api.id, JSON.stringify(this.api), options)
+        this.http.put(this.baseUrl + this.info.links.remoteApis + "/" + this.api.id, editor.getValue(), options)
             .subscribe(
                 success => {
                     this.loading = false;
@@ -48,7 +46,16 @@ export class ApiOverviewComponent {
         var editor = ace.edit("eventTopicEditor");
         let eventTime = new Date().toISOString();
         let eventType = document.getElementById("selectedTopic").innerHTML;
-        var version = eventType.substring(eventType.lastIndexOf(".") + 1)
+        var version;
+        var regex = /^(.*)\.([v|V][0-9]+$)/;
+        if (eventType.match(regex)) {
+            var matchedGroups = regex.exec(eventType);
+            version = matchedGroups[2];
+            eventType = matchedGroups[1];
+        }
+        else {
+            version = this.api.events.spec.info.version;
+        }
         let eventData = {
             "event-type": eventType,
             "event-type-version": version, //event types normally end with .v1
@@ -68,5 +75,8 @@ export class ApiOverviewComponent {
     }
     public closeAlert() {
         this.alert = false;
+    }
+    public goBack() {
+        linkManager().navigate('/');
     }
 }

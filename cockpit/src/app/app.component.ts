@@ -1,5 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
+import { ServiceInstancesService } from './service-instances/service-instances.service';
+import {
+  addInitListener,
+  addContextUpdateListener
+} from '@kyma-project/luigi-client';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,19 +13,12 @@ import { Http } from '@angular/http';
 export class AppComponent {
   public info;
   public loadViews;
-  public constructor(private http: Http) {
-    let baseUrl;
-    if (window["config"] && window["config"].domain) {
-      baseUrl = window["config"].domain;
-    }
-    else {
-      baseUrl = window.location.origin;
-    }
-    this.http.get(baseUrl + "/info")
-      .subscribe(
-        data => {
-          window['info'] = JSON.parse(data["_body"]);
-          this.loadViews = true;
-        });
+  public constructor(private serviceInstance: ServiceInstancesService) {
+
+    addInitListener(context => this.serviceInstance.initialize(context.config).then((result) => {
+      this.loadViews = true;
+    }).catch((err) => {
+      console.error(err);
+    }));
   }
 }

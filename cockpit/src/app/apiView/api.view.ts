@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Http } from '@angular/http';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
 @Component({
     selector: 'api-view',
     templateUrl: './app.apiView.html'
@@ -18,17 +19,14 @@ export class ApiViewComponent implements OnInit {
     public event;
     public update;
     public eventExample;
-    constructor(private http: Http, private route: ActivatedRoute) {
-        if (window["config"] && window["config"].domain) {
-            this.baseUrl = window["config"].domain;
-        }
-        else {
-            this.baseUrl = window.location.origin;
-        }
-        this.info = window["info"]
+    constructor(private http: Http, private route: ActivatedRoute, private serviceInstance: ServiceInstancesService) {
+
     }
 
-    public ngOnInit() {
+    public async ngOnInit() {
+        this.baseUrl = this.serviceInstance.getBaseUrl();
+        console.log("baseUrl " + this.baseUrl);
+        this.info = await this.serviceInstance.getInfo();
         this.route.params.subscribe(params => {
             this.apiId = params.id;
             this.remote = params.remote == "true";
