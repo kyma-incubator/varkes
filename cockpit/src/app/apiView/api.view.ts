@@ -25,7 +25,6 @@ export class ApiViewComponent implements OnInit {
 
     public async ngOnInit() {
         this.baseUrl = this.serviceInstance.getBaseUrl();
-        console.log("baseUrl " + this.baseUrl);
         this.info = await this.serviceInstance.getInfo();
         this.route.params.subscribe(params => {
             this.apiId = params.id;

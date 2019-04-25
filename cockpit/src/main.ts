@@ -11,5 +11,5 @@ if (environment.production) {
 LuigiClient.addInitListener(initialContext => {
   platformBrowserDynamic()
     .bootstrapModule(AppModule)
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 });
