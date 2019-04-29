@@ -1,55 +1,60 @@
-<div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
-  <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
-  {{alertMessage}}
-  <br />
-</div>
-
-<div style="background-color: white">
-  <div class="fd-action-bar">
-    <div class="fd-action-bar__back">
-      <button (click)="goBack()" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+<header class="fd-page__header fd-has-background-color-background-2">
+  <section class="fd-section">
+    <div class="fd-action-bar">
+      <div class="fd-action-bar__back">
+        <button (click)="goBack()" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+      </div>
+      <div class="fd-action-bar__header">
+        <h1 class="fd-action-bar__title">
+          {{api.name}}
+        </h1>
+      </div>
     </div>
-    <div class="fd-action-bar__header">
-      <h1 class="fd-action-bar__title">
-        {{api.name}}
-      </h1>
-    </div>
-    <div class="fd-action-bar__actions">
-      <button *ngIf="!readonly" class=" fd-button--primary fd-button--l" (click)="updateApi()">Update</button>
-      <button *ngIf="event && remote" class=" fd-button--primary fd-button--l" (click)="sendEvent()">Send Event</button>
-    </div>
-  </div>
-  <br />
-  <div class="fd-container fd-container--fluid" style="background-color: white;">
-    <span class="fd-tabs__item fd-col--1">
-      Name<br /><br />
-      Description
-    </span>
-    <span class="fd-tabs__item fd-col--4">
-      {{api.name}}<br /><br />
-      {{api.description}}
-    </span>
-    <span *ngIf="!event" class="fd-tabs__item fd-col--1">
-      TargetUrl<br /><br />
-      SpecUrl
-    </span>
-    <span *ngIf="!event" class="fd-tabs__item fd-col--4">
-      <a href="{{api.api.targetUrl}}" target="_blank">{{api.api.targetUrl}}</a><br /><br />
-      <a href="{{api.api.specificationUrl}}" target="_blank">{{api.api.specificationUrl}}</a>
-    </span>
-    <span class="fd-tabs__item fd-col--1">
-      Type<br /><br />
-      Status
-    </span>
-    <span class="fd-tabs__item fd-col--1">
-      {{api.labels.type}}<br /><br />
-      <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
-      <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
-    </span>
-  </div>
-  <br />
-</div>
 
-<div *ngIf="loading" class="fd-spinner" hidden aria-label="Loading">
+    <div class="fd-container fd-container--fluid">
+      <div class="fd-col--6">
+        <table class="fd-table fd-table--no-borders">
+          <tbody>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Name</td>
+              <td>{{api.name}}</td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Description</td>
+              <td>{{api.description}}</td>
+            </tr>
+            <ng-container *ngIf="!event">
+              <tr>
+                <td class="y-fd-table--col-2 fd-has-color-text-4">Links</td>
+                <td>
+                  <a href="{{api.api.targetUrl}}/console" target="_blank">Console Url <span
+                      class="sap-icon--action sap-icon--s"></span></a>,
+                  <a href="{{api.api.specificationUrl}}" target="_blank">Spec Url <span
+                      class="sap-icon--action sap-icon--s"></span></a>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="fd-col--6">
+        <table class="fd-table fd-table--no-borders">
+          <tbody>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Type</td>
+              <td>{{api.labels.type}}</td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
+              <td>
+                <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
+                <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-</div>
+  </section>
+</header>

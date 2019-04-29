@@ -12,7 +12,6 @@ import { ServiceInstancesService } from '../service-instances/service-instances.
 })
 export class ConnectionOverviewComponent implements OnInit {
 
-
     public apis;
     public baseUrl;
     public info;
@@ -42,11 +41,9 @@ export class ConnectionOverviewComponent implements OnInit {
             .subscribe(
                 success => {
                     this.connection = JSON.parse(success["_body"]);
-                    this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.connected = true;
                 },
                 error => {
-                    console.error(error);
                     this.connected = false;
                 });
     }
@@ -78,7 +75,6 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = true;
                     this.connection = JSON.parse(success["_body"]);
                     this.insecureConnection = this.connection.insecure;
-                    this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.onConnectionCloseModalClick();
                 },
                 error => {
@@ -99,12 +95,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 });
 
     }
-    public onLocalAPIClick() {
-        this.remote = false;
-    }
-    public onRemoteAPIClick() {
-        this.remote = true;
-    }
+
     public oninsecureConnection(target) {
         this.insecureConnection = target;
     }
@@ -120,22 +111,6 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.alert = true;
                 });
     }
-    public getStatus() {
-        this.loadInd = true;
-        this.http.get(this.baseUrl + this.info.links.registration)
-            .subscribe(
-                success => {
-                    this.loadInd = false;
-                    this.status = JSON.parse(success["_body"]);
-                    uxManager().addBackdrop();
-                    this.statusModalActive = true;
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                    this.loadInd = false;
-                });
-    }
     public downloadKey() {
         window.location.href = this.baseUrl + this.info.links.connection + this.connection.key;
     }
@@ -144,21 +119,5 @@ export class ConnectionOverviewComponent implements OnInit {
     }
     public closeAlert() {
         this.alert = false;
-    }
-    public searchApis() {
-        this.apis = this.apis.find(x => x.name == document.getElementById("search-1").innerHTML);
-        this.remote = true;
-    }
-    public openSearch() {
-        this.searchInd = true;
-    }
-    public closeSearch() {
-        this.searchInd = false;
-    }
-    public showNewApi() {
-        linkManager().navigate('/createapi/false');
-    }
-    public showNewEvent() {
-        linkManager().navigate('/createapi/true');
     }
 }
