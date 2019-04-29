@@ -26,6 +26,10 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public initial: boolean;
     public constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
         this.initial = true;
+        this.status = {
+            successCount: 0,
+            failedCount: 0
+        }
     }
     async ngOnChanges(changes: SimpleChanges) {
         this.apis = [];

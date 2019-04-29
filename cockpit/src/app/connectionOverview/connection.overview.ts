@@ -41,7 +41,6 @@ export class ConnectionOverviewComponent implements OnInit {
             .subscribe(
                 success => {
                     this.connection = JSON.parse(success["_body"]);
-                    this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.connected = true;
                 },
                 error => {
@@ -76,10 +75,7 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = true;
                     this.connection = JSON.parse(success["_body"]);
                     this.insecureConnection = this.connection.insecure;
-                    this.consoleUrl = this.connection.consoleUrl.match(/https:\/\/[A-z0-9.]+\//);
                     this.onConnectionCloseModalClick();
-                    window['info'].connection = this.connection;
-                    window['info'].connected = true;
                 },
                 error => {
                     this.connected = false;

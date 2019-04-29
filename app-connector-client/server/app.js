@@ -41,18 +41,13 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
         var info = {
             appName: varkesConfig.name,
-            connected: connection.established(),
-            insecure: connection.established() ? !connection.secure() : false,
-            connection: connection.established() ? connection.info() : {},
             links: {
                 logo: LOGO_URL,
                 localApis: LOCAL_APIS_URL + "/apis",
                 remoteApis: REMOTE_APIS_URL,
                 connection: CONNECTION,
                 registration: BATCH_REGISTRATION,
-                events: EVENTS_URL,
-                key: CONNECTION + "/key",
-                cert: CONNECTION + "/cert"
+                events: EVENTS_URL
             }
         }
         res.status(200).send(info);
