@@ -96,6 +96,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
             .subscribe(
                 success => {
                     this.batchStart = false;
+                    window.setInterval(() => { this.pollStatus(); }, 2000);
                 },
                 error => {
                     this.alertMessage = error;
@@ -104,24 +105,25 @@ export class ApiTableComponent implements OnInit, OnChanges {
                 });
     }
 
-    public getStatus() {
-        this.loadInd = true;
+    public pollStatus() {
         this.http.get(this.baseUrl + this.info.links.registration)
             .subscribe(
                 success => {
-                    this.loadInd = false;
                     this.status = JSON.parse(success["_body"]);
                     this.inProgress = this.status.inProgress;
-                    uxManager().addBackdrop();
-                    this.statusModalActive = true;
+                    if (!this.inProgress) {
+                        clearInterval();
+                    }
                 },
                 error => {
                     this.alertMessage = error;
                     this.alert = true;
-                    this.loadInd = false;
                 });
     }
-
+    public openStatusModal() {
+        uxManager().addBackdrop();
+        this.statusModalActive = true;
+    }
     public onLocalAPIClick() {
         this.remote = false;
         this.getApis(false);

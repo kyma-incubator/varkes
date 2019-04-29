@@ -50,23 +50,13 @@
                 "output": "/luigi-client"
               },
               {
-                "glob": "jquery.min.js",
-                "input": "node_modules/jquery/dist",
-                "output": "/jquery"
-              },
-              {
-                "glob": "bootstrap.min.js",
-                "input": "node_modules/bootstrap/dist/js",
-                "output": "/bootstrap"
-              },
-              {
                 "glob": "mode-json.js",
-                "input": "node_modules/ace-builds/src-min",
+                "input": "node_modules/ace-builds/src-min-noconflict",
                 "output": "/"
               },
               {
                 "glob": "worker-json.js",
-                "input": "node_modules/ace-builds/src-min",
+                "input": "node_modules/ace-builds/src-min-noconflict",
                 "output": "/"
               }
             ],
@@ -74,8 +64,8 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/ace-builds/src-min/ace.js",
-              "node_modules/ace-builds/src-min/theme-eclipse.js"
+              "node_modules/ace-builds/src-min-noconflict/ace.js",
+              "node_modules/ace-builds/src-min-noconflict/theme-eclipse.js"
             ],
             "es5BrowserSupport": true
           },

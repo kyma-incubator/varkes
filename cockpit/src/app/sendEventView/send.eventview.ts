@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import * as ace from 'ace-builds';
-
+import * as ace from 'ace-builds/src-min-noconflict/ace.js';
+import "ace-builds/webpack-resolver";
 @Component({
     selector: 'send-event-view',
     templateUrl: './app.send.eventview.html'
@@ -35,6 +35,7 @@ export class SendEventViewComponent implements OnInit {
         this.filteredTopicsNames = this.topics;
         this.info = await this.serviceInstance.getInfo();
         this.baseUrl = this.serviceInstance.getBaseUrl();
+        this.options['basePath'] = this.baseUrl;
     }
     public onOpenDropDown() {
         this.showTopics = true;
@@ -46,7 +47,7 @@ export class SendEventViewComponent implements OnInit {
     public sendEvent() {
         this.loading = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let httpOptions = new RequestOptions({ headers: headers });
         var editor = ace.edit("eventTopicEditor");
         let eventTime = new Date().toISOString();
         let eventType = this.topicName;
@@ -67,7 +68,7 @@ export class SendEventViewComponent implements OnInit {
             "event-time": eventTime,
             "data": editor.getValue()
         }
-        this.http.post(this.baseUrl + this.info.links.events, eventData, options)
+        this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
             .subscribe(
                 success => {
                     this.loading = false;

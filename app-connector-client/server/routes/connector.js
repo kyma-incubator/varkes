@@ -85,7 +85,7 @@ function disconnect(req, res) {
 function info(req, res) {
     var err = assureConnected()
     if (err) {
-        res.status(400).send({ error: err })
+        res.status(404).send({ error: err })
     } else {
         res.status(200).send(connection.info())
     }

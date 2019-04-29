@@ -44,7 +44,7 @@
               <span class="sap-icon--synchronize sap-icon--m sap-icon--animate-spin"></span>
             </ng-container>
           </button>
-          <button class="fd-button sap-icon--hint y-fd-button-status" (click)="getStatus()"
+          <button class="fd-button sap-icon--hint y-fd-button-status" (click)="openStatusModal()"
             title="Shows the progress of the batch registration" [ngClass]="{
                       'fd-button--medium': inProgress && !initial, 
                       'fd-button--positive': !inProgress && !initial , 
