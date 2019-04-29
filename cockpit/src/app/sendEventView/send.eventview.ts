@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { read } from 'fs';
+import { ServiceInstancesService } from '../service-instances/service-instances.service';
 import * as ace from 'ace-builds';
 
 @Component({
@@ -15,7 +15,7 @@ export class SendEventViewComponent implements OnInit {
     public topic;
     public showTopics;
     public loading: boolean;
-    public hostname;
+    public baseUrl;
     public info;
     public alert;
     public alertMessage;
@@ -26,20 +26,15 @@ export class SendEventViewComponent implements OnInit {
     public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
 
-    constructor(private http: Http) {
-        this.info = window['info'];
-        if (window["config"] && window["config"].domain) {
-            this.hostname = window["config"].domain;
-        }
-        else {
-            this.hostname = window.location.origin;
-        }
+    constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
     }
 
-    ngOnInit() {
+    public async ngOnInit() {
         this.event = JSON.parse(this.event);
         this.topics = Object.keys(this.event.events.spec.topics);
         this.filteredTopicsNames = this.topics;
+        this.info = await this.serviceInstance.getInfo();
+        this.baseUrl = this.serviceInstance.getBaseUrl();
     }
     public onOpenDropDown() {
         this.showTopics = true;
@@ -54,15 +49,25 @@ export class SendEventViewComponent implements OnInit {
         let options = new RequestOptions({ headers: headers });
         var editor = ace.edit("eventTopicEditor");
         let eventTime = new Date().toISOString();
-        let eventType = document.getElementById("selectedTopic").innerHTML;
-        var version = eventType.substring(eventType.lastIndexOf(".") + 1)
+        let eventType = this.topicName;
+        var version;
+        console.log("eventType " + eventType);
+        var regex = /^(.*)\.([v|V][0-9]+$)/;
+        if (eventType.match(regex)) {
+            var matchedGroups = regex.exec(eventType);
+            version = matchedGroups[2];
+            eventType = matchedGroups[1];
+        }
+        else {
+            version = this.event.events.spec.info.version;
+        }
         let eventData = {
             "event-type": eventType,
             "event-type-version": version, //event types normally end with .v1
             "event-time": eventTime,
             "data": editor.getValue()
         }
-        this.http.post(this.hostname + this.info.links.events, eventData, options)
+        this.http.post(this.baseUrl + this.info.links.events, eventData, options)
             .subscribe(
                 success => {
                     this.loading = false;
@@ -98,7 +103,6 @@ export class SendEventViewComponent implements OnInit {
         this.topicName = topic;
         this.topic = JSON.stringify(this.event.events.spec.topics[topic].example, null, '\t');
         this.showTopics = false;
-        document.getElementById("selectedTopic").innerHTML = topic;
     }
     filterTopicsNames() {
         this.filteredTopicsNames = [];

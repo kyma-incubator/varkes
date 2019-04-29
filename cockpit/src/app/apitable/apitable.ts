@@ -20,13 +20,12 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public actionList = [];
     public isDataAvailable;
     public status;
-    public searchInd: boolean;
-    public done;
+    public inProgress: boolean;
     public statusModalActive: boolean;
     public batchStart: boolean;
     public initial: boolean;
     public constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
-
+        this.initial = true;
     }
     async ngOnChanges(changes: SimpleChanges) {
         this.apis = [];
@@ -82,6 +81,12 @@ export class ApiTableComponent implements OnInit, OnChanges {
         uxManager().removeBackdrop();
         this.statusModalActive = false;
     }
+    public showNewApi() {
+        linkManager().navigate('/createapi/false');
+    }
+    public showNewEvent() {
+        linkManager().navigate('/createapi/true');
+    }
     public onBatchRegisteration() {
         this.batchStart = true;
         this.initial = false;
@@ -106,8 +111,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                 success => {
                     this.loadInd = false;
                     this.status = JSON.parse(success["_body"]);
-                    this.done = this.status.done;
-                    console.log("status " + this.status.errorMessage);
+                    this.inProgress = this.status.inProgress;
                     uxManager().addBackdrop();
                     this.statusModalActive = true;
                 },
@@ -116,19 +120,6 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.alert = true;
                     this.loadInd = false;
                 });
-    }
-
-    public searchApis() {
-        this.apis = this.apis.find(x => x.name == document.getElementById("search-1").innerHTML);
-        this.remote = true;
-    }
-
-    public openSearch() {
-        this.searchInd = true;
-    }
-
-    public closeSearch() {
-        this.searchInd = false;
     }
 
     public onLocalAPIClick() {
