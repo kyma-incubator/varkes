@@ -45,7 +45,6 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = true;
                 },
                 error => {
-                    console.error(error);
                     this.connected = false;
                 });
     }
