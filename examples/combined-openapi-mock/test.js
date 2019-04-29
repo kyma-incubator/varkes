@@ -53,12 +53,12 @@ describe('tests odata controllers', function () {
             });
 
             describe('GET connection info', function () {
-                it('should return 400', function (done) {
+                it('should return 404', function (done) {
                     request(app)
                         .get('/connection')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(400, done)
+                        .expect(404, done)
                 });
             });
 
