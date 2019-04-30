@@ -4,7 +4,8 @@
     "./cockpit",
     "./examples/*",
     "./odata-mock",
-    "./openapi-mock"
+    "./openapi-mock",
+    "./app-connector"
   ],
   "version": "0.5.3"
 }
