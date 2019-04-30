@@ -10,8 +10,6 @@ spec:
     metadata:
       labels:
         app: example-combined-odata-mock
-      annotations:
-        sidecar.istio.io/inject: "true"
     spec:
       containers:
       - image: eu.gcr.io/kyma-project/incubator/varkes-example-combined-odata-mock:latest
