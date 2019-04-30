@@ -80,7 +80,7 @@
               <td *ngIf="!remote">
                 <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
               </td>
-              <td *ngIf="remote">
+              <td *ngIf="remote" class="y--fixed-width">
                 <div class="fd-has-text-align-right">
                   <a (click)="showApiDetails(api.id)" class="fd-has-margin-left-small fd-has-margin-right-small"><span
                       class="sap-icon--edit sap-icon--m"></span></a>

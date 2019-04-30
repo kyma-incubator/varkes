@@ -68,11 +68,13 @@
 
   td {
     vertical-align: top;
-    word-break: break-all;
   }
 
   tr {
     cursor: default;
+  }
+  .y--fixed-width {
+    width: 130px;
   }
 }
 
@@ -208,7 +210,7 @@
 }
 
 .y-fd-popover__body {
-  width: 100%;
+  min-width: 100%;
   overflow: auto;
   max-height: 300px;
 }
