@@ -23,16 +23,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ConnectionResponse"
+        "400":
+          description: "Missing required attributes"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           description: "Connection is not authorized, usually the provided token is not valid"
           content:
             application/json:
               schema:
-                type: "object"
-                properties:
-                  error:
-                    type: string
-                    example: There is an error while registering. Please make sure that your token is unique
+                $ref: "#/components/schemas/ErrorResponse"
     get:
       tags:
         - "connection"
@@ -44,7 +46,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ConnectionResponse"
-        "400":
+        "404":
           description: "Not connected to Kyma cluster"
           content:
             application/json:
@@ -57,12 +59,6 @@ paths:
       responses:
         204:
           description: Disconnection was successful
-        500:
-          description: "There was an internal error while deleting files"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 
   /connection/key:
     get:
@@ -77,7 +73,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/KeyFile"
         "400":
-          description: "Private key could not be downloaded. Delete keys folder and restart varkes."
+          description: "Not connected to kyma cluster"
           content:
             application/json:
               schema:
@@ -95,7 +91,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/KeyFile"
         "400":
-          description: "Certificate file could not be found. You must be connected to Kyma instance, else restart Varkes."
+          description: "Not connected to kyma cluster"
           content:
             application/json:
               schema:
@@ -120,7 +116,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EventId"
         "400":
-          description: "Not connected to kyma cluster"
+          description: "Not connected to kyma cluster or missing required attributes"
           content:
             application/json:
               schema:
@@ -145,7 +141,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServiceId"
         "400":
-          description: "Not connected to Kyma cluster"
+          description: "Not connected to Kyma cluster or missing required attributes"
           content:
             application/json:
               schema:
@@ -196,7 +192,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "400":
-          description: "You are not connected to a Kyma instance."
+          description: "Not connected to Kyma"
           content:
             application/json:
               schema:
@@ -260,6 +256,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /local/registration:
+    get:
+      tags:
+        - "api"
+      summary: "Gets the status of the batch registration"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+    post:
+      tags:
+        - "api"
+      summary: "Batch registration action"
+      requestBody:
+        description: "Registration data"
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationDetails"
+      responses:
+        "200":
+          description: "Currently connected application and cluster"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectionResponse"
+        "400":
+          description: "Not connected to Kyma"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /local/apis:
     get:
       tags:
@@ -274,46 +306,15 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Service"
-  /local/registration:
-    get:
-      tags:
-        - "api"
-      summary: "Gets the status of the batch registration"
-      responses:
-        "200":
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Status"
-    post:
-      tags:
-        - "api"
-      summary: "Batch registration action"
-      responses:
-        "200":
-          description: "Currently connected application and cluster"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ConnectionResponse"
-        "401":
-          description: "Error with connection to Kyma cluster"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /local/apis/{apiname}:
     get:
       tags:
         - "api"
-      summary: "Gets all local apis bundled from the config file"
+      summary: "Gets a specific local api bundled from the config file"
       parameters:
         - in: "path"
           name: "apiname"
-          description: "Name of a API"
+          description: "Name of the API"
           required: true
           schema:
             type: "string"
@@ -336,7 +337,14 @@ paths:
     post:
       tags:
         - "api"
-      summary: "Gets all local apis bundled from the config file"
+      summary: "Registers a specific local API at the connected Kyma cluster"
+      requestBody:
+        description: "Registration data"
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationDetails"
       parameters:
         - in: "path"
           name: "apiname"
@@ -358,7 +366,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "400":
-          description: "You are not connected to a Kyma instance."
+          description: "Not connected to Kyma"
           content:
             application/json:
               schema:
@@ -376,7 +384,7 @@ paths:
     get:
       tags:
         - "misc"
-      summary: "Returns the app-connector-client endpoints"
+      summary: "Returns general information of the application"
       responses:
         "200":
           description: "Successful"
@@ -392,20 +400,6 @@ paths:
       responses:
         "200":
           description: "Successful"
-  /mock/apis:
-    get:
-      tags:
-        - "api"
-      summary: "Gets all mocked apis"
-      responses:
-        "200":
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Service"
 
 components:
   schemas:
@@ -443,8 +437,6 @@ components:
               type: "string"
               example: "/events"
               description: "url for sending events"
-            
-            
     Status:
       type: "object"
       properties:
@@ -468,29 +460,26 @@ components:
           type: "string"
           example: "Failed to register api <apiname>: "
           description: "error messages of the failed apis"
+    RegistrationDetails:
+      type: "object"
+      properties:
+        baseUrl:
+          type: "string"
+          description: "Base url under which the API will be served"
+          example: "https://myMock.kyma-cluster.io"
     ConnectionDetails:
       type: "object"
       properties:
-        token:
+        url:
           type: "string"
           example: "https://kyma-cluster/v1/applications/sampleApp/info?token=xxx"
           description: "The token url provided by the Kyma cluster to connect to"
-        register:
-          type: "boolean"
-          description: Defines whether you want to auto register your APIs to Kyma while registering
-          example: true
         insecure:
           type: "boolean"
           description: "Connected Kyma cluster is running in minikube?"
           example: false
-        hostname:
-          type: "string"
-          example: "http://localhost:10000"
-          description: Hostname of the APIs you are registering
       required:
-        - token
-        - hostname
-
+        - url
     ServiceId:
       type: "object"
       properties:

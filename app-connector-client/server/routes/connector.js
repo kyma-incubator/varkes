@@ -152,7 +152,8 @@ function parseSubjectToJsonArray(subject) {
 }
 
 async function connect(req, res) {
-    if (!req.body) res.status(400).send({ error: "No connection details provided" })
+    if (!req.body) res.status(400).send({ error: "No request body provided" })
+    if (!req.body.url) res.status(400).send({ error: "Missing required attribute 'url'" })
 
     try {
         var insecure = req.body.insecure ? true : false
