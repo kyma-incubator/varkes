@@ -1,6 +1,6 @@
 {
   "name": "@varkes/odata-mock",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "main": "dist/server/app.js",
   "types": "dist/app.d.ts",
   "engines": {
