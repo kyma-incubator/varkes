@@ -1,0 +1,229 @@
+//Panel
+.fd-panel {
+  @extend .fd-panel;
+
+  display: block;
+  &--button {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 5px 0 rgba(fd-color('text', 3), 0.4);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .fd-panel__body {
+    &--bleed {
+      .fd-table {
+        td:last-child,
+        th:last-child {
+          padding-right: 24px;
+        }
+
+        td:first-child,
+        th:first-child {
+          padding-left: 24px;
+        }
+      }
+    }
+  }
+
+  &__actions {
+    &.fd-panel__actions {
+      display: flex;
+      > * {
+        margin-left: 8px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &__head {
+    .fd-tabs {
+      margin: -(fd-space('small')) 0;
+    }
+  }
+}
+
+//Popover
+.fd-popover {
+  &__body {
+    z-index: 5;
+  }
+}
+
+//Tables
+.fd-table {
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  td {
+    vertical-align: top;
+  }
+
+  tr {
+    cursor: default;
+  }
+  .y--fixed-width {
+    width: 130px;
+  }
+}
+
+.y-fd-table {
+  margin-bottom: 0;
+
+  $possible-columns: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+  @each $i in $possible-columns {
+    &--col-#{$i} {
+      width: calc(100% / 12 * #{$i});
+    }
+  }
+
+  &__tr--no-border-below {
+    border-bottom: 0;
+  }
+
+  &__tr--no-border-below + tr {
+    border-top: 0;
+  }
+}
+
+//Page header
+.fd-page {
+  &__header {
+
+    margin-bottom: fd-space('large') / 2;
+
+    .fd-section {
+      padding-bottom: fd-space('small');
+    }
+
+    .fd-tabs {
+      margin-bottom: -(fd-space('small'));
+    }
+
+    .fd-table {
+      &--no-borders {
+        tr {
+          &:hover,
+          .is-hover {
+            background-color: transparent;
+          }
+
+          td {
+            padding-top: fd-space('tiny');
+            padding-bottom: fd-space('tiny');
+
+            &:first-child {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+} 
+
+//Overlay 
+.fd-overlay {
+  &--modal {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+//Tabs
+.fd-tabs {
+  &__item {
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+}
+
+//Loading spinner
+.is-busy,
+[aria-busy='true'] {
+  &:before {
+    z-index: 5;
+  }
+
+  .fd-spinner {
+    z-index: 6;
+  }
+}
+
+//Inline help
+.fd-inline-help {
+  &:before {
+    line-height: 1.3;
+  }
+}
+
+// Fix for popover could not be opened on Safari (also causing some infinite operations eating all resources)
+// Transform property causes problem in Safari. Workaround removes `transform` and uses `margin-top` instead
+.fd-popover__body {
+  margin-top: 0;
+  transform: none;
+}
+
+.fd-popover__body {
+  &[aria-hidden='true'],
+  &.is-hidden {
+    margin-top: -15px;
+    transform: none;
+  }
+}
+
+//Dropdown
+.y-fd-form__control[type='text'] {
+  border: 0;
+  padding-right: 40px;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.y-fd-dropdown__control {
+  height: auto;
+  max-height: none;
+
+  &:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    margin: 0;
+  }
+}
+
+.y-fd-popover__body {
+  min-width: 100%;
+  overflow: auto;
+  max-height: 300px;
+}
+
+//Registration status
+.y-fd-pannel {
+  &_actions-width-status {
+    align-items: center;
+
+    .y-fd-button-status {
+      max-height: 25px;
+      height: 25px;
+      min-width: 25px;
+    }
+  }
+}

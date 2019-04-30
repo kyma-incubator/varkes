@@ -1,51 +1,123 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
-  <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
-  {{alertMessage}}
-  <br />
-</div>
-<div *ngIf="loadInd" class="fd-spinner" hidden aria-label="Loading">
+<section class="fd-section">
+  <!--The content below is only a placeholder and can be replaced.-->
+  <div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
+    <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
+    {{alertMessage}}
+    <br />
+  </div>
 
-</div>
-<div *ngIf="isDataAvailable" class="fd-tabs__panel" aria-expanded="true" id="apitable" role="tabpanel">
-  <table class="fd-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Type</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let api of apis; index as i" id="api{{i}}">
-        <td>
-          <a (click)="showApiDetails(api.id)" class="fd-has-font-weight-semi">{{api.name}}</a>
-        </td>
-        <td>{{api.description}}</td>
-        <td>{{api.labels.type}}</td>
-        <td *ngIf="!remote">
-          <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
-        </td>
-        <td *ngIf="remote">
-          <div class="fd-popover" (clickOutside)="onCloseActionList(i)" [excludeBeforeClick]="true">
-            <div class="fd-popover__control">
-              <button id="actionBtn" (click)="onOpenActionList(i)" class="fd-button--light sap-icon--overflow"
-                aria-label="More"></button>
-            </div>
-            <div *ngIf="actionList[i]" class="fd-popover__body fd-has-padding-tiny">
-              <nav class="fd-menu">
-                <ul class="fd-menu__list">
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a
-                      (click)="showApiDetails(api.id)">Edit</a></li>
-                  <li class="fd-menu__item fd-button--compact fd-button--light"><a (click)="deleteApi(api,i)"
-                      style="color: brown">Delete</a></li>
-                </ul>
-              </nav>
-            </div>
+  <div class="fd-panel" [attr.aria-busy]="loadInd ? 'true' : 'false'">
+    <div class="fd-spinner" [attr.aria-hidden]="loadInd ? 'false' : 'true'" aria-label="Loading">
+      <div></div>
+    </div>
+    <div class="fd-panel__header">
+      <div class="fd-panel__head">
+
+        <ng-container *ngIf="connected">
+          <ul class="fd-tabs" role="tablist">
+            <li class="fd-tabs__item">
+              <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{!remote}}
+                (click)="onLocalAPIClick()" href="#apitable" role="tab">
+                Local APIs
+              </a>
+            </li>
+            <li class="fd-tabs__item">
+              <a class=" fd-tabs__link" aria-controls="apitable" attr.aria-selected={{remote}}
+                (click)="onRemoteAPIClick()" href="#apitable" role="tab">
+                Remote APIs
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+
+        <ng-container *ngIf="!connected">
+          <h3 class="fd-panel__title">Local API</h3>
+        </ng-container>
+
+      </div>
+      <div class="fd-panel__actions y-fd-pannel_actions-width-status">
+        <ng-container *ngIf="!remote && connected">
+          <button class="fd-button fd-button--light" (click)="onBatchRegisteration()"
+            [attr.disabled]="batchStart ? '' : null" title="Register all the local apis to kyma">
+            Batch Registration
+            <ng-container *ngIf="batchStart">
+              <span class="sap-icon--synchronize sap-icon--m sap-icon--animate-spin"></span>
+            </ng-container>
+          </button>
+          <button class="fd-button sap-icon--hint y-fd-button-status" (click)="openStatusModal()"
+            title="Shows the progress of the batch registration" [ngClass]="{
+                      'fd-button--medium': inProgress && !initial, 
+                      'fd-button--positive': !inProgress && !initial , 
+                      'fd-button--standard': initial
+                    }"></button>
+        </ng-container>
+
+        <ng-container *ngIf="remote">
+          <button class="fd-button fd-button--light sap-icon--add" (click)="showNewApi()">Create New API</button>
+          <button class="fd-button fd-button--light sap-icon--add" (click)="showNewEvent()">Create New
+            Event</button>
+        </ng-container>
+      </div>
+    </div>
+    <div class="fd-panel__body fd-panel__body--bleed">
+      <div *ngIf="isDataAvailable" class="fd-tabs__panel" aria-expanded="true" id="apitable" role="tabpanel">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let api of apis; index as i" id="api{{i}}">
+              <td>
+                <a (click)="showApiDetails(api.id)" class="fd-has-font-weight-bold">{{api.name}}</a>
+              </td>
+              <td>{{api.description}}</td>
+              <td>{{api.labels.type}}</td>
+              <td *ngIf="!remote">
+                <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
+              </td>
+              <td *ngIf="remote" class="y--fixed-width">
+                <div class="fd-has-text-align-right">
+                  <a (click)="showApiDetails(api.id)" class="fd-has-margin-left-small fd-has-margin-right-small"><span
+                      class="sap-icon--edit sap-icon--m"></span></a>
+                  <a (click)="deleteApi(api,i)" href="javascript:void(null)"
+                    class="fd-has-margin-left-small fd-has-margin-right-small fd-has-color-status-3"><span
+                      class="sap-icon--delete sap-icon--m"></span></a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="statusModalActive" class="fd-ui__overlay fd-overlay fd-overlay--modal" aria-hidden="false">
+    <div class="fd-modal" role="dialog" style="width: 45%;">
+      <div class="fd-modal__content" role="document">
+        <div class="fd-modal__header">
+          <h1 class="fd-modal__title">Registration Status</h1>
+          <button (click)="onStatusCloseModalClick()" class="fd-button--light fd-modal__close"
+            aria-label="close"></button>
+        </div>
+        <div class="fd-modal__body">
+          Successful Registration: <b>{{status.successCount}}</b><br />
+          <br />
+          Failed Registration: <b>{{status.failedCount}}</b><br />
+          <br />
+          Progress: <span *ngIf="!inProgress" class="fd-badge fd-badge--success">Done</span>
+          <span *ngIf="inProgress" class="fd-badge fd-badge--warning">InProgress</span><br />
+          <br />
+          <div *ngIf="status.errorMessage">
+            Errors:<br />
+            <textarea class="fd-form__control" style="resize: none" readonly>{{status.errorMessage}}</textarea>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

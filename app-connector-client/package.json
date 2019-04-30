@@ -1,6 +1,6 @@
 {
   "name": "@varkes/app-connector-client",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Client for Kyma application connectivity",
   "main": "server/app.js",
   "scripts": {
@@ -32,7 +32,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@varkes/example-kyma-mock": "^0.5.1",
+    "@varkes/example-kyma-mock": "^0.5.2",
     "mocha": "^6.1.3",
     "nyc": "^13.3.0",
     "supertest": "^4.0.2"

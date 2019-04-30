@@ -13,6 +13,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { SendEventViewComponent } from './sendEventView/send.eventview';
 import { CreateApiViewComponent } from './createApi/create.api.view';
 import { ServiceInstancesService } from './service-instances/service-instances.service';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +30,8 @@ import { ServiceInstancesService } from './service-instances/service-instances.s
     AppRoutingModule,
     AceEditorModule,
     HttpModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    FormsModule
   ],
   providers: [ServiceInstancesService],
   bootstrap: [AppComponent]

@@ -85,7 +85,7 @@ function disconnect(req, res) {
 function info(req, res) {
     var err = assureConnected()
     if (err) {
-        res.status(400).send({ error: err })
+        res.status(404).send({ error: err })
     } else {
         res.status(200).send(connection.info())
     }
@@ -152,7 +152,8 @@ function parseSubjectToJsonArray(subject) {
 }
 
 async function connect(req, res) {
-    if (!req.body) res.status(400).send({ error: "No connection details provided" })
+    if (!req.body) res.status(400).send({ error: "No request body provided" })
+    if (!req.body.url) res.status(400).send({ error: "Missing required attribute 'url'" })
 
     try {
         var insecure = req.body.insecure ? true : false
@@ -171,7 +172,8 @@ async function connect(req, res) {
             certificatesUrl: infoResponse.urls.certificatesUrl,
             renewCertUrl: infoResponse.urls.renewCertUrl,
             revocationCertUrl: infoResponse.urls.revocationCertUrl,
-            consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
+            consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", ""),
+            applicationUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
             domain: domains,
             application: infoResponse.clientIdentity.application,
             key: KEY_URL,
