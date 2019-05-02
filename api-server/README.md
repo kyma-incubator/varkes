@@ -2,10 +2,10 @@
  <img src="https://raw.githubusercontent.com/kyma-incubator/varkes/master/logos/logo.svg" width="150">
 </p>
 
-# App Connector Client
-[![npm version](https://badge.fury.io/js/%40varkes%2Fapp-connector-client.svg)](https://badge.fury.io/js/%40varkes%2Fapp-connector-client)
+# Api Server
+[![npm version](https://badge.fury.io/js/%40varkes%2Fapp-connector-client.svg)](https://badge.fury.io/js/%40varkes%2Fapi-server)
 
-App Connector Client provides an interface to pair your application with Kyma, register APIs and send Events.
+Api Server provides an interface to pair your application with Kyma, register APIs and send Events.
 
 After the startup, you have access to:
 
@@ -17,7 +17,7 @@ After the startup, you have access to:
 
 Make sure you have first executed `make resolve` from the project root!
 
-To run the Client locally with an empty configuration, use:
+To run the Server locally with an empty configuration, use:
 ```
 npm start
 ```

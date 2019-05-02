@@ -1,4 +1,4 @@
-APP_NAME = varkes-app-connector-client
+APP_NAME = varkes-api-server
 IMG = $(DOCKER_PUSH_REPOSITORY)$(DOCKER_PUSH_DIRECTORY)/$(APP_NAME)
 resolve:
 	npm install
