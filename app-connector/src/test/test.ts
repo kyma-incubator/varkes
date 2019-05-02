@@ -23,7 +23,7 @@ describe("should work", () => {
         })
 
         let connectionData = await connection.connect(tokenURL)
-        await api.create(schoolsAPI);
+        await api.create(JSON.parse(schoolsAPI));
         return expect(new RegExp(JSON.stringify(connectionData), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(connectionExpected)), "g"));
     })
 
@@ -33,9 +33,9 @@ describe("should work", () => {
         })
     })
     describe('bundled apis', () => {
-        it('register school api', () => {
+        it('register school api', async () => {
             api.findAll().then(function (result) {
-                expect(new RegExp(JSON.stringify(result), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
+                return expect(new RegExp(JSON.stringify(result), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
             })
         })
     });
