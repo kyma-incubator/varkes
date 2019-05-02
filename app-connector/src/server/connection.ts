@@ -1,6 +1,6 @@
 import { logger as LOGGER } from "./logger";
 import * as request from "request-promise";
-import * as forge from "node-forge";
+const forge = require("node-forge");
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
