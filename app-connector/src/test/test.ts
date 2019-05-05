@@ -33,10 +33,11 @@ describe("should work", () => {
         })
     })
     describe('bundled apis', () => {
-        it('register school api', async () => {
-            api.findAll().then(function (result) {
-                return expect(new RegExp(JSON.stringify(result), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
+        it('register school api', () => {
+            return api.findAll().then((result) => {
+                expect(JSON.stringify(result).replace(/\\/g, '')).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
             })
+
         })
     });
 });

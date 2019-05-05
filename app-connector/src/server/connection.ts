@@ -96,14 +96,26 @@ function parseSubjectToJsonArray(subject: any) {
     return subjectsArray;
 }
 function certificate() {
-    return certificateData
+    if (fs.existsSync(crtFile)) {
+        LOGGER.info("Found existing certificate: %s", crtFile)
+        return fs.readFileSync(crtFile, "utf-8")
+    }
+    return "";
 }
 
 function privateKey() {
-    return privateKeyData
+    if (fs.existsSync(privateKeyFile)) {
+        LOGGER.info("Found existing function key: %s", privateKeyFile)
+        return fs.readFileSync(privateKeyFile, "utf-8");
+    } else {
+        return generateprivateKey(privateKeyFile);
+    }
 }
 
 function established() {
+    if (!connection) {
+        connection = info();
+    }
     return connection && connection.metadataUrl
 }
 function generateprivateKey(filePath: any) {
@@ -115,7 +127,12 @@ function generateprivateKey(filePath: any) {
     return key
 }
 function info() {
-    return connection;
+    if (fs.existsSync(connFile)) {
+        LOGGER.info("Found existing connection info: %s", connFile)
+        connection = JSON.parse(fs.readFileSync(connFile, "utf-8"))
+        return connection;
+    }
+    return null;
 }
 async function connect(tokenUrl: string, insecure: boolean = false, nodePort: any = null) {
     if (!fs.existsSync(keysDirectory)) {
@@ -134,7 +151,7 @@ async function connect(tokenUrl: string, insecure: boolean = false, nodePort: an
         var tokenResponse = await callTokenUrl(insecure, tokenUrl)
         var csr = generateCSR(tokenResponse.certificate.subject)
         var crt = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
-        var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, privateKey(), insecure)
+        var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, privateKeyData, insecure)
 
         var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
         var connectionData: any = {
