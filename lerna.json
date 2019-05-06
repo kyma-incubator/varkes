@@ -1,6 +1,6 @@
 {
   "packages": [
-    "./app-connector-client",
+    "./api-server",
     "./cockpit",
     "./examples/*",
     "./odata-mock",

@@ -14,6 +14,29 @@ var privateKeyData: any;
 var certificateData: any;
 var connection: any;
 
+function init() {
+    if (!fs.existsSync(keysDirectory)) {
+        fs.mkdirSync(keysDirectory)
+    }
+
+    if (fs.existsSync(privateKeyFile)) {
+        privateKeyData = fs.readFileSync(privateKeyFile, "utf-8")
+        LOGGER.info("Found existing private key: %s", privateKeyFile)
+    } else {
+        privateKeyData = generatePrivateKey(privateKeyFile)
+    }
+
+
+    if (fs.existsSync(connFile)) {
+        connection = JSON.parse(fs.readFileSync(connFile, "utf-8"))
+        LOGGER.info("Found existing connection info: %s", connFile)
+    }
+
+    if (fs.existsSync(crtFile)) {
+        certificateData = fs.readFileSync(crtFile, "utf-8")
+        LOGGER.info("Found existing certificate: %s", crtFile)
+    }
+}
 async function callTokenUrl(insecure: any, url: any) {
     LOGGER.debug("Calling token URL '%s'", url)
     return request({
@@ -99,30 +122,21 @@ function parseSubjectToJsonArray(subject: any) {
 }
 
 function certificate() {
-    if (fs.existsSync(crtFile)) {
-        LOGGER.info("Found existing certificate: %s", crtFile)
-        return fs.readFileSync(crtFile, "utf-8")
+    if (!established()) {
+        throw new Error("Trying to access connection status without having a connection established. Please call connection.established() upfront to assure an available connection status")
     }
-    return "";
+    return certificateData
 }
 
 function privateKey() {
-    if (fs.existsSync(privateKeyFile)) {
-        LOGGER.info("Found existing function key: %s", privateKeyFile)
-        return fs.readFileSync(privateKeyFile, "utf-8");
-    } else {
-        return generateprivateKey(privateKeyFile);
-    }
+    return privateKeyData
 }
 
 function established() {
-    if (!connection) {
-        connection = info();
-    }
     return connection && connection.metadataUrl
 }
 
-function generateprivateKey(filePath: any) {
+function generatePrivateKey(filePath: any) {
     LOGGER.debug("Generating new function key: %s", filePath)
     var keys = forge.pki.rsa.generateKeyPair(2048)
     const key = forge.pki.privateKeyToPem(keys.privateKey)
@@ -132,32 +146,17 @@ function generateprivateKey(filePath: any) {
 }
 
 function info() {
-    if (fs.existsSync(connFile)) {
-        LOGGER.info("Found existing connection info: %s", connFile)
-        connection = JSON.parse(fs.readFileSync(connFile, "utf-8"))
-        return connection;
-    }
-    return null;
+    return connection;
 }
 
-async function connect(tokenUrl: string, insecure: boolean = false, nodePort: any = null) {
-    if (!fs.existsSync(keysDirectory)) {
-        fs.mkdirSync(keysDirectory)
-    }
-
-    if (fs.existsSync(privateKeyFile)) {
-        privateKeyData = fs.readFileSync(privateKeyFile, "utf-8")
-        LOGGER.info("Found existing function key: %s", privateKeyFile)
-    } else {
-        privateKeyData = generateprivateKey(privateKeyFile)
-    }
+async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false, nodePort: any = null) {
     try {
         var insecure = insecure ? true : false
 
         var tokenResponse = await callTokenUrl(insecure, tokenUrl)
         var csr = generateCSR(tokenResponse.certificate.subject)
-        var crt = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
-        var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, crt, privateKeyData, insecure)
+        certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
+        var infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, certificateData, privateKeyData, insecure)
 
         var domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
         var connectionData: any = {
@@ -178,9 +177,10 @@ async function connect(tokenUrl: string, insecure: boolean = false, nodePort: an
             var result = connectionData.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/)
             connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
         }
-
-        fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), "utf8")
-        fs.writeFileSync(crtFile, crt, "utf8")
+        if (persistFiles) {
+            fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), "utf8")
+            fs.writeFileSync(crtFile, certificateData, "utf8")
+        }
         connection = connectionData;
         LOGGER.info("Connected to %s", connectionData.domain)
         return connectionData;
@@ -191,4 +191,14 @@ async function connect(tokenUrl: string, insecure: boolean = false, nodePort: an
         throw new Error(message);
     }
 }
-export { connect, info, privateKey, certificate, established }
+function destroy() {
+    connection = null
+
+    if (fs.existsSync(connFile)) {
+        fs.unlinkSync(connFile)
+    }
+    if (fs.existsSync(crtFile)) {
+        fs.unlinkSync(crtFile)
+    }
+}
+export { connect, info, privateKey, certificate, established, init, destroy }

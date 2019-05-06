@@ -1,20 +1,20 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: app-connector-client
+  name: api-server
   labels:
-    app: app-connector-client
+    app: api-server
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: app-connector-client
+        app: api-server
     spec:
       containers:
-      - image: eu.gcr.io/kyma-project/incubator/develop/varkes-app-connector-client:latest
+      - image: eu.gcr.io/kyma-project/incubator/develop/varkes-api-server:latest
         imagePullPolicy: Always
-        name: app-connector-client
+        name: api-server
         ports:
         - name: http
           containerPort: 10000
@@ -25,24 +25,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-connector-client
+  name: api-server
   labels:
-    app: app-connector-client
+    app: api-server
 spec:
   ports:
   - name: http
     port: 10000
   selector:
-    app: app-connector-client
+    app: api-server
 ---
 apiVersion: gateway.kyma-project.io/v1alpha2
 kind: Api
 metadata:
   labels:
-    app: app-connector-client
-  name: app-connector-client
+    app: api-server
+  name: api-server
 spec:
-  hostname: app-connector-client
+  hostname: api-server
   service:
-    name: app-connector-client
+    name: api-server
     port: 10000

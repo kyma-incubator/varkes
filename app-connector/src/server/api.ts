@@ -25,16 +25,16 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Sending Event: %s", error)
+                    LOGGER.error("Error while Finding all APIs: %s", error)
                     reject(error);
                 } else {
                     if (httpResponse.statusCode >= 400) {
-                        let message = "Error while Sending Event: %s" + JSON.stringify(body, null, 2);
+                        let message = "Error while Finding all APIs: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
                         reject(new Error(message));
                     }
                     else {
-                        LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
+                        LOGGER.debug("Received all APIs: %s", JSON.stringify(body, null, 2))
                         resolve(body);
                     }
                 }
@@ -63,16 +63,16 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Sending Event: %s", error)
+                    LOGGER.error("Error while Creating Api: %s", error)
                     reject(error);
                 } else {
                     if (httpResponse.statusCode >= 400) {
-                        let message = "Error while Sending Event: %s" + JSON.stringify(body, null, 2);
+                        let message = "Error while Creating Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
                         reject(new Error(message));
                     }
                     else {
-                        LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
+                        LOGGER.debug("Received new Api: %s", JSON.stringify(body, null, 2))
                         resolve(body);
                     }
                 }
@@ -99,16 +99,16 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Sending Event: %s", error)
+                    LOGGER.error("Error while Updating API: %s", error)
                     reject(error);
                 } else {
                     if (httpResponse.statusCode >= 400) {
-                        let message = "Error while Sending Event: %s" + JSON.stringify(body, null, 2);
+                        let message = "Error while Updating API: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
                         reject(new Error(message));
                     }
                     else {
-                        LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
+                        LOGGER.debug("Received Updated API: %s", JSON.stringify(body, null, 2))
                         resolve(body);
                     }
                 }
@@ -130,16 +130,49 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Sending Event: %s", error)
+                    LOGGER.error("Error while Finding Api (%s): %s", apiId, error)
                     reject(error);
                 } else {
                     if (httpResponse.statusCode >= 400) {
-                        let message = "Error while Sending Event: %s" + JSON.stringify(body, null, 2);
+                        let message = "Error while Finding Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
                         reject(new Error(message));
                     }
                     else {
-                        LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))
+                        LOGGER.debug("Received api: %s", JSON.stringify(body, null, 2))
+                        resolve(body);
+                    }
+                }
+            })
+        })
+    }
+
+    public delete(apiId: any) {
+        LOGGER.debug("Delete API %s", apiId)
+        return new Promise((resolve, reject) => {
+            let err = this.assureConnected()
+            if (err) {
+                reject(new Error(err));
+            }
+            request.delete({
+                url: `${connection.info().metadataUrl}/${apiId}`,
+                agentOptions: {
+                    cert: connection.certificate(),
+                    key: connection.privateKey()
+                },
+                rejectUnauthorized: !connection.info().insecure
+            }, (error: any, httpResponse: any, body: any) => {
+                if (error) {
+                    LOGGER.error("Error while Deleting Api: %s", error)
+                    reject(error);
+                } else {
+                    if (httpResponse.statusCode >= 400) {
+                        let message = "Error while Deleting Api: %s" + JSON.stringify(body, null, 2);
+                        LOGGER.error(message);
+                        reject(new Error(message));
+                    }
+                    else {
+                        LOGGER.debug("Received delete Api response: %s", JSON.stringify(body, null, 2))
                         resolve(body);
                     }
                 }
