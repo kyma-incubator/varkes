@@ -1,6 +1,4 @@
 import { api, event, connection } from '../server/app';
-import * as request from "supertest"
-import * as express from "express"
 var kyma = require("@varkes/example-kyma-mock");
 import * as fs from 'fs';
 import * as chai from 'chai';
@@ -8,14 +6,15 @@ chai.use(require('chai-match'));
 const expect = chai.expect;
 import * as path from 'path';
 import { equal } from 'assert';
+
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
 const connectionExpected = fs.readFileSync(path.resolve("dist/test/expect/connection.json")).toString();
 const schoolsAPI = fs.readFileSync(path.resolve("dist/test/schools.json")).toString();
 const schoolsExpectedAPI = fs.readFileSync(path.resolve("dist/test/expect/schools.json")).toString();
+
 describe("should work", () => {
     var kymaServer: any
-    var server: any
     before(async () => { //* start kyma mock before tests
         deleteKeysFile()
         await kyma.then((app: any) => {
@@ -37,7 +36,6 @@ describe("should work", () => {
             return api.findAll().then((result) => {
                 expect(JSON.stringify(result).replace(/\\/g, '')).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
             })
-
         })
     });
 });

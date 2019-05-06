@@ -1,6 +1,7 @@
 import { logger as LOGGER } from "./logger";
 import * as request from 'request-promise';
 import * as connection from './connection';
+
 export class API {
     private assureConnected() {
         if (!connection.established()) {

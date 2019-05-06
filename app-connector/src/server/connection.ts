@@ -5,13 +5,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
 
-var privateKeyData: any;
-var certificateData: any;
-var connection: any;
 const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
+
+var privateKeyData: any;
+var certificateData: any;
+var connection: any;
+
 async function callTokenUrl(insecure: any, url: any) {
     LOGGER.debug("Calling token URL '%s'", url)
     return request({
@@ -81,8 +83,8 @@ function generateCSR(subject: any) {
     csr.sign(pk)
     LOGGER.debug("Created csr using subject %s", subject)
     return forge.pki.certificationRequestToPem(csr)
-
 }
+
 function parseSubjectToJsonArray(subject: any) {
     var subjectsArray: any = []
     subject.split(",").map((el: any) => {
@@ -95,6 +97,7 @@ function parseSubjectToJsonArray(subject: any) {
 
     return subjectsArray;
 }
+
 function certificate() {
     if (fs.existsSync(crtFile)) {
         LOGGER.info("Found existing certificate: %s", crtFile)
@@ -118,6 +121,7 @@ function established() {
     }
     return connection && connection.metadataUrl
 }
+
 function generateprivateKey(filePath: any) {
     LOGGER.debug("Generating new function key: %s", filePath)
     var keys = forge.pki.rsa.generateKeyPair(2048)
@@ -126,6 +130,7 @@ function generateprivateKey(filePath: any) {
     LOGGER.info("Generated new function key: %s", filePath)
     return key
 }
+
 function info() {
     if (fs.existsSync(connFile)) {
         LOGGER.info("Found existing connection info: %s", connFile)
@@ -134,6 +139,7 @@ function info() {
     }
     return null;
 }
+
 async function connect(tokenUrl: string, insecure: boolean = false, nodePort: any = null) {
     if (!fs.existsSync(keysDirectory)) {
         fs.mkdirSync(keysDirectory)
