@@ -60,7 +60,7 @@ export class API {
                     cert: connection.certificate(),
                     key: connection.privateKey()
                 },
-                rejectUnauthorized: connection.info().insecure
+                rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Sending Event: %s", error)
@@ -96,7 +96,7 @@ export class API {
                     cert: connection.certificate(),
                     key: connection.privateKey()
                 },
-                rejectUnauthorized: connection.info().insecure
+                rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Sending Event: %s", error)
@@ -127,7 +127,7 @@ export class API {
                     cert: connection.certificate(),
                     key: connection.privateKey()
                 },
-                rejectUnauthorized: connection.info().insecure
+                rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Sending Event: %s", error)
