@@ -66,7 +66,6 @@ export class ConnectionOverviewComponent implements OnInit {
             baseUrl: this.baseUrl,
             insecure: this.insecureConnection
         };
-        console.log(url);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.baseUrl + this.info.links.connection, JSON.stringify(sendData), options)

@@ -123,6 +123,10 @@ paths:
       responses:
         '200':
           description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
         '404':
           description: 'Service not found'
           content:

@@ -13,8 +13,6 @@ const connectionExpected = fs.readFileSync(path.resolve("dist/test/expect/connec
 const schoolsAPI = fs.readFileSync(path.resolve("dist/test/schools.json")).toString();
 const schoolsExpectedAPI = fs.readFileSync(path.resolve("dist/test/expect/schools.json")).toString();
 const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools.json")).toString();
-const updatedSchoolsExpectedAPI = fs.readFileSync(path.resolve("dist/test/expect/updatedSchools.json")).toString();
-var apiId: any;
 describe("should work", () => {
     var kymaServer: any
     before(async () => { //* start kyma mock before tests
@@ -23,9 +21,8 @@ describe("should work", () => {
             kymaServer = app.listen(port)
         })
         connection.init();
-        let connectionData = await connection.connect(tokenURL)
-        let createdApi: any = await api.create(JSON.parse(schoolsAPI));
-        apiId = createdApi.id;
+        let connectionData = await connection.connect(tokenURL, false)
+        await api.create(JSON.parse(schoolsAPI));
         return expect(new RegExp(JSON.stringify(connectionData), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(connectionExpected)), "g"));
     })
 
@@ -41,21 +38,18 @@ describe("should work", () => {
             })
         })
         it("update an API", () => {
-            console.log("api id " + apiId);
-            return api.update(JSON.parse(updatedSchoolsAPI), apiId).then((updatedApi) => {
-                console.log("************id ********** " + updatedApi);
-                return api.findOne(updatedApi)
-            }).then((result) => {
-                expect(JSON.stringify(result).replace(/\\/g, '')).to.match(new RegExp(JSON.stringify(JSON.parse(updatedSchoolsExpectedAPI)), "g"))
+            return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
+                return api.update(JSON.parse(updatedSchoolsAPI), createdApi.id).then((updatedApi) => {
+                    assert(JSON.stringify(updatedApi).indexOf("error") <= -1)
+                })
             })
-
         });
         it('delete school api', () => {
             return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
                 return api.delete(createdApi.id)
 
             }).then((result) => {
-                assert(result != null);
+                assert(JSON.stringify(result).indexOf("error") <= -1)
             })
         })
     });

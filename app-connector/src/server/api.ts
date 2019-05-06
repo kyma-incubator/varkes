@@ -80,7 +80,7 @@ export class API {
         })
     }
 
-    public async update(serviceMetadata: any, api_id: any) {
+    public update(serviceMetadata: any, api_id: any) {
         return new Promise((resolve, reject) => {
             let err = this.assureConnected()
             if (err) {
@@ -115,7 +115,7 @@ export class API {
             })
         })
     }
-    public async findOne(apiId: any) {
+    public findOne(apiId: any) {
         return new Promise((resolve, reject) => {
             let err = this.assureConnected()
             if (err) {
