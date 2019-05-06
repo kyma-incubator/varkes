@@ -33,6 +33,7 @@ export class SendEventViewComponent implements OnInit {
         this.event = JSON.parse(this.event);
         this.topics = Object.keys(this.event.events.spec.topics);
         this.filteredTopicsNames = this.topics;
+        this.filteredTopicsNames.sort();
         this.info = await this.serviceInstance.getInfo();
         this.baseUrl = this.serviceInstance.getBaseUrl();
         this.options['basePath'] = this.baseUrl;
@@ -52,7 +53,6 @@ export class SendEventViewComponent implements OnInit {
         let eventTime = new Date().toISOString();
         let eventType = this.topicName;
         var version;
-        console.log("eventType " + eventType);
         var regex = /^(.*)\.([v|V][0-9]+$)/;
         if (eventType.match(regex)) {
             var matchedGroups = regex.exec(eventType);
@@ -112,5 +112,6 @@ export class SendEventViewComponent implements OnInit {
                 this.filteredTopicsNames.push(element);
             }
         });
+        this.filteredTopicsNames.sort();
     }
 }
