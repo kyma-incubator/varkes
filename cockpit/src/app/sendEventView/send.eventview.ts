@@ -66,7 +66,7 @@ export class SendEventViewComponent implements OnInit {
             "event-type": eventType,
             "event-type-version": version, //event types normally end with .v1
             "event-time": eventTime,
-            "data": editor.getValue()
+            "data": JSON.parse(editor.getValue())
         }
         this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
             .subscribe(
