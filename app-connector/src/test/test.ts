@@ -13,6 +13,9 @@ const connectionExpected = fs.readFileSync(path.resolve("dist/test/expect/connec
 const schoolsAPI = fs.readFileSync(path.resolve("dist/test/schools.json")).toString();
 const schoolsExpectedAPI = fs.readFileSync(path.resolve("dist/test/expect/schools.json")).toString();
 const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools.json")).toString();
+const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString();
+const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
+const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
 describe("should work", () => {
     var kymaServer: any
     before(async () => { //* start kyma mock before tests
@@ -23,6 +26,7 @@ describe("should work", () => {
         connection.init();
         let connectionData = await connection.connect(tokenURL, false)
         await api.create(JSON.parse(schoolsAPI));
+        await api.create(JSON.parse(eventAPI));
         return expect(new RegExp(JSON.stringify(connectionData), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(connectionExpected)), "g"));
     })
 
@@ -50,6 +54,17 @@ describe("should work", () => {
 
             }).then((result) => {
                 assert(JSON.stringify(result).indexOf("error") <= -1)
+            })
+        })
+        it('send event', () => {
+            let eventData = {
+                "event-type": "customer.created",
+                "event-type-version": "v1", //event types normally end with .v1
+                "event-time": new Date().toISOString(),
+                "data": JSON.parse(eventPublishAPI)
+            }
+            return event.sendEvent(eventData).then((result) => {
+                expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"))
             })
         })
     });
