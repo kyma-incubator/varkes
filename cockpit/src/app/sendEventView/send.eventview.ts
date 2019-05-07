@@ -62,22 +62,29 @@ export class SendEventViewComponent implements OnInit {
         else {
             version = this.event.events.spec.info.version;
         }
-        let eventData = {
-            "event-type": eventType,
-            "event-type-version": version, //event types normally end with .v1
-            "event-time": eventTime,
-            "data": JSON.parse(editor.getValue())
+        try {
+            let eventData = {
+                "event-type": eventType,
+                "event-type-version": version, //event types normally end with .v1
+                "event-time": eventTime,
+                "data": JSON.parse(editor.getValue())
+            }
+            this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
+                .subscribe(
+                    success => {
+                        this.loading = false;
+                    },
+                    error => {
+                        this.alertMessage = error;
+                        this.alert = true;
+                        this.loading = false;
+                    });
         }
-        this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
-            .subscribe(
-                success => {
-                    this.loading = false;
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                    this.loading = false;
-                });
+        catch (err) {
+            this.alertMessage = "Please make sure that the Event Data follows JSON format";
+            this.alert = true;
+            this.loading = false;
+        }
     }
 
     public closeAlert() {
