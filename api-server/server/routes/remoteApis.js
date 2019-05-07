@@ -2,12 +2,11 @@
 'use strict'
 
 const connection = require("../connection")
-const request = require("request")
 const LOGGER = require("../logger").logger
 const express = require("express")
 const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
-const services = require("../services")
+const appConnector = require("@varkes/app-connector").api
 module.exports = {
     router: router
 }
@@ -18,17 +17,8 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        services.getAllAPIs(function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while getting all APIs: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while getting all API: %s", JSON.stringify(body, null, 2))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received all API data")
-                res.status(httpResponse.statusCode).type("json").send(body)
-            }
+        appConnector.findAll().then((result) => {
+            res.status(result.statusCode).send(result.body);
         })
     }
 }
@@ -39,23 +29,9 @@ function get(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        request.get({
-            url: `${connection.info().metadataUrl}/${req.params.api}`,
-            agentOptions: {
-                cert: connection.certificate(),
-                key: connection.privateKey()
-            },
-            rejectUnauthorized: connection.secure()
-        }, function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while getting API: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while getting API: %s", JSON.stringify(body, null, 2))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received API data")
-                body = JSON.parse(body)
+        appConnector.findOne(req.params.api).then((result) => {
+            if (result.statusCode < 400) {
+                let body = result.body;
                 body.id = req.params.api //comply with the api spec
                 if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
                     refParser.dereference(body.events.spec)
@@ -69,7 +45,7 @@ function get(req, res) {
                                 }
                             })
                             body.events.spec = schema
-                            res.status(httpResponse.statusCode).type("json").send(body)
+                            res.status(result.statusCode).type("json").send(body)
                         })
                         .catch(function (err) {
                             LOGGER.error("Error while getting API: %s", err)
@@ -77,8 +53,11 @@ function get(req, res) {
                         })
                 }
                 else {
-                    res.status(httpResponse.statusCode).type("json").send(body)
+                    res.status(result.statusCode).type("json").send(body)
                 }
+            }
+            else {
+                res.status(result.statusCode).send(result.body);
             }
         })
     }
@@ -90,19 +69,9 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        services.updateAPI(req.body, req.params.api,
-            function (error, httpResponse, body) {
-                if (error) {
-                    LOGGER.error("Error while updating API: %s", error)
-                    res.status(500).send({ error: error.message })
-                } else if (httpResponse.statusCode >= 400) {
-                    LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
-                    res.status(httpResponse.statusCode).type("json").send(body)
-                } else {
-                    LOGGER.debug("Received API data")
-                    res.status(httpResponse.statusCode).type("json").send(body)
-                }
-            })
+        appConnector.update(req.body, req.params.api).then((result) => {
+            res.status(result.statusCode).send(result.body);
+        })
     }
 }
 
@@ -112,25 +81,9 @@ function deleteApi(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        request.delete({
-            url: `${connection.info().metadataUrl}/${req.params.api}`,
-            agentOptions: {
-                cert: connection.certificate(),
-                key: connection.privateKey()
-            },
-            rejectUnauthorized: connection.secure()
-        }, function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while deleting API: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while deleting API: %s", JSON.stringify(body, null, 2))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received API data")
-                res.status(httpResponse.statusCode).type("json").send(body)
-            }
-        })
+        appConnector.delete(req.params.api).then((result) => {
+            res.status(result.statusCode).send(result.body);
+        });
     }
 }
 function create(req, res) {
@@ -139,18 +92,9 @@ function create(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        services.createAPI(req.body, function (error, httpResponse, body) {
-            if (error) {
-                LOGGER.error("Error while creating API: %s", error)
-                res.status(500).send({ error: error.message })
-            } else if (httpResponse.statusCode >= 400) {
-                LOGGER.error("Error while creating API: %s", JSON.stringify(body, null, 2))
-                res.status(httpResponse.statusCode).type("json").send(body)
-            } else {
-                LOGGER.debug("Received create API data")
-                res.status(httpResponse.statusCode).type("json").send(body)
-            }
-        })
+        appConnector.create(req.body).then((result) => {
+            res.status(result.statusCode).send(result.body);
+        });
     }
 }
 function assureConnected() {

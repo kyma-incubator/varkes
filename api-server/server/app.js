@@ -27,8 +27,6 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
 
-    connection.init()
-
     var app = express()
     app.use(bodyParser.json())
     app.use(cors())
@@ -36,7 +34,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.use(expressWinston.logger(LOGGER))
     app.use(REMOTE_APIS_URL, remoteApis.router())
     app.use(LOCAL_APIS_URL, localApis.router(varkesConfig))
-    app.use(CONNECTION, connector.router(varkesConfig, nodePortParam))
+    app.use(CONNECTION, connector.router(nodePortParam))
     app.use(EVENTS_URL, events.router())
 
     app.use("/swagger-ui", express.static(pathToSwaggerUI))

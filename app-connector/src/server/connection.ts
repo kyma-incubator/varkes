@@ -9,7 +9,8 @@ const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
-
+const KEY_URL = "/key";
+const CERT_URL = "/cert";
 var privateKeyData: any;
 var certificateData: any;
 var connection: any;
@@ -170,7 +171,9 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
             consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", ""),
             applicationUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
             domain: domains,
-            application: infoResponse.clientIdentity.application
+            application: infoResponse.clientIdentity.application,
+            key: KEY_URL,
+            cert: CERT_URL
         }
 
         if (connectionData.insecure && nodePort) {
@@ -201,4 +204,4 @@ function destroy() {
         fs.unlinkSync(crtFile)
     }
 }
-export { connect, info, privateKey, certificate, established, init, destroy }
+export { connect, info, privateKey, certificate, established, init, destroy, KEY_URL, CERT_URL }

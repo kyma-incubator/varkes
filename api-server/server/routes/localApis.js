@@ -2,6 +2,7 @@ const LOGGER = require("../logger").logger
 const express = require("express")
 const services = require("../services")
 const connection = require("../connection")
+const appConnector = require("@varkes/app-connector").api
 module.exports = {
     router: router
 }
@@ -62,7 +63,7 @@ async function registerAll(req, res) {
         res.status(400).send({ error: err })
     }
     try {
-        let registeredAPIs = await services.getAllAPI()
+        let registeredAPIs = await appConnector.findAll();
         services.createServicesFromConfig(getOrigin(req), varkesConfig, registeredAPIs)
         LOGGER.debug("Auto-registereing %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         res.status(200).send(connection.info())
@@ -104,39 +105,19 @@ async function create(req, res) {
                 break;
             }
         }
-        var registeredAPIs = await services.getAllAPI();
+        var registeredAPIs = await appConnector.findAll();
         var reg_api
         if (registeredAPIs.length > 0)
             reg_api = registeredAPIs.find(x => x.name == serviceMetadata.name)
         if (!reg_api) {
-            services.createAPI(serviceMetadata,
-                function (error, httpResponse, body) {
-                    if (error) {
-                        LOGGER.error("Error while updating API: %s", error)
-                        res.status(500).send({ error: error.message })
-                    } else if (httpResponse.statusCode >= 400) {
-                        LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
-                        res.status(httpResponse.statusCode).type("json").send(body)
-                    } else {
-                        LOGGER.debug("Received API data")
-                        res.status(httpResponse.statusCode).type("json").send(body)
-                    }
-                })
+            appConnector.create(serviceMetadata).then((result) => {
+                res.status(result.statusCode).send(result.body);
+            });
         }
         else {
-            services.updateAPI(serviceMetadata, reg_api.id,
-                function (error, httpResponse, body) {
-                    if (error) {
-                        LOGGER.error("Error while updating API: %s", error)
-                        res.status(500).send({ error: error.message })
-                    } else if (httpResponse.statusCode >= 400) {
-                        LOGGER.error("Error while updating API: %s", JSON.stringify(body, null, 2))
-                        res.status(httpResponse.statusCode).type("json").send(body)
-                    } else {
-                        LOGGER.debug("Received API data")
-                        res.status(httpResponse.statusCode).type("json").send(body)
-                    }
-                })
+            appConnector.update(serviceMetadata, reg_api.id).then((result) => {
+                res.status(result.statusCode).send(result.body);
+            })
             LOGGER.debug("Updated API successful: %s", api.name)
         }
 

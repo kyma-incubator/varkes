@@ -3,7 +3,7 @@
 
 const odataApp = require("@varkes/odata-mock")
 const cockpitApp = require("@varkes/cockpit");
-const connectorApp = require("@varkes/app-connector-client")
+const connectorApp = require("@varkes/api-server")
 const app = require('express')()
 var runAsync = async () => {
     var port

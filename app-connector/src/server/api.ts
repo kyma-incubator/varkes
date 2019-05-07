@@ -26,16 +26,23 @@ export class API {
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Finding all APIs: %s", error)
-                    reject(error);
+                    let resultobj = {
+                        statusCode: 500,
+                        body: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, body: {} };
                     if (httpResponse.statusCode >= 400) {
                         let message = "Error while Finding all APIs: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.body = new Error(message)
+                        reject(resultObj);
                     }
                     else {
                         LOGGER.debug("Received all APIs: %s", JSON.stringify(body, null, 2))
-                        resolve(body);
+                        resultObj.body = JSON.parse(body);
+                        resolve(resultObj);
                     }
                 }
             })
@@ -64,16 +71,23 @@ export class API {
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Creating Api: %s", error)
-                    reject(error);
+                    let resultobj = {
+                        statusCode: 500,
+                        body: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, body: {} };
                     if (httpResponse.statusCode >= 400) {
                         let message = "Error while Creating Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.body = new Error(message)
+                        reject(resultObj);
                     }
                     else {
                         LOGGER.debug("Received new Api: %s", JSON.stringify(body, null, 2))
-                        resolve(body);
+                        resultObj.body = JSON.parse(body);
+                        resolve(resultObj);
                     }
                 }
             })
@@ -99,17 +113,24 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Updating API: %s", error)
-                    reject(error);
+                    LOGGER.error("Error while Updating Api: %s", error)
+                    let resultobj = {
+                        statusCode: 500,
+                        body: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, body: {} };
                     if (httpResponse.statusCode >= 400) {
-                        let message = "Error while Updating API: %s" + JSON.stringify(body, null, 2);
+                        let message = "Error while Updating Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.body = new Error(message)
+                        reject(resultObj);
                     }
                     else {
-                        LOGGER.debug("Received Updated API: %s", JSON.stringify(body, null, 2))
-                        resolve(body);
+                        LOGGER.debug("Received Updated Api: %s", JSON.stringify(body, null, 2))
+                        resultObj.body = JSON.parse(body);
+                        resolve(resultObj);
                     }
                 }
             })
@@ -130,17 +151,24 @@ export class API {
                 rejectUnauthorized: !connection.info().insecure
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
-                    LOGGER.error("Error while Finding Api (%s): %s", apiId, error)
-                    reject(error);
+                    LOGGER.error("Error while Finding Api: %s", error)
+                    let resultobj = {
+                        statusCode: 500,
+                        body: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, body: {} };
                     if (httpResponse.statusCode >= 400) {
                         let message = "Error while Finding Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.body = new Error(message)
+                        reject(resultObj);
                     }
                     else {
-                        LOGGER.debug("Received api: %s", JSON.stringify(body, null, 2))
-                        resolve(body);
+                        LOGGER.debug("Received Found Api: %s", JSON.stringify(body, null, 2))
+                        resultObj.body = JSON.parse(body);
+                        resolve(resultObj);
                     }
                 }
             })
@@ -164,16 +192,23 @@ export class API {
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Deleting Api: %s", error)
-                    reject(error);
+                    let resultobj = {
+                        statusCode: 500,
+                        body: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, body: {} };
                     if (httpResponse.statusCode >= 400) {
                         let message = "Error while Deleting Api: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.body = new Error(message)
+                        reject(resultObj);
                     }
                     else {
-                        LOGGER.debug("Received delete Api response: %s", JSON.stringify(body, null, 2))
-                        resolve(body);
+                        LOGGER.debug("Received Deleted confirmation: %s", JSON.stringify(body, null, 2))
+                        resultObj.body = JSON.parse(body);
+                        resolve(resultObj);
                     }
                 }
             })

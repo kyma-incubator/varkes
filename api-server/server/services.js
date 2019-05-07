@@ -8,16 +8,13 @@ const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
 const request = require("request-promise")
+const appConnector = require("@varkes/app-connector")
 var apiSucceedCount = 0;
 var apisFailedCount = 0;
 var apisCount = 0;
 var regErrorMessage = ""
 module.exports = {
     createServicesFromConfig: createServicesFromConfig,
-    getAllAPI: getAllAPI,
-    getAllAPIs, getAllAPIs,
-    createAPI: createAPI,
-    updateAPI: updateAPI,
     fillServiceMetadata: fillServiceMetadata,
     getStatus: getStatus,
     fillEventData: fillEventData
@@ -36,13 +33,14 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == api.name)
         try {
+            let serviceData = fillServiceMetadata(api, baseUrl)
             if (!reg_api) {
-                await createService(api, false, baseUrl)
+                await appConnector.create(serviceData);
                 apiSucceedCount++;
                 LOGGER.debug("Registered API successful: %s", api.name)
             }
             else {
-                await updateService(api, reg_api.id, false, baseUrl)
+                await appConnector.update(serviceData, reg_api.id);
                 apiSucceedCount++;
                 LOGGER.debug("Updated API successful: %s", api.name)
             }
@@ -68,13 +66,14 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == event.name)
         try {
+            let serviceData = fillEventData(event)
             if (!reg_api) {
-                await createService(event, true)
+                await appConnector.create(serviceData);
                 apiSucceedCount++;
                 LOGGER.debug("Registered Event API successful: %s", event.name)
             }
             else {
-                await updateService(event, reg_api.id, true);
+                await appConnector.update(serviceData, reg_api.id);
                 apiSucceedCount++;
                 LOGGER.debug("Updated Event API successful: %s", event.name)
             }
@@ -105,54 +104,6 @@ function getStatus() {
         "errorMessage": regErrorMessage
     }
 }
-function createService(api, isEvent, baseUrl) {
-    LOGGER.debug("Auto-register API '%s'", api.name)
-    return new Promise((resolve, reject) => {
-        let serviceData;
-        if (isEvent) {
-            serviceData = fillEventData(api)
-        }
-        else {
-            serviceData = fillServiceMetadata(api, baseUrl)
-        }
-        createAPI(serviceData, function (err, httpResponse, body) {
-            if (!err && httpResponse.statusCode < 400) {
-                resolve(body)
-            }
-            else {
-                if (!err) {
-                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
-                }
-                reject(err)
-
-            }
-        })
-    })
-}
-
-function updateService(api, api_id, isEvent, baseUrl) {
-    LOGGER.debug("Auto-update API '%s'", api.name)
-    return new Promise((resolve, reject) => {
-        let serviceData;
-        if (isEvent) {
-            serviceData = fillEventData(api)
-        }
-        else {
-            serviceData = fillServiceMetadata(api, baseUrl)
-        }
-        updateAPI(serviceData, api_id, function (err, httpResponse, body) {
-            if (!err && httpResponse.statusCode < 400) {
-                resolve(body)
-            }
-            else {
-                if (!err) {
-                    err = new Error("Response with status " + httpResponse.statusCode + " and body: " + JSON.stringify(body))
-                }
-                reject(err)
-            }
-        })
-    })
-}
 
 function fillEventData(event) {
     var specInJson
@@ -173,67 +124,6 @@ function fillEventData(event) {
         }
     }
     return serviceData
-}
-function getAllAPI() {
-    LOGGER.debug("Get all API ")
-    return new Promise((resolve, reject) => {
-        getAllAPIs(function (error, httpResponse, body) {
-            if (error) {
-                reject(error)
-            } else if (httpResponse.statusCode >= 400) {
-                var err = new Error("Response with status " + httpResponse.statusCode + " and body: " + body)
-                reject(err)
-            } else {
-                resolve(JSON.parse(body))
-            }
-        })
-    })
-}
-function getAllAPIs(cb) {
-    request({
-        url: connection.info().metadataUrl,
-        method: "GET",
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
-function createAPI(serviceMetadata, cb) {
-    request.post({
-        url: connection.info().metadataUrl,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: serviceMetadata,
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
-}
-
-function updateAPI(serviceMetadata, api_id, cb) {
-    request.put({
-        url: `${connection.info().metadataUrl}/${api_id}`,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        json: serviceMetadata,
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: connection.secure()
-    }, function (error, httpResponse, body) {
-        cb(error, httpResponse, body)
-    })
 }
 
 function fillServiceMetadata(api, baseUrl) {
