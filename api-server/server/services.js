@@ -4,11 +4,9 @@
 const LOGGER = require("./logger").logger
 const yaml = require('js-yaml')
 const fs = require("fs")
-const connection = require("./connection")
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-const request = require("request-promise")
-const appConnector = require("@varkes/app-connector")
+const { api, event, connection } = require("@varkes/app-connector")
 var apiSucceedCount = 0;
 var apisFailedCount = 0;
 var apisCount = 0;
@@ -28,33 +26,33 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
     regErrorMessage = "";
-    varkesConfig.apis.forEach(async (api) => {
+    varkesConfig.apis.forEach(async (varkesApi) => {
         var reg_api
         if (registeredApis.length > 0)
-            reg_api = registeredApis.find(x => x.name == api.name)
+            reg_api = registeredApis.find(x => x.name == varkesApi.name)
         try {
-            let serviceData = fillServiceMetadata(api, baseUrl)
+            let serviceData = fillServiceMetadata(varkesApi, baseUrl)
             if (!reg_api) {
-                await appConnector.create(serviceData);
+                await api.create(serviceData);
                 apiSucceedCount++;
-                LOGGER.debug("Registered API successful: %s", api.name)
+                LOGGER.debug("Registered API successful: %s", varkesApi.name)
             }
             else {
-                await appConnector.update(serviceData, reg_api.id);
+                await api.update(serviceData, reg_api.id);
                 apiSucceedCount++;
-                LOGGER.debug("Updated API successful: %s", api.name)
+                LOGGER.debug("Updated API successful: %s", varkesApi.name)
             }
         }
         catch (err) {
             if (!reg_api) {
                 apisFailedCount++;
-                var message = "Registration of API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                var message = "Registration of API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
             }
             else {
                 apisFailedCount++;
-                var message = "Updating API '" + api.name + "' failed: " + JSON.stringify(err.message);
+                var message = "Updating API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += "- " + message + "\n\n";
                 LOGGER.error(message)
             }
@@ -68,12 +66,12 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
         try {
             let serviceData = fillEventData(event)
             if (!reg_api) {
-                await appConnector.create(serviceData);
+                await api.create(serviceData);
                 apiSucceedCount++;
                 LOGGER.debug("Registered Event API successful: %s", event.name)
             }
             else {
-                await appConnector.update(serviceData, reg_api.id);
+                await api.update(serviceData, reg_api.id);
                 apiSucceedCount++;
                 LOGGER.debug("Updated Event API successful: %s", event.name)
             }

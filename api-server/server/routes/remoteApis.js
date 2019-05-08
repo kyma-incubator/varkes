@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 'use strict'
 
-const connection = require("../connection")
 const LOGGER = require("../logger").logger
 const express = require("express")
 const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
-const appConnector = require("@varkes/app-connector").api
+const { api, event, connection } = require("@varkes/app-connector")
 module.exports = {
     router: router
 }
@@ -17,7 +16,7 @@ function getAll(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        appConnector.findAll().then((result) => {
+        api.findAll().then((result) => {
             res.status(result.statusCode).send(result.body);
         })
     }
@@ -29,7 +28,7 @@ function get(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        appConnector.findOne(req.params.api).then((result) => {
+        api.findOne(req.params.api).then((result) => {
             if (result.statusCode < 400) {
                 let body = result.body;
                 body.id = req.params.api //comply with the api spec
@@ -69,7 +68,7 @@ function update(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        appConnector.update(req.body, req.params.api).then((result) => {
+        api.update(req.body, req.params.api).then((result) => {
             res.status(result.statusCode).send(result.body);
         })
     }
@@ -81,7 +80,7 @@ function deleteApi(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        appConnector.delete(req.params.api).then((result) => {
+        api.delete(req.params.api).then((result) => {
             res.status(result.statusCode).send(result.body);
         });
     }
@@ -92,7 +91,7 @@ function create(req, res) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        appConnector.create(req.body).then((result) => {
+        api.create(req.body).then((result) => {
             res.status(result.statusCode).send(result.body);
         });
     }

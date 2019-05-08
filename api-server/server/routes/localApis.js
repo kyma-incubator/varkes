@@ -1,8 +1,7 @@
 const LOGGER = require("../logger").logger
 const express = require("express")
 const services = require("../services")
-const connection = require("../connection")
-const appConnector = require("@varkes/app-connector").api
+const { api, event, connection } = require("@varkes/app-connector")
 module.exports = {
     router: router
 }
@@ -63,7 +62,7 @@ async function registerAll(req, res) {
         res.status(400).send({ error: err })
     }
     try {
-        let registeredAPIs = await appConnector.findAll();
+        let registeredAPIs = await api.findAll();
         services.createServicesFromConfig(getOrigin(req), varkesConfig, registeredAPIs)
         LOGGER.debug("Auto-registereing %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         res.status(200).send(connection.info())
@@ -105,17 +104,17 @@ async function create(req, res) {
                 break;
             }
         }
-        var registeredAPIs = await appConnector.findAll();
+        var registeredAPIs = await api.findAll();
         var reg_api
         if (registeredAPIs.length > 0)
             reg_api = registeredAPIs.find(x => x.name == serviceMetadata.name)
         if (!reg_api) {
-            appConnector.create(serviceMetadata).then((result) => {
+            api.create(serviceMetadata).then((result) => {
                 res.status(result.statusCode).send(result.body);
             });
         }
         else {
-            appConnector.update(serviceMetadata, reg_api.id).then((result) => {
+            api.update(serviceMetadata, reg_api.id).then((result) => {
                 res.status(result.statusCode).send(result.body);
             })
             LOGGER.debug("Updated API successful: %s", api.name)

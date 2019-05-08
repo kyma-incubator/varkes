@@ -1,4 +1,4 @@
-import { api, event, connection } from '../server/app';
+var { api, event, connection } = require('../server/app');
 var kyma = require("@varkes/example-kyma-mock");
 import * as fs from 'fs';
 import * as chai from 'chai';
@@ -37,13 +37,13 @@ describe("should work", () => {
     })
     describe('testing apis', () => {
         it('register school api', () => {
-            return api.findAll().then((result) => {
+            return api.findAll().then((result: any) => {
                 expect(JSON.stringify(result).replace(/\\/g, '')).to.match(new RegExp(JSON.stringify(JSON.parse(schoolsExpectedAPI)), "g"))
             })
         })
         it("update an API", () => {
             return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
-                return api.update(JSON.parse(updatedSchoolsAPI), createdApi.id).then((updatedApi) => {
+                return api.update(JSON.parse(updatedSchoolsAPI), createdApi.id).then((updatedApi: any) => {
                     assert(JSON.stringify(updatedApi).indexOf("error") <= -1)
                 })
             })
@@ -52,7 +52,7 @@ describe("should work", () => {
             return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
                 return api.delete(createdApi.id)
 
-            }).then((result) => {
+            }).then((result: any) => {
                 assert(JSON.stringify(result).indexOf("error") <= -1)
             })
         })
@@ -63,7 +63,7 @@ describe("should work", () => {
                 "event-time": new Date().toISOString(),
                 "data": JSON.parse(eventPublishAPI)
             }
-            return event.sendEvent(eventData).then((result) => {
+            return event.sendEvent(eventData).then((result: any) => {
                 expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"))
             })
         })

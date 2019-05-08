@@ -3,7 +3,7 @@
 
 const LOGGER = require("../logger").logger
 const express = require("express")
-const connection = require("@varkes/app-connector").connection
+var { api, event, connection } = require("@varkes/app-connector")
 var nodePort;
 module.exports = {
     router: router
@@ -77,7 +77,7 @@ async function connect(req, res) {
 
 function router(nodePortParam = null) {
     nodePort = nodePortParam
-
+    console.log("connection " + JSON.stringify(connection));
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)

@@ -4,4 +4,4 @@ import { API } from './api';
 connection.init();
 let api = new API();
 let event = new Event();
-export { api, event, connection };
+module.exports = { api, event, connection };

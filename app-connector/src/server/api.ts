@@ -86,7 +86,7 @@ export class API {
                     }
                     else {
                         LOGGER.debug("Received new Api: %s", JSON.stringify(body, null, 2))
-                        resultObj.body = JSON.parse(body);
+                        resultObj.body = body;
                         resolve(resultObj);
                     }
                 }
@@ -129,7 +129,7 @@ export class API {
                     }
                     else {
                         LOGGER.debug("Received Updated Api: %s", JSON.stringify(body, null, 2))
-                        resultObj.body = JSON.parse(body);
+                        resultObj.body = body;
                         resolve(resultObj);
                     }
                 }
@@ -207,7 +207,7 @@ export class API {
                     }
                     else {
                         LOGGER.debug("Received Deleted confirmation: %s", JSON.stringify(body, null, 2))
-                        resultObj.body = JSON.parse(body);
+                        resultObj.body = body;
                         resolve(resultObj);
                     }
                 }
