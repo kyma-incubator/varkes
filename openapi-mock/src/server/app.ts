@@ -9,6 +9,8 @@ import { logger as LOGGER } from "./logger"
 import * as morgan from "morgan"
 import * as fs from "fs"
 
+const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
+
 async function init(varkesConfigPath: string, currentDirectory = "") {
   var app = express()
 
@@ -19,6 +21,7 @@ async function init(varkesConfigPath: string, currentDirectory = "") {
   registerLogger(app);
 
   app.use(await mock(varkesConfig))
+  app.use("/swagger-ui", express.static(pathToSwaggerUI))
 
   customErrorResponses(app)
   return app;

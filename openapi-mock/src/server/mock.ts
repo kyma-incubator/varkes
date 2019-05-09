@@ -168,7 +168,7 @@ function createConsole(api: any, app: express.Application) {
     LOGGER.debug("Adding console endpoint '%s%s'", api.basepath, "/console")
     app.get(api.basepath + "/console", function (req, res) {
         var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
-        html = html.replace("OPENAPI", api.basepath + api.metadata + ".json")
+        html = html.replace("OPENAPI", api.basepath + api.metadata + ".json") //only replaces the first instance of OPENAPI.
         html = html.replace("NAME", api.name)
         res.type("text/html")
         res.status(200)
