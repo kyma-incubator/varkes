@@ -21,6 +21,8 @@ const REMOTE_APIS_URL = "/remote/apis";
 const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
 const BATCH_REGISTRATION = "/local/registration";
+
+const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
 
     var varkesConfig = config(varkesConfigPath, currentPath)
@@ -36,6 +38,8 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.use(LOCAL_APIS_URL, localApis.router(varkesConfig))
     app.use(CONNECTION, connector.router(varkesConfig, nodePortParam))
     app.use(EVENTS_URL, events.router())
+
+    app.use("/swagger-ui", express.static(pathToSwaggerUI))
 
     app.get("/info", function (req, res) {
 
