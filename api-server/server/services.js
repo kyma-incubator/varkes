@@ -18,7 +18,7 @@ module.exports = {
     fillEventData: fillEventData
 }
 
-function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
+async function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
     if (!varkesConfig.apis && !varkesConfig.events)
         return;
     apiSucceedCount = 0;
@@ -26,7 +26,9 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
     regErrorMessage = "";
-    varkesConfig.apis.forEach(async (varkesApi) => {
+    console.log("registered apis " + JSON.stringify(registeredApis));
+    for (var i = 0; i < varkesConfig.apis.length; i++) {
+        let varkesApi = varkesConfig.apis[i];
         var reg_api
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == varkesApi.name)
@@ -57,10 +59,11 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
                 LOGGER.error(message)
             }
         }
-    });
+    }
     apisCount += varkesConfig.events.length;
-    varkesConfig.events.forEach(async (event) => {
-        var reg_api
+    for (var i = 0; i < varkesConfig.events.length; i++) {
+        let event = varkesConfig.events[i];
+        var reg_api;
         if (registeredApis.length > 0)
             reg_api = registeredApis.find(x => x.name == event.name)
         try {
@@ -91,7 +94,7 @@ function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
             }
         }
 
-    });
+    }
 }
 function getStatus() {
     return {
