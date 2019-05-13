@@ -63,7 +63,6 @@ async function registerAll(req, res) {
     }
     try {
         let registeredAPIs = await api.findAll();
-        registeredAPIs = registeredAPIs;
         services.createServicesFromConfig(getOrigin(req), varkesConfig, registeredAPIs)
         LOGGER.debug("Auto-registereing %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         res.status(200).send(connection.info())
@@ -106,7 +105,6 @@ async function create(req, res) {
             }
         }
         var registeredAPIs = await api.findAll();
-        registeredAPIs = registeredAPIs;
         var reg_api;
         if (registeredAPIs.length > 0)
             reg_api = registeredAPIs.find(x => x.name == serviceMetadata.name)

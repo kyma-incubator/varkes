@@ -181,8 +181,8 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
             connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
         }
         if (persistFiles) {
-            fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), "utf8")
-            fs.writeFileSync(crtFile, certificateData, "utf8")
+            fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), { encoding: "utf8", flag: 'wx' })
+            fs.writeFileSync(crtFile, certificateData, { encoding: "utf8", flag: 'wx' })
         }
         connection = connectionData;
         LOGGER.info("Connected to %s", connectionData.domain)
@@ -190,7 +190,7 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
 
     } catch (error) {
         var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
-        LOGGER.error("Failed to connect to kyma cluster: %s", error)
+        LOGGER.error("Failed to connect to kyma cluster: %s", error.stack)
         throw new Error(message);
     }
 }

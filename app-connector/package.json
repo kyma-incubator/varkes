@@ -36,9 +36,5 @@
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
-  },
-  "bin": {
-    "varkes-connector-cli": "./tools/cli.js",
-    "varkes-connector-server": "./server/server.js"
   }
 }

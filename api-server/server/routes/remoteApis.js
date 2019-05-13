@@ -35,29 +35,17 @@ function get(req, res) {
             let body = result;
             body.id = req.params.api //comply with the api spec
             if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
-                refParser.dereference(body.events.spec)
-                    .then(function (schema) {
-                        Object.keys(schema.topics).forEach((topicKey) => {
-                            if (schema.topics[topicKey].publish) {
-                                schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
-                            }
-                            else {
-                                schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
-                            }
-                        })
-                        body.events.spec = schema
-                        res.status(200).type("json").send(body)
-                    })
-                    .catch(function (err) {
-                        LOGGER.error("Error while getting API: %s", err)
-                        res.status(500).send({ error: err.message })
-                    })
+                dereferenceApi(body).then((result) => {
+                    res.status(200).type("json").send(result)
+                }, (err) => {
+                    res.status(500).send({ error: err.message })
+                })
             }
             else {
                 res.status(200).type("json").send(body)
             }
         }, (err) => {
-            res.status(err.statusCode).send(result.body);
+            res.status(err.statusCode).send(err.body);
         })
     }
 }
@@ -108,7 +96,28 @@ function assureConnected() {
     }
     return null
 }
+function dereferenceApi(body) {
+    return new Promise(function (resolve, reject) {
+        refParser.dereference(body.events.spec)
+            .then(function (schema) {
+                Object.keys(schema.topics).forEach((topicKey) => {
+                    if (schema.topics[topicKey].publish) {
+                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
+                    }
+                    else {
+                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
+                    }
+                })
+                body.events.spec = schema
+                //res.status(200).type("json").send(body)
+                resolve(body);
+            })
+            .catch(function (err) {
+                reject(err);
+            })
+    })
 
+}
 function router() {
     var apiRouter = express.Router()
 

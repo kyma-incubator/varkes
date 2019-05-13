@@ -6,7 +6,7 @@ import * as winston from "winston"
 const console_logger = new winston.transports.Console({
   format: winston.format.combine(
     winston.format.colorize(),
-    winston.format.label({ label: 'openapi-mock' }),
+    winston.format.label({ label: 'app-connector' }),
     winston.format.printf((info: any) => `${info.level} ${info.label}: ${info.message}`)
   )
 })
