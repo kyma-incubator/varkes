@@ -16,6 +16,7 @@
   "dependencies": {
     "node-forge": "^0.8.2",
     "request-promise": "^4.2.4",
+    "request": "^2.88.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -23,7 +24,9 @@
     "@types/mocha": "^5.2.6",
     "@types/morgan": "^1.7.35",
     "@types/node": "^11.13.8",
+    "@types/request-promise": "^4.1.43",
     "@varkes/example-kyma-mock": "^0.5.3",
+    "@types/request": "^2.48.1",
     "chai-match": "^1.1.1",
     "chai": "^4.2.0",
     "copyfiles": "^2.1.0",

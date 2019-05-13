@@ -29,6 +29,7 @@
     "openapi-sampler": "^1.0.0-beta.14",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "swagger-ui-dist": "^3.22.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
