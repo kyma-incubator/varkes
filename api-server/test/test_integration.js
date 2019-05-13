@@ -7,7 +7,6 @@ const express = require("express")
 const fs = require("fs")
 const path = require("path")
 const kyma = require("@varkes/example-kyma-mock")
-
 const testAPI = JSON.parse(fs.readFileSync(path.resolve("test/test-api.json")))
 const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/schools.json")))
 const coursesAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/courses.json")))
@@ -22,7 +21,6 @@ describe("should work", () => {
     var kymaServer
     var server
     before(async () => { //* start kyma mock before tests
-        deleteKeysFile()
         await kyma.then(app => {
             kymaServer = app.listen(port)
         })
@@ -30,13 +28,11 @@ describe("should work", () => {
             server = express()
             server.use(mock)
         })
-
         await request(server)  //* Make sure we are connected to kyma
             .post("/connection")
             .send({ "url": tokenURL })
             .set('Accept', 'application/json').
             expect(200)
-
         await request(server) //* Make sure we registered local apis to kyma
             .post('/local/registration')
             .send({ "baseUrl": "http://localhost" })
@@ -44,9 +40,9 @@ describe("should work", () => {
             .expect(200)
     })
 
-    after(() => { //* stop kyma mock after tests
-        kymaServer.close(() => {
-            deleteKeysFile()
+    after(async () => { //* stop kyma mock after tests
+        await kymaServer.close(() => {
+            deleteKeysFile();
         })
     })
 
