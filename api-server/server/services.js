@@ -26,7 +26,6 @@ async function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
     regErrorMessage = "";
-    console.log("registered apis " + JSON.stringify(registeredApis));
     for (var i = 0; i < varkesConfig.apis.length; i++) {
         let varkesApi = varkesConfig.apis[i];
         var reg_api

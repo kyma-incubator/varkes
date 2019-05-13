@@ -20,12 +20,18 @@ export class Event {
             }, (error: any, httpResponse: any, body: any) => {
                 if (error) {
                     LOGGER.error("Error while Sending Event: %s", error)
-                    reject(error);
+                    let resultobj = {
+                        statusCode: 500,
+                        message: error
+                    }
+                    reject(resultobj);
                 } else {
+                    let resultObj = { statusCode: httpResponse.statusCode, message: {} };
                     if (httpResponse.statusCode >= 400) {
                         let message = "Error while Sending Event: %s" + JSON.stringify(body, null, 2);
                         LOGGER.error(message);
-                        reject(new Error(message));
+                        resultObj.message = new Error(message)
+                        reject(resultObj);
                     }
                     else {
                         LOGGER.debug("Received event response: %s", JSON.stringify(body, null, 2))

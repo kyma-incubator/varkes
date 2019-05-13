@@ -6,7 +6,7 @@ const winston = require("winston")
 const console_logger = new winston.transports.Console({
   format: winston.format.combine(
     winston.format.colorize(),
-    winston.format.label({ label: 'app-connector-client' }),
+    winston.format.label({ label: 'api-server' }),
     winston.format.printf(info => `${info.level} ${info.label}: ${info.message}`)
   )
 })

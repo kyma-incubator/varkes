@@ -77,7 +77,6 @@ async function connect(req, res) {
 
 function router(nodePortParam = null) {
     nodePort = nodePortParam
-    console.log("connection " + JSON.stringify(connection));
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)

@@ -17,7 +17,9 @@ function getAll(req, res) {
         res.status(400).send({ error: err })
     } else {
         api.findAll().then((result) => {
-            res.status(result.statusCode).send(result.body);
+            res.status(200).send(result);
+        }, (err) => {
+            res.status(err.statusCode, err.message)
         })
     }
 }
@@ -29,35 +31,33 @@ function get(req, res) {
         res.status(400).send({ error: err })
     } else {
         api.findOne(req.params.api).then((result) => {
-            if (result.statusCode < 400) {
-                let body = result.body;
-                body.id = req.params.api //comply with the api spec
-                if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
-                    refParser.dereference(body.events.spec)
-                        .then(function (schema) {
-                            Object.keys(schema.topics).forEach((topicKey) => {
-                                if (schema.topics[topicKey].publish) {
-                                    schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
-                                }
-                                else {
-                                    schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
-                                }
-                            })
-                            body.events.spec = schema
-                            res.status(result.statusCode).type("json").send(body)
+
+            let body = result;
+            body.id = req.params.api //comply with the api spec
+            if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
+                refParser.dereference(body.events.spec)
+                    .then(function (schema) {
+                        Object.keys(schema.topics).forEach((topicKey) => {
+                            if (schema.topics[topicKey].publish) {
+                                schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
+                            }
+                            else {
+                                schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
+                            }
                         })
-                        .catch(function (err) {
-                            LOGGER.error("Error while getting API: %s", err)
-                            res.status(500).send({ error: err.message })
-                        })
-                }
-                else {
-                    res.status(result.statusCode).type("json").send(body)
-                }
+                        body.events.spec = schema
+                        res.status(200).type("json").send(body)
+                    })
+                    .catch(function (err) {
+                        LOGGER.error("Error while getting API: %s", err)
+                        res.status(500).send({ error: err.message })
+                    })
             }
             else {
-                res.status(result.statusCode).send(result.body);
+                res.status(200).type("json").send(body)
             }
+        }, (err) => {
+            res.status(err.statusCode).send(result.body);
         })
     }
 }
@@ -69,7 +69,9 @@ function update(req, res) {
         res.status(400).send({ error: err })
     } else {
         api.update(req.body, req.params.api).then((result) => {
-            res.status(result.statusCode).send(result.body);
+            res.status(200).send(result);
+        }, (err) => {
+            res.status(err.statusCode).send(err.message);
         })
     }
 }
@@ -81,7 +83,9 @@ function deleteApi(req, res) {
         res.status(400).send({ error: err })
     } else {
         api.delete(req.params.api).then((result) => {
-            res.status(result.statusCode).send(result.body);
+            res.status(200).send(result);
+        }, (err) => {
+            res.status(err.statusCode).send(err.message);
         });
     }
 }
@@ -92,7 +96,9 @@ function create(req, res) {
         res.status(400).send({ error: err })
     } else {
         api.create(req.body).then((result) => {
-            res.status(result.statusCode).send(result.body);
+            res.status(200).send(result);
+        }, (err) => {
+            res.status(err.statusCode).send(err.message);
         });
     }
 }
