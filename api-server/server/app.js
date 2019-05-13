@@ -12,7 +12,6 @@ const connector = require("./routes/connector")
 const events = require("./routes/events")
 const remoteApis = require("./routes/remoteApis")
 const localApis = require("./routes/localApis")
-const connection = require("./connection")
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
 const cors = require("cors")
 const LOGO_URL = "/logo";

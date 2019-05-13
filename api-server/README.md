@@ -3,7 +3,7 @@
 </p>
 
 # Api Server
-[![npm version](https://badge.fury.io/js/%40varkes%2Fapp-connector-client.svg)](https://badge.fury.io/js/%40varkes%2Fapi-server)
+[![npm version](https://badge.fury.io/js/%40varkes%2Fapi-server.svg)](https://badge.fury.io/js/%40varkes%2Fapi-server)
 
 Api Server provides an interface to pair your application with Kyma, register APIs and send Events.
 

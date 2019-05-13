@@ -3,7 +3,7 @@
 
 const LOGGER = require("../logger").logger
 const express = require("express")
-var { api, event, connection } = require("@varkes/app-connector")
+var { _, _, connection } = require("@varkes/app-connector")
 var nodePort;
 module.exports = {
     router: router

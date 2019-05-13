@@ -5,7 +5,7 @@ const LOGGER = require("../logger").logger
 const express = require("express")
 const openapiSampler = require('openapi-sampler');
 const refParser = require('json-schema-ref-parser');
-const { api, event, connection } = require("@varkes/app-connector")
+const { api, _, connection } = require("@varkes/app-connector")
 module.exports = {
     router: router
 }

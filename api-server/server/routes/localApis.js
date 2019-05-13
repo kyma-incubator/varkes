@@ -1,7 +1,7 @@
 const LOGGER = require("../logger").logger
 const express = require("express")
 const services = require("../services")
-const { api, event, connection } = require("@varkes/app-connector")
+const { api, _, connection } = require("@varkes/app-connector")
 module.exports = {
     router: router
 }
