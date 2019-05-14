@@ -65,9 +65,6 @@ async function init(varkesConfigPath: string, currentPath = "", nodePortParam = 
         res.sendFile(path.resolve(__dirname, "resources/console.html"))
     })
     return app;
-    // return new Promise(function (resolve, reject) {
-    //     resolve(app)
-    // })
 }
 
 export { init }
