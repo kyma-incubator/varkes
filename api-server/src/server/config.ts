@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 'use strict'
 
-const path = require("path")
-const fs = require('fs')
-const LOGGER = require("./logger").logger
-const check_api = require('check_api')
-const yaml = require('js-yaml')
+import * as path from "path";
+import * as fs from "fs"
+import { logger as LOGGER } from "./logger"
+const check_api = require("check_api");
+const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
 
-module.exports = function (varkesConfigPath, currentDirectory) {
+function init(varkesConfigPath: string, currentDirectory: any) {
     var varkesConfig
     if (varkesConfigPath) {
         var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
-        varkesConfig.apis.map(element => {
+        varkesConfig.apis.map((element: any) => {
             element.specification = path.resolve(path.dirname(endpointConfig), element.specification)
         })
-        varkesConfig.events.map(element => {
+        varkesConfig.events.map((element: any) => {
             element.specification = path.resolve(path.dirname(endpointConfig), element.specification)
         })
         configValidation(varkesConfig)
@@ -28,7 +28,7 @@ module.exports = function (varkesConfigPath, currentDirectory) {
     return varkesConfig
 }
 
-function configValidation(configJson) {
+function configValidation(configJson: any) {
     var error_message = ""
     var events = configJson.events
     var apis = configJson.apis
@@ -48,11 +48,11 @@ function configValidation(configJson) {
                 else {
                     var specInJson
                     if (event.specification.endsWith(".json")) {
-                        specInJson = JSON.parse(fs.readFileSync(event.specification))
+                        specInJson = JSON.parse(fs.readFileSync(event.specification, 'utf8'))
                     } else {
                         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
                     }
-                    check_api.check_api(specInJson, {}, function (err, options) {
+                    check_api.check_api(specInJson, {}, function (err: any, options: any) {
                         if (err) {
                             error_message += "\nevent " + event.name + ": Schema validation Error \n" + pretty_yaml.stringify(err)
                         }
@@ -76,3 +76,4 @@ function configValidation(configJson) {
         throw new Error("Validation of configuration failed: " + error_message)
     }
 }
+export { init };

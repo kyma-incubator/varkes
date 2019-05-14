@@ -1,24 +1,19 @@
 #!/usr/bin/env node
 'use strict'
 
-const LOGGER = require("./logger").logger
-const yaml = require('js-yaml')
-const fs = require("fs")
+import { logger as LOGGER } from "./logger"
+const yaml = require("js-yaml");
+import * as fs from "fs"
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-const { api } = require("@varkes/app-connector")
+import { api } from "@varkes/app-connector";
 var apiSucceedCount = 0;
 var apisFailedCount = 0;
 var apisCount = 0;
 var regErrorMessage = ""
-module.exports = {
-    createServicesFromConfig: createServicesFromConfig,
-    fillServiceMetadata: fillServiceMetadata,
-    getStatus: getStatus,
-    fillEventData: fillEventData
-}
 
-async function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
+
+async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registeredApis: any) {
     if (!varkesConfig.apis && !varkesConfig.events)
         return;
     apiSucceedCount = 0;
@@ -30,7 +25,7 @@ async function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
         let varkesApi = varkesConfig.apis[i];
         var reg_api
         if (registeredApis.length > 0)
-            reg_api = registeredApis.find(x => x.name == varkesApi.name)
+            reg_api = registeredApis.find((x: any) => x.name == varkesApi.name)
         try {
             let serviceData = fillServiceMetadata(varkesApi, baseUrl)
             if (!reg_api) {
@@ -64,7 +59,7 @@ async function createServicesFromConfig(baseUrl, varkesConfig, registeredApis) {
         let event = varkesConfig.events[i];
         var reg_api;
         if (registeredApis.length > 0)
-            reg_api = registeredApis.find(x => x.name == event.name)
+            reg_api = registeredApis.find((x: any) => x.name == event.name)
         try {
             let serviceData = fillEventData(event)
             if (!reg_api) {
@@ -105,10 +100,10 @@ function getStatus() {
     }
 }
 
-function fillEventData(event) {
+function fillEventData(event: any) {
     var specInJson
     if (event.specification.endsWith(".json")) {
-        specInJson = JSON.parse(fs.readFileSync(event.specification))
+        specInJson = JSON.parse(fs.readFileSync(event.specification, 'utf8'))
     } else {
         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
@@ -126,7 +121,7 @@ function fillEventData(event) {
     return serviceData
 }
 
-function fillServiceMetadata(api, baseUrl) {
+function fillServiceMetadata(api: any, baseUrl: any) {
     let apiUrl = baseUrl
     let apiUrlWithBasepath = baseUrl
     if (api.basepath) {
@@ -137,7 +132,7 @@ function fillServiceMetadata(api, baseUrl) {
         specificationUrl = apiUrlWithBasepath + "/$metadata"
     }
 
-    let apiData = {
+    let apiData: any = {
         targetUrl: api.registerBasepath != false ? apiUrlWithBasepath : apiUrl,
         credentials: {},
         specificationUrl: specificationUrl
@@ -175,7 +170,7 @@ function fillServiceMetadata(api, baseUrl) {
     if (!api.type || api.type == "openapi") {
         var specInJson
         if (api.specification.endsWith(".json")) {
-            specInJson = JSON.parse(fs.readFileSync(api.specification))
+            specInJson = JSON.parse(fs.readFileSync(api.specification, 'utf8'))
         } else {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
         }
@@ -202,4 +197,10 @@ function fillServiceMetadata(api, baseUrl) {
     }
 
     return serviceData
+}
+export {
+    createServicesFromConfig,
+    fillServiceMetadata,
+    getStatus,
+    fillEventData
 }
