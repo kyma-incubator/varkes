@@ -189,9 +189,10 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
         return connectionData;
 
     } catch (error) {
-        var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
-        LOGGER.error("Failed to connect to kyma cluster: %s", error.stack)
-        throw new Error(message);
+        // var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
+        // LOGGER.error("Failed to connect to kyma cluster: %s", error)
+        // throw new Error(message);
+        throw error;
     }
 }
 function destroy() {

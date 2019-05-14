@@ -67,10 +67,21 @@ async function connect(req, res) {
         res.status(200).send(connection.info())
 
     } catch (error) {
-        var message = "There is an error while establishing the connection. Usually that is caused by an invalid or expired token URL."
+
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
-        res.status(401).send({ error: message })
-        return
+        if (!error.statusCode) {
+
+            res.status(500).send(error.message);
+        }
+        else {
+            if (error.statusCode == 403) {
+                var message = "Error: Invalid Token, Please use another Token"
+                res.status(error.statusCode).send(message);
+            }
+            else {
+                res.status(error.statusCode).send(error.message);
+            }
+        }
     }
 
 }
