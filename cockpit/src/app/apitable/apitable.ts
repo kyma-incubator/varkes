@@ -92,7 +92,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public showNewEvent() {
         linkManager().navigate('/createapi/true');
     }
-    public onBatchRegisteration() {
+    public onRegisterAll() {
         this.batchStart = true;
         this.initial = false;
         let headers = new Headers({ 'Content-Type': 'application/json' });
