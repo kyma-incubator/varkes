@@ -3,7 +3,7 @@
 
 const openapiApp = require("@varkes/openapi-mock")
 const odataApp = require("@varkes/odata-mock")
-const connectorApp = require("@varkes/app-connector-client")
+const connectorApp = require("@varkes/api-server")
 const cockpitApp = require("@varkes/cockpit");
 const app = require('express')()
 var fs = require("fs")

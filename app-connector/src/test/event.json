@@ -1,0 +1,55 @@
+{
+    "provider": "myProvider",
+    "name": "events1",
+    "description": "All Events v1",
+    "labels": {
+        "connected-app": "icke",
+        "label1": "value1",
+        "type": "AsyncApi"
+    },
+    "events": {
+        "spec": {
+            "asyncapi": "1.0.0",
+            "info": {
+                "title": "events",
+                "version": "v1",
+                "description": "Events v1"
+            },
+            "topics": {
+                "customer.created.v1": {
+                    "subscribe": {
+                        "summary": "Customer Register Event v2",
+                        "payload": {
+                            "type": "object",
+                            "properties": {
+                                "customerUid": {
+                                    "type": "string",
+                                    "example": "adam@example.com",
+                                    "description": "Email of a Customer",
+                                    "title": "Customer uid"
+                                },
+                                "storeUid": {
+                                    "type": "string",
+                                    "example": "4caad296",
+                                    "description": "Unique id of a Store",
+                                    "title": "StoreUid"
+                                },
+                                "customerId": {
+                                    "type": "string",
+                                    "example": "0ed118f9474e",
+                                    "description": "Unique id of a Customer",
+                                    "title": "Customer uid"
+                                }
+                            }
+                        }
+                    },
+                    "example": {
+                        "customerUid": "adam@example.com",
+                        "storeUid": "4caad296",
+                        "customerId": "0ed118f9474e"
+                    }
+                }
+            }
+        }
+    }
+}

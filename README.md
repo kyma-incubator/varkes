@@ -11,7 +11,7 @@ Varkes (Greek for “small boats”) is a framework which mocks applications. Th
 
 Varkes framework provides the following node modules to make the application mocks work:
 
-* **Application Connector Client** used to pair with the Kyma cluster to register Events and APIs and send Events. For details, see [Application Connector Client](app-connector-client/README.md).
+* **Api Server** used to pair with the Kyma cluster to register Events and APIs and send Events. For details, see [Api Server](api-server/README.md).
 
 * **OpenAPI mock** which mocks the application APIs based on the OpenAPI specification. For details, see [OpenAPI mock](openapi-mock/README.md).
 

@@ -66,7 +66,6 @@ export class ConnectionOverviewComponent implements OnInit {
             baseUrl: this.baseUrl,
             insecure: this.insecureConnection
         };
-        console.log(url);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         this.http.post(this.baseUrl + this.info.links.connection, JSON.stringify(sendData), options)
@@ -79,7 +78,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 },
                 error => {
                     this.connected = false;
-                    this.alertMessage = error;
+                    this.alertMessage = error["_body"];
                     this.alert = true;
                 });
     }
@@ -90,7 +89,7 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = false;
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = error["_body"];
                     this.alert = true;
                 });
 
@@ -98,18 +97,6 @@ export class ConnectionOverviewComponent implements OnInit {
 
     public oninsecureConnection(target) {
         this.insecureConnection = target;
-    }
-    public onBatchRegisteration() {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        this.http.post(this.baseUrl + this.info.links.registration, { baseUrl: this.baseUrl }, options)
-            .subscribe(
-                success => {
-                },
-                error => {
-                    this.alertMessage = error;
-                    this.alert = true;
-                });
     }
     public downloadKey() {
         window.location.href = this.baseUrl + this.info.links.connection + this.connection.key;

@@ -1,0 +1,11 @@
+{
+    "event-type": ".*",
+    "event-type-version": "v1",
+    "event-time": ".*",
+    "data": {
+        "customerUid": ".*",
+        "storeUid": "4caad296",
+        "customerId": "0ed118f9474e"
+    },
+    "event-id": ".*"
+}

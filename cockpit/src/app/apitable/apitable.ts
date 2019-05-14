@@ -18,6 +18,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public alertMessage;
     public info;
     public actionList = [];
+    public refresherTimer;
     public isDataAvailable;
     public status;
     public inProgress: boolean;
@@ -91,7 +92,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public showNewEvent() {
         linkManager().navigate('/createapi/true');
     }
-    public onBatchRegisteration() {
+    public onRegisterAll() {
         this.batchStart = true;
         this.initial = false;
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -100,7 +101,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
             .subscribe(
                 success => {
                     this.batchStart = false;
-                    window.setInterval(() => { this.pollStatus(); }, 2000);
+                    this.refresherTimer = window.setInterval(() => { this.pollStatus(); }, 2000);
                 },
                 error => {
                     this.alertMessage = error;
@@ -116,12 +117,13 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.status = JSON.parse(success["_body"]);
                     this.inProgress = this.status.inProgress;
                     if (!this.inProgress) {
-                        clearInterval();
+                        window.clearInterval(this.refresherTimer);
                     }
                 },
                 error => {
                     this.alertMessage = error;
                     this.alert = true;
+                    window.clearInterval(this.refresherTimer);
                 });
     }
     public openStatusModal() {

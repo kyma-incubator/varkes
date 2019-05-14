@@ -1,0 +1,50 @@
+{
+  "name": "@varkes/api-server",
+  "version": "0.5.3",
+  "description": "Client for Kyma application connectivity",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/server",
+    "start:dev": "npm run clean && export DEBUG=true && node server/server ../test/varkes_config.json",
+    "test": "nyc mocha --exit",
+    "clean": "rm -rf logs || true && rm -rf generated || true && rm -rf keys || true"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "check_api": "^1.2.2",
+    "commander": "^2.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-winston": "^3.1.0",
+    "js-yaml": "^3.13.1",
+    "json-schema-ref-parser": "^6.1.0",
+    "json-to-pretty-yaml": "^1.2.2",
+    "node-forge": "^0.8.2",
+    "npm-check-updates": "^3.1.7",
+    "openapi-sampler": "^1.0.0-beta.14",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "swagger-ui-dist": "^3.22.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@varkes/example-kyma-mock": "^0.5.3",
+    "@varkes/app-connector": "^0.5.3",
+    "mocha": "^6.1.3",
+    "nyc": "^13.3.0",
+    "supertest": "^4.0.2"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
+  },
+  "bin": {
+    "varkes-connector-cli": "./tools/cli.js",
+    "varkes-connector-server": "./server/server.js"
+  }
+}

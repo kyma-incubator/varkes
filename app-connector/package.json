@@ -1,0 +1,40 @@
+{
+  "name": "@varkes/app-connector",
+  "version": "0.5.3",
+  "description": "Client for Kyma application connectivity",
+  "main": "dist/server/app.js",
+  "scripts": {
+    "compile": "tsc && copyfiles -f -e '*.ts' src/test/* dist/test && copyfiles -f src/test/expect/* dist/test/expect",
+    "test": "mocha dist/test",
+    "clean": "rm -rf dist || true && rm -rf logs || true"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-forge": "^0.8.2",
+    "request-promise": "^4.2.4",
+    "request": "^2.88.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/morgan": "^1.7.35",
+    "@types/node": "^11.13.8",
+    "@types/request-promise": "^4.1.43",
+    "@varkes/example-kyma-mock": "^0.5.3",
+    "@types/request": "^2.48.1",
+    "chai-match": "^1.1.1",
+    "chai": "^4.2.0",
+    "copyfiles": "^2.1.0",
+    "mocha": "^6.1.3",
+    "typescript": "~3.2.2"
+  },
+  "repository": {
+    "type": "ssh",
+    "url": "git@github.com:kyma-incubator/varkes.git"
+  }
+}

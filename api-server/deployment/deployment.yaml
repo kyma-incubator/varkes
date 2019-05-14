@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-server
+  labels:
+    app: api-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      containers:
+      - image: eu.gcr.io/kyma-project/incubator/develop/varkes-api-server:latest
+        imagePullPolicy: Always
+        name: api-server
+        ports:
+        - name: http
+          containerPort: 10000
+        env:
+        - name: DEBUG
+          value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-server
+  labels:
+    app: api-server
+spec:
+  ports:
+  - name: http
+    port: 10000
+  selector:
+    app: api-server
+---
+apiVersion: gateway.kyma-project.io/v1alpha2
+kind: Api
+metadata:
+  labels:
+    app: api-server
+  name: api-server
+spec:
+  hostname: api-server
+  service:
+    name: api-server
+    port: 10000
