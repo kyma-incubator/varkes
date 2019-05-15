@@ -1,6 +1,6 @@
 {
   "name": "@varkes/api-server",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Client for Kyma application connectivity",
   "main": "dist/server/app.js",
   "scripts": {
@@ -45,8 +45,8 @@
     "@types/request-promise": "^4.1.43",
     "@types/supertest": "^2.0.7",
     "@types/yaml": "^1.0.2",
-    "@varkes/app-connector": "^0.6.0",
-    "@varkes/example-kyma-mock": "^0.6.0",
+    "@varkes/app-connector": "^0.6.1",
+    "@varkes/example-kyma-mock": "^0.6.1",
     "copyfiles": "^2.1.0",
     "mocha": "^6.1.3",
     "nyc": "^13.3.0",
