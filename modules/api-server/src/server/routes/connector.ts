@@ -4,7 +4,6 @@
 import { logger as LOGGER } from "../logger"
 import * as express from "express"
 import { connection } from "@varkes/app-connector"
-var nodePort: any;
 
 function disconnect(req: any, res: any) {
     try {
@@ -58,7 +57,7 @@ function assureConnected() {
 
 async function connect(req: any, res: any) {
     try {
-        await connection.connect(req.body.url, true, req.body.insecure, nodePort)
+        await connection.connect(req.body.url, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info().domain)
         res.status(200).send(connection.info())
 
@@ -82,8 +81,7 @@ async function connect(req: any, res: any) {
 
 }
 
-function router(nodePortParam = null) {
-    nodePort = nodePortParam
+function router() {
     var connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)

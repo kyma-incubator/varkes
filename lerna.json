@@ -1,11 +1,7 @@
 {
   "packages": [
-    "./api-server",
-    "./cockpit",
-    "./examples/*",
-    "./odata-mock",
-    "./openapi-mock",
-    "./app-connector"
+    "modules/*",
+    "examples/*"
   ],
   "version": "0.5.3"
 }

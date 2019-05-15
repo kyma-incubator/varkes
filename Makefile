@@ -28,6 +28,7 @@ npm-publish:
 
 clean:
 	npx lerna clean
+	npx lerna run clean
 
 test:
 	echo $(DOCKER_TAG)
