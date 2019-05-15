@@ -77,6 +77,6 @@ export class ApiOverviewComponent implements OnInit {
         this.alert = false;
     }
     public goBack() {
-        linkManager().navigate('/');
+        linkManager().fromClosestContext().navigate('/');
     }
 }
