@@ -1,5 +1,5 @@
 <p align="center">
- <img src="./logos/logo.svg" width="150">
+ <img src="./assets/logo.svg" width="150">
 </p>
 
 # Varkes
@@ -11,17 +11,21 @@ Varkes (Greek for “small boats”) is a framework which mocks applications. Th
 
 Varkes framework provides the following node modules to make the application mocks work:
 
-* **Api Server** used to pair with the Kyma cluster to register Events and APIs and send Events. For details, see [Api Server](api-server/README.md).
+* **API Server** serves an API to pair with a Kyma cluster to register Events and APIs and send Events. For details, see [API Server](modules/api-server/README.md).
 
-* **OpenAPI mock** which mocks the application APIs based on the OpenAPI specification. For details, see [OpenAPI mock](openapi-mock/README.md).
+* **App Connector** is a library used by the *API-Server* covering all communication to a Kyma cluster. For details, see [App Connector](modules/app-connector/README.md).
 
-* **Odata mock** which mocks the application APIs based on the OData specification. For details, see [OData mock](odata-mock/README.md).
+* **Cockpit** a UI of the *API server* for a convenient way of management. For details, see [Cockpit](modules/cockpit/README.md).
+
+* **OpenAPI Mock** which mocks the application APIs based on the OpenAPI specification. For details, see [OpenAPI mock](modules/openapi-mock/README.md).
+
+* **OData Mock** which mocks the application APIs based on the OData specification. For details, see [OData mock](modules/odata-mock/README.md).
 
 ## Architecture
 
 The diagram shows how an application mock integrates with a Kyma cluster and which functionality is taken over by which framework modules:
 
-![Mocks Architecture](/assets/mocks-architecture.svg)
+![Mocks Architecture](/assets/architecture.svg)
 
 ## Examples
 

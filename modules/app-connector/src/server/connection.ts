@@ -150,7 +150,7 @@ function info() {
     return connection;
 }
 
-async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false, nodePort: any = null) {
+async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false) {
     try {
         var insecure = insecure ? true : false
 
@@ -176,10 +176,6 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
             cert: CERT_URL
         }
 
-        if (connectionData.insecure && nodePort) {
-            var result = connectionData.metadataUrl.match(/https:\/\/[a-zA-z0-9.]+/)
-            connectionData.metadataUrl = connectionData.metadataUrl.replace(result[0], result[0] + ":" + nodePort)
-        }
         if (persistFiles) {
             fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), { encoding: "utf8", flag: 'wx' })
             fs.writeFileSync(crtFile, certificateData, { encoding: "utf8", flag: 'wx' })

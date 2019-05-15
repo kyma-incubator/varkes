@@ -13,16 +13,17 @@ import * as connector from "./routes/connector";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
-const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
+
+const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
 const LOCAL_APIS_URL = "/local";
 const REMOTE_APIS_URL = "/remote/apis";
 const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
 const BATCH_REGISTRATION = "/local/registration";
-
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
-async function init(varkesConfigPath: string, currentPath = "", nodePortParam = null) {
+
+async function init(varkesConfigPath: string, currentPath = "") {
 
     var varkesConfig = config.init(varkesConfigPath, currentPath)
 
@@ -33,7 +34,7 @@ async function init(varkesConfigPath: string, currentPath = "", nodePortParam = 
     app.use(expressWinston.logger(LOGGER))
     app.use(REMOTE_APIS_URL, remoteApis.router())
     app.use(LOCAL_APIS_URL, localApis.router(varkesConfig))
-    app.use(CONNECTION, connector.router(nodePortParam))
+    app.use(CONNECTION, connector.router())
     app.use(EVENTS_URL, events.router())
 
     app.use("/swagger-ui", express.static(pathToSwaggerUI))

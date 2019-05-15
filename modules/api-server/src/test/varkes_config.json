@@ -5,7 +5,7 @@
         "404": "{\"error\":\"End Point not found\"}"
     },
     "name": "app-connector-mock",
-    "logo": "../logos/logo.svg",
+    "logo": "../../assets/logo.svg",
     "events": [
         {
             "specification": "events1.json",

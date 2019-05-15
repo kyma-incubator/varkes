@@ -13,6 +13,9 @@
   },
   "author": "",
   "license": "Apache-2.0",
+  "bin": {
+    "varkes-cli": "./src/tools/cli.js"
+  },
   "dependencies": {
     "node-forge": "^0.8.2",
     "request-promise": "^4.2.4",
