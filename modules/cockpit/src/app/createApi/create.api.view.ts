@@ -47,7 +47,7 @@ export class CreateApiViewComponent implements OnInit {
                 });
     }
     public goBack() {
-        linkManager().navigate('/');
+        linkManager().fromClosestContext().navigate('/');
     }
     private createEventExample() {
         return {
