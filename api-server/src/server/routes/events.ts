@@ -1,23 +1,19 @@
 #!/usr/bin/env node
 'use strict'
 
-const express = require('express')
-const LOGGER = require("../logger").logger
-var { _, event, connection } = require("@varkes/app-connector")
-const request = require("request")
-module.exports = {
-    router: router
-}
+import * as express from "express"
+import { logger as LOGGER } from "../logger"
+import { event, connection } from "@varkes/app-connector"
 
-function sendEvent(req, res) {
+function sendEvent(req: any, res: any) {
     LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        event.sendEvent(req.body).then((result) => {
+        event.sendEvent(req.body).then((result: any) => {
             res.status(200).send(result);
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode).send(err.message);
         })
     }
@@ -35,3 +31,5 @@ function assureConnected() {
     }
     return null
 }
+
+export { router }

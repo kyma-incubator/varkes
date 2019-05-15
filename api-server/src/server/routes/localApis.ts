@@ -1,43 +1,41 @@
-const LOGGER = require("../logger").logger
-const express = require("express")
-const services = require("../services")
-const { api, _, connection } = require("@varkes/app-connector")
-module.exports = {
-    router: router
-}
-var varkesConfig
-function getAll(req, res) {
+import { logger as LOGGER } from "../logger"
+import * as express from "express"
+import * as services from "../services";
+import { api, connection } from "@varkes/app-connector"
+
+var varkesConfig: any;
+function getAll(req: any, res: any) {
     LOGGER.debug("Getting all Local APIs")
     var apis = []
     var configApis = varkesConfig.apis;
     for (var i = 0; i < configApis.length; i++) {
         var api = configApis[i]
-        let metadata = services.fillServiceMetadata(api, getOrigin(req))
+        let metadata: any = services.fillServiceMetadata(api, getOrigin(req))
         metadata.id = api.name
         apis.push(metadata)
     }
     var configEvents = varkesConfig.events;
     for (var i = 0; i < configEvents.length; i++) {
         var event = configEvents[i];
-        let metadata = services.fillEventData(event)
+        let metadata: any = services.fillEventData(event)
         metadata.id = event.name;
         apis.push(metadata);
     }
     res.status(200).send(apis);
 }
-function getLocalApi(req, res) {
+function getLocalApi(req: any, res: any) {
     LOGGER.debug("Getting Local API")
     let apiname = req.params.apiname;
-    let api = varkesConfig.apis.find(x => x.name == apiname);
+    let api = varkesConfig.apis.find((x: any) => x.name == apiname);
     if (api) {
-        let serviceMetadata = services.fillServiceMetadata(api, getOrigin(req))
+        let serviceMetadata: any = services.fillServiceMetadata(api, getOrigin(req))
         serviceMetadata.id = apiname;
         res.status(200).send(serviceMetadata);
     }
     else {
-        api = varkesConfig.events.find(x => x.name == apiname);
+        api = varkesConfig.events.find((x: any) => x.name == apiname);
         if (api) {
-            let eventMetadata = services.fillEventData(api)
+            let eventMetadata: any = services.fillEventData(api)
             eventMetadata.id = apiname;
             res.status(200).send(eventMetadata);
         }
@@ -48,14 +46,14 @@ function getLocalApi(req, res) {
         }
     }
 }
-function getOrigin(req) {
+function getOrigin(req: any) {
     if (req.body.baseUrl && !req.body.baseUrl.match(/http(s)?:\/\//)) {
         return req.protocol + req.body.baseUrl
     }
     return req.body.baseUrl || req.protocol + "://" + req.headers.host
 }
 
-async function registerAll(req, res) {
+async function registerAll(req: any, res: any) {
     LOGGER.debug("Registering all Local APIs")
     var err = assureConnected()
     if (err) {
@@ -73,11 +71,11 @@ async function registerAll(req, res) {
         res.status(500).send({ error: message })
     }
 }
-function getStatus(req, res) {
+function getStatus(req: any, res: any) {
     LOGGER.debug("Getting Registration Status")
     res.status(200).send(services.getStatus());
 }
-async function create(req, res) {
+async function create(req: any, res: any) {
     LOGGER.debug("Create Local API %s", req.params.apiname)
 
     var err = assureConnected()
@@ -88,7 +86,7 @@ async function create(req, res) {
         let apis = varkesConfig.apis;
         let events = varkesConfig.events;
         let apiFound = false;
-        let serviceMetadata;
+        let serviceMetadata: any;
         for (var i = 0; i < apis.length; i++) {
             var api = apis[i];
             if (api.name == apiName) {
@@ -107,18 +105,18 @@ async function create(req, res) {
         var registeredAPIs = await api.findAll();
         var reg_api;
         if (registeredAPIs.length > 0)
-            reg_api = registeredAPIs.find(x => x.name == serviceMetadata.name)
+            reg_api = registeredAPIs.find((x: any) => x.name == serviceMetadata.name)
         if (!reg_api) {
-            api.create(serviceMetadata).then((result) => {
+            api.create(serviceMetadata).then((result: any) => {
                 res.status(200).send(result);
-            }, (err) => {
+            }, (err: any) => {
                 res.status(err.statusCode).send(err.message);
             });
         }
         else {
-            api.update(serviceMetadata, reg_api.id).then((result) => {
+            api.update(serviceMetadata, reg_api.id).then((result: any) => {
                 res.status(200).send(result);
-            }, (err) => {
+            }, (err: any) => {
                 res.status(err.statusCode).send(err.message);
             })
             LOGGER.debug("Updated API successful: %s", api.name)
@@ -132,7 +130,7 @@ function assureConnected() {
     }
     return null
 }
-function router(config) {
+function router(config: any) {
     var apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/apis", getAll)
@@ -142,3 +140,5 @@ function router(config) {
     apiRouter.post("/apis/:apiname/register", create)
     return apiRouter
 }
+
+export { router }

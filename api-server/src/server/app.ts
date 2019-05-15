@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 'use strict'
 
-const config = require('./config.js')
-const express = require("express")
-const fs = require("fs")
-const LOGGER = require("./logger").logger
-const path = require("path")
-const bodyParser = require('body-parser')
-const expressWinston = require('express-winston')
-const connector = require("./routes/connector")
-const events = require("./routes/events")
-const remoteApis = require("./routes/remoteApis")
-const localApis = require("./routes/localApis")
+import * as config from './config.js';
+import * as express from "express";
+import * as fs from "fs";
+import { logger as LOGGER } from "./logger";
+import * as path from "path";
+import * as bodyParser from "body-parser";
+import * as expressWinston from "express-winston";
+import * as cors from "cors";
+import * as connector from "./routes/connector";
+import * as events from "./routes/events";
+import * as remoteApis from "./routes/remoteApis";
+import * as localApis from "./routes/localApis";
 const VARKES_LOGO = path.resolve(__dirname, 'views/static/logo.svg')
-const cors = require("cors")
 const LOGO_URL = "/logo";
 const LOCAL_APIS_URL = "/local";
 const REMOTE_APIS_URL = "/remote/apis";
@@ -22,9 +22,9 @@ const CONNECTION = "/connection";
 const BATCH_REGISTRATION = "/local/registration";
 
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
-function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
+async function init(varkesConfigPath: string, currentPath = "", nodePortParam = null) {
 
-    var varkesConfig = config(varkesConfigPath, currentPath)
+    var varkesConfig = config.init(varkesConfigPath, currentPath)
 
     var app = express()
     app.use(bodyParser.json())
@@ -64,12 +64,7 @@ function init(varkesConfigPath = null, currentPath = "", nodePortParam = null) {
     app.get("/console", function (req, res) {
         res.sendFile(path.resolve(__dirname, "resources/console.html"))
     })
-
-    return new Promise(function (resolve, reject) {
-        resolve(app)
-    })
+    return app;
 }
 
-module.exports = {
-    init: init
-}
+export { init }

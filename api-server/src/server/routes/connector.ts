@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-const LOGGER = require("../logger").logger
-const express = require("express")
-var { _, _, connection } = require("@varkes/app-connector")
-var nodePort;
-module.exports = {
-    router: router
-}
+import { logger as LOGGER } from "../logger"
+import * as express from "express"
+import { connection } from "@varkes/app-connector"
+var nodePort: any;
 
-
-function disconnect(req, res) {
+function disconnect(req: any, res: any) {
     try {
         connection.destroy()
     } catch (error) {
@@ -20,7 +16,7 @@ function disconnect(req, res) {
     res.status(204).send()
 }
 
-function info(req, res) {
+function info(req: any, res: any) {
     var err = assureConnected()
     if (err) {
         res.status(404).send({ error: err })
@@ -29,7 +25,7 @@ function info(req, res) {
     }
 }
 
-function key(req, res) {
+function key(req: any, res: any) {
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
@@ -41,7 +37,7 @@ function key(req, res) {
     }
 }
 
-function cert(req, res) {
+function cert(req: any, res: any) {
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
@@ -60,7 +56,7 @@ function assureConnected() {
     return null
 }
 
-async function connect(req, res) {
+async function connect(req: any, res: any) {
     try {
         await connection.connect(req.body.url, true, req.body.insecure, nodePort)
         LOGGER.info("Connected to %s", connection.info().domain)
@@ -97,3 +93,4 @@ function router(nodePortParam = null) {
 
     return connectionRouter
 }
+export { router }

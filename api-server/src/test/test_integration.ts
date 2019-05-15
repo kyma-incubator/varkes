@@ -1,30 +1,30 @@
 #!/usr/bin/env node
 'use strict'
 
-var request = require('supertest')
-const mock = require('../server/app')
-const express = require("express")
-const fs = require("fs")
-const path = require("path")
+import * as  mock from "../server/app"
+import * as request from "supertest"
+import * as express from "express"
+import * as fs from "fs"
+import * as path from "path"
 const kyma = require("@varkes/example-kyma-mock")
-const testAPI = JSON.parse(fs.readFileSync(path.resolve("test/test-api.json")))
-const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/schools.json")))
-const coursesAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/courses.json")))
-const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("test/expect/northwind.json")))
-const events1API = JSON.parse(fs.readFileSync(path.resolve("test/expect/events1.json")))
-const events2API = JSON.parse(fs.readFileSync(path.resolve("test/expect/events2.json")))
+const testAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/test-api.json"), "utf-8"))
+const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools.json"), "utf-8"))
+const coursesAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses.json"), "utf-8"))
+const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/northwind.json"), "utf-8"))
+const events1API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events1.json"), "utf-8"))
+const events2API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events2.json"), "utf-8"))
 
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
 
 describe("should work", () => {
-    var kymaServer
-    var server
+    var kymaServer: any
+    var server: any
     before(async () => { //* start kyma mock before tests
-        await kyma.then(app => {
+        await kyma.then((app: any) => {
             kymaServer = app.listen(port)
         })
-        await mock.init("varkes_config.json", __dirname).then((mock) => {
+        await mock.init("varkes_config.json", __dirname).then((mock: any) => {
             server = express()
             server.use(mock)
         })
@@ -210,14 +210,14 @@ describe("should work", () => {
     })
 })
 
-function createAPI(server) {
+function createAPI(server: any) {
     return new Promise((resolve, reject) => {
         request(server)
             .post("/remote/apis/")
             .send(testAPI)
             .set("Accept", "application/json")
             .expect(200)
-            .end((err, res) => {
+            .end((err: any, res: any) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -230,7 +230,7 @@ function createAPI(server) {
 function deleteKeysFile() {
     const path = "./keys"
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file, index) {
+        fs.readdirSync(path).forEach(function (file: any, index: any) {
             fs.unlinkSync(path + "/" + file)
         })
         fs.rmdirSync(path)

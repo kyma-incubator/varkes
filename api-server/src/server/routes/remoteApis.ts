@@ -1,36 +1,33 @@
 #!/usr/bin/env node
 'use strict'
 
-const LOGGER = require("../logger").logger
-const express = require("express")
-const openapiSampler = require('openapi-sampler');
-const refParser = require('json-schema-ref-parser');
-const { api, _, connection } = require("@varkes/app-connector")
-module.exports = {
-    router: router
-}
+import { logger as LOGGER } from "../logger"
+import * as express from "express"
+const openapiSampler = require('openapi-sampler')
+import * as refParser from 'json-schema-ref-parser'
+import { api, connection } from "@varkes/app-connector"
 
-function getAll(req, res) {
+function getAll(req: any, res: any) {
     LOGGER.debug("Getting all APIs")
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.findAll().then((result) => {
+        api.findAll().then((result: any) => {
             res.status(200).send(result);
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode, err.message)
         })
     }
 }
 
-function get(req, res) {
+function get(req: any, res: any) {
     LOGGER.debug("Get API %s", req.params.api)
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.findOne(req.params.api).then((result) => {
+        api.findOne(req.params.api).then((result: any) => {
 
             let body = result;
             body.id = req.params.api //comply with the api spec
@@ -44,48 +41,48 @@ function get(req, res) {
             else {
                 res.status(200).type("json").send(body)
             }
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode).send(err.body);
         })
     }
 }
 
-function update(req, res) {
+function update(req: any, res: any) {
     LOGGER.debug("Update API %s", req.params.api)
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.update(req.body, req.params.api).then((result) => {
+        api.update(req.body, req.params.api).then((result: any) => {
             res.status(200).send(result);
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode).send(err.message);
         })
     }
 }
 
-function deleteApi(req, res) {
+function deleteApi(req: any, res: any) {
     LOGGER.debug("Delete API %s", req.params.api)
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.delete(req.params.api).then((result) => {
+        api.delete(req.params.api).then((result: any) => {
             res.status(200).send(result);
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode).send(err.message);
         });
     }
 }
-function create(req, res) {
+function create(req: any, res: any) {
     LOGGER.debug("Creating API %s", req.body.name)
     var err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.create(req.body).then((result) => {
+        api.create(req.body).then((result: any) => {
             res.status(200).send(result);
-        }, (err) => {
+        }, (err: any) => {
             res.status(err.statusCode).send(err.message);
         });
     }
@@ -96,10 +93,10 @@ function assureConnected() {
     }
     return null
 }
-function dereferenceApi(body) {
-    return new Promise(function (resolve, reject) {
+function dereferenceApi(body: any) {
+    return new Promise((resolve, reject) => {
         refParser.dereference(body.events.spec)
-            .then(function (schema) {
+            .then((schema: any) => {
                 Object.keys(schema.topics).forEach((topicKey) => {
                     if (schema.topics[topicKey].publish) {
                         schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
@@ -129,3 +126,4 @@ function router() {
 
     return apiRouter
 }
+export { router }
