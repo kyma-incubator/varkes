@@ -27,6 +27,11 @@ The diagram shows how an application mock integrates with a Kyma cluster and whi
 
 ![Mocks Architecture](/assets/architecture.svg)
 
+## Known Issues
+**Kyma on Minikube not supported**
+At the moment the application connector API of Kyma is exposed via node ports on minikube (based on nginx ingress). The port number is not propagated correct in the links returned by the API of the application connector. With that the app-connector module will fail when trying to call that links.
+The issue is currently getting addressed in Kyma and a fix is planned for release 1.2 (based on istio-ingress avoiding node port usage)
+
 ## Examples
 
 The `examples` folder includes mocks based on OpenAPI and OData packages. 
