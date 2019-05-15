@@ -32,7 +32,6 @@ function customizeMock(app) {
     app.use(bodyParser.json());
 
     app.get('/connector/v1/applications/signingRequests/info', function (req, res, next) {
-        console.log("Incoming signing request")
         var localDomain = req.protocol + "://" + req.headers.host
 
         res.body = {

@@ -1,5 +1,5 @@
 <p align="center">
- <img src="../../logos/logo.svg" width="150">
+ <img src="../../assets/logo.svg" width="150">
 </p>
 
 # stress-mock example
@@ -22,8 +22,8 @@ npm install
 npm start
 ```
 
-Navigate to `http://localhost:10000` to see the UI of the `app-connector-client`.
-Navigate to `http://localhost:10000/console` to see the console of the `app-connector-client`.
+Navigate to `http://localhost:10000` to see the UI of the `cockpit`.
+Navigate to `http://localhost:10000/console` to see the console of the `api-server`.
 Navigate to `http://localhost:10000/api[154,155,...,303]/console` to see the console of the `courses` api.
 Navigate to `http://localhost:10000/api[3,..,152]/console` to see the console of the `schools` api.
 

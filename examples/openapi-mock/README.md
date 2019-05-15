@@ -1,5 +1,5 @@
 <p align="center">
- <img src="../../logos/logo.svg" width="150">
+ <img src="../../assets/logo.svg" width="150">
 </p>
 
 # openapi-mock example

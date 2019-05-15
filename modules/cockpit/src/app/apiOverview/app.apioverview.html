@@ -1,0 +1,60 @@
+<header class="fd-page__header fd-has-background-color-background-2">
+  <section class="fd-section">
+    <div class="fd-action-bar">
+      <div class="fd-action-bar__back">
+        <button (click)="goBack()" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+      </div>
+      <div class="fd-action-bar__header">
+        <h1 class="fd-action-bar__title">
+          {{api.name}}
+        </h1>
+      </div>
+    </div>
+
+    <div class="fd-container fd-container--fluid">
+      <div class="fd-col--6">
+        <table class="fd-table fd-table--no-borders">
+          <tbody>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Name</td>
+              <td>{{api.name}}</td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Description</td>
+              <td>{{api.description}}</td>
+            </tr>
+            <ng-container *ngIf="!event">
+              <tr>
+                <td class="y-fd-table--col-2 fd-has-color-text-4">Links</td>
+                <td>
+                  <a href="{{api.api.targetUrl}}/console" target="_blank">Console Url <span
+                      class="sap-icon--action sap-icon--s"></span></a>,
+                  <a href="{{api.api.specificationUrl}}" target="_blank">Spec Url <span
+                      class="sap-icon--action sap-icon--s"></span></a>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="fd-col--6">
+        <table class="fd-table fd-table--no-borders">
+          <tbody>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Type</td>
+              <td>{{api.labels.type}}</td>
+            </tr>
+            <tr>
+              <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
+              <td>
+                <span *ngIf='remote' class="fd-badge fd-badge--success">remote</span>
+                <span *ngIf='!remote' class="fd-badge fd-badge--warning">local</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</header>

@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: odata-mock
+  labels:
+    app: odata-mock
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: odata-mock
+    spec:
+      containers:
+      - image: eu.gcr.io/kyma-project/incubator/develop/varkes-odata-mock:latest
+        imagePullPolicy: Always
+        name: odata-mock
+        ports:
+        - name: http
+          containerPort: 10000
+        env:
+        - name: DEBUG
+          value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odata-mock
+  labels:
+    app: odata-mock
+spec:
+  ports:
+  - name: http
+    port: 10000
+  selector:
+    app: odata-mock
+---
+apiVersion: gateway.kyma-project.io/v1alpha2
+kind: Api
+metadata:
+  labels:
+    app: odata-mock
+  name: odata-mock
+spec:
+  hostname: odata-mock
+  service:
+    name: odata-mock
+    port: 10000

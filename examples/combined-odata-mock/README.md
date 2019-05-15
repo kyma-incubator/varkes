@@ -1,10 +1,10 @@
 <p align="center">
- <img src="../../logos/logo.svg" width="150">
+ <img src="../../assets/logo.svg" width="150">
 </p>
 
 # combined-openapi-mock example
 
-This example illustrate how to use the `varkes-odata-mock` in combination with the `varkes-app-connector-client`.
+This example illustrate how to use the `varkes-odata-mock` in combination with the `varkes-api-server`.
 
 ## Run local using npm
 
@@ -14,8 +14,8 @@ npm install
 npm start
 ```
 
-Navigate to `http://localhost:10000` to see the UI of the `app-connector-client`.
-Navigate to `http://localhost:10000/console` to see the console of the `app-connector-client`.
+Navigate to `http://localhost:10000` to see the UI of the `cockpit`.
+Navigate to `http://localhost:10000/console` to see the console of the `api-server`.
 Navigate to `http://localhost:10000/api/console` to see the console of the `odata-mock`.
 
 ## Run local using docker

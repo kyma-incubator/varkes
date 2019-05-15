@@ -1,0 +1,12 @@
+{
+    "insecure": false,
+    "infoUrl": ".*",
+    "metadataUrl": ".*",
+    "eventsUrl": ".*",
+    "renewCertUrl": ".*",
+    "revocationCertUrl": ".*",
+    "consoleUrl": ".*",
+    "applicationUrl": ".*",
+    "domain": ".*",
+    "application": ".*"
+}

@@ -1,0 +1,39 @@
+<header class="fd-page__header fd-has-background-color-background-2">
+  <section class="fd-section">
+    <div class="fd-action-bar">
+      <div class="fd-action-bar__back">
+        <button (click)="goBack()" class="fd-button--light fd-button--compact sap-icon--nav-back"></button>
+      </div>
+      <div class="fd-action-bar__header">
+        <h1 *ngIf='!event' class="fd-action-bar__title">
+          Create API
+        </h1>
+        <h1 *ngIf='event' class="fd-action-bar__title">
+          Create Event
+        </h1>
+      </div>
+      <div class="fd-action-bar__actions">
+        <button *ngIf="!event" class=" fd-button--primary fd-button--l" (click)="createApi()">Create API</button>
+        <button *ngIf="event" class=" fd-button--primary fd-button--l" (click)="createApi()">Create Event</button>
+      </div>
+    </div>
+  </section>
+</header>
+
+<section class="fd-section">
+  <div class="fd-panel" [attr.aria-busy]="loadInd ? 'true' : 'false'">
+    <div class="fd-spinner" [attr.aria-hidden]="loadInd ? 'false' : 'true'" aria-label="Loading">
+      <div></div>
+    </div>
+    <div class="fd-panel__header">
+      <div class="fd-panel__head">
+        <h3 class="fd-panel__title">Code</h3>
+      </div>
+    </div>
+    <div class="fd-panel__body">
+      <div id="apiEditor" ace-editor [(text)]='text' [mode]="'json'" [theme]="'eclipse'" [options]="options"
+        [readOnly]="false" [autoUpdateContent]="true" style="min-height: 200px; width:100%; overflow: auto;">
+      </div>
+    </div>
+  </div>
+</section>
