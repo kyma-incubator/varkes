@@ -12,9 +12,9 @@ import * as fs from "fs"
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 
 async function init(varkesConfigPath: string, currentDirectory = "") {
-  var app = express()
+  let app = express()
 
-  var varkesConfig = configure(varkesConfigPath, currentDirectory);
+  let varkesConfig = configure(varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -40,11 +40,11 @@ function registerLogger(app: express.Application) {
     else
       return "-";
   });
-  var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
-  var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
+  let logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
+  let requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
   app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
   app.get('/requests', function (req, res, done) {
-    var text = fs.readFileSync("requests.log", "utf8");
+    let text = fs.readFileSync("requests.log", "utf8");
     res.status(200);
     res.send(text);
   });

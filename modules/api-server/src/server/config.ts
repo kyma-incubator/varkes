@@ -9,9 +9,9 @@ const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
 
 function init(varkesConfigPath: string, currentDirectory: any) {
-    var varkesConfig
+    let varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
+        let endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
         varkesConfig.apis.map((element: any) => {
@@ -29,13 +29,13 @@ function init(varkesConfigPath: string, currentDirectory: any) {
 }
 
 function configValidation(configJson: any) {
-    var error_message = ""
-    var events = configJson.events
-    var apis = configJson.apis
+    let error_message = ""
+    let events = configJson.events
+    let apis = configJson.apis
     if (events) {
-        for (var i = 1; i <= events.length; i++) {
+        for (let i = 1; i <= events.length; i++) {
             {
-                var event = events[i - 1]
+                let event = events[i - 1]
                 if (!event.name) {
                     error_message += "\nevent number " + i + ": missing attribute 'name', a name is mandatory"
                 }
@@ -46,7 +46,7 @@ function configValidation(configJson: any) {
                     error_message += "\nevent '" + event.name + "': specification '" + event.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'"
                 }
                 else {
-                    var specInJson
+                    let specInJson
                     if (event.specification.endsWith(".json")) {
                         specInJson = JSON.parse(fs.readFileSync(event.specification, 'utf8'))
                     } else {
@@ -62,8 +62,8 @@ function configValidation(configJson: any) {
         }
     }
     if (apis) {
-        for (var i = 1; i <= apis.length; i++) {
-            var api = apis[i - 1]
+        for (let i = 1; i <= apis.length; i++) {
+            let api = apis[i - 1]
             if (api.auth && !(api.auth == "oauth" || api.auth == "none" || api.auth == "basic")) {
                 error_message += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'auth' should be one of three values [oauth, basic, none]";
             }

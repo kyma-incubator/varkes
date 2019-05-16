@@ -8,7 +8,7 @@ const express = require('express')
 describe('test app', function () {
     it('should work', (done) => {
         mock('./varkes_config.json', __dirname).then((mock: any) => {
-            var app = express()
+            let app = express()
             app.use(mock)
 
             describe('GET Advertisements via API', function () {

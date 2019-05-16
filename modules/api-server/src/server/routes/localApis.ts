@@ -6,17 +6,17 @@ import { api, connection } from "@varkes/app-connector"
 var varkesConfig: any;
 function getAll(req: any, res: any) {
     LOGGER.debug("Getting all Local APIs")
-    var apis = []
-    var configApis = varkesConfig.apis;
-    for (var i = 0; i < configApis.length; i++) {
-        var api = configApis[i]
+    let apis = []
+    let configApis = varkesConfig.apis;
+    for (let i = 0; i < configApis.length; i++) {
+        let api = configApis[i]
         let metadata: any = services.fillServiceMetadata(api, getOrigin(req))
         metadata.id = api.name
         apis.push(metadata)
     }
-    var configEvents = varkesConfig.events;
-    for (var i = 0; i < configEvents.length; i++) {
-        var event = configEvents[i];
+    let configEvents = varkesConfig.events;
+    for (let i = 0; i < configEvents.length; i++) {
+        let event = configEvents[i];
         let metadata: any = services.fillEventData(event)
         metadata.id = event.name;
         apis.push(metadata);
@@ -55,7 +55,7 @@ function getOrigin(req: any) {
 
 async function registerAll(req: any, res: any) {
     LOGGER.debug("Registering all Local APIs")
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     }
@@ -66,7 +66,7 @@ async function registerAll(req: any, res: any) {
         res.status(200).send(connection.info())
     }
     catch (error) {
-        var message = "There is an error while registering all APIs."
+        let message = "There is an error while registering all APIs."
         LOGGER.error("Failed to register all APIs: %s", error.stack)
         res.status(500).send({ error: message })
     }
@@ -78,7 +78,7 @@ function getStatus(req: any, res: any) {
 async function create(req: any, res: any) {
     LOGGER.debug("Create Local API %s", req.params.apiname)
 
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -87,23 +87,23 @@ async function create(req: any, res: any) {
         let events = varkesConfig.events;
         let apiFound = false;
         let serviceMetadata: any;
-        for (var i = 0; i < apis.length; i++) {
-            var api = apis[i];
-            if (api.name == apiName) {
-                serviceMetadata = services.fillServiceMetadata(api, getOrigin(req));
+        for (let i = 0; i < apis.length; i++) {
+            let apiEntry = apis[i];
+            if (apiEntry.name == apiName) {
+                serviceMetadata = services.fillServiceMetadata(apiEntry, getOrigin(req));
                 apiFound = true;
                 break;
             }
         }
-        for (var i = 0; i < events.length && !apiFound; i++) {
-            var event = events[i];
+        for (let i = 0; i < events.length && !apiFound; i++) {
+            let event = events[i];
             if (event.name == apiName) {
                 serviceMetadata = services.fillEventData(event);
                 break;
             }
         }
-        var registeredAPIs = await api.findAll();
-        var reg_api;
+        let registeredAPIs = await api.findAll();
+        let reg_api;
         if (registeredAPIs.length > 0)
             reg_api = registeredAPIs.find((x: any) => x.name == serviceMetadata.name)
         if (!reg_api) {
@@ -119,7 +119,7 @@ async function create(req: any, res: any) {
             }, (err: any) => {
                 res.status(err.statusCode).send(err.message);
             })
-            LOGGER.debug("Updated API successful: %s", api.name)
+            LOGGER.debug("Updated API successful: %s", apiName)
         }
 
     }
@@ -131,7 +131,7 @@ function assureConnected() {
     return null
 }
 function router(config: any) {
-    var apiRouter = express.Router()
+    let apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/apis", getAll)
     apiRouter.post("/registration", registerAll)

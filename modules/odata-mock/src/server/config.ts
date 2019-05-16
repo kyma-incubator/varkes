@@ -7,9 +7,9 @@ import { logger as LOGGER } from "./logger"
 import { VarkesConfigType } from "./types";
 
 function config(varkesConfigPath: string, currentPath: string): VarkesConfigType {
-    var varkesConfig
+    let varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(currentPath, varkesConfigPath)
+        let endpointConfig = path.resolve(currentPath, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
         varkesConfig.apis.map((api: any) => {
@@ -24,10 +24,10 @@ function config(varkesConfigPath: string, currentPath: string): VarkesConfigType
 }
 
 function configValidation(configJson: VarkesConfigType) {
-    var error_message = "";
+    let error_message = "";
     if (configJson.hasOwnProperty("apis")) {
-        for (var i = 1; i <= configJson.apis.length; i++) {
-            var api = configJson.apis[i - 1];
+        for (let i = 1; i <= configJson.apis.length; i++) {
+            let api = configJson.apis[i - 1];
             if (!api.name) {
                 error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
             }

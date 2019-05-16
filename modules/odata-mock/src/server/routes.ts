@@ -8,10 +8,10 @@ const fs = require('fs');
 
 module.exports = function (app: any) {
     registerLogger(app);
-    var apis = app.varkesConfig.apis;
+    let apis = app.varkesConfig.apis;
 
     function modifyResponseBody(req: any, res: any, next: any) {
-        var oldSend = res.send;
+        let oldSend = res.send;
 
         res.send = function (data: any) {
             if (!arguments[0] && arguments[0].statusCode) {
@@ -45,8 +45,8 @@ module.exports = function (app: any) {
             else
                 return "-";
         });
-        var logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
-        var requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
+        let logging_string = '[:date[clf]], User: :remote-user, ":method :url, Status: :status"\n Header:\n :header\n Body:\n :body'
+        let requestLogStream = fs.createWriteStream('requests.log', { flags: 'a' })
         app.use(morgan(logging_string, { stream: requestLogStream }), morgan(logging_string))
     }
 

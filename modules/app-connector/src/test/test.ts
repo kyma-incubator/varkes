@@ -17,7 +17,7 @@ const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString(
 const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
 const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
 describe("should work", () => {
-    var kymaServer: any
+    let kymaServer: any
     before(async () => { //* start kyma mock before tests
         deleteKeysFile()
         await kyma.then((app: any) => {

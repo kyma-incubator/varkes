@@ -6,8 +6,8 @@ const app = require('express')()
 const uuid = require('uuid/v4')
 const bodyParser = require('body-parser');
 
-var runAsync = async () => {
-    var port
+let runAsync = async () => {
+    let port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
         port = process.argv[2]
     }
@@ -32,7 +32,7 @@ function customizeMock(app) {
     app.use(bodyParser.json());
 
     app.get('/connector/v1/applications/signingRequests/info', function (req, res, next) {
-        var localDomain = req.protocol + "://" + req.headers.host
+        let localDomain = req.protocol + "://" + req.headers.host
 
         res.body = {
             csrUrl: localDomain + '/connector/v1/applications/certificates?token=' + "validToken",
@@ -59,7 +59,7 @@ function customizeMock(app) {
         next();
     })
     app.get("/connector/v1/applications/management/info", (req, res, next) => {
-        var localDomain = req.protocol + "://" + req.headers.host
+        let localDomain = req.protocol + "://" + req.headers.host
         res.send({
             clientIdentity: { application: 'test' },
             urls:

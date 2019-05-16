@@ -7,7 +7,7 @@ import { event, connection } from "@varkes/app-connector"
 
 function sendEvent(req: any, res: any) {
     LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -20,7 +20,7 @@ function sendEvent(req: any, res: any) {
 }
 
 function router() {
-    var eventsRouter = express.Router()
+    let eventsRouter = express.Router()
     eventsRouter.post("/", sendEvent)
     return eventsRouter
 }

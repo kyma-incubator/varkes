@@ -25,9 +25,9 @@ const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 
 async function init(varkesConfigPath: string, currentPath = "") {
 
-    var varkesConfig = config.init(varkesConfigPath, currentPath)
+    let varkesConfig = config.init(varkesConfigPath, currentPath)
 
-    var app = express()
+    let app = express()
     app.use(bodyParser.json())
     app.use(cors())
     app.options('*', cors())
@@ -41,7 +41,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
 
     app.get("/info", function (req, res) {
 
-        var info = {
+        let info = {
             appName: varkesConfig.name,
             links: {
                 logo: LOGO_URL,
@@ -55,7 +55,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
         res.status(200).send(info);
     });
     app.get(LOGO_URL, function (req, res) {
-        var img = fs.readFileSync(varkesConfig.logo || VARKES_LOGO)
+        let img = fs.readFileSync(varkesConfig.logo || VARKES_LOGO)
         res.writeHead(200, { 'Content-Type': "image/svg+xml" })
         res.end(img, 'binary')
     })

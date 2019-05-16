@@ -21,9 +21,9 @@ async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registe
     apisCount = 0;
     apisCount += varkesConfig.apis.length;
     regErrorMessage = "";
-    for (var i = 0; i < varkesConfig.apis.length; i++) {
+    for (let i = 0; i < varkesConfig.apis.length; i++) {
         let varkesApi = varkesConfig.apis[i];
-        var reg_api
+        let reg_api
         if (registeredApis.length > 0)
             reg_api = registeredApis.find((x: any) => x.name == varkesApi.name)
         try {
@@ -42,22 +42,22 @@ async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registe
         catch (err) {
             if (!reg_api) {
                 apisFailedCount++;
-                var message = "Registration of API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
+                let message = "Registration of API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
             }
             else {
                 apisFailedCount++;
-                var message = "Updating API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
+                let message = "Updating API '" + varkesApi.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += "- " + message + "\n\n";
                 LOGGER.error(message)
             }
         }
     }
     apisCount += varkesConfig.events.length;
-    for (var i = 0; i < varkesConfig.events.length; i++) {
+    for (let i = 0; i < varkesConfig.events.length; i++) {
         let event = varkesConfig.events[i];
-        var reg_api;
+        let reg_api;
         if (registeredApis.length > 0)
             reg_api = registeredApis.find((x: any) => x.name == event.name)
         try {
@@ -76,13 +76,13 @@ async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registe
         catch (err) {
             if (!reg_api) {
                 apisFailedCount++;
-                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                let message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
             }
             else {
                 apisFailedCount++;
-                var message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
+                let message = "Registration of Event '" + event.name + "' failed: " + JSON.stringify(err.message);
                 regErrorMessage += message + "\n";
                 LOGGER.error(message)
             }
@@ -101,7 +101,7 @@ function getStatus() {
 }
 
 function fillEventData(event: any) {
-    var specInJson
+    let specInJson
     if (event.specification.endsWith(".json")) {
         specInJson = JSON.parse(fs.readFileSync(event.specification, 'utf8'))
     } else {
@@ -109,7 +109,7 @@ function fillEventData(event: any) {
     }
     let labels = event.labels ? event.labels : {};
     labels["type"] = "AsyncApi";
-    var serviceData = {
+    let serviceData = {
         provider: event.provider ? event.provider : "Varkes",
         name: event.name,
         description: event.description ? event.description : event.name,
@@ -168,7 +168,7 @@ function fillServiceMetadata(api: any, baseUrl: any) {
     }
 
     if (!api.type || api.type == "openapi") {
-        var specInJson
+        let specInJson
         if (api.specification.endsWith(".json")) {
             specInJson = JSON.parse(fs.readFileSync(api.specification, 'utf8'))
         } else {
@@ -188,7 +188,7 @@ function fillServiceMetadata(api: any, baseUrl: any) {
     }
     let labels = api.labels ? api.labels : {};
     labels["type"] = api.type == "odata" ? "OData" : "OpenAPI"
-    var serviceData = {
+    let serviceData = {
         provider: api.provider ? api.provider : "Varkes",
         name: api.name,
         description: api.description ? api.description : api.name,
