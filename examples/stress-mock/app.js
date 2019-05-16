@@ -6,19 +6,19 @@ const odataApp = require("@varkes/odata-mock")
 const connectorApp = require("@varkes/api-server")
 const cockpitApp = require("@varkes/cockpit");
 const app = require('express')()
-var fs = require("fs")
+let fs = require("fs")
 
 const OPENAPI_COUNT = process.env.OPENAPI ? parseInt(process.env.OPENAPI) : 100;
 const ODATA_COUNT = process.env.ODATA ? parseInt(process.env.ODATA) : 100;
 const EVENT_COUNT = process.env.EVENT ? parseInt(process.env.EVENT) : 100;
 
-var runAsync = async () => {
-    var port
+let runAsync = async () => {
+    let port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
         port = process.argv[2]
     }
 
-    var config = generateConfig()
+    let config = generateConfig()
     if (!fs.existsSync("./generated/")) {
         fs.mkdirSync("./generated/");
     }
@@ -39,13 +39,13 @@ var runAsync = async () => {
 }
 
 function generateConfig() {
-    var config = {
+    let config = {
         name: "Stress-Mock",
         apis: [],
         events: []
     }
 
-    for (var i = 1; i < OPENAPI_COUNT + 1; i++) {
+    for (let i = 1; i < OPENAPI_COUNT + 1; i++) {
         config.apis.push({
             basepath: "/api" + i + "/v1",
             name: "OpenAPI " + i,
@@ -53,7 +53,7 @@ function generateConfig() {
             specification: "../apis/schools.yaml"
         })
     }
-    for (var i = 1; i < ODATA_COUNT + 1; i++) {
+    for (let i = 1; i < ODATA_COUNT + 1; i++) {
         config.apis.push({
             name: "OData " + i,
             specification: "../apis/services.xml",
@@ -61,7 +61,7 @@ function generateConfig() {
             type: "odata"
         })
     }
-    for (var i = 1; i < EVENT_COUNT + 1; i++) {
+    for (let i = 1; i < EVENT_COUNT + 1; i++) {
         config.events.push({
             name: "Event " + i,
             specification: "../apis/events.json"

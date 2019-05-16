@@ -9,7 +9,7 @@ import { api, connection } from "@varkes/app-connector"
 
 function getAll(req: any, res: any) {
     LOGGER.debug("Getting all APIs")
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -23,7 +23,7 @@ function getAll(req: any, res: any) {
 
 function get(req: any, res: any) {
     LOGGER.debug("Get API %s", req.params.api)
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -49,7 +49,7 @@ function get(req: any, res: any) {
 
 function update(req: any, res: any) {
     LOGGER.debug("Update API %s", req.params.api)
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -63,7 +63,7 @@ function update(req: any, res: any) {
 
 function deleteApi(req: any, res: any) {
     LOGGER.debug("Delete API %s", req.params.api)
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -76,7 +76,7 @@ function deleteApi(req: any, res: any) {
 }
 function create(req: any, res: any) {
     LOGGER.debug("Creating API %s", req.body.name)
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -116,7 +116,7 @@ function dereferenceApi(body: any) {
 
 }
 function router() {
-    var apiRouter = express.Router()
+    let apiRouter = express.Router()
 
     apiRouter.get("/", getAll)
     apiRouter.post("/", create)

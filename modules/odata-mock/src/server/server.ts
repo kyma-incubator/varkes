@@ -6,7 +6,7 @@ const app = require('express')()
 import { logger as LOGGER } from "./logger"
 
 var runAsync = async () => {
-    var configPath: string = ""
+    let configPath: string = ""
     if (process.argv.length > 2) {
 
         configPath = process.argv[2]

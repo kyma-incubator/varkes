@@ -78,13 +78,13 @@ describe('test app', function () {
                         .expect(200, done)
                 });
             });
-            describe('GET connection info', function () {
-                it('should return 404', function (done) {
+            describe('GET info', function () {
+                it('should return 200', function (done) {
                     request(app)
-                        .get('/connection')
+                        .get('/info')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(404, done)
+                        .expect(200, done)
                 });
             });
 

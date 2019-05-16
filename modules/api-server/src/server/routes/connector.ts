@@ -16,7 +16,7 @@ function disconnect(req: any, res: any) {
 }
 
 function info(req: any, res: any) {
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(404).send({ error: err })
     } else {
@@ -25,7 +25,7 @@ function info(req: any, res: any) {
 }
 
 function key(req: any, res: any) {
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -37,7 +37,7 @@ function key(req: any, res: any) {
 }
 
 function cert(req: any, res: any) {
-    var err = assureConnected()
+    let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
     } else {
@@ -70,7 +70,7 @@ async function connect(req: any, res: any) {
         }
         else {
             if (error.statusCode == 403) {
-                var message = "Error: Invalid Token, Please use another Token"
+                let message = "Error: Invalid Token, Please use another Token"
                 res.status(error.statusCode).send(message);
             }
             else {
@@ -82,7 +82,7 @@ async function connect(req: any, res: any) {
 }
 
 function router() {
-    var connectionRouter = express.Router()
+    let connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)
     connectionRouter.get(connection.KEY_URL, key)

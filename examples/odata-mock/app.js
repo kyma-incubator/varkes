@@ -5,7 +5,7 @@ const odataMock = require("@varkes/odata-mock")
 const app = require('express')()
 
 async function runAsync() {
-    var port
+    let port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
         port = process.argv[2]
     }

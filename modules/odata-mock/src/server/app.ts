@@ -11,11 +11,11 @@ import * as parser from "./parser"
 const path = require("path")
 
 async function init(varkesConfigPath: string, currentPath = "") {
-  var varkesConfig = config(varkesConfigPath, currentPath)
+  let varkesConfig = config(varkesConfigPath, currentPath)
 
-  var promises: Promise<any>[] = [];
-  for (var i = 0; i < varkesConfig.apis.length; i++) {
-    var api = varkesConfig.apis[i]
+  let promises: Promise<any>[] = [];
+  for (let i = 0; i < varkesConfig.apis.length; i++) {
+    let api = varkesConfig.apis[i]
     if (api.type == "odata") {
       promises.push(bootLoopback(api, varkesConfig))
     }
@@ -23,7 +23,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
 
   let resultApp = express()
   let apps = await Promise.all(promises)
-  for (var i = 0; i < apps.length; i++) {
+  for (let i = 0; i < apps.length; i++) {
     resultApp.use(apps[i])
   }
 
@@ -31,12 +31,12 @@ async function init(varkesConfigPath: string, currentPath = "") {
 }
 
 async function bootLoopback(api: any, varkesConfig: any) {
-  var app = loopback();
+  let app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
 
   LOGGER.debug("Parsing specification and generating models for api %s", api.name)
-  var bootConfig = await generateBootConfig(api)
+  let bootConfig = await generateBootConfig(api)
 
   LOGGER.debug("Booting loopback middleware for api %s", api.name)
 
@@ -53,10 +53,10 @@ async function bootLoopback(api: any, varkesConfig: any) {
 
 async function generateBootConfig(api: any) {
   let dataSourceName = api.name.replace(/\s/g, '')
-  var parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
+  let parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 
   //for configuration, see https://apidocs.strongloop.com/loopback-boot/
-  var bootConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "resources/boot_config_template.json"), "utf-8"))
+  let bootConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "resources/boot_config_template.json"), "utf-8"))
 
   parsedModel.modelConfigs.forEach(function (config: any) {
     bootConfig.models[config.name] = config.value

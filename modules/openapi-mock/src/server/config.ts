@@ -9,9 +9,9 @@ const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 
 function configure(varkesConfigPath: string, currentDirectory: string) {
-    var varkesConfig
+    let varkesConfig
     if (varkesConfigPath) {
-        var endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
+        let endpointConfig = path.resolve(currentDirectory, varkesConfigPath)
         LOGGER.info("Using configuration %s", endpointConfig)
         varkesConfig = JSON.parse(fs.readFileSync(endpointConfig, "utf-8"))
         varkesConfig.apis.map((api: any) => {
@@ -32,10 +32,10 @@ function configure(varkesConfigPath: string, currentDirectory: string) {
 }
 
 function configValidation(configJson: any) {
-    var error_message = "";
+    let error_message = "";
     if (configJson.hasOwnProperty("apis")) {
-        for (var i = 1; i <= configJson.apis.length; i++) {
-            var api = configJson.apis[i - 1];
+        for (let i = 1; i <= configJson.apis.length; i++) {
+            let api = configJson.apis[i - 1];
             if (!api.name) {
                 error_message += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
             }

@@ -9,7 +9,7 @@ export class API {
         }
         return null
     }
-    public findAll() {
+    public findAll():Promise<any[]> {
         return new Promise((resolve, reject) => {
             let err = this.assureConnected()
             if (err) {

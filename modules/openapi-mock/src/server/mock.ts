@@ -14,21 +14,21 @@ const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
 async function mock(config: any) {
-    var resultApp = express()
-    var error_message = "";
-    for (var i = 0; i < config.apis.length; i++) {
-        var api = config.apis[i];
+    let resultApp = express()
+    let error_message = "";
+    for (let i = 0; i < config.apis.length; i++) {
+        let api = config.apis[i];
         if (!api.type || api.type == "openapi") {
             try {
                 let app = express()
                 createOauthEndpoint(api, app);
                 createConsole(api, app);
 
-                var spec = loadSpec(api)
+                let spec = loadSpec(api)
                 if (spec.openapi) {
-                    var jsonSpec = await transformSpec(api)
+                    let jsonSpec = await transformSpec(api)
 
-                    var specString = jsonSpec.stringify({ syntax: "yaml" })
+                    let specString = jsonSpec.stringify({ syntax: "yaml" })
                     writeSpec(specString, api, i)
                     spec = loadSpec(api)
                 }
@@ -50,7 +50,7 @@ async function mock(config: any) {
                     myDB = new middleware.FileDataStore("./data");
                 }
 
-                var middlewares = [];
+                let middlewares = [];
                 middlewares.push(
                     middleware(api.specification, app, (_err: Error, middleware: SwaggerMiddleware) => {
                         app.use(
@@ -66,7 +66,7 @@ async function mock(config: any) {
                 resultApp.use(app)
             }
             catch (err) {
-                var message = "Serving API " + api.name + " failed: " + err.message
+                let message = "Serving API " + api.name + " failed: " + err.message
                 LOGGER.error(message)
                 error_message += "\n" + message
             }
@@ -84,7 +84,7 @@ function loadSpec(api: any) {
 }
 
 function writeSpec(specString: string, api: any, index: any) {
-    var file_name = DIR_NAME + index + "_" + TMP_FILE;
+    let file_name = DIR_NAME + index + "_" + TMP_FILE;
     LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, file_name, specString.length);
 
     if (!fs.existsSync(DIR_NAME)) {
@@ -100,7 +100,7 @@ function createEndpoints(spec: any, api: any) {
     if (api.hasOwnProperty("added_endpoints")) {
         LOGGER.debug("Adding new Endpoints for api '%s'", api.name);
         api.added_endpoints.forEach((point: any) => {
-            var endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
+            let endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
             if (!spec["paths"].hasOwnProperty(point.url)) {
                 LOGGER.debug("Adding custom endpoint '%s' to '%s'", point.url, api.name)
                 spec["paths"][point.url] = endpoint;
@@ -117,7 +117,7 @@ function createOauthEndpoint(api: any, app: express.Application) {
             res.send({ token: 3333 });
         }
         else {
-            var message = "Some of the required parameters are missing";
+            let message = "Some of the required parameters are missing";
             res.status(400);
             res.send({ error: message });
         }
@@ -167,7 +167,7 @@ function createMetadataEndpoint(spec: any, api: any, app: express.Application) {
 function createConsole(api: any, app: express.Application) {
     LOGGER.debug("Adding console endpoint '%s%s'", api.basepath, "/console")
     app.get(api.basepath + "/console", function (req, res) {
-        var html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
+        let html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')
         html = html.replace("OPENAPI", api.basepath + api.metadata + ".json") //only replaces the first instance of OPENAPI.
         html = html.replace("NAME", api.name)
         res.type("text/html")

@@ -9,7 +9,7 @@ import * as express from "express"
 describe('controllers', function () {
   it('should work', function (done) {
     mock.init('varkes_config.json', __dirname).then(function (mock: any) {
-      var app = express()
+      let app = express()
       app.get('/api1/pets/:petId', (req: any, res: any, next: any) => {
         res.body = {
           success: req.params.petId
