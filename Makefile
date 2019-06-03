@@ -34,7 +34,7 @@ test:
 	echo $(DOCKER_TAG)
 
 docker-build:
-	#call docker-push in sub makefiles with docker parameter
+	#call docker-build in sub makefiles with docker parameter
 	npx lerna exec --no-bail -- make docker-build DOCKER_TAG=$(DOCKER_TAG)
 
 docker-push:

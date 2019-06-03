@@ -19,7 +19,7 @@
     "@varkes/api-server": "^0.6.2",
     "@varkes/cockpit": "^0.6.2",
     "@varkes/openapi-mock": "^0.6.2",
-    "express": "^4.16.4"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "mocha": "^6.1.4",

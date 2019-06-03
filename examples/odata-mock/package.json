@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@varkes/odata-mock": "^0.6.2",
-    "express": "^4.16.4"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
