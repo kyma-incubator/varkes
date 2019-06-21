@@ -22,21 +22,21 @@
     "check_api": "^1.2.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "express-winston": "^3.1.0",
+    "express-winston": "^3.2.0",
     "js-yaml": "^3.13.1",
-    "json-schema-ref-parser": "^6.1.0",
+    "json-schema-ref-parser": "^7.1.0",
     "json-to-pretty-yaml": "^1.2.2",
     "openapi-sampler": "^1.0.0-beta.14",
-    "swagger-ui-dist": "^3.22.2",
+    "swagger-ui-dist": "^3.22.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.5",
-    "@types/express-winston": "^3.0.2",
+    "@types/express-winston": "^3.0.3",
     "@types/json-schema": "^7.0.3",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.35",
-    "@types/node": "^12.0.4",
+    "@types/node": "^12.0.8",
     "@types/supertest": "^2.0.7",
     "@types/yaml": "^1.0.2",
     "@varkes/example-kyma-mock": "^0.6.2",
@@ -44,7 +44,7 @@
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "supertest": "^4.0.2",
-    "typescript": "~3.5.1"
+    "typescript": "~3.5.2"
   },
   "repository": {
     "type": "ssh",
