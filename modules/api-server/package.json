@@ -1,6 +1,6 @@
 {
   "name": "@varkes/api-server",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Client for Kyma application connectivity",
   "main": "dist/server/app.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@varkes/app-connector": "^0.6.2",
+    "@varkes/app-connector": "^0.6.3",
     "body-parser": "^1.19.0",
     "check_api": "^1.2.2",
     "cors": "^2.8.5",
@@ -39,7 +39,7 @@
     "@types/node": "^12.0.8",
     "@types/supertest": "^2.0.7",
     "@types/yaml": "^1.0.2",
-    "@varkes/example-kyma-mock": "^0.6.2",
+    "@varkes/example-kyma-mock": "^0.6.3",
     "copyfiles": "^2.1.0",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
