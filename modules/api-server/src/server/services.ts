@@ -108,7 +108,7 @@ function fillEventData(event: any) {
         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
     let labels = event.labels ? event.labels : {};
-    labels["type"] = "AsyncApi";
+    labels["type"] = "AsyncApi v" + specInJson.asyncapi;
     let serviceData = {
         provider: event.provider ? event.provider : "Varkes",
         name: event.name,
@@ -188,6 +188,18 @@ function fillServiceMetadata(api: any, baseUrl: any) {
     }
     let labels = api.labels ? api.labels : {};
     labels["type"] = api.type == "odata" ? "OData" : "OpenAPI"
+    if (api.type == "odata") {
+        labels["type"] = "OData v" + 2
+    }
+    else if (apiData.spec.openapi) {
+        labels["type"] = "OpenAPI v" + apiData.spec.openapi
+    }
+    else if (apiData.spec.swagger) {
+        labels["type"] = "Swagger v" + apiData.spec.swagger
+    }
+    else {
+        labels["type"] = "Other"
+    }
     let serviceData = {
         provider: api.provider ? api.provider : "Varkes",
         name: api.name,
