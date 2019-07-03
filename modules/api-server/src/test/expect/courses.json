@@ -3,7 +3,7 @@
     "name": "courses",
     "description": "Courses Webservices",
     "labels": {
-        "type": "OpenAPI"
+        "type": "OpenAPI v3.0.0"
     },
     "api": {
         "targetUrl": "http://(localhost|.+)/entity/v1",
