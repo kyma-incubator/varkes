@@ -4,8 +4,15 @@ import { Http } from '@angular/http';
 export class ServiceInstancesService {
     private baseUrl;
     private info;
+    private token;
     constructor(private http: Http) {
 
+    }
+    public setToken(tokenId) {
+        this.token = tokenId;
+    }
+    public getToken() {
+        return this.token;
     }
     public getBaseUrl() {
         return this.baseUrl;

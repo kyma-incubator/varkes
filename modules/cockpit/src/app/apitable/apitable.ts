@@ -1,8 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import { linkManager } from '@kyma-project/luigi-client';
-import { uxManager } from '@kyma-project/luigi-client';
+import { linkManager, uxManager, addContextUpdateListener } from '@kyma-project/luigi-client';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
@@ -26,11 +25,29 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public batchStart: boolean;
     public initial: boolean;
     public constructor(private http: Http, private serviceInstance: ServiceInstancesService) {
-        this.initial = true;
         this.status = {
             successCount: 0,
             failedCount: 0
         }
+
+        addContextUpdateListener((context) => {
+            let goBackContext = context.goBackContext;
+            if (goBackContext && goBackContext.id) {
+                let index = -1;
+                let api = this.apis.find((x: any, i: any) => {
+                    if (x.id == goBackContext.id) {
+                        index = i;
+                        x.name = goBackContext.name;
+                        x.description = goBackContext.description;
+                        x.labels.type = goBackContext.type;
+                        return x;
+                    }
+                });
+                if (index != -1)
+                    this.apis[index] = api;
+            }
+            this.initial = true;
+        })
     }
     async ngOnChanges(changes: SimpleChanges) {
         this.apis = [];
@@ -79,7 +96,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
         this.alert = false;
     }
     public showApiDetails(apiId) {
-        linkManager().fromClosestContext().navigate('/apiview/' + apiId + "/" + (this.remote == true));
+        linkManager().fromClosestContext().navigate('/apiview/' + apiId + "/" + (this.remote == true), "", true);
     }
 
     public onStatusCloseModalClick() {

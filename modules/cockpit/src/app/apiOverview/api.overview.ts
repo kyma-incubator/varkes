@@ -77,6 +77,14 @@ export class ApiOverviewComponent implements OnInit {
         this.alert = false;
     }
     public goBack() {
-        linkManager().fromClosestContext().navigate('/');
+        if (linkManager().hasBack()) {
+            let editor = ace.edit("specEditor");
+            let spec = JSON.parse(editor.getValue());
+
+            linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.labels.type });
+        }
+        else {
+            linkManager().fromClosestContext().navigate("/");
+        }
     }
 }
