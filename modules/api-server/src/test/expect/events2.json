@@ -3,7 +3,7 @@
     "name": "events2",
     "description": "All Events v2",
     "labels": {
-        "type": "AsyncApi"
+        "type": "AsyncApi v1"
     },
     "events": {
         "spec": {

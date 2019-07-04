@@ -21,8 +21,9 @@ export class SendEventViewComponent implements OnInit {
     public alertMessage;
     public ariaExpanded = false;
     public ariaHidden = true;
-    private filteredTopics = [];
+    public success;
     public topicName;
+    public successMessage;
     public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
 
@@ -73,6 +74,8 @@ export class SendEventViewComponent implements OnInit {
                 .subscribe(
                     success => {
                         this.loading = false;
+                        this.successMessage = "Event has been sent Successfully";
+                        this.success = true;
                     },
                     error => {
                         this.alertMessage = error;
@@ -90,7 +93,9 @@ export class SendEventViewComponent implements OnInit {
     public closeAlert() {
         this.alert = false;
     }
-
+    public closeSuccessMessage() {
+        this.success = false;
+    }
     public toggleDropDown() {
         this.ariaExpanded = !this.ariaExpanded;
         this.ariaHidden = !this.ariaHidden;
