@@ -1,6 +1,6 @@
 {
   "name": "@varkes/app-connector",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Client for Kyma application connectivity",
   "main": "dist/server/app.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "@types/node": "^12.0.8",
     "@types/request": "^2.48.1",
     "@types/request-promise": "^4.1.44",
-    "@varkes/example-kyma-mock": "^0.6.3",
+    "@varkes/example-kyma-mock": "^0.6.4",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
     "copyfiles": "^2.1.0",
