@@ -1,0 +1,27 @@
+{
+    "name": "@varkes/config-validator",
+    "version": "0.0.1",
+    "private": false,
+    "description": "Config validator for varkes modules",
+    "keywords": [],
+    "author": "",
+    "license": "Apache-2.0",
+    "main": "dist/validator",
+    "typings": "dist/validator",
+    "publishConfig": {
+        "access": "public"
+    },
+    "dependencies": {},
+    "repository": {
+        "type": "ssh",
+        "url": "git@github.com:kyma-incubator/varkes.git"
+    },
+    "scripts": {
+        "compile": "tsc",
+        "start:dev": "npm run clean && npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
+        "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
+    },
+    "devDependencies": {
+        "typescript": "^3.6.2"
+    }
+}

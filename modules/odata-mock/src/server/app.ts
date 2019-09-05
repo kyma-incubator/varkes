@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict'
-import { config } from "./config"
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
@@ -9,9 +8,9 @@ const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
 const path = require("path")
-
+import * as configValidator from "@varkes/config-validator"
 async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = config(varkesConfigPath, currentPath)
+  let varkesConfig = configValidator.discover(LOGGER, varkesConfigPath, currentPath)
 
   let promises: Promise<any>[] = [];
   for (let i = 0; i < varkesConfig.apis.length; i++) {
