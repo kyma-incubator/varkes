@@ -22,8 +22,7 @@
     },
     "scripts": {
         "compile": "tsc",
-        "start:dev": "npm run clean && npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
-        "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
+        "clean": "rm -rf dist"
     },
     "devDependencies": {
         "@types/node": "^12.7.4",
