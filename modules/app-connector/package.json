@@ -5,7 +5,7 @@
   "main": "dist/server/app.js",
   "scripts": {
     "compile": "tsc && copyfiles -f -e '*.ts' src/test/* dist/test && copyfiles -f src/test/expect/* dist/test/expect",
-    "test": "mocha dist/test",
+    "test": "npm run compile && mocha dist/test",
     "clean": "rm -rf dist || true && rm -rf logs || true"
   },
   "publishConfig": {
@@ -17,7 +17,7 @@
     "node-forge": "^0.9.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "winston": "^3.2.1"
+    "@varkes/config-validator": "0.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",

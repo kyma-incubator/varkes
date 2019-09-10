@@ -1,4 +1,4 @@
-import { logger as LOGGER } from "./logger";
+import { LOGGER } from "./app";
 import * as request from 'request-promise';
 import * as connection from './connection';
 import * as common from './common';

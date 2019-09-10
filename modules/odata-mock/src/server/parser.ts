@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 'use strict'
-
-import { logger as LOGGER } from "./logger"
+import { LOGGER } from "./app"
 const fs = require("fs");
 import { ParsedModels } from "./types"
 Object.defineProperty(exports, "__esModule", { value: true });

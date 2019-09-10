@@ -4,17 +4,17 @@
 import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
-import * as configValidator from "@varkes/configuration"
-import { logger as LOGGER } from "./logger"
+import { configValidator as cv, logger as lg } from "@varkes/configuration"
 import * as morgan from "morgan"
 import * as fs from "fs"
 
+const LOGGER = lg.init("openapi-mock")
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 
 async function init(varkesConfigPath: string, currentDirectory = "") {
   let app = express()
 
-  let varkesConfig = configValidator.discover(LOGGER, varkesConfigPath, currentDirectory);
+  let varkesConfig = cv.discover(LOGGER, varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -62,4 +62,4 @@ function customErrorResponses(app: express.Application) {
   });
 }
 
-export { init }
+export { init, LOGGER }

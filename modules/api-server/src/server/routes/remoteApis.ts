@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as LOGGER } from "../logger"
+import { LOGGER } from "../app"
 import * as express from "express"
 const openapiSampler = require('openapi-sampler')
 import * as refParser from 'json-schema-ref-parser'

@@ -6,15 +6,16 @@
     "keywords": [],
     "author": "",
     "license": "Apache-2.0",
-    "main": "dist/validator",
-    "typings": "dist/validator",
+    "main": "dist/index",
+    "typings": "dist/index",
     "publishConfig": {
         "access": "public"
     },
     "dependencies": {
         "check_api": "^1.2.2",
         "js-yaml": "^3.13.1",
-        "json-to-pretty-yaml": "^1.2.2"
+        "json-to-pretty-yaml": "^1.2.2",
+        "winston": "^3.2.1"
     },
     "repository": {
         "type": "ssh",
@@ -26,6 +27,7 @@
     },
     "devDependencies": {
         "@types/node": "^12.7.4",
+        "@types/winston": "^2.4.4",
         "typescript": "^3.6.2"
     }
 }

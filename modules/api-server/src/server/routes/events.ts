@@ -2,7 +2,7 @@
 'use strict'
 
 import * as express from "express"
-import { logger as LOGGER } from "../logger"
+import { LOGGER } from "../app"
 import { event, connection } from "@varkes/app-connector"
 
 function sendEvent(req: any, res: any) {

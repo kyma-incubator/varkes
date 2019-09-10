@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as LOGGER } from "./logger"
+import { LOGGER } from "./app"
 const yaml = require("js-yaml");
 import * as fs from "fs"
 const OAUTH = "/authorizationserver/oauth/token"

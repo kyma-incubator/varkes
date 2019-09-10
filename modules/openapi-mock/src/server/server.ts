@@ -3,7 +3,6 @@
 
 import * as openapiApp from "./app"
 import * as express from "express"
-import { logger as LOGGER } from "./logger"
 const app = express()
 var configPath: string
 
@@ -16,10 +15,10 @@ var runAsync = async () => {
     try {
         app.use(await openapiApp.init(configPath, __dirname))
         app.listen(10000, function () {
-            LOGGER.info("Started application on port %d", 10000)
+            openapiApp.LOGGER.info("Started application on port %d", 10000)
         });
     } catch (error) {
-        LOGGER.error("Problem while starting application: %s", error)
+        openapiApp.LOGGER.error("Problem while starting application: %s", error)
     }
 }
 

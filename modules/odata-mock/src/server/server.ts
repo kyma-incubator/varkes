@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import { init } from "./app"
+import { init, LOGGER } from "./app"
 const app = require('express')()
-import { logger as LOGGER } from "./logger"
 
 var runAsync = async () => {
     let configPath: string = ""

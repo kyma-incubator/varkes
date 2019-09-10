@@ -1,10 +1,9 @@
-import { logger as LOGGER } from "./logger";
 import * as request from "request-promise";
 const forge = require("node-forge");
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-
+import { LOGGER } from "./app"
 const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")

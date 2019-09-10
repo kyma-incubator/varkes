@@ -1,4 +1,4 @@
-import { logger as LOGGER } from "../logger"
+import { LOGGER } from "../app"
 import * as express from "express"
 import * as services from "../services";
 import { api, connection } from "@varkes/app-connector"
