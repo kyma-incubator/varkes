@@ -4,7 +4,7 @@
 import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
-import { configure } from "./config"
+import * as configValidator from "@varkes/config-validator"
 import { logger as LOGGER } from "./logger"
 import * as morgan from "morgan"
 import * as fs from "fs"
@@ -14,7 +14,7 @@ const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 async function init(varkesConfigPath: string, currentDirectory = "") {
   let app = express()
 
-  let varkesConfig = configure(varkesConfigPath, currentDirectory);
+  let varkesConfig = configValidator.discover(LOGGER, varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
 
