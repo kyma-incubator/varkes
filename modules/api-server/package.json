@@ -18,14 +18,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@varkes/app-connector": "^0.6.3",
+    "@varkes/config-validator": "0.0.1",
     "body-parser": "^1.19.0",
-    "check_api": "^1.2.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-winston": "^4.0.1",
-    "js-yaml": "^3.13.1",
     "json-schema-ref-parser": "^7.1.1",
-    "json-to-pretty-yaml": "^1.2.2",
     "openapi-sampler": "^1.0.0-beta.14",
     "swagger-ui-dist": "^3.24.0",
     "winston": "^3.2.1"

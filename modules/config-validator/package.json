@@ -11,7 +11,11 @@
     "publishConfig": {
         "access": "public"
     },
-    "dependencies": {},
+    "dependencies": {
+        "check_api": "^1.2.2",
+        "js-yaml": "^3.13.1",
+        "json-to-pretty-yaml": "^1.2.2"
+    },
     "repository": {
         "type": "ssh",
         "url": "git@github.com:kyma-incubator/varkes.git"
