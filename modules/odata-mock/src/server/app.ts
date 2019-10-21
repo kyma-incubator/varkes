@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 import { logger as LOGGER } from "./logger"
 import * as parser from "./parser"
 const path = require("path")
-import * as configValidator from "@varkes/config-validator"
+import * as configValidator from "@varkes/configuration"
 async function init(varkesConfigPath: string, currentPath = "") {
   let varkesConfig = configValidator.discover(LOGGER, varkesConfigPath, currentPath)
 

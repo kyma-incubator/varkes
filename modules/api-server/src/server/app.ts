@@ -12,7 +12,7 @@ import * as connector from "./routes/connector";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
-import * as configValidator from "@varkes/config-validator"
+import * as configValidator from "@varkes/configuration"
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";

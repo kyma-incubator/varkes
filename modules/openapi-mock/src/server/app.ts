@@ -4,7 +4,7 @@
 import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
-import * as configValidator from "@varkes/config-validator"
+import * as configValidator from "@varkes/configuration"
 import { logger as LOGGER } from "./logger"
 import * as morgan from "morgan"
 import * as fs from "fs"

@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@varkes/app-connector": "^0.6.3",
-    "@varkes/config-validator": "0.0.1",
+    "@varkes/configuration": "0.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
