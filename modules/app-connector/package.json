@@ -17,7 +17,7 @@
     "node-forge": "^0.9.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "@varkes/config-validator": "0.0.1"
+    "@varkes/configuration": "0.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
