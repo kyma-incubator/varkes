@@ -60,25 +60,10 @@ async function connect(req: any, res: any) {
         await connection.connect(req.body.url, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info().domain)
         res.status(200).send(connection.info())
-
     } catch (error) {
-
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
-        if (!error.statusCode) {
-
-            res.status(500).send(error.message);
-        }
-        else {
-            if (error.statusCode == 403) {
-                let message = "Error: Invalid Token, Please use another Token"
-                res.status(error.statusCode).send(message);
-            }
-            else {
-                res.status(error.statusCode).send(error.message);
-            }
-        }
+        res.status(500).send({ error: error.message });
     }
-
 }
 
 function router() {

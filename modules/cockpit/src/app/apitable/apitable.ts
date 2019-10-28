@@ -73,7 +73,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.isDataAvailable = true;
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                 });
     }
@@ -87,7 +87,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.loadInd = false;
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error;
                     this.alert = true;
                     this.loadInd = false;
                 });
@@ -121,7 +121,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.refresherTimer = window.setInterval(() => { this.pollStatus(); }, 2000);
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                     this.batchStart = false;
                 });
@@ -138,7 +138,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     }
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                     window.clearInterval(this.refresherTimer);
                 });
@@ -164,7 +164,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                     this.isDataAvailable = true;
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                 });
     }

@@ -45,13 +45,18 @@ async function callTokenUrl(insecure: any, url: any) {
         method: "GET",
         json: true,
         rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true
+        resolveWithFullResponse: true,
+        simple: false
     }).then((response: any) => {
-        if (response.statusCode !== 200) {
+        if (response.statusCode < 300) {
+            LOGGER.debug("Token URL returned %s", JSON.stringify(response.body, null, 2))
+            return response.body
+        } else if (response.statusCode == 403) {
+            LOGGER.debug("Token URL returned failed with status 403: %s", JSON.stringify(response.body, null, 2))
+            throw new Error("The token is invalid, please fetch a new token")
+        } else {
             throw new Error("Calling token URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
         }
-        LOGGER.debug("Token URL returned %s", JSON.stringify(response.body, null, 2))
-        return response.body
     })
 }
 
@@ -64,7 +69,8 @@ async function callCSRUrl(csrUrl: any, csr: any, insecure: any) {
         body: { csr: csrData },
         json: true,
         rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true
+        resolveWithFullResponse: true,
+        simple: false
     }).then((response: any) => {
         if (response.statusCode !== 201) {
             throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
@@ -85,7 +91,8 @@ async function callInfoUrl(infoUrl: any, crt: any, privateKey: any, insecure: an
             key: privateKey
         },
         rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true
+        resolveWithFullResponse: true,
+        simple: false
     }).then((response: any) => {
         if (response.statusCode !== 200) {
             throw new Error("Calling Info URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
@@ -138,11 +145,11 @@ function established() {
 }
 
 function generatePrivateKey(filePath: any) {
-    LOGGER.debug("Generating new function key: %s", filePath)
+    LOGGER.debug("Generating new private key: %s", filePath)
     let keys = forge.pki.rsa.generateKeyPair(2048)
     const key = forge.pki.privateKeyToPem(keys.privateKey)
     fs.writeFileSync(filePath, key)
-    LOGGER.info("Generated new function key: %s", filePath)
+    LOGGER.info("Generated new private key: %s", filePath)
     return key
 }
 
@@ -181,6 +188,7 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
     LOGGER.info("Connected to %s", connectionData.domain)
     return connectionData;
 }
+
 function destroy() {
     connection = null
 

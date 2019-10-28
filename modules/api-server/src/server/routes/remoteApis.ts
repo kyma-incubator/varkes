@@ -16,7 +16,7 @@ function getAll(req: any, res: any) {
         api.findAll().then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
-            res.status(err.statusCode, err.message)
+            res.status(500, { error: err.message })
         })
     }
 }
@@ -28,7 +28,10 @@ function get(req: any, res: any) {
         res.status(400).send({ error: err })
     } else {
         api.findOne(req.params.api).then((result: any) => {
-
+            if (!result) {
+                res.status(404).type("json").send({ error: "API not found" })
+                return
+            }
             let body = result;
             body.id = req.params.api //comply with the api spec
             if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
@@ -42,7 +45,7 @@ function get(req: any, res: any) {
                 res.status(200).type("json").send(body)
             }
         }, (err: any) => {
-            res.status(err.statusCode).send(err.body);
+            res.status(500).send({ error: err.message });
         })
     }
 }
@@ -54,9 +57,13 @@ function update(req: any, res: any) {
         res.status(400).send({ error: err })
     } else {
         api.update(req.body, req.params.api).then((result: any) => {
-            res.status(200).send(result);
+            if (!result) {
+                res.status(404).type("json").send({ error: "API not found" })
+            } else {
+                res.status(200).send(result);
+            }
         }, (err: any) => {
-            res.status(err.statusCode).send(err.message);
+            res.status(500).send({ error: err.message });
         })
     }
 }
@@ -68,9 +75,13 @@ function deleteApi(req: any, res: any) {
         res.status(400).send({ error: err })
     } else {
         api.delete(req.params.api).then((result: any) => {
-            res.status(200).send(result);
+            if (!result) {
+                res.status(404).type("json").send({ error: "API not found" })
+            } else {
+                res.status(200).send(result);
+            }
         }, (err: any) => {
-            res.status(err.statusCode).send(err.message);
+            res.status(500).send({ error: err.message });
         });
     }
 }
@@ -83,7 +94,7 @@ function create(req: any, res: any) {
         api.create(req.body).then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
-            res.status(err.statusCode).send(err.message);
+            res.status(500).send({ error: err.message });
         });
     }
 }
@@ -106,7 +117,6 @@ function dereferenceApi(body: any) {
                     }
                 })
                 body.events.spec = schema
-                //res.status(200).type("json").send(body)
                 resolve(body);
             })
             .catch(function (err) {

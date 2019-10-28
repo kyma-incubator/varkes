@@ -18,10 +18,10 @@
   "dependencies": {
     "@varkes/openapi-mock": "^0.6.3",
     "express": "^4.17.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.1",
     "supertest": "^4.0.2"
   },
   "repository": {

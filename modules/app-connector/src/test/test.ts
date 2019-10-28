@@ -42,17 +42,20 @@ describe("should work", () => {
             })
         })
         it("update an API", () => {
-            return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
-                return api.update(JSON.parse(updatedSchoolsAPI), createdApi.id).then((updatedApi: any) => {
+            return api.create(JSON.parse(schoolsAPI))
+            .then((createdApi: any) => {
+                return api.update(JSON.parse(updatedSchoolsAPI), createdApi.id)
+                .then((updatedApi: any) => {
                     assert(JSON.stringify(updatedApi).indexOf("error") <= -1)
                 })
             })
         });
         it('delete school api', () => {
-            return api.create(JSON.parse(schoolsAPI)).then((createdApi: any) => {
+            return api.create(JSON.parse(schoolsAPI))
+            .then((createdApi: any) => {
                 return api.delete(createdApi.id)
-
-            }).then((result: any) => {
+            })
+            .then((result: any) => {
                 assert(JSON.stringify(result).indexOf("error") <= -1)
             })
         })

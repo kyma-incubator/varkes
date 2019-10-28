@@ -78,7 +78,7 @@ export class SendEventViewComponent implements OnInit {
                         this.success = true;
                     },
                     error => {
-                        this.alertMessage = error;
+                        this.alertMessage = JSON.parse(error._body).error
                         this.alert = true;
                         this.loading = false;
                     });

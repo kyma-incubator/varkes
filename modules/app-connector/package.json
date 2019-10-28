@@ -14,24 +14,24 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "node-forge": "^0.8.5",
+    "node-forge": "^0.9.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
-    "@types/morgan": "^1.7.35",
-    "@types/node": "^12.0.8",
-    "@types/request": "^2.48.1",
+    "@types/morgan": "^1.7.37",
+    "@types/node": "^12.11.1",
+    "@types/request": "^2.48.3",
     "@types/request-promise": "^4.1.44",
     "@varkes/example-kyma-mock": "^0.6.3",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
-    "copyfiles": "^2.1.0",
-    "mocha": "^6.1.4",
-    "typescript": "~3.5.2"
+    "copyfiles": "^2.1.1",
+    "mocha": "^6.2.1",
+    "typescript": "~3.6.4"
   },
   "repository": {
     "type": "ssh",

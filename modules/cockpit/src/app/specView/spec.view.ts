@@ -38,7 +38,7 @@ export class SpecViewComponent implements OnInit {
                     this.loading = false;
                 },
                 error => {
-                    this.alertMessage = error;
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                     this.loading = false;
                 });
