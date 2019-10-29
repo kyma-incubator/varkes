@@ -1,8 +1,13 @@
 {
   "name": "@varkes/api-server",
   "version": "0.6.3",
-  "description": "Client for Kyma application connectivity",
   "main": "dist/server/app.js",
+  "types": "dist/server/app.d.ts",
+  "license": "Apache-2.0",
+  "description": "Client for Kyma application connectivity",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test  && copyfiles -f src/server/resources/* dist/server/resources  && copyfiles -f src/test/expect/* dist/test/expect",
     "start": "node dist/server/server",
@@ -11,14 +16,9 @@
     "test": "nyc mocha dist/test --exit",
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "author": "",
-  "license": "Apache-2.0",
   "dependencies": {
     "@varkes/app-connector": "^0.6.3",
-    "@varkes/configuration": "0.0.1",
+    "@varkes/configuration": "^0.6.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as lg } from "@varkes/configuration"
-const LOGGER = lg.init("api-server")
+import * as config from "@varkes/configuration"
+const LOGGER = config.logger("api-server")
 import * as express from "express"
 import { connection } from "@varkes/app-connector"
 
-function disconnect(req: any, res: any) {
+function disconnect(req: express.Request, res: express.Response) {
     try {
         connection.destroy()
     } catch (error) {
@@ -16,7 +16,7 @@ function disconnect(req: any, res: any) {
     res.status(204).send()
 }
 
-function info(req: any, res: any) {
+function info(req: express.Request, res: express.Response) {
     let err = assureConnected()
     if (err) {
         res.status(404).send({ error: err })
@@ -25,7 +25,7 @@ function info(req: any, res: any) {
     }
 }
 
-function key(req: any, res: any) {
+function key(req: express.Request, res: express.Response) {
     let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
@@ -37,7 +37,7 @@ function key(req: any, res: any) {
     }
 }
 
-function cert(req: any, res: any) {
+function cert(req: express.Request, res: express.Response) {
     let err = assureConnected()
     if (err) {
         res.status(400).send({ error: err })
@@ -56,7 +56,7 @@ function assureConnected() {
     return null
 }
 
-async function connect(req: any, res: any) {
+async function connect(req: express.Request, res: express.Response) {
     try {
         await connection.connect(req.body.url, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info().domain)

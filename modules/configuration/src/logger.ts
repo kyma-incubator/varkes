@@ -3,7 +3,7 @@
 
 import * as winston from "winston"
 
-export function init(loggerLabel: string): winston.Logger {
+export function logger(loggerLabel: string): winston.Logger {
     const console_logger = new winston.transports.Console({
         format: winston.format.combine(
             winston.format.colorize(),

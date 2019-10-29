@@ -12,9 +12,16 @@ type API = {
     auth: string,
     oauth: string,
     name: string,
+    description: string,
     metadata: string,
     specification: string,
     type: string,
+    persistence: boolean,
+    registerBasepath: boolean,
+    registerSpec: boolean,
+    provider: string,
+    labels: any,
+    csrf: boolean,
     added_endpoints: Array<{ filePath: string, url: string }>
 }
 type Config = {

@@ -5,9 +5,9 @@ import * as request from "request-promise";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-import { logger as lg } from "@varkes/configuration"
+import * as config from "@varkes/configuration"
 
-const LOGGER: any = lg.init("app-connector")
+const LOGGER: any = config.logger("app-connector")
 const forge = require("node-forge");
 const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
@@ -43,7 +43,7 @@ function init() {
         LOGGER.info("Found existing certificate: %s", crtFile)
     }
 }
-async function callTokenUrl(insecure: any, url: any) {
+async function callTokenUrl(insecure: boolean, url: string) {
     LOGGER.debug("Calling token URL '%s'", url)
     return request({
         uri: url,
@@ -65,7 +65,7 @@ async function callTokenUrl(insecure: any, url: any) {
     })
 }
 
-async function callCSRUrl(csrUrl: any, csr: any, insecure: any) {
+async function callCSRUrl(csrUrl: string, csr: any, insecure: boolean) {
     LOGGER.debug("Calling csr URL '%s'", csrUrl)
     let csrData = forge.util.encode64(csr)
 
@@ -85,7 +85,7 @@ async function callCSRUrl(csrUrl: any, csr: any, insecure: any) {
     })
 }
 
-async function callInfoUrl(infoUrl: any, crt: any, privateKey: any, insecure: any) {
+async function callInfoUrl(infoUrl: string, crt: any, privateKey: any, insecure: boolean) {
     LOGGER.debug("Calling info URL '%s'", infoUrl)
 
     return request.get({
@@ -149,7 +149,7 @@ function established() {
     return connection && connection.metadataUrl
 }
 
-function generatePrivateKey(filePath: any) {
+function generatePrivateKey(filePath: string) {
     LOGGER.debug("Generating new private key: %s", filePath)
     let keys = forge.pki.rsa.generateKeyPair(2048)
     const key = forge.pki.privateKeyToPem(keys.privateKey)

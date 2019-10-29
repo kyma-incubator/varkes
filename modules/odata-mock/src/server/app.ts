@@ -2,7 +2,7 @@
 'use strict'
 
 import * as parser from "./parser"
-import { config as config, logger as lg } from "@varkes/configuration"
+import * as config from "@varkes/configuration"
 
 const loopback = require('loopback');
 const boot = require('loopback-boot');
@@ -10,7 +10,7 @@ const fs = require('fs');
 const express = require('express')
 const bodyParser = require('body-parser');
 const path = require("path")
-const LOGGER: any = lg.init("odata-mock")
+const LOGGER: any = config.logger("odata-mock")
 
 async function init(varkesConfigPath: string, currentPath = "") {
   let varkesConfig = config.load(varkesConfigPath, currentPath)
@@ -32,7 +32,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
   return resultApp
 }
 
-async function bootLoopback(api: any, varkesConfig: any) {
+async function bootLoopback(api: config.types.API, varkesConfig: config.types.Config) {
   let app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
@@ -53,7 +53,7 @@ async function bootLoopback(api: any, varkesConfig: any) {
   })
 }
 
-async function generateBootConfig(api: any) {
+async function generateBootConfig(api: config.types.API) {
   let dataSourceName = api.name.replace(/\s/g, '')
   let parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 

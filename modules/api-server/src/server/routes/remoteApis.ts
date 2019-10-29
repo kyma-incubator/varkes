@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as lg } from "@varkes/configuration"
-const LOGGER = lg.init("api-server")
+import * as config from "@varkes/configuration"
+const LOGGER = config.logger("api-server")
 import * as express from "express"
 const openapiSampler = require('openapi-sampler')
 import * as refParser from 'json-schema-ref-parser'
 import { api, connection } from "@varkes/app-connector"
 
-function getAll(req: any, res: any) {
+function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all APIs")
     let err = assureConnected()
     if (err) {
@@ -17,12 +17,12 @@ function getAll(req: any, res: any) {
         api.findAll().then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
-            res.status(500, { error: err.message })
+            res.status(500).send({ error: err.message })
         })
     }
 }
 
-function get(req: any, res: any) {
+function get(req: express.Request, res: express.Response) {
     LOGGER.debug("Get API %s", req.params.api)
     let err = assureConnected()
     if (err) {
@@ -51,7 +51,7 @@ function get(req: any, res: any) {
     }
 }
 
-function update(req: any, res: any) {
+function update(req: express.Request, res: express.Response) {
     LOGGER.debug("Update API %s", req.params.api)
     let err = assureConnected()
     if (err) {
@@ -69,7 +69,7 @@ function update(req: any, res: any) {
     }
 }
 
-function deleteApi(req: any, res: any) {
+function deleteApi(req: express.Request, res: express.Response) {
     LOGGER.debug("Delete API %s", req.params.api)
     let err = assureConnected()
     if (err) {
@@ -86,7 +86,7 @@ function deleteApi(req: any, res: any) {
         });
     }
 }
-function create(req: any, res: any) {
+function create(req: express.Request, res: express.Response) {
     LOGGER.debug("Creating API %s", req.body.name)
     let err = assureConnected()
     if (err) {

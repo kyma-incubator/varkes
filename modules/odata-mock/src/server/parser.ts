@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as lg } from "@varkes/configuration"
+import * as config from "@varkes/configuration"
 import { ParsedModels } from "./types"
 
-const LOGGER: any = lg.init("odata-mock")
+const LOGGER: any = config.logger("odata-mock")
 const fs = require("fs");
 const { parse } = require('odata2openapi');
 

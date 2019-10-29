@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "./configuration"
-import * as logger from "./logger"
+import {load} from "./configuration"
+import {logger} from "./logger"
+import * as types from "./types"
 
-export { config, logger }
+export { load, logger, types }

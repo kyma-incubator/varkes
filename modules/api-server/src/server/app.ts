@@ -11,7 +11,7 @@ import * as connector from "./routes/connector";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
-import { config as config, logger as lg } from "@varkes/configuration"
+import * as config from "@varkes/configuration"
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
@@ -21,7 +21,7 @@ const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
 const BATCH_REGISTRATION = "/local/registration";
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
-const LOGGER = lg.init("api-server")
+const LOGGER = config.logger("api-server")
 
 async function init(varkesConfigPath: string, currentPath = "") {
     let varkesConfig = config.load(varkesConfigPath, currentPath)

@@ -2,9 +2,11 @@
   "name": "@varkes/odata-mock",
   "version": "0.6.3",
   "main": "dist/server/app.js",
-  "types": "dist/app.d.ts",
-  "engines": {
-    "node": ">=4"
+  "types": "dist/server/types.d.ts",
+  "license": "Apache-2.0",
+  "description": "OData Mock",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",
@@ -14,11 +16,8 @@
     "test": "mocha dist/test",
     "clean": "rm -rf dist || true && rm -r logs || true"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
-    "@varkes/configuration": "0.0.1",
+    "@varkes/configuration": "^0.6.3",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -43,10 +42,5 @@
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
-  },
-  "license": "Apache-2.0",
-  "description": "OData Mock",
-  "files": [
-    "dist/**/*"
-  ]
+  }
 }

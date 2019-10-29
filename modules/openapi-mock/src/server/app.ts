@@ -4,11 +4,11 @@
 import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
-import { config as config, logger as lg } from "@varkes/configuration"
+import * as config from "@varkes/configuration"
 import * as morgan from "morgan"
 import * as fs from "fs"
 
-const LOGGER = lg.init("openapi-mock")
+const LOGGER = config.logger("openapi-mock")
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 
 async function init(varkesConfigPath: string, currentDirectory = "") {

@@ -1,17 +1,23 @@
 {
   "name": "@varkes/openapi-mock",
   "version": "0.6.3",
-  "private": false,
-  "description": "Open API Mock",
-  "keywords": [],
-  "author": "",
-  "license": "Apache-2.0",
   "main": "dist/server/app.js",
+  "types": "dist/server/app.d.ts",
+  "license": "Apache-2.0",
+  "description": "Open API Mock",
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",
+    "start": "node dist/server/server",
+    "start:dev": "npm run clean && npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
+    "pretest": "npm run compile",
+    "test": "mocha dist/test",
+    "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
+  },
   "dependencies": {
-    "@varkes/configuration": "0.0.1",
+    "@varkes/configuration": "^0.6.3",
     "api-spec-converter": "~2.9.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
@@ -36,13 +42,5 @@
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
-  },
-  "scripts": {
-    "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",
-    "start": "node dist/server/server",
-    "start:dev": "npm run clean && npm run compile && export DEBUG=true && node dist/server/server ../test/varkes_config.json",
-    "pretest": "npm run compile",
-    "test": "mocha dist/test",
-    "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   }
 }

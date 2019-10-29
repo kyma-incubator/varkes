@@ -2,11 +2,11 @@
 'use strict'
 
 import * as express from "express"
-import { logger as lg } from "@varkes/configuration"
-const LOGGER = lg.init("api-server")
+import * as config from "@varkes/configuration"
+const LOGGER = config.logger("api-server")
 import { event, connection } from "@varkes/app-connector"
 
-function sendEvent(req: any, res: any) {
+function sendEvent(req: express.Request, res: express.Response) {
     LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))
     let err = assureConnected()
     if (err) {

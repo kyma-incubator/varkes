@@ -12,7 +12,7 @@ const pretty_yaml = require('json-to-pretty-yaml')
 
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
-const LOGGER = logger.init("configuration")
+const LOGGER = logger.logger("configuration")
 
 export function load(configPath: string, currentPath: string): Config {
     let config = loadFromFile(configPath ? configPath : "varkes_config.json", currentPath)
