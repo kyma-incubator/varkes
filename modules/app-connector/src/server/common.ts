@@ -1,4 +1,4 @@
-import { logger as LOGGER } from "./logger";
+import { LOGGER } from "./app"
 
 
 function resolveError(statusCode: any, body: any, name: string) {
