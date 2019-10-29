@@ -1,32 +1,37 @@
-const OAUTH = "/authorizationserver/oauth/token";
-const METADATA = "/metadata";
+#!/usr/bin/env node
+'use strict'
+
 import path = require("path");
 import fs = require("fs");
+import * as logger from "./logger"
+import { Config, API, Event } from "./types"
+
 const check_api = require("check_api");
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
-import * as logger from "./logger"
+
+const OAUTH = "/authorizationserver/oauth/token";
+const METADATA = "/metadata";
 const LOGGER = logger.init("configuration")
 
-export function load(configPath: string, currentPath: string): any {
-    LOGGER.error("path:" + configPath+", current: "+currentPath)
+export function load(configPath: string, currentPath: string): Config {
     let config = loadFromFile(configPath ? configPath : "varkes_config.json", currentPath)
     resolve(config)
     validate(config)
     return config
 }
 
-function loadFromFile(configPath: string, currentPath: string): any {
+function loadFromFile(configPath: string, currentPath: string): Config {
     let configLocation = path.resolve(currentPath, configPath)
-    LOGGER.info("Using configuration %s", configLocation)
+    LOGGER.info("Loading configuration %s", configLocation)
     let config = JSON.parse(fs.readFileSync(configLocation, "utf-8"))
     config.location = configLocation
     return config
 }
 
-function resolve(config: any) {
+function resolve(config: Config) {
     if (config.apis) {
-        config.apis.map((api: any) => {
+        config.apis.map((api: API) => {
             api.specification = path.resolve(path.dirname(config.location), api.specification)
             if (api.added_endpoints) {
                 api.added_endpoints.map((ae: any) => {
@@ -37,13 +42,13 @@ function resolve(config: any) {
     }
 
     if (config.events) {
-        config.events.map((element: any) => {
+        config.events.map((element: Event) => {
             element.specification = path.resolve(path.dirname(config.location), element.specification)
         })
     }
 }
 
-function validate(config: any) {
+function validate(config: Config) {
     let errors = validateBasics(config)
     errors = errors + validateEvents(config)
     errors = errors + validateApis(config)
@@ -53,7 +58,7 @@ function validate(config: any) {
     }
 }
 
-function validateBasics(config: any) {
+function validateBasics(config: Config) {
     let errors = ""
     if (config.logo && !config.logo.match(/^.+\.(svg)$/)) {
         errors += "\nlogo image must be in svg format"
@@ -61,7 +66,7 @@ function validateBasics(config: any) {
     return errors
 }
 
-function validateApis(config: any) {
+function validateApis(config: Config) {
     let apis = config.apis
     let errors = ""
     if (apis) {
@@ -92,7 +97,7 @@ function validateApis(config: any) {
     return errors
 }
 
-function validateOdata(api: any): String {
+function validateOdata(api: API): String {
     let errors = ""
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
@@ -110,7 +115,7 @@ function validateOdata(api: any): String {
 }
 
 
-function validateOpenApi(api: any): String {
+function validateOpenApi(api: API): String {
     let errors = "";
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\\w]+$+'";
@@ -130,7 +135,7 @@ function validateOpenApi(api: any): String {
     return errors
 }
 
-function validateEvents(config: any) {
+function validateEvents(config: Config) {
     let events = config.events
     let errors = ""
     if (events) {
