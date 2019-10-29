@@ -78,7 +78,7 @@ export class ConnectionOverviewComponent implements OnInit {
                 },
                 error => {
                     this.connected = false;
-                    this.alertMessage = error["_body"];
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                 });
     }
@@ -89,7 +89,7 @@ export class ConnectionOverviewComponent implements OnInit {
                     this.connected = false;
                 },
                 error => {
-                    this.alertMessage = error["_body"];
+                    this.alertMessage = JSON.parse(error._body).error
                     this.alert = true;
                 });
 

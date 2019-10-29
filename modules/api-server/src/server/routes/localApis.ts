@@ -62,21 +62,20 @@ async function registerAll(req: any, res: any) {
     try {
         let registeredAPIs = await api.findAll();
         services.createServicesFromConfig(getOrigin(req), varkesConfig, registeredAPIs)
-        LOGGER.debug("Auto-registereing %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
+        LOGGER.debug("Auto-registering %d APIs and %d Event APIs", varkesConfig.apis ? varkesConfig.apis.length : 0, varkesConfig.events ? varkesConfig.events.length : 0)
         res.status(200).send(connection.info())
     }
     catch (error) {
-        let message = "There is an error while registering all APIs."
-        LOGGER.error("Failed to register all APIs: %s", error.stack)
-        res.status(500).send({ error: message })
+        LOGGER.error("Failed to register all APIs: %s")
+        res.status(500).send({ error: error.message })
     }
 }
 function getStatus(req: any, res: any) {
     LOGGER.debug("Getting Registration Status")
     res.status(200).send(services.getStatus());
 }
-async function create(req: any, res: any) {
-    LOGGER.debug("Create Local API %s", req.params.apiname)
+async function register(req: any, res: any) {
+    LOGGER.debug("Register Local API %s", req.params.apiname)
 
     let err = assureConnected()
     if (err) {
@@ -102,26 +101,21 @@ async function create(req: any, res: any) {
                 break;
             }
         }
-        let registeredAPIs = await api.findAll();
-        let reg_api;
-        if (registeredAPIs.length > 0)
-            reg_api = registeredAPIs.find((x: any) => x.name == serviceMetadata.name)
-        if (!reg_api) {
-            api.create(serviceMetadata).then((result: any) => {
+        try {
+            let registeredAPIs = await api.findAll();
+            let reg_api;
+            if (registeredAPIs.length > 0)
+                reg_api = registeredAPIs.find((x: any) => x.name == serviceMetadata.name)
+            if (!reg_api) {
+                let result = await api.create(serviceMetadata)
                 res.status(200).send(result);
-            }, (err: any) => {
-                res.status(err.statusCode).send(err.message);
-            });
-        }
-        else {
-            api.update(serviceMetadata, reg_api.id).then((result: any) => {
+            } else {
+                let result = await api.update(serviceMetadata, reg_api.id)
                 res.status(200).send(result);
-            }, (err: any) => {
-                res.status(err.statusCode).send(err.message);
-            })
-            LOGGER.debug("Updated API successful: %s", apiName)
+            }
+        } catch (error) {
+            res.status(500).send({ error: error.message });
         }
-
     }
 }
 function assureConnected() {
@@ -137,7 +131,7 @@ function router(config: any) {
     apiRouter.post("/registration", registerAll)
     apiRouter.get("/registration", getStatus)
     apiRouter.get("/apis/:apiname", getLocalApi)
-    apiRouter.post("/apis/:apiname/register", create)
+    apiRouter.post("/apis/:apiname/register", register)
     return apiRouter
 }
 

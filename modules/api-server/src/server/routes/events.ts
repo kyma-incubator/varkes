@@ -14,7 +14,7 @@ function sendEvent(req: any, res: any) {
         event.sendEvent(req.body).then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
-            res.status(err.statusCode).send(err.message);
+            res.status(500).send({ error: err.message });
         })
     }
 }
