@@ -7,11 +7,11 @@ const express = require('express')
 const bodyParser = require('body-parser');
 import * as parser from "./parser"
 const path = require("path")
-import { configValidator as cv, logger as lg } from "@varkes/configuration"
+import { config as config, logger as lg } from "@varkes/configuration"
 
 const LOGGER: any = lg.init("odata-mock")
 async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = cv.discover(LOGGER, varkesConfigPath, currentPath)
+  let varkesConfig = config.load( varkesConfigPath, currentPath)
 
   let promises: Promise<any>[] = [];
   for (let i = 0; i < varkesConfig.apis.length; i++) {

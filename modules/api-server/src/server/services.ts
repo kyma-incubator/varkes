@@ -12,7 +12,6 @@ var apisFailedCount = 0;
 var apisCount = 0;
 var regErrorMessage = ""
 
-
 async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registeredApis: any) {
     if (!varkesConfig.apis && !varkesConfig.events)
         return;
