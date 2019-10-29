@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 'use strict'
+
+import * as parser from "./parser"
+import { config as config, logger as lg } from "@varkes/configuration"
+
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
 const express = require('express')
 const bodyParser = require('body-parser');
-import * as parser from "./parser"
 const path = require("path")
-import { config as config, logger as lg } from "@varkes/configuration"
-
 const LOGGER: any = lg.init("odata-mock")
+
 async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = config.load( varkesConfigPath, currentPath)
+  let varkesConfig = config.load(varkesConfigPath, currentPath)
 
   let promises: Promise<any>[] = [];
   for (let i = 0; i < varkesConfig.apis.length; i++) {
@@ -103,4 +105,4 @@ async function generateBootConfig(api: any) {
   return bootConfig
 }
 
-export { init, LOGGER }
+export { init }

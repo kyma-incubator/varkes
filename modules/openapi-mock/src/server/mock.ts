@@ -5,7 +5,8 @@ import * as express from "express"
 import * as yaml from "js-yaml"
 import * as fs from "fs"
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
-import { LOGGER } from "./app"
+import { logger as lg } from "@varkes/configuration"
+const LOGGER = lg.init("openapi-mock")
 import { SwaggerMiddleware } from "swagger-express-middleware";
 const Converter = require("api-spec-converter")
 const middleware = require("swagger-express-middleware")

@@ -62,4 +62,4 @@ function customErrorResponses(app: express.Application) {
   });
 }
 
-export { init, LOGGER }
+export { init }

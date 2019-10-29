@@ -2,7 +2,8 @@
 'use strict'
 
 import * as express from "express"
-import { LOGGER } from "../app"
+import { logger as lg } from "@varkes/configuration"
+const LOGGER = lg.init("api-server")
 import { event, connection } from "@varkes/app-connector"
 
 function sendEvent(req: any, res: any) {

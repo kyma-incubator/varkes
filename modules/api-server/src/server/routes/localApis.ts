@@ -1,4 +1,5 @@
-import { LOGGER } from "../app"
+import { logger as lg } from "@varkes/configuration"
+const LOGGER = lg.init("api-server")
 import * as express from "express"
 import * as services from "../services";
 import { api, connection } from "@varkes/app-connector"

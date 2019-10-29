@@ -1,15 +1,21 @@
+#!/usr/bin/env node
+'use strict'
+
 import * as request from "request-promise";
-const forge = require("node-forge");
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-import { LOGGER } from "./app"
+import { logger as lg } from "@varkes/configuration"
+
+const LOGGER: any = lg.init("app-connector")
+const forge = require("node-forge");
 const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
 const KEY_URL = "/key";
 const CERT_URL = "/cert";
+
 var privateKeyData: any;
 var certificateData: any;
 var connection: any;

@@ -67,4 +67,4 @@ async function init(varkesConfigPath: string, currentPath = "") {
     return app;
 }
 
-export { init, LOGGER }
+export { init }

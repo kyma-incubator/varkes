@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 'use strict'
-import { LOGGER } from "./app"
-const fs = require("fs");
+
+import { logger as lg } from "@varkes/configuration"
 import { ParsedModels } from "./types"
-Object.defineProperty(exports, "__esModule", { value: true });
+
+const LOGGER: any = lg.init("odata-mock")
+const fs = require("fs");
 const { parse } = require('odata2openapi');
+
+Object.defineProperty(exports, "__esModule", { value: true });
 
 function parseEdmx(path: string, dataSourceName: string): Promise<ParsedModels> {
 	return new Promise<ParsedModels>(function (resolve, reject) {

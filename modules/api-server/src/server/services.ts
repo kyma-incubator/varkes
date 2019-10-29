@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import { LOGGER } from "./app"
+import { logger as lg } from "@varkes/configuration"
+const LOGGER = lg.init("api-server")
 const yaml = require("js-yaml");
 import * as fs from "fs"
 const OAUTH = "/authorizationserver/oauth/token"

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import { LOGGER } from "../app"
+import { logger as lg } from "@varkes/configuration"
+const LOGGER = lg.init("api-server")
 import * as express from "express"
 const openapiSampler = require('openapi-sampler')
 import * as refParser from 'json-schema-ref-parser'

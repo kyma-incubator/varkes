@@ -1,5 +1,9 @@
-import { LOGGER } from "./app"
+#!/usr/bin/env node
+'use strict'
 
+import { logger as lg } from "@varkes/configuration"
+
+const LOGGER: any = lg.init("app-connector")
 
 function resolveError(statusCode: any, body: any, name: string) {
     let message = ""
