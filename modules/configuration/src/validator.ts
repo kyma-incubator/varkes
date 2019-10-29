@@ -9,7 +9,8 @@ import * as logger from "./logger"
 const LOGGER = logger.init("configuration")
 
 export function load(configPath: string, currentPath: string): any {
-    let config = loadFromFile(configPath ? configPath : "varkes_config.json", currentPath ? currentPath : __dirname)
+    LOGGER.error("path:" + configPath+", current: "+currentPath)
+    let config = loadFromFile(configPath ? configPath : "varkes_config.json", currentPath)
     resolve(config)
     validate(config)
     return config
