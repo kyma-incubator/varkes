@@ -13,7 +13,7 @@ const path = require("path")
 const LOGGER: any = config.logger("odata-mock")
 
 async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = config.load(varkesConfigPath, currentPath)
+  let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
 
   let promises: Promise<any>[] = [];
   for (let i = 0; i < varkesConfig.apis.length; i++) {

@@ -14,7 +14,7 @@ const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 async function init(varkesConfigPath: string, currentDirectory = "") {
   let app = express()
 
-  let varkesConfig = config.load(varkesConfigPath, currentDirectory);
+  let varkesConfig = config.resolveFile(varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
 

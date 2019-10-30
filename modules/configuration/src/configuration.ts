@@ -20,13 +20,13 @@ const LOGGER = logger.logger("configuration")
  * @param configText the string containing the configuration as text
  * @param location optional absolute path to the config in order to resolve referenced spec files
  */
-export function parse(configText: string, location: string = ""): Config {
+export function resolve(configText: string, location: string = ""): Config {
     let config = JSON.parse(configText)
     if (location) {
         config.location = location
     }
     LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
-    resolve(config)
+    resolveSpecs(config)
     validate(config)
     return config
 }
@@ -37,13 +37,13 @@ export function parse(configText: string, location: string = ""): Config {
  * @param configPath the relative path to the configuration file
  * @param currentPath the current working directory
  */
-export function load(configPath: string, currentPath: string): Config {
+export function resolveFile(configPath: string, currentPath: string): Config {
     let configLocation = path.resolve(currentPath, configPath)
     let configText = fs.readFileSync(configLocation, "utf-8")
-    return parse(configText, configLocation)
+    return resolve(configText, configLocation)
 }
 
-function resolve(config: Config) {
+function resolveSpecs(config: Config) {
     if (config.location) {
         if (config.apis) {
             config.apis.map((api: API) => {

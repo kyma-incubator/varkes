@@ -24,7 +24,7 @@ const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 const LOGGER = config.logger("api-server")
 
 async function init(varkesConfigPath: string, currentPath = "") {
-    let varkesConfig = config.load(varkesConfigPath, currentPath)
+    let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
 
     let app = express()
     app.use(bodyParser.json())
