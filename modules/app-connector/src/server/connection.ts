@@ -1,21 +1,24 @@
-import { logger as LOGGER } from "./logger";
+#!/usr/bin/env node
+'use strict'
+
 import * as request from "request-promise";
-const forge = require("node-forge");
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
+import * as config from "@varkes/configuration"
 
+const LOGGER: any = config.logger("app-connector")
+const forge = require("node-forge");
 const keysDirectory = path.resolve("keys")
 const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
-const KEY_URL = "/key";
-const CERT_URL = "/cert";
-var privateKeyData: any;
-var certificateData: any;
-var connection: any;
 
-function init() {
+var privateKeyData: string;
+var certificateData: string;
+var connection: Info | null = null;
+
+export function init() {
     if (!fs.existsSync(keysDirectory)) {
         fs.mkdirSync(keysDirectory)
     }
@@ -38,7 +41,8 @@ function init() {
         LOGGER.info("Found existing certificate: %s", crtFile)
     }
 }
-async function callTokenUrl(insecure: any, url: any) {
+
+async function callTokenUrl(insecure: boolean, url: string) {
     LOGGER.debug("Calling token URL '%s'", url)
     return request({
         uri: url,
@@ -60,7 +64,7 @@ async function callTokenUrl(insecure: any, url: any) {
     })
 }
 
-async function callCSRUrl(csrUrl: any, csr: any, insecure: any) {
+async function callCSRUrl(csrUrl: string, csr: any, insecure: boolean) {
     LOGGER.debug("Calling csr URL '%s'", csrUrl)
     let csrData = forge.util.encode64(csr)
 
@@ -80,7 +84,7 @@ async function callCSRUrl(csrUrl: any, csr: any, insecure: any) {
     })
 }
 
-async function callInfoUrl(infoUrl: any, crt: any, privateKey: any, insecure: any) {
+async function callInfoUrl(infoUrl: string, crt: any, privateKey: string, insecure: boolean) {
     LOGGER.debug("Calling info URL '%s'", infoUrl)
 
     return request.get({
@@ -129,22 +133,22 @@ function parseSubjectToJsonArray(subject: any) {
     return subjectsArray;
 }
 
-function certificate() {
+export function certificate(): string {
     if (!established()) {
         throw new Error("Trying to access connection status without having a connection established. Please call connection.established() upfront to assure an available connection status")
     }
     return certificateData
 }
 
-function privateKey() {
+export function privateKey(): string {
     return privateKeyData
 }
 
-function established() {
-    return connection && connection.metadataUrl
+export function established(): boolean {
+    return connection != null
 }
 
-function generatePrivateKey(filePath: any) {
+function generatePrivateKey(filePath: string): string {
     LOGGER.debug("Generating new private key: %s", filePath)
     let keys = forge.pki.rsa.generateKeyPair(2048)
     const key = forge.pki.privateKeyToPem(keys.privateKey)
@@ -153,18 +157,21 @@ function generatePrivateKey(filePath: any) {
     return key
 }
 
-function info() {
-    return connection;
+export function info(): Info {
+    if (!established()) {
+        throw new Error("Trying to access connection status without having a connection established. Please call connection.established() upfront to assure an available connection status")
+    }
+    return connection!;
 }
 
-async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false) {
+export async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false): Promise<Info> {
     let tokenResponse = await callTokenUrl(insecure, tokenUrl)
     let csr = generateCSR(tokenResponse.certificate.subject)
     certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
     let infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, certificateData, privateKeyData, insecure)
 
     let domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
-    let connectionData: any = {
+    let connectionData: Info = {
         insecure: insecure,
         infoUrl: tokenResponse.api.infoUrl,
         metadataUrl: infoResponse.urls.metadataUrl,
@@ -175,9 +182,7 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
         consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", ""),
         applicationUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
         domain: domains,
-        application: infoResponse.clientIdentity.application,
-        key: KEY_URL,
-        cert: CERT_URL
+        application: infoResponse.clientIdentity.application
     }
 
     if (persistFiles) {
@@ -189,7 +194,7 @@ async function connect(tokenUrl: string, persistFiles: boolean = true, insecure:
     return connectionData;
 }
 
-function destroy() {
+export function destroy(): void {
     connection = null
 
     if (fs.existsSync(connFile)) {
@@ -199,4 +204,17 @@ function destroy() {
         fs.unlinkSync(crtFile)
     }
 }
-export { connect, info, privateKey, certificate, established, init, destroy, KEY_URL, CERT_URL }
+
+export type Info = {
+    insecure: boolean,
+    infoUrl: string,
+    metadataUrl: string,
+    eventsUrl: string,
+    certificatesUrl: string,
+    renewCertUrl: string,
+    revocationCertUrl: string,
+    consoleUrl: string,
+    applicationUrl: string,
+    domain: string,
+    application: string
+}

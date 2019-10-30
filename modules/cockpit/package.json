@@ -2,8 +2,10 @@
   "name": "@varkes/cockpit",
   "version": "0.6.3",
   "main": "dist/app.js",
-  "engines": {
-    "node": ">=4"
+  "description": "Varkes Cockpit",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/luigiconfig.js --mode production",
@@ -12,9 +14,6 @@
     "start": "node dist/server",
     "build": "ng build",
     "compile": "npm run buildConfig && npm run build && npm run build-tsc"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "dependencies": {
     "@angular/animations": "^7.2.15",
@@ -66,10 +65,5 @@
   "repository": {
     "type": "ssh",
     "url": "git@github.com:kyma-incubator/varkes.git"
-  },
-  "license": "Apache-2.0",
-  "description": "Varkes Cockpit",
-  "files": [
-    "dist/**/*"
-  ]
+  }
 }

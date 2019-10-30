@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 'use strict'
 
-import { logger as LOGGER } from "./logger"
-const yaml = require("js-yaml");
+import * as config from "@varkes/configuration"
+import { api } from "@varkes/app-connector";
 import * as fs from "fs"
+
+const LOGGER = config.logger("api-server")
+const yaml = require("js-yaml");
 const OAUTH = "/authorizationserver/oauth/token"
 const METADATA = "/metadata"
-import { api } from "@varkes/app-connector";
+
 var apiSucceedCount = 0;
 var apisFailedCount = 0;
 var apisCount = 0;
 var regErrorMessage = ""
 
-
-async function createServicesFromConfig(baseUrl: any, varkesConfig: any, registeredApis: any) {
+async function createServicesFromConfig(baseUrl: string, varkesConfig: config.Config, registeredApis: any) {
     if (!varkesConfig.apis && !varkesConfig.events)
         return;
     apiSucceedCount = 0;
@@ -121,7 +123,7 @@ function fillEventData(event: any) {
     return serviceData
 }
 
-function fillServiceMetadata(api: any, baseUrl: any) {
+function fillServiceMetadata(api: config.API, baseUrl: string) {
     let apiUrl = baseUrl
     let apiUrlWithBasepath = baseUrl
     if (api.basepath) {

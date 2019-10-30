@@ -3,7 +3,6 @@
 
 import { init } from "./app"
 const app = require('express')()
-import { logger as LOGGER } from "./logger"
 
 var runAsync = async () => {
     let configPath: string = ""
@@ -14,10 +13,10 @@ var runAsync = async () => {
     try {
         app.use(await init(configPath, __dirname))
         app.listen(10000, function () {
-            LOGGER.info("Started application on port %d", 10000)
+            console.info("Started application on port %d", 10000)
         });
     } catch (error) {
-        LOGGER.error("Problem while starting application: %s", JSON.stringify(error))
+        console.error("Problem while starting application: %s", JSON.stringify(error))
     }
 }
 

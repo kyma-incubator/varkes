@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 'use strict'
-import { config } from "./config"
+
+import * as parser from "./parser"
+import * as config from "@varkes/configuration"
+
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 const fs = require('fs');
 const express = require('express')
 const bodyParser = require('body-parser');
-import { logger as LOGGER } from "./logger"
-import * as parser from "./parser"
 const path = require("path")
+const LOGGER: any = config.logger("odata-mock")
 
 async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = config(varkesConfigPath, currentPath)
+  let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
 
   let promises: Promise<any>[] = [];
   for (let i = 0; i < varkesConfig.apis.length; i++) {
@@ -30,7 +32,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
   return resultApp
 }
 
-async function bootLoopback(api: any, varkesConfig: any) {
+async function bootLoopback(api: config.API, varkesConfig: config.Config) {
   let app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
@@ -51,7 +53,7 @@ async function bootLoopback(api: any, varkesConfig: any) {
   })
 }
 
-async function generateBootConfig(api: any) {
+async function generateBootConfig(api: config.API) {
   let dataSourceName = api.name.replace(/\s/g, '')
   let parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 

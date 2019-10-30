@@ -21,6 +21,8 @@ Varkes framework provides the following node modules to make the application moc
 
 * **OData Mock** which mocks the application APIs based on the OData specification. For details, see [OData mock](modules/odata-mock/README.md).
 
+* **Configuration** which manages loading and validation of Varkes configuration files, see [Configuration](modules/configuration/README.md).
+  
 ## Architecture
 
 The diagram shows how an application mock integrates with a Kyma cluster and which functionality is taken over by which framework modules:

@@ -16,6 +16,7 @@ const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools
 const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString();
 const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
 const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
+
 describe("should work", () => {
     let kymaServer: any
     before(async () => { //* start kyma mock before tests
@@ -53,7 +54,7 @@ describe("should work", () => {
         it('delete school api', () => {
             return api.create(JSON.parse(schoolsAPI))
                 .then((createdApi: any) => {
-                    return api.delete(createdApi.id)
+                    return api.remove(createdApi.id)
                 })
                 .then((result: any) => {
                     assert(JSON.stringify(result).indexOf("error") <= -1)
@@ -66,7 +67,7 @@ describe("should work", () => {
                 "event-time": new Date().toISOString(),
                 "data": JSON.parse(eventPublishAPI)
             }
-            return event.sendEvent(eventData).then((result: any) => {
+            return event.send(eventData).then((result: any) => {
                 expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"))
             })
         })

@@ -1,10 +1,12 @@
-import { logger as LOGGER } from "../logger"
+import * as config from "@varkes/configuration"
+const LOGGER = config.logger("api-server")
 import * as express from "express"
 import * as services from "../services";
 import { api, connection } from "@varkes/app-connector"
 
-var varkesConfig: any;
-function getAll(req: any, res: any) {
+var varkesConfig: config.Config;
+
+function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all Local APIs")
     let apis = []
     let configApis = varkesConfig.apis;
@@ -23,19 +25,20 @@ function getAll(req: any, res: any) {
     }
     res.status(200).send(apis);
 }
-function getLocalApi(req: any, res: any) {
+
+function getLocalApi(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting Local API")
     let apiname = req.params.apiname;
-    let api = varkesConfig.apis.find((x: any) => x.name == apiname);
+    let api = varkesConfig.apis.find((x: config.API) => x.name == apiname);
     if (api) {
         let serviceMetadata: any = services.fillServiceMetadata(api, getOrigin(req))
         serviceMetadata.id = apiname;
         res.status(200).send(serviceMetadata);
     }
     else {
-        api = varkesConfig.events.find((x: any) => x.name == apiname);
-        if (api) {
-            let eventMetadata: any = services.fillEventData(api)
+        let event = varkesConfig.events.find((x: config.Event) => x.name == apiname);
+        if (event) {
+            let eventMetadata: any = services.fillEventData(event)
             eventMetadata.id = apiname;
             res.status(200).send(eventMetadata);
         }
@@ -46,14 +49,15 @@ function getLocalApi(req: any, res: any) {
         }
     }
 }
-function getOrigin(req: any) {
+
+function getOrigin(req: express.Request) {
     if (req.body.baseUrl && !req.body.baseUrl.match(/http(s)?:\/\//)) {
         return req.protocol + req.body.baseUrl
     }
     return req.body.baseUrl || req.protocol + "://" + req.headers.host
 }
 
-async function registerAll(req: any, res: any) {
+async function registerAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Registering all Local APIs")
     let err = assureConnected()
     if (err) {
@@ -70,11 +74,13 @@ async function registerAll(req: any, res: any) {
         res.status(500).send({ error: error.message })
     }
 }
-function getStatus(req: any, res: any) {
+
+function getStatus(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting Registration Status")
     res.status(200).send(services.getStatus());
 }
-async function register(req: any, res: any) {
+
+async function register(req: express.Request, res: express.Response) {
     LOGGER.debug("Register Local API %s", req.params.apiname)
 
     let err = assureConnected()
@@ -118,13 +124,15 @@ async function register(req: any, res: any) {
         }
     }
 }
+
 function assureConnected() {
     if (!connection.established()) {
         return "Not connected to a kyma cluster, please re-connect"
     }
     return null
 }
-function router(config: any) {
+
+function router(config: config.Config) {
     let apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/apis", getAll)

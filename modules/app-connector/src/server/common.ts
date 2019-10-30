@@ -1,10 +1,14 @@
-import { logger as LOGGER } from "./logger";
+#!/usr/bin/env node
+'use strict'
 
+import * as config from "@varkes/configuration"
 
-function resolveError(statusCode: any, body: any, name: string) {
+const LOGGER: any = config.logger("app-connector")
+
+function resolveError(statusCode: number, body: string, name: string) {
     let message = ""
     if (statusCode == 404) {
-        message = "The Kyma application is not reachable, check if the paired application on Kyma is running healthy";
+        message = "The Kyma application is not reachable, check if the paired application at Kyma is healthy";
     } else {
         message = "Problem while " + name + ": Kyma application API responded with status " + statusCode + (body ?
             " " + JSON.stringify(body, null, 2) : "");

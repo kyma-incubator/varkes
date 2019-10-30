@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from './config.js';
 import * as express from "express";
 import * as fs from "fs";
-import { logger as LOGGER } from "./logger";
 import * as path from "path";
 import * as bodyParser from "body-parser";
 import * as expressWinston from "express-winston";
@@ -13,6 +11,7 @@ import * as connector from "./routes/connector";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
+import * as config from "@varkes/configuration"
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
@@ -22,10 +21,10 @@ const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
 const BATCH_REGISTRATION = "/local/registration";
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
+const LOGGER = config.logger("api-server")
 
 async function init(varkesConfigPath: string, currentPath = "") {
-
-    let varkesConfig = config.init(varkesConfigPath, currentPath)
+    let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
 
     let app = express()
     app.use(bodyParser.json())
