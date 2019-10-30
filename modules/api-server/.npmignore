@@ -1,7 +1,6 @@
-Dockerfile
 .dockerignore
+Dockerfile
 node_modules
 Makefile
 *.log
-keys/.*
-.nyc_output
+src
