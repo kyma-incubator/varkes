@@ -15,7 +15,7 @@ const middleware = require("swagger-express-middleware")
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
-async function mock(config: config.types.Config) {
+async function mock(config: config.Config) {
     let resultApp = express()
     let error_message = "";
     for (let i = 0; i < config.apis.length; i++) {
@@ -80,12 +80,12 @@ async function mock(config: config.types.Config) {
     return resultApp
 }
 
-function loadSpec(api: config.types.API) {
+function loadSpec(api: config.API) {
     LOGGER.debug("Loading api '%s' from file '%s'", api.name, api.specification);
     return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
 }
 
-function writeSpec(specString: string, api: config.types.API, index: number) {
+function writeSpec(specString: string, api: config.API, index: number) {
     let file_name = DIR_NAME + index + "_" + TMP_FILE;
     LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, file_name, specString.length);
 
@@ -98,7 +98,7 @@ function writeSpec(specString: string, api: config.types.API, index: number) {
     api.specification = file_name;
 }
 
-function createEndpoints(spec: any, api: config.types.API) {
+function createEndpoints(spec: any, api: config.API) {
     if (api.added_endpoints) {
         LOGGER.debug("Adding new Endpoints for api '%s'", api.name);
         api.added_endpoints.forEach((point: any) => {
@@ -110,7 +110,7 @@ function createEndpoints(spec: any, api: config.types.API) {
         });
     }
 }
-function createOauthEndpoint(api: config.types.API, app: express.Application) {
+function createOauthEndpoint(api: config.API, app: express.Application) {
     LOGGER.debug("Adding oauth endpoint '%s%s'", api.basepath, api.oauth)
     app.post(api.basepath + api.oauth, function (req, res) {
         if (req.body.client_id && req.body.client_secret && req.body.grant_type) {
@@ -126,7 +126,7 @@ function createOauthEndpoint(api: config.types.API, app: express.Application) {
     });
 }
 
-async function validateSpec(api: config.types.API, type: string) {
+async function validateSpec(api: config.API, type: string) {
     LOGGER.debug("Validating spec of api '%s'", api.name);
     return Converter.getSpec(api.specification, type)
         .then((fromSpec: any) => {
@@ -141,13 +141,13 @@ async function validateSpec(api: config.types.API, type: string) {
         });
 }
 
-async function transformSpec(api: config.types.API) {
+async function transformSpec(api: config.API) {
     LOGGER.debug("Transforming spec of api '%s' to swagger2 format", api.name)
     return Converter.getSpec(api.specification, 'openapi_3')
         .then((fromSpec: any) => fromSpec.convertTo('swagger_2'))
 }
 
-function createMetadataEndpoint(spec: any, api: config.types.API, app: express.Application) {
+function createMetadataEndpoint(spec: any, api: config.API, app: express.Application) {
     LOGGER.debug("Adding metadata endpoint '%s%s'", api.basepath, api.metadata)
     app.get(api.basepath + api.metadata, function (req, res) {
         res.type('text/x-yaml')
@@ -166,7 +166,7 @@ function createMetadataEndpoint(spec: any, api: config.types.API, app: express.A
     })
 }
 
-function createConsole(api: config.types.API, app: express.Application) {
+function createConsole(api: config.API, app: express.Application) {
     LOGGER.debug("Adding console endpoint '%s%s'", api.basepath, "/console")
     app.get(api.basepath + "/console", function (req, res) {
         let html = fs.readFileSync(__dirname + "/resources/console_template.html", 'utf8')

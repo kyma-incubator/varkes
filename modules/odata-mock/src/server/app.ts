@@ -32,7 +32,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
   return resultApp
 }
 
-async function bootLoopback(api: config.types.API, varkesConfig: config.types.Config) {
+async function bootLoopback(api: config.API, varkesConfig: config.Config) {
   let app = loopback();
   app.use(bodyParser.json());
   app.varkesConfig = varkesConfig
@@ -53,7 +53,7 @@ async function bootLoopback(api: config.types.API, varkesConfig: config.types.Co
   })
 }
 
-async function generateBootConfig(api: config.types.API) {
+async function generateBootConfig(api: config.API) {
   let dataSourceName = api.name.replace(/\s/g, '')
   let parsedModel = await parser.parseEdmx(api.specification, dataSourceName)
 

@@ -9,7 +9,8 @@
         "access": "public"
     },
     "scripts": {
-        "compile": "tsc",
+        "compile": "tsc && copyfiles -f -e '*.ts' src/test/* dist/test && copyfiles -f src/test/expect/* dist/test/expect",
+        "test": "npm run compile && mocha dist/test",
         "clean": "rm -rf dist"
     },
     "dependencies": {
@@ -19,9 +20,15 @@
         "winston": "^3.2.1"
     },
     "devDependencies": {
-        "@types/node": "^12.7.4",
+        "@types/node": "^12.12.0",
         "@types/winston": "^2.4.4",
-        "typescript": "^3.6.2"
+        "typescript": "^3.6.4",
+        "@types/chai": "^4.2.4",
+        "@types/mocha": "^5.2.7",
+        "chai": "^4.2.0",
+        "chai-match": "^1.1.1",
+        "copyfiles": "^2.1.1",
+        "mocha": "^6.2.2"
     },
     "repository": {
         "type": "ssh",

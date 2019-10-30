@@ -5,7 +5,7 @@ import * as config from "@varkes/configuration"
 
 const LOGGER: any = config.logger("app-connector")
 
-function resolveError(statusCode: any, body: any, name: string) {
+function resolveError(statusCode: number, body: string, name: string) {
     let message = ""
     if (statusCode == 404) {
         message = "The Kyma application is not reachable, check if the paired application at Kyma is healthy";

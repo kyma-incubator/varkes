@@ -15,7 +15,7 @@ var apisFailedCount = 0;
 var apisCount = 0;
 var regErrorMessage = ""
 
-async function createServicesFromConfig(baseUrl: string, varkesConfig: config.types.Config, registeredApis: any) {
+async function createServicesFromConfig(baseUrl: string, varkesConfig: config.Config, registeredApis: any) {
     if (!varkesConfig.apis && !varkesConfig.events)
         return;
     apiSucceedCount = 0;
@@ -123,7 +123,7 @@ function fillEventData(event: any) {
     return serviceData
 }
 
-function fillServiceMetadata(api: config.types.API, baseUrl: string) {
+function fillServiceMetadata(api: config.API, baseUrl: string) {
     let apiUrl = baseUrl
     let apiUrlWithBasepath = baseUrl
     if (api.basepath) {

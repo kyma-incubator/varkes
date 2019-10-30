@@ -4,7 +4,7 @@ import * as express from "express"
 import * as services from "../services";
 import { api, connection } from "@varkes/app-connector"
 
-var varkesConfig: config.types.Config;
+var varkesConfig: config.Config;
 
 function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all Local APIs")
@@ -29,14 +29,14 @@ function getAll(req: express.Request, res: express.Response) {
 function getLocalApi(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting Local API")
     let apiname = req.params.apiname;
-    let api = varkesConfig.apis.find((x: config.types.API) => x.name == apiname);
+    let api = varkesConfig.apis.find((x: config.API) => x.name == apiname);
     if (api) {
         let serviceMetadata: any = services.fillServiceMetadata(api, getOrigin(req))
         serviceMetadata.id = apiname;
         res.status(200).send(serviceMetadata);
     }
     else {
-        let event = varkesConfig.events.find((x: config.types.Event) => x.name == apiname);
+        let event = varkesConfig.events.find((x: config.Event) => x.name == apiname);
         if (event) {
             let eventMetadata: any = services.fillEventData(event)
             eventMetadata.id = apiname;
@@ -132,7 +132,7 @@ function assureConnected() {
     return null
 }
 
-function router(config: config.types.Config) {
+function router(config: config.Config) {
     let apiRouter = express.Router()
     varkesConfig = config
     apiRouter.get("/apis", getAll)

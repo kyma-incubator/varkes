@@ -75,7 +75,7 @@ function deleteApi(req: express.Request, res: express.Response) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.delete(req.params.api).then((result: any) => {
+        api.remove(req.params.api).then((result: any) => {
             if (!result) {
                 res.status(404).type("json").send({ error: "API not found" })
             } else {

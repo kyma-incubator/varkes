@@ -14,37 +14,53 @@ const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
 
-export function load(configPath: string, currentPath: string): Config {
-    let config = loadFromFile(configPath ? configPath : "varkes_config.json", currentPath)
+/**
+ * Loads a config from a string
+ * 
+ * @param configText the string containing the configuration as text
+ * @param location optional absolute path to the config in order to resolve referenced spec files
+ */
+export function parse(configText: string, location: string = ""): Config {
+    let config = JSON.parse(configText)
+    if (location) {
+        config.location = location
+    }
+    LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
     resolve(config)
     validate(config)
     return config
 }
 
-function loadFromFile(configPath: string, currentPath: string): Config {
+/**
+ * Loads a configuration from file
+ * 
+ * @param configPath the relative path to the configuration file
+ * @param currentPath the current working directory
+ */
+export function load(configPath: string, currentPath: string): Config {
     let configLocation = path.resolve(currentPath, configPath)
-    LOGGER.info("Loading configuration %s", configLocation)
-    let config = JSON.parse(fs.readFileSync(configLocation, "utf-8"))
-    config.location = configLocation
-    return config
+    let configText = fs.readFileSync(configLocation, "utf-8")
+    return parse(configText, configLocation)
 }
 
 function resolve(config: Config) {
-    if (config.apis) {
-        config.apis.map((api: API) => {
-            api.specification = path.resolve(path.dirname(config.location), api.specification)
-            if (api.added_endpoints) {
-                api.added_endpoints.map((ae: any) => {
-                    ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
-                })
-            }
-        })
-    }
+    if (config.location) {
+        if (config.apis) {
+            config.apis.map((api: API) => {
+                api.specification = path.resolve(path.dirname(config.location), api.specification)
+                if (api.added_endpoints) {
+                    api.added_endpoints.map((ae: any) => {
+                        ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
+                    })
+                }
+            })
+        }
 
-    if (config.events) {
-        config.events.map((element: Event) => {
-            element.specification = path.resolve(path.dirname(config.location), element.specification)
-        })
+        if (config.events) {
+            config.events.map((element: Event) => {
+                element.specification = path.resolve(path.dirname(config.location), element.specification)
+            })
+        }
     }
 }
 

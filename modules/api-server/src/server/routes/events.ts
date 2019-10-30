@@ -12,7 +12,7 @@ function sendEvent(req: express.Request, res: express.Response) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        event.sendEvent(req.body).then((result: any) => {
+        event.send(req.body).then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
             res.status(500).send({ error: err.message });

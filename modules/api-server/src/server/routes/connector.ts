@@ -59,7 +59,7 @@ function assureConnected() {
 async function connect(req: express.Request, res: express.Response) {
     try {
         await connection.connect(req.body.url, true, req.body.insecure)
-        LOGGER.info("Connected to %s", connection.info().domain)
+        LOGGER.info("Connected to %s", connection.info()!.domain)
         res.status(200).send(connection.info())
     } catch (error) {
         LOGGER.error("Failed to connect to kyma cluster: %s", error)
@@ -71,8 +71,8 @@ function router() {
     let connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)
-    connectionRouter.get(connection.KEY_URL, key)
-    connectionRouter.get(connection.CERT_URL, cert)
+    connectionRouter.get("/key", key)
+    connectionRouter.get("/cert", cert)
     connectionRouter.post("/", connect)
 
     return connectionRouter
