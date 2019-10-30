@@ -2,9 +2,13 @@
 'use strict'
 
 import * as config from "@varkes/configuration"
-const LOGGER = config.logger("api-server")
 import * as express from "express"
 import { connection } from "@varkes/app-connector"
+
+const LOGGER = config.logger("api-server")
+const KEY_URL = "/key"
+const CERT_URL = "/cert"
+
 
 function disconnect(req: express.Request, res: express.Response) {
     try {
@@ -21,7 +25,10 @@ function info(req: express.Request, res: express.Response) {
     if (err) {
         res.status(404).send({ error: err })
     } else {
-        res.status(200).send(connection.info())
+        let body: any = connection.info()
+        body.cert = CERT_URL
+        body.key = KEY_URL
+        res.status(200).send(body)
     }
 }
 
@@ -71,8 +78,8 @@ function router() {
     let connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)
-    connectionRouter.get("/key", key)
-    connectionRouter.get("/cert", cert)
+    connectionRouter.get(KEY_URL, key)
+    connectionRouter.get(CERT_URL, cert)
     connectionRouter.post("/", connect)
 
     return connectionRouter
