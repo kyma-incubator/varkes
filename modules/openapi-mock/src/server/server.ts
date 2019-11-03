@@ -3,6 +3,8 @@
 
 import { init } from "./app"
 import * as express from "express"
+import * as config from "@varkes/configuration"
+
 const app = express()
 var configPath: string
 
@@ -13,7 +15,8 @@ var runAsync = async () => {
     }
 
     try {
-        app.use(await init(configPath, __dirname))
+        let configuration = config.resolveFile(configPath, __dirname)
+        app.use(await init(configuration))
         app.listen(10000, function () {
             console.log("Started application on port %d", 10000)
         });

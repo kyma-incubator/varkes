@@ -1,16 +1,18 @@
 import * as express from 'express';
 import * as path from 'path';
+import * as config from "@varkes/configuration"
+
 const app = express();
 
-async function init(domain: string = null) {
+async function init(config: config.Config) {
     app.use(express.static(path.resolve(__dirname + "/cockpit")));
 
-    var config = {
-        domain: domain
+    var payload = {
+        name: config.name
     };
     app.get("/config", function (req, res) {
         res.type('json');
-        res.send(config);
+        res.send(payload);
     });
 
     return app;

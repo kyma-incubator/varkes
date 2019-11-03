@@ -12,14 +12,12 @@ const bodyParser = require('body-parser');
 const path = require("path")
 const LOGGER: any = config.logger("odata-mock")
 
-async function init(varkesConfigPath: string, currentPath = "") {
-  let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
-
+async function init(config: config.Config) {
   let promises: Promise<any>[] = [];
-  for (let i = 0; i < varkesConfig.apis.length; i++) {
-    let api = varkesConfig.apis[i]
+  for (let i = 0; i < config.apis.length; i++) {
+    let api = config.apis[i]
     if (api.type == "odata") {
-      promises.push(bootLoopback(api, varkesConfig))
+      promises.push(bootLoopback(api, config))
     }
   }
 

@@ -2,6 +2,8 @@
 'use strict'
 
 import { init } from "./app"
+import * as config from "@varkes/configuration"
+
 const app = require('express')()
 
 var runAsync = async () => {
@@ -11,7 +13,8 @@ var runAsync = async () => {
         configPath = process.argv[2]
     }
     try {
-        app.use(await init(configPath, __dirname))
+        let configuration = config.resolveFile(configPath, __dirname)
+        app.use(await init(configuration))
         app.listen(10000, function () {
             console.info("Started application on port %d", 10000)
         });

@@ -2,6 +2,7 @@
 'use strict'
 
 const odataMock = require("@varkes/odata-mock")
+const config = require("@varkes/configuration")
 const app = require('express')()
 
 async function runAsync() {
@@ -11,7 +12,7 @@ async function runAsync() {
     }
 
     try {
-        app.use(await odataMock.init("./varkes_config.json"))
+        app.use(await odataMock.init(config.resolveFile("./varkes_config.json")))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)

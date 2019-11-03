@@ -23,16 +23,14 @@ const BATCH_REGISTRATION = "/local/registration";
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 const LOGGER = config.logger("api-server")
 
-async function init(varkesConfigPath: string, currentPath = "") {
-    let varkesConfig = config.resolveFile(varkesConfigPath, currentPath)
-
+async function init(config: config.Config) {
     let app = express()
     app.use(bodyParser.json())
     app.use(cors())
     app.options('*', cors())
     app.use(expressWinston.logger(LOGGER))
     app.use(REMOTE_APIS_URL, remoteApis.router())
-    app.use(LOCAL_APIS_URL, localApis.router(varkesConfig))
+    app.use(LOCAL_APIS_URL, localApis.router(config))
     app.use(CONNECTION, connector.router())
     app.use(EVENTS_URL, events.router())
 
@@ -41,7 +39,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
     app.get("/info", function (req, res) {
 
         let info = {
-            appName: varkesConfig.name,
+            appName: config.name,
             links: {
                 logo: LOGO_URL,
                 localApis: LOCAL_APIS_URL + "/apis",
@@ -54,7 +52,7 @@ async function init(varkesConfigPath: string, currentPath = "") {
         res.status(200).send(info);
     });
     app.get(LOGO_URL, function (req, res) {
-        let img = fs.readFileSync(varkesConfig.logo || VARKES_LOGO)
+        let img = fs.readFileSync(config.logo || VARKES_LOGO)
         res.writeHead(200, { 'Content-Type': "image/svg+xml" })
         res.end(img, 'binary')
     })

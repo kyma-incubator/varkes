@@ -2,6 +2,7 @@
 'use strict'
 
 const openapiApp = require("@varkes/openapi-mock")
+const config = require("@varkes/configuration")
 const app = require('express')()
 
 let runAsync = async () => {
@@ -10,7 +11,7 @@ let runAsync = async () => {
         port = process.argv[2]
     }
     try {
-        app.use(await openapiApp.init("./varkes_config.json"))
+        app.use(await openapiApp.init(config.resolveFile("./varkes_config.json")))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)

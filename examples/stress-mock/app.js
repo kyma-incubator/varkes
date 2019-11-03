@@ -5,6 +5,7 @@ const openapiApp = require("@varkes/openapi-mock")
 const odataApp = require("@varkes/odata-mock")
 const connectorApp = require("@varkes/api-server")
 const cockpitApp = require("@varkes/cockpit");
+const {configuration} = require("@varkes/configuration")
 const app = require('express')()
 let fs = require("fs")
 
@@ -24,10 +25,11 @@ let runAsync = async () => {
     }
     fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config, null, 2))
     try {
-        app.use(await connectorApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await odataApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await openapiApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await cockpitApp.init())
+        let config = configuration.resolveFile("./generated/varkes_config.json", __dirname)
+        app.use(await connectorApp.init(config))
+        app.use(await odataApp.init(config))
+        app.use(await openapiApp.init(config))
+        app.use(await cockpitApp.init(config))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d with %d OpenAPIs, %d ODatas and %d Events", port, OPENAPI_COUNT, ODATA_COUNT, EVENT_COUNT)

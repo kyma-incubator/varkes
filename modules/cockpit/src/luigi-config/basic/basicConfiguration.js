@@ -8,8 +8,8 @@ xhttp.onreadystatechange = function () {
         hideNavigation: false,
         backdropDisabled: false,
         header: {
-          title: 'Varkes',
-          logo: (config.domain ? config.domain : '') + '/logo',
+          title: (config.name ? config.name : 'Varkes'),
+          logo: '/logo',
         }
       },
       navigation: {

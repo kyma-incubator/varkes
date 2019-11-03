@@ -2,6 +2,7 @@
 'use strict'
 
 const openapiApp = require("@varkes/openapi-mock")
+const config = require("@varkes/configuration")
 const app = require('express')()
 const uuid = require('uuid/v4')
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ let runAsync = async () => {
 
     try {
         customizeMock(app)
-        app.use(await openapiApp.init("./varkes_config.json", __dirname))
+        app.use(await openapiApp.init(config.resolveFile("./varkes_config.json", __dirname)))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
