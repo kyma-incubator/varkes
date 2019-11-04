@@ -36,7 +36,7 @@ let runAsync = async () => {
             });
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", JSON.stringify(error.stack,null,2))
+        console.error("Problem while starting application: %s", JSON.stringify(error))
     }
 }
 
