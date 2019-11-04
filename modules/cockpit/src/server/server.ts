@@ -2,12 +2,21 @@
 'use strict'
 
 import { init } from "./app"
+import * as config from "@varkes/configuration"
 import * as express from 'express';
+
 const app = express();
+var configPath: string
+
 var runAsync = async () => {
 
+    if (process.argv.length > 2) {
+        configPath = process.argv[2]
+    }
+
     try {
-        app.use(await init('http://localhost:10000'));
+        let configuration = config.resolveFile(configPath, __dirname)
+        app.use(await init(configuration))
         app.listen(3000, function () {
             console.log("Started application on port " + 3000);
         })

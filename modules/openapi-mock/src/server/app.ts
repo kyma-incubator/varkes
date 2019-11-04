@@ -11,16 +11,15 @@ import * as fs from "fs"
 const LOGGER = config.logger("openapi-mock")
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 
-async function init(varkesConfigPath: string, currentDirectory = "") {
+async function init(config: config.Config) {
   let app = express()
 
-  let varkesConfig = config.resolveFile(varkesConfigPath, currentDirectory);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }))
 
   registerLogger(app);
 
-  app.use(await mock(varkesConfig))
+  app.use(await mock(config))
   app.use("/swagger-ui", express.static(pathToSwaggerUI))
 
   customErrorResponses(app)

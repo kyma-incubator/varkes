@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-const openapiApp = require("@varkes/openapi-mock")
-const connectorApp = require("@varkes/api-server")
-const cockpitApp = require("@varkes/cockpit");
+const mock = require("@varkes/openapi-mock")
+const server = require("@varkes/api-server")
+const cockpit = require("@varkes/cockpit");
+const config = require("@varkes/configuration")
 const app = require('express')()
+
 let runAsync = async () => {
     let port
     if (process.argv.length > 2 && parseInt(process.argv[2])) {
@@ -12,16 +14,17 @@ let runAsync = async () => {
     }
 
     try {
-        app.use(await openapiApp.init("./varkes_config.json"))
-        app.use(await connectorApp.init("./varkes_config.json"))
-        app.use(await cockpitApp.init())
+        let configuration = config.resolveFile("./varkes_config.json")
+        app.use(await mock.init(configuration))
+        app.use(await server.init(configuration))
+        app.use(await cockpit.init(configuration))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
             });
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", JSON.stringify(error))
+        console.error("Problem while starting application: %s", error.stack)
     }
 }
 

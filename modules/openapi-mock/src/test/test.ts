@@ -5,10 +5,11 @@
 import * as  mock from "../server/app"
 import * as request from "supertest"
 import * as express from "express"
+import * as config from "@varkes/configuration"
 
 describe('controllers', function () {
   it('should work', function (done) {
-    mock.init('varkes_config.json', __dirname).then(function (mock: any) {
+    mock.init(config.resolveFile('varkes_config.json', __dirname)).then(function (mock: any) {
       let app = express()
       app.get('/api1/pets/:petId', (req: any, res: any, next: any) => {
         res.body = {

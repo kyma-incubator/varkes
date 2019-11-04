@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 'use strict'
 
-const openapiApp = require("@varkes/openapi-mock")
-const odataApp = require("@varkes/odata-mock")
-const connectorApp = require("@varkes/api-server")
-const cockpitApp = require("@varkes/cockpit");
+const openapiMock = require("@varkes/openapi-mock")
+const odataMock = require("@varkes/odata-mock")
+const server = require("@varkes/api-server")
+const cockpit = require("@varkes/cockpit");
+const config = require("@varkes/configuration")
 const app = require('express')()
 let fs = require("fs")
 
@@ -18,16 +19,17 @@ let runAsync = async () => {
         port = process.argv[2]
     }
 
-    let config = generateConfig()
+    let generatedConfig = generateConfig()
     if (!fs.existsSync("./generated/")) {
         fs.mkdirSync("./generated/");
     }
-    fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config, null, 2))
+    fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(generatedConfig, null, 2))
     try {
-        app.use(await connectorApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await odataApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await openapiApp.init("./generated/varkes_config.json", __dirname))
-        app.use(await cockpitApp.init())
+        let configuration = config.resolveFile("./generated/varkes_config.json", __dirname)
+        app.use(await server.init(configuration))
+        app.use(await odataMock.init(configuration))
+        app.use(await openapiMock.init(configuration))
+        app.use(await cockpit.init(configuration))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d with %d OpenAPIs, %d ODatas and %d Events", port, OPENAPI_COUNT, ODATA_COUNT, EVENT_COUNT)
@@ -39,14 +41,14 @@ let runAsync = async () => {
 }
 
 function generateConfig() {
-    let config = {
+    let configuration = {
         name: "Stress-Mock",
         apis: [],
         events: []
     }
 
     for (let i = 1; i < OPENAPI_COUNT + 1; i++) {
-        config.apis.push({
+        configuration.apis.push({
             basepath: "/api" + i + "/v1",
             name: "OpenAPI " + i,
             type: "openapi",
@@ -54,7 +56,7 @@ function generateConfig() {
         })
     }
     for (let i = 1; i < ODATA_COUNT + 1; i++) {
-        config.apis.push({
+        configuration.apis.push({
             name: "OData " + i,
             specification: "../apis/services.xml",
             basepath: "/api" + i + "/odata",
@@ -62,11 +64,11 @@ function generateConfig() {
         })
     }
     for (let i = 1; i < EVENT_COUNT + 1; i++) {
-        config.events.push({
+        configuration.events.push({
             name: "Event " + i,
             specification: "../apis/events.json"
         })
     }
-    return config
+    return configuration
 }
 module.exports = runAsync()

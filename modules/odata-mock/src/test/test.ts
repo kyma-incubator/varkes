@@ -2,12 +2,14 @@
 'use strict'
 
 import * as mock from "../server/app"
+import * as config from "@varkes/configuration"
+
 const request = require('supertest')
 const express = require('express')
 
 describe('test app', function () {
     it('should work', (done) => {
-        mock.init('varkes_config.json', __dirname).then((mock: any) => {
+        mock.init(config.resolveFile('varkes_config.json', __dirname)).then((mock: any) => {
             let app = express()
             app.use(mock)
 

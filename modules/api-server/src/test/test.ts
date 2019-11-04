@@ -6,6 +6,8 @@ import * as request from "supertest"
 import * as express from "express"
 import * as fs from "fs"
 import * as path from "path"
+import * as config from "@varkes/configuration"
+
 const kyma = require("@varkes/example-kyma-mock")
 const testAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/test-api.json"), "utf-8"))
 const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools.json"), "utf-8"))
@@ -24,7 +26,8 @@ describe("should work", () => {
         await kyma.then((app: any) => {
             kymaServer = app.listen(port)
         })
-        await mock.init("varkes_config.json", __dirname).then((mock: any) => {
+        let configuration = config.resolveFile("varkes_config.json", __dirname)
+        await mock.init(configuration).then((mock: any) => {
             server = express()
             server.use(mock)
         })

@@ -37,7 +37,7 @@ export function resolve(configText: string, location: string = ""): Config {
  * @param configPath the relative path to the configuration file
  * @param currentPath the current working directory
  */
-export function resolveFile(configPath: string, currentPath: string): Config {
+export function resolveFile(configPath: string, currentPath: string = ""): Config {
     let configLocation = path.resolve(currentPath, configPath)
     let configText = fs.readFileSync(configLocation, "utf-8")
     return resolve(configText, configLocation)
