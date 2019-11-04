@@ -5,7 +5,7 @@ const openapiMock = require("@varkes/openapi-mock")
 const odataMock = require("@varkes/odata-mock")
 const server = require("@varkes/api-server")
 const cockpit = require("@varkes/cockpit");
-const {config} = require("@varkes/configuration")
+const config = require("@varkes/configuration")
 const app = require('express')()
 let fs = require("fs")
 
@@ -19,11 +19,11 @@ let runAsync = async () => {
         port = process.argv[2]
     }
 
-    let config = generateConfig()
+    let generatedConfig = generateConfig()
     if (!fs.existsSync("./generated/")) {
         fs.mkdirSync("./generated/");
     }
-    fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(config, null, 2))
+    fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(generatedConfig, null, 2))
     try {
         let configuration = config.resolveFile("./generated/varkes_config.json", __dirname)
         app.use(await server.init(configuration))
@@ -36,19 +36,19 @@ let runAsync = async () => {
             });
         return app
     } catch (error) {
-        console.error("Problem while starting application: %s", JSON.stringify(error))
+        console.error("Problem while starting application: %s", JSON.stringify(error.stack,null,2))
     }
 }
 
 function generateConfig() {
-    let config = {
+    let configuration = {
         name: "Stress-Mock",
         apis: [],
         events: []
     }
 
     for (let i = 1; i < OPENAPI_COUNT + 1; i++) {
-        config.apis.push({
+        configuration.apis.push({
             basepath: "/api" + i + "/v1",
             name: "OpenAPI " + i,
             type: "openapi",
@@ -56,7 +56,7 @@ function generateConfig() {
         })
     }
     for (let i = 1; i < ODATA_COUNT + 1; i++) {
-        config.apis.push({
+        configuration.apis.push({
             name: "OData " + i,
             specification: "../apis/services.xml",
             basepath: "/api" + i + "/odata",
@@ -64,11 +64,11 @@ function generateConfig() {
         })
     }
     for (let i = 1; i < EVENT_COUNT + 1; i++) {
-        config.events.push({
+        configuration.events.push({
             name: "Event " + i,
             specification: "../apis/events.json"
         })
     }
-    return config
+    return configuration
 }
 module.exports = runAsync()
