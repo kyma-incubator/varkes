@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
-const odataApp = require("@varkes/odata-mock")
-const cockpitApp = require("@varkes/cockpit");
-const connectorApp = require("@varkes/api-server")
+const mock = require("@varkes/odata-mock")
+const cockpit = require("@varkes/cockpit");
+const server = require("@varkes/api-server")
 const config = require("@varkes/configuration")
 const app = require('express')()
 
@@ -15,9 +15,9 @@ let runAsync = async () => {
 
     try {
         let configuration = config.resolveFile("./varkes_config.json")
-        app.use(await odataApp.init(configuration))
-        app.use(await connectorApp.init(configuration))
-        app.use(await cockpitApp.init(configuration))
+        app.use(await mock.init(configuration))
+        app.use(await server.init(configuration))
+        app.use(await cockpit.init(configuration))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d", port)
