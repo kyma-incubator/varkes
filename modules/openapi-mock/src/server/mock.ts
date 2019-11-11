@@ -6,7 +6,7 @@ import * as yaml from "js-yaml"
 import * as fs from "fs"
 import * as config from "@varkes/configuration"
 import { SwaggerMiddleware } from "swagger-express-middleware";
-
+import * as request from "request-promise";
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 const LOGGER = config.logger("openapi-mock")
 const Converter = require("api-spec-converter")
@@ -26,7 +26,7 @@ async function mock(config: config.Config) {
                 createOauthEndpoint(api, app);
                 createConsole(api, app);
 
-                let spec = loadSpec(api)
+                let spec: any = loadSpec(api)
                 if (spec.openapi) {
                     let jsonSpec = await transformSpec(api)
 
@@ -82,7 +82,21 @@ async function mock(config: config.Config) {
 
 function loadSpec(api: config.API) {
     LOGGER.debug("Loading api '%s' from file '%s'", api.name, api.specification);
-    return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
+    if (!api.isSpecUrl) {
+        return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
+    }
+    else {
+        return new Promise((resolve, reject) => {
+            request.get({
+                uri: api.specification,
+                resolveWithFullResponse: true,
+                simple: false
+            }).then((response: any) => {
+                console.log(response.body)
+                resolve(yaml.safeLoad(response.body))
+            })
+        })
+    }
 }
 
 function writeSpec(specString: string, api: config.API, index: number) {

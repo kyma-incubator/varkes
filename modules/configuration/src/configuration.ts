@@ -13,7 +13,7 @@ const pretty_yaml = require('json-to-pretty-yaml')
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
-
+const URL_REGEX = /^((http|https):\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})*(:[0-9]{1,5})?(\/.*)?$/
 /**
  * Loads a config from a string
  * 
@@ -47,7 +47,13 @@ function resolveSpecs(config: Config) {
     if (config.location) {
         if (config.apis) {
             config.apis.map((api: API) => {
-                api.specification = path.resolve(path.dirname(config.location), api.specification)
+                if (!api.specification.match(URL_REGEX)) {
+                    api.specification = path.resolve(path.dirname(config.location), api.specification)
+                    api.isSpecUrl = false
+                }
+                else {
+                    api.isSpecUrl = true
+                }
                 if (api.added_endpoints) {
                     api.added_endpoints.map((ae: any) => {
                         ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
@@ -118,8 +124,9 @@ function validateOdata(api: API): String {
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
     }
-    if (!api.specification.match(/^.+\.xml$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
+    if (!api.specification.match(/^.+\.xml$/) &&
+        !api.specification.match(URL_REGEX)) {
+        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$' and is not a url";
     }
     if (!api.basepath) {
         errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
@@ -139,8 +146,9 @@ function validateOpenApi(api: API): String {
     if (!api.oauth.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
-    if (!api.specification.match(/^.+\.(json|yaml|yml)$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
+    if (!api.specification.match(/^.+\.(json|yaml|yml)$/) &&
+        !api.specification.match(URL_REGEX)) {
+        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$' and is not a url";
     }
     if (!api.basepath) {
         errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
