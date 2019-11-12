@@ -29,7 +29,6 @@ async function mock(config: config.Config) {
                 let spec: any = loadSpec(api)
                 if (spec.openapi) {
                     let jsonSpec = await transformSpec(api)
-
                     let specString = jsonSpec.stringify({ syntax: "yaml" })
                     writeSpec(specString, api, i)
                     spec = loadSpec(api)
@@ -82,21 +81,7 @@ async function mock(config: config.Config) {
 
 function loadSpec(api: config.API) {
     LOGGER.debug("Loading api '%s' from file '%s'", api.name, api.specification);
-    if (!api.isSpecUrl) {
-        return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
-    }
-    else {
-        return new Promise((resolve, reject) => {
-            request.get({
-                uri: api.specification,
-                resolveWithFullResponse: true,
-                simple: false
-            }).then((response: any) => {
-                console.log(response.body)
-                resolve(yaml.safeLoad(response.body))
-            })
-        })
-    }
+    return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
 }
 
 function writeSpec(specString: string, api: config.API, index: number) {

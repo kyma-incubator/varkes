@@ -14,9 +14,14 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
+        "@types/request-promise": "^4.1.44",
+        "@types/tmp": "^0.1.0",
         "check_api": "^1.2.2",
         "js-yaml": "^3.13.1",
         "json-to-pretty-yaml": "^1.2.2",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.5",
+        "tmp": "^0.1.0",
         "winston": "^3.2.1"
     },
     "devDependencies": {

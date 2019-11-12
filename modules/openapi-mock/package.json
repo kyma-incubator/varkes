@@ -17,6 +17,7 @@
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
   "dependencies": {
+    "@types/request-promise": "^4.1.44",
     "@varkes/configuration": "^0.7.0",
     "api-spec-converter": "~2.9.1",
     "body-parser": "^1.19.0",
@@ -24,6 +25,7 @@
     "js-yaml": "^3.13.1",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
+    "request-promise": "^4.2.5",
     "swagger-express-middleware": "^2.0.3",
     "swagger-ui-dist": "^3.24.0"
   },

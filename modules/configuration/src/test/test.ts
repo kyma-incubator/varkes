@@ -33,7 +33,7 @@ describe('config parser', () => {
 
 describe('config loader', () => {
     it('works with basic config', () => {
-        let config = configuration.resolveFile("varkes_config.json",__dirname)
+        let config: any = configuration.resolveFile("varkes_config.json", __dirname)
         expect(config.name).equals("test")
         expect(config.logo).equals("../../assets/logo.svg")
         expect(config.location).not.empty

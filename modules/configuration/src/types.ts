@@ -22,7 +22,6 @@ type API = {
     provider: string,
     labels: any,
     csrf: boolean,
-    isSpecUrl: boolean,
     added_endpoints: Array<{ filePath: string, url: string }>
 }
 type Config = {

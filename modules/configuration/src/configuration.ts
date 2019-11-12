@@ -9,7 +9,8 @@ import { Config, API, Event } from "./types"
 const check_api = require("check_api");
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
-
+import * as request from "request-promise";
+import * as tmp from "tmp"
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
@@ -20,14 +21,14 @@ const URL_REGEX = /^((http|https):\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,
  * @param configText the string containing the configuration as text
  * @param location optional absolute path to the config in order to resolve referenced spec files
  */
-export function resolve(configText: string, location: string = ""): Config {
+export async function resolve(configText: string, location: string = "") {
     let config = JSON.parse(configText)
     if (location) {
         config.location = location
     }
     LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
-    resolveSpecs(config)
     validate(config)
+    await resolveSpecs(config)
     return config
 }
 
@@ -37,29 +38,32 @@ export function resolve(configText: string, location: string = ""): Config {
  * @param configPath the relative path to the configuration file
  * @param currentPath the current working directory
  */
-export function resolveFile(configPath: string, currentPath: string = ""): Config {
+export async function resolveFile(configPath: string, currentPath: string = "") {
     let configLocation = path.resolve(currentPath, configPath)
     let configText = fs.readFileSync(configLocation, "utf-8")
-    return resolve(configText, configLocation)
+    return await resolve(configText, configLocation)
 }
 
-function resolveSpecs(config: Config) {
+async function resolveSpecs(config: Config) {
+    let promises: any = []
     if (config.location) {
         if (config.apis) {
-            config.apis.map((api: API) => {
+            promises = promises.concat(config.apis.map(async (api: API) => {
                 if (!api.specification.match(URL_REGEX)) {
                     api.specification = path.resolve(path.dirname(config.location), api.specification)
-                    api.isSpecUrl = false
                 }
                 else {
-                    api.isSpecUrl = true
+                    let body = await getSpecFromUrl(api.specification)
+                    var tmpobj = tmp.fileSync()
+                    fs.writeFileSync(tmpobj.name, body)
+                    api.specification = tmpobj.name
                 }
                 if (api.added_endpoints) {
                     api.added_endpoints.map((ae: any) => {
                         ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
                     })
                 }
-            })
+            }))
         }
 
         if (config.events) {
@@ -68,8 +72,19 @@ function resolveSpecs(config: Config) {
             })
         }
     }
+    return Promise.all(promises)
 }
-
+function getSpecFromUrl(url: string) {
+    return new Promise((resolve, reject) => {
+        request.get({
+            uri: url,
+            resolveWithFullResponse: true,
+            simple: false
+        }).then((response: any) => {
+            resolve(response.body)
+        })
+    })
+}
 function validate(config: Config) {
     let errors = validateBasics(config)
     errors = errors + validateEvents(config)
