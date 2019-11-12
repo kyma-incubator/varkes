@@ -13,27 +13,31 @@ describe('config parser', () => {
     })
     it('fails with invalid JSON', (done) => {
         let input = ""
-        try {
-            configuration.resolve(input)
+        configuration.resolve(input).then((result) => {
             done(new Error("should fail"))
-        } catch (error) {
-            done()
-        }
+        },
+            (err) => {
+                done()
+            })
+
     })
     it('fails with invalid image', (done) => {
         let input = JSON.stringify({ logo: "a.jpg" })
-        try {
-            configuration.resolve(input)
+        configuration.resolve(input).then((result) => {
             done(new Error("should fail"))
-        } catch (error) {
-            done()
-        }
+        },
+            (err) => {
+                done()
+            })
     })
 });
 
 describe('config loader', () => {
+    let config: any
+    before(async () => {
+        config = await configuration.resolveFile("varkes_config.json", __dirname)
+    })
     it('works with basic config', () => {
-        let config: any = configuration.resolveFile("varkes_config.json", __dirname)
         expect(config.name).equals("test")
         expect(config.logo).equals("../../assets/logo.svg")
         expect(config.location).not.empty
