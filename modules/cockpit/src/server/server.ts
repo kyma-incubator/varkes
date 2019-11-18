@@ -15,7 +15,7 @@ var runAsync = async () => {
     }
 
     try {
-        let configuration = config.resolveFile(configPath, __dirname)
+        let configuration = await config.resolveFile(configPath, __dirname)
         app.use(await init(configuration))
         app.listen(3000, function () {
             console.log("Started application on port " + 3000);

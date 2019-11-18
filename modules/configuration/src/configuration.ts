@@ -49,40 +49,69 @@ async function resolveSpecs(config: Config) {
     if (config.location) {
         if (config.apis) {
             promises = promises.concat(config.apis.map(async (api: API) => {
-                if (!api.specification.match(URL_REGEX)) {
-                    api.specification = path.resolve(path.dirname(config.location), api.specification)
+                if (stringIsAValidUrl(api.specification)) {
+                    try {
+                        api.specification = await getTmpFilePath(api.specification)
+                    }
+                    catch (err) {
+                        throw err
+                    }
                 }
                 else {
-                    let body = await getSpecFromUrl(api.specification)
-                    var tmpobj = tmp.fileSync()
-                    fs.writeFileSync(tmpobj.name, body)
-                    api.specification = tmpobj.name
+                    api.specification = path.resolve(path.dirname(config.location), api.specification)
                 }
                 if (api.added_endpoints) {
-                    api.added_endpoints.map((ae: any) => {
-                        ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
+                    api.added_endpoints.map(async (ae: any) => {
+                        if (stringIsAValidUrl(ae.filePath)) {
+                            try {
+                                ae.filePath = await getTmpFilePath(ae.filePath)
+                            }
+                            catch (err) {
+                                throw err
+                            }
+                        }
+                        else {
+                            ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
+                        }
                     })
                 }
             }))
         }
 
         if (config.events) {
-            config.events.map((element: Event) => {
-                element.specification = path.resolve(path.dirname(config.location), element.specification)
+            config.events.map(async (element: Event) => {
+                if (stringIsAValidUrl(element.specification)) {
+                    try {
+                        element.specification = await getTmpFilePath(element.specification)
+                    }
+                    catch (err) {
+                        throw err
+                    }
+                }
+                else {
+                    element.specification = path.resolve(path.dirname(config.location), element.specification)
+                }
             })
         }
     }
     return Promise.all(promises)
 }
+async function getTmpFilePath(url: string) {
+    try {
+        let response = await getSpecFromUrl(url)
+        var tmpobj = tmp.fileSync()
+        fs.writeFileSync(tmpobj.name, response.body)
+        return tmpobj.name
+    }
+    catch (err) {
+        throw new Error("the url '" + url + "' is not reachable")
+    }
+}
 function getSpecFromUrl(url: string) {
-    return new Promise((resolve, reject) => {
-        request.get({
-            uri: url,
-            resolveWithFullResponse: true,
-            simple: false
-        }).then((response: any) => {
-            resolve(response.body)
-        })
+    return request.get({
+        uri: url,
+        resolveWithFullResponse: true,
+        simple: false
     })
 }
 function validate(config: Config) {

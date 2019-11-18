@@ -26,7 +26,7 @@ describe("should work", () => {
         await kyma.then((app: any) => {
             kymaServer = app.listen(port)
         })
-        let configuration = config.resolveFile("varkes_config.json", __dirname)
+        let configuration = await config.resolveFile("varkes_config.json", __dirname)
         await mock.init(configuration).then((mock: any) => {
             server = express()
             server.use(mock)

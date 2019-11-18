@@ -25,7 +25,7 @@ let runAsync = async () => {
     }
     fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(generatedConfig, null, 2))
     try {
-        let configuration = config.resolveFile("./generated/varkes_config.json", __dirname)
+        let configuration = await config.resolveFile("./generated/varkes_config.json", __dirname)
         app.use(await server.init(configuration))
         app.use(await odataMock.init(configuration))
         app.use(await openapiMock.init(configuration))

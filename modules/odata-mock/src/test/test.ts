@@ -6,10 +6,13 @@ import * as config from "@varkes/configuration"
 
 const request = require('supertest')
 const express = require('express')
-
+let configuration: config.Config;
 describe('test app', function () {
+    before(async () => {
+        configuration = await config.resolveFile('varkes_config.json', __dirname)
+    })
     it('should work', (done) => {
-        mock.init(config.resolveFile('varkes_config.json', __dirname)).then((mock: any) => {
+        mock.init(configuration).then((mock: any) => {
             let app = express()
             app.use(mock)
 
