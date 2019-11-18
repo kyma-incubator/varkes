@@ -5,7 +5,7 @@ import path = require("path");
 import fs = require("fs");
 import * as logger from "./logger"
 import { Config, API, Event } from "./types"
-
+const URL = require("url").URL;
 const check_api = require("check_api");
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
@@ -21,7 +21,7 @@ const URL_REGEX = /^((http|https):\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,
  * @param configText the string containing the configuration as text
  * @param location optional absolute path to the config in order to resolve referenced spec files
  */
-export async function resolve(configText: string, location: string = "") {
+export async function resolve(configText: string, location: string = ""): Promise<Config> {
     let config = JSON.parse(configText)
     if (location) {
         config.location = location
@@ -38,10 +38,10 @@ export async function resolve(configText: string, location: string = "") {
  * @param configPath the relative path to the configuration file
  * @param currentPath the current working directory
  */
-export async function resolveFile(configPath: string, currentPath: string = "") {
+export function resolveFile(configPath: string, currentPath: string = ""): Promise<Config> {
     let configLocation = path.resolve(currentPath, configPath)
     let configText = fs.readFileSync(configLocation, "utf-8")
-    return await resolve(configText, configLocation)
+    return resolve(configText, configLocation)
 }
 
 async function resolveSpecs(config: Config) {
@@ -140,7 +140,7 @@ function validateOdata(api: API): String {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
     }
     if (!api.specification.match(/^.+\.xml$/) &&
-        !api.specification.match(URL_REGEX)) {
+        !stringIsAValidUrl(api.specification)) {
         errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$' and is not a url";
     }
     if (!api.basepath) {
@@ -162,7 +162,7 @@ function validateOpenApi(api: API): String {
         errors += "\napi '" + api.name + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
     if (!api.specification.match(/^.+\.(json|yaml|yml)$/) &&
-        !api.specification.match(URL_REGEX)) {
+        !stringIsAValidUrl(api.specification)) {
         errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$' and is not a url";
     }
     if (!api.basepath) {
@@ -205,3 +205,11 @@ function validateEvents(config: Config) {
 
     return errors
 }
+const stringIsAValidUrl = (s: string) => {
+    try {
+        new URL(s);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};

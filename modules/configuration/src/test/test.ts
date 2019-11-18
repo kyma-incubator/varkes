@@ -1,6 +1,7 @@
 import * as configuration from '../index';
 import * as chai from 'chai';
 import { fail, doesNotReject } from 'assert';
+import { Config } from '../types';
 
 chai.use(require('chai-match'));
 const expect = chai.expect;
@@ -33,7 +34,7 @@ describe('config parser', () => {
 });
 
 describe('config loader', () => {
-    let config: any
+    let config: Config
     before(async () => {
         config = await configuration.resolveFile("varkes_config.json", __dirname)
     })

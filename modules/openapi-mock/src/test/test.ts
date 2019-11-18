@@ -6,13 +6,13 @@ import * as  mock from "../server/app"
 import * as request from "supertest"
 import * as express from "express"
 import * as config from "@varkes/configuration"
-let resolvePath: any;
+let configuration: config.Config;
 describe('controllers', function () {
   before(async () => {
-    resolvePath = await config.resolveFile('varkes_config.json', __dirname)
+    configuration = await config.resolveFile('varkes_config.json', __dirname)
   })
   it('should work', function (done) {
-    mock.init(resolvePath).then(function (mock: any) {
+    mock.init(configuration).then(function (mock: any) {
       let app = express()
       app.get('/api1/pets/:petId', (req: any, res: any, next: any) => {
         res.body = {
