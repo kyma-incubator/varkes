@@ -6,7 +6,6 @@ import * as yaml from "js-yaml"
 import * as fs from "fs"
 import * as config from "@varkes/configuration"
 import { SwaggerMiddleware } from "swagger-express-middleware";
-import * as request from "request-promise";
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 const LOGGER = config.logger("openapi-mock")
 const Converter = require("api-spec-converter")
