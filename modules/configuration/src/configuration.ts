@@ -27,8 +27,8 @@ export async function resolve(configText: string, location: string = ""): Promis
         config.location = location
     }
     LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
-    validate(config)
     await resolveSpecs(config)
+    validate(config)
     return config
 }
 
@@ -61,7 +61,7 @@ async function resolveSpecs(config: Config) {
                     api.specification = path.resolve(path.dirname(config.location), api.specification)
                 }
                 if (api.added_endpoints) {
-                    api.added_endpoints.map(async (ae: any) => {
+                    promises = promises.concat(api.added_endpoints.map(async (ae: any) => {
                         if (stringIsAValidUrl(ae.filePath)) {
                             try {
                                 ae.filePath = await getTmpFilePath(ae.filePath)
@@ -73,13 +73,13 @@ async function resolveSpecs(config: Config) {
                         else {
                             ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
                         }
-                    })
+                    }))
                 }
             }))
         }
 
         if (config.events) {
-            config.events.map(async (element: Event) => {
+            promises = promises.concat(config.events.map(async (element: Event) => {
                 if (stringIsAValidUrl(element.specification)) {
                     try {
                         element.specification = await getTmpFilePath(element.specification)
@@ -91,7 +91,7 @@ async function resolveSpecs(config: Config) {
                 else {
                     element.specification = path.resolve(path.dirname(config.location), element.specification)
                 }
-            })
+            }))
         }
     }
     return Promise.all(promises)
@@ -99,9 +99,17 @@ async function resolveSpecs(config: Config) {
 async function getTmpFilePath(url: string) {
     try {
         let response = await getSpecFromUrl(url)
+        let content = response.body
         var tmpobj = tmp.fileSync()
-        fs.writeFileSync(tmpobj.name, response.body)
-        return tmpobj.name
+        let filePath: string
+        if (IsJsonString(content)) {
+            filePath = tmpobj.name + ".json"
+        }
+        else {
+            filePath = tmpobj.name + ".yaml"
+        }
+        fs.writeFileSync(filePath, response.body)
+        return filePath
     }
     catch (err) {
         throw new Error("the url '" + url + "' is not reachable")
@@ -168,8 +176,7 @@ function validateOdata(api: API): String {
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
     }
-    if (!api.specification.match(/^.+\.xml$/) &&
-        !stringIsAValidUrl(api.specification)) {
+    if (!api.specification.match(/^.+\.xml$/)) {
         errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$' and is not a url";
     }
     if (!api.basepath) {
@@ -190,8 +197,7 @@ function validateOpenApi(api: API): String {
     if (!api.oauth.match(/^\/[/\\\w]+$/)) {
         errors += "\napi '" + api.name + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
-    if (!api.specification.match(/^.+\.(json|yaml|yml)$/) &&
-        !stringIsAValidUrl(api.specification)) {
+    if (!api.specification.match(/^.+\.(json|yaml|yml)$/)) {
         errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$' and is not a url";
     }
     if (!api.basepath) {
@@ -234,11 +240,20 @@ function validateEvents(config: Config) {
 
     return errors
 }
-const stringIsAValidUrl = (s: string) => {
+function stringIsAValidUrl(str: string) {
     try {
-        new URL(s);
+        new URL(str);
         return true;
     } catch (err) {
         return false;
     }
-};
+}
+
+function IsJsonString(str: string) {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
