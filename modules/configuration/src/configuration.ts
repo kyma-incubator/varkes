@@ -14,7 +14,6 @@ import * as tmp from "tmp"
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
-const URL_REGEX = /^((http|https):\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})*(:[0-9]{1,5})?(\/.*)?$/
 /**
  * Loads a config from a string
  * 
