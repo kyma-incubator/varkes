@@ -176,7 +176,7 @@ function validateOdata(api: API): String {
         errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
     }
     if (!api.specification.match(/^.+\.xml$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$' and is not a url";
+        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
     }
     if (!api.basepath) {
         errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
@@ -197,7 +197,7 @@ function validateOpenApi(api: API): String {
         errors += "\napi '" + api.name + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
     if (!api.specification.match(/^.+\.(json|yaml|yml)$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$' and is not a url";
+        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
     }
     if (!api.basepath) {
         errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
