@@ -10,18 +10,22 @@ function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all Local APIs")
     let apis = []
     let configApis = varkesConfig.apis;
-    for (let i = 0; i < configApis.length; i++) {
-        let api = configApis[i]
-        let metadata: any = services.fillServiceMetadata(api, getOrigin(req))
-        metadata.id = api.name
-        apis.push(metadata)
+    if(configApis){
+        for (let i = 0; i < configApis.length; i++) {
+            let api = configApis[i]
+            let metadata: any = services.fillServiceMetadata(api, getOrigin(req))
+            metadata.id = api.name
+            apis.push(metadata)
+        }
     }
     let configEvents = varkesConfig.events;
-    for (let i = 0; i < configEvents.length; i++) {
-        let event = configEvents[i];
-        let metadata: any = services.fillEventData(event)
-        metadata.id = event.name;
-        apis.push(metadata);
+    if(configEvents){
+        for (let i = 0; i < configEvents.length; i++) {
+            let event = configEvents[i];
+            let metadata: any = services.fillEventData(event)
+            metadata.id = event.name;
+            apis.push(metadata);
+        }
     }
     res.status(200).send(apis);
 }

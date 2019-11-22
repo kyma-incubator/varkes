@@ -43,4 +43,16 @@ describe('config loader', () => {
         expect(config.logo).equals("../../assets/logo.svg")
         expect(config.location).not.empty
     })
+    it('works with API JSON URL', ()=> {
+        expect(config.apis[0].name).equals("test1")
+        expect(config.apis[0].specification).match(new RegExp("/generated/.*\.json"))
+    })
+    it('works with API JSON file', ()=> {
+        expect(config.apis[1].name).equals("test2")
+        expect(config.apis[1].specification).match(new RegExp(".*\.json"))
+    })
+    it('works with Events Yaml file', ()=> {
+        expect(config.events[0].name).equals("test3")
+        expect(config.events[0].specification).match(new RegExp("/generated/.*\.yaml"))
+    })
 });

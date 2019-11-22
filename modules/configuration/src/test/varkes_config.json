@@ -1,4 +1,22 @@
 {
     "name": "test",
-    "logo": "../../assets/logo.svg"
+    "logo": "../../assets/logo.svg",
+    "apis":[
+        {
+            "basepath": "/test1",
+            "name":"test1",
+            "specification":"https://raw.githubusercontent.com/kyma-incubator/varkes/master/modules/api-server/src/test/schools.json"
+        },
+        {
+            "basepath": "/test2",
+            "name":"test2",
+            "specification":"schools.json"
+        }
+    ],
+    "events":[
+        {
+            "specification": "https://raw.githubusercontent.com/kyma-incubator/varkes/master/modules/api-server/src/test/events2.yaml",
+            "name": "test3"
+        }
+    ]
 }

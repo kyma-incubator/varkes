@@ -6,7 +6,7 @@ import fs = require("fs");
 import * as logger from "./logger"
 import { Config, API, Event } from "./types"
 import * as request from "request-promise";
-import * as tmp from "tmp"
+import { uuid } from 'uuidv4';
 
 const URL = require("url").URL;
 const check_api = require("check_api");
@@ -73,28 +73,27 @@ function resolveSpecsOfElement(config: Config, element: Event | API): Promise<vo
 }
 
 function downloadSpec(api: API | Event): Promise<string> {
+    LOGGER.debug(`Downloading for API ${api.name} spec from ${api.specification}`)
     return request.get({
         uri: api.specification,
         resolveWithFullResponse: true,
         simple: false
     }).then(function (response) {
         if (response.statusCode >= 300) {
-            throw new Error(`Cannot download specification for API ${api.name} with URL ${api.specification}: Got a ${response.statusCode} with message ${response.body}`)
+            throw new Error(`Cannot download specification of API ${api.name} with URL ${api.specification}: Got a ${response.statusCode} with message ${response.body}`)
         }
-        let contentType = response.headers["content-type"]
-        if (!contentType) {
-            throw new Error(`Cannot determine content-type for specification for API ${api.name} with URL ${api.specification}`)
-        }
-        let fileType;
-        if (contentType == "application/json") {
+        let fileType
+        if (api.specification.endsWith("json")) {
             fileType = ".json"
-        } else if (contentType == "application/xml" || contentType == "text/xml") {
-            fileType = ".xml"
-        } else if (contentType == "text/vnd.yaml" || contentType == "text/yaml" || contentType == "text/x-yaml" || contentType == "application/x-yaml") {
+        } else if (api.specification.endsWith("yaml") || api.specification.endsWith("yml")) {
             fileType = ".yaml"
+        } else if (api.specification.endsWith("xml")) {
+            fileType = ".xml"
+        } else {
+            throw new Error(`Cannot determine file extension for specification of API ${api.name} with URL ${api.specification}`)
         }
 
-        let fileName = DIR_NAME + tmp.fileSync() + fileType;
+        let fileName = DIR_NAME + uuid() + fileType;
         LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, fileName, response.body.length);
         if (!fs.existsSync(DIR_NAME)) {
             fs.mkdirSync(DIR_NAME);
