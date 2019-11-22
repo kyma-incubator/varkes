@@ -21,8 +21,7 @@ type API = {
     registerSpec: boolean,
     provider: string,
     labels: any,
-    csrf: boolean,
-    added_endpoints: Array<{ filePath: string, url: string }>
+    csrf: boolean
 }
 type Config = {
     name: string,

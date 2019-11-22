@@ -38,7 +38,6 @@ async function mock(config: config.Config) {
                 await validateSpec(api, 'swagger_2')
 
                 createMetadataEndpoint(spec, api, app);
-                createEndpoints(spec, api);
 
                 writeSpec(pretty_yaml.stringify(spec), api, i)
 
@@ -96,18 +95,6 @@ function writeSpec(specString: string, api: config.API, index: number) {
     api.specification = file_name;
 }
 
-function createEndpoints(spec: any, api: config.API) {
-    if (api.added_endpoints) {
-        LOGGER.debug("Adding new Endpoints for api '%s'", api.name);
-        api.added_endpoints.forEach((point: any) => {
-            let endpoint = yaml.safeLoad(fs.readFileSync(point.filePath, 'utf8'));
-            if (!spec["paths"].hasOwnProperty(point.url)) {
-                LOGGER.debug("Adding custom endpoint '%s' to '%s'", point.url, api.name)
-                spec["paths"][point.url] = endpoint;
-            }
-        });
-    }
-}
 function createOauthEndpoint(api: config.API, app: express.Application) {
     LOGGER.debug("Adding oauth endpoint '%s%s'", api.basepath, api.oauth)
     app.post(api.basepath + api.oauth, function (req, res) {

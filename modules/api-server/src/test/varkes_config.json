@@ -29,12 +29,6 @@
             "name": "schools",
             "provider": "schoolProvider",
             "registerSpec": true,
-            "added_endpoints": [
-                {
-                    "filePath": "Endpoint_template.yaml",
-                    "url": "/trial_endpoint"
-                }
-            ],
             "labels": {
                 "label1": "value1"
             }

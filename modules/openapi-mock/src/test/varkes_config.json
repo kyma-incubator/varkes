@@ -31,13 +31,7 @@
             "name": "courses",
             "specification": "courses.yaml",
             "auth": "none",
-            "oauth": "/myoauth/token",
-            "added_endpoints": [
-                {
-                    "filePath": "Endpoint_template.yaml",
-                    "url": "/trial_endpoint"
-                }
-            ]
+            "oauth": "/myoauth/token"
         }
     ]
 }

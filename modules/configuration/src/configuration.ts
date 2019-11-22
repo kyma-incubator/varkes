@@ -59,21 +59,6 @@ async function resolveSpecs(config: Config) {
                 else {
                     api.specification = path.resolve(path.dirname(config.location), api.specification)
                 }
-                if (api.added_endpoints) {
-                    promises = promises.concat(api.added_endpoints.map(async (ae: any) => {
-                        if (stringIsAValidUrl(ae.filePath)) {
-                            try {
-                                ae.filePath = await getTmpFilePath(ae.filePath)
-                            }
-                            catch (err) {
-                                throw err
-                            }
-                        }
-                        else {
-                            ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
-                        }
-                    }))
-                }
             }))
         }
 
