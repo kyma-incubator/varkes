@@ -6,7 +6,6 @@ import * as yaml from "js-yaml"
 import * as fs from "fs"
 import * as config from "@varkes/configuration"
 import { SwaggerMiddleware } from "swagger-express-middleware";
-
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 const LOGGER = config.logger("openapi-mock")
 const Converter = require("api-spec-converter")
@@ -26,10 +25,9 @@ async function mock(config: config.Config) {
                 createOauthEndpoint(api, app);
                 createConsole(api, app);
 
-                let spec = loadSpec(api)
+                let spec: any = loadSpec(api)
                 if (spec.openapi) {
                     let jsonSpec = await transformSpec(api)
-
                     let specString = jsonSpec.stringify({ syntax: "yaml" })
                     writeSpec(specString, api, i)
                     spec = loadSpec(api)

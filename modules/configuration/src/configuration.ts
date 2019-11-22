@@ -5,28 +5,28 @@ import path = require("path");
 import fs = require("fs");
 import * as logger from "./logger"
 import { Config, API, Event } from "./types"
-
+const URL = require("url").URL;
 const check_api = require("check_api");
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
-
+import * as request from "request-promise";
+import * as tmp from "tmp"
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
-
 /**
  * Loads a config from a string
  * 
  * @param configText the string containing the configuration as text
  * @param location optional absolute path to the config in order to resolve referenced spec files
  */
-export function resolve(configText: string, location: string = ""): Config {
+export async function resolve(configText: string, location: string = ""): Promise<Config> {
     let config = JSON.parse(configText)
     if (location) {
         config.location = location
     }
     LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
-    resolveSpecs(config)
+    await resolveSpecs(config)
     validate(config)
     return config
 }
@@ -37,33 +37,90 @@ export function resolve(configText: string, location: string = ""): Config {
  * @param configPath the relative path to the configuration file
  * @param currentPath the current working directory
  */
-export function resolveFile(configPath: string, currentPath: string = ""): Config {
+export function resolveFile(configPath: string, currentPath: string = ""): Promise<Config> {
     let configLocation = path.resolve(currentPath, configPath)
     let configText = fs.readFileSync(configLocation, "utf-8")
     return resolve(configText, configLocation)
 }
 
-function resolveSpecs(config: Config) {
+async function resolveSpecs(config: Config) {
+    let promises: any = []
     if (config.location) {
         if (config.apis) {
-            config.apis.map((api: API) => {
-                api.specification = path.resolve(path.dirname(config.location), api.specification)
-                if (api.added_endpoints) {
-                    api.added_endpoints.map((ae: any) => {
-                        ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
-                    })
+            promises = promises.concat(config.apis.map(async (api: API) => {
+                if (stringIsAValidUrl(api.specification)) {
+                    try {
+                        api.specification = await getTmpFilePath(api.specification)
+                    }
+                    catch (err) {
+                        throw err
+                    }
                 }
-            })
+                else {
+                    api.specification = path.resolve(path.dirname(config.location), api.specification)
+                }
+                if (api.added_endpoints) {
+                    promises = promises.concat(api.added_endpoints.map(async (ae: any) => {
+                        if (stringIsAValidUrl(ae.filePath)) {
+                            try {
+                                ae.filePath = await getTmpFilePath(ae.filePath)
+                            }
+                            catch (err) {
+                                throw err
+                            }
+                        }
+                        else {
+                            ae.filePath = path.resolve(path.dirname(config.location), ae.filePath)
+                        }
+                    }))
+                }
+            }))
         }
 
         if (config.events) {
-            config.events.map((element: Event) => {
-                element.specification = path.resolve(path.dirname(config.location), element.specification)
-            })
+            promises = promises.concat(config.events.map(async (element: Event) => {
+                if (stringIsAValidUrl(element.specification)) {
+                    try {
+                        element.specification = await getTmpFilePath(element.specification)
+                    }
+                    catch (err) {
+                        throw err
+                    }
+                }
+                else {
+                    element.specification = path.resolve(path.dirname(config.location), element.specification)
+                }
+            }))
         }
     }
+    return Promise.all(promises)
 }
-
+async function getTmpFilePath(url: string) {
+    try {
+        let response = await getSpecFromUrl(url)
+        let content = response.body
+        var tmpobj = tmp.fileSync()
+        let filePath: string
+        if (IsJsonString(content)) {
+            filePath = tmpobj.name + ".json"
+        }
+        else {
+            filePath = tmpobj.name + ".yaml"
+        }
+        fs.writeFileSync(filePath, response.body)
+        return filePath
+    }
+    catch (err) {
+        throw new Error("the url '" + url + "' is not reachable")
+    }
+}
+function getSpecFromUrl(url: string) {
+    return request.get({
+        uri: url,
+        resolveWithFullResponse: true,
+        simple: false
+    })
+}
 function validate(config: Config) {
     let errors = validateBasics(config)
     errors = errors + validateEvents(config)
@@ -181,4 +238,21 @@ function validateEvents(config: Config) {
     }
 
     return errors
+}
+function stringIsAValidUrl(str: string) {
+    try {
+        new URL(str);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+function IsJsonString(str: string) {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
