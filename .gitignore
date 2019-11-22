@@ -9,3 +9,6 @@ generated
 dist
 data
 luigiconfig.js
+examples/commerce-mock
+examples/marketing-mock
+*.Dockerfile
