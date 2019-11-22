@@ -5,15 +5,18 @@ import path = require("path");
 import fs = require("fs");
 import * as logger from "./logger"
 import { Config, API, Event } from "./types"
+import * as request from "request-promise";
+import * as tmp from "tmp"
+
 const URL = require("url").URL;
 const check_api = require("check_api");
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
-import * as request from "request-promise";
-import * as tmp from "tmp"
 const OAUTH = "/authorizationserver/oauth/token";
 const METADATA = "/metadata";
 const LOGGER = logger.logger("configuration")
+const DIR_NAME = "./generated/";
+
 /**
  * Loads a config from a string
  * 
@@ -43,69 +46,65 @@ export function resolveFile(configPath: string, currentPath: string = ""): Promi
     return resolve(configText, configLocation)
 }
 
-async function resolveSpecs(config: Config) {
-    let promises: any = []
+async function resolveSpecs(config: Config): Promise<any> {
+    let promises: Promise<void>[] = []
     if (config.location) {
         if (config.apis) {
-            promises = promises.concat(config.apis.map(async (api: API) => {
-                if (stringIsAValidUrl(api.specification)) {
-                    try {
-                        api.specification = await getTmpFilePath(api.specification)
-                    }
-                    catch (err) {
-                        throw err
-                    }
-                }
-                else {
-                    api.specification = path.resolve(path.dirname(config.location), api.specification)
-                }
-            }))
+            promises = promises.concat(config.apis.map((element: API) => resolveSpecsOfElement(config, element)))
         }
 
         if (config.events) {
-            promises = promises.concat(config.events.map(async (element: Event) => {
-                if (stringIsAValidUrl(element.specification)) {
-                    try {
-                        element.specification = await getTmpFilePath(element.specification)
-                    }
-                    catch (err) {
-                        throw err
-                    }
-                }
-                else {
-                    element.specification = path.resolve(path.dirname(config.location), element.specification)
-                }
-            }))
+            promises = promises.concat(config.events.map((element: Event) => resolveSpecsOfElement(config, element)))
         }
     }
     return Promise.all(promises)
 }
-async function getTmpFilePath(url: string) {
-    try {
-        let response = await getSpecFromUrl(url)
-        let content = response.body
-        var tmpobj = tmp.fileSync()
-        let filePath: string
-        if (IsJsonString(content)) {
-            filePath = tmpobj.name + ".json"
-        }
-        else {
-            filePath = tmpobj.name + ".yaml"
-        }
-        fs.writeFileSync(filePath, response.body)
-        return filePath
+
+function resolveSpecsOfElement(config: Config, element: Event | API): Promise<void> {
+    if (isValidUrl(element.specification)) {
+        return downloadSpec(element).then((fileName: string) => {
+            element.specification = fileName
+        })
     }
-    catch (err) {
-        throw new Error("the url '" + url + "' is not reachable")
+    else {
+        element.specification = path.resolve(path.dirname(config.location), element.specification)
+        return Promise.resolve()
     }
 }
-function getSpecFromUrl(url: string) {
+
+function downloadSpec(api: API | Event): Promise<string> {
     return request.get({
-        uri: url,
+        uri: api.specification,
         resolveWithFullResponse: true,
         simple: false
+    }).then(function (response) {
+        if (response.statusCode >= 300) {
+            throw new Error(`Cannot download specification for API ${api.name} with URL ${api.specification}: Got a ${response.statusCode} with message ${response.body}`)
+        }
+        let contentType = response.headers["content-type"]
+        if (!contentType) {
+            throw new Error(`Cannot determine content-type for specification for API ${api.name} with URL ${api.specification}`)
+        }
+        let fileType;
+        if (contentType == "application/json") {
+            fileType = ".json"
+        } else if (contentType == "application/xml" || contentType == "text/xml") {
+            fileType = ".xml"
+        } else if (contentType == "text/vnd.yaml" || contentType == "text/yaml" || contentType == "text/x-yaml" || contentType == "application/x-yaml") {
+            fileType = ".yaml"
+        }
+
+        let fileName = DIR_NAME + tmp.fileSync() + fileType;
+        LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, fileName, response.body.length);
+        if (!fs.existsSync(DIR_NAME)) {
+            fs.mkdirSync(DIR_NAME);
+        }
+
+        fs.writeFileSync(fileName, response.body);
+        return fileName
     })
 }
+
 function validate(config: Config) {
     let errors = validateBasics(config)
     errors = errors + validateEvents(config)
@@ -224,20 +223,11 @@ function validateEvents(config: Config) {
 
     return errors
 }
-function stringIsAValidUrl(str: string) {
+function isValidUrl(str: string) {
     try {
         new URL(str);
         return true;
     } catch (err) {
-        return false;
-    }
-}
-
-function IsJsonString(str: string) {
-    try {
-        JSON.parse(str);
-        return true;
-    } catch (e) {
         return false;
     }
 }
