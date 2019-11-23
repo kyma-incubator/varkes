@@ -17,6 +17,7 @@ function getAll(req: express.Request, res: express.Response) {
         api.findAll().then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
+            LOGGER.error("Failed to get all apis: %s", err)
             res.status(500).send({ error: err.message })
         })
     }
@@ -39,6 +40,7 @@ function get(req: express.Request, res: express.Response) {
                 dereferenceApi(body).then((result) => {
                     res.status(200).type("json").send(result)
                 }, (err) => {
+                    LOGGER.error("Failed to dereference the events spec: %s", err)
                     res.status(500).send({ error: err.message })
                 })
             }
@@ -46,6 +48,7 @@ function get(req: express.Request, res: express.Response) {
                 res.status(200).type("json").send(body)
             }
         }, (err: any) => {
+            LOGGER.error("Failed to get api '%s': %s", req.params.api, err)
             res.status(500).send({ error: err.message });
         })
     }
@@ -64,6 +67,7 @@ function update(req: express.Request, res: express.Response) {
                 res.status(200).send(result);
             }
         }, (err: any) => {
+            LOGGER.error("Failed to update api '%s': %s", req.params.api, err)
             res.status(500).send({ error: err.message });
         })
     }
@@ -82,6 +86,7 @@ function deleteApi(req: express.Request, res: express.Response) {
                 res.status(200).send(result);
             }
         }, (err: any) => {
+            LOGGER.error("Failed to delete api '%s': %s", req.params.api, err)
             res.status(500).send({ error: err.message });
         });
     }
@@ -95,6 +100,7 @@ function create(req: express.Request, res: express.Response) {
         api.create(req.body).then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
+            LOGGER.error("Failed to create api '%s': %s", req.body.name, err)
             res.status(500).send({ error: err.message });
         });
     }

@@ -32,7 +32,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
 
         addContextUpdateListener((context) => {
             let goBackContext = context.goBackContext;
-            if (goBackContext && goBackContext.id) {
+            if (goBackContext && goBackContext.id && this.apis) {
                 let index = -1;
                 let api = this.apis.find((x: any, i: any) => {
                     if (x.id == goBackContext.id) {

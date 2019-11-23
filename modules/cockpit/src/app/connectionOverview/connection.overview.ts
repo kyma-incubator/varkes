@@ -95,14 +95,14 @@ export class ConnectionOverviewComponent implements OnInit {
 
     }
 
-    public oninsecureConnection(target) {
+    public onInsecureConnection(target) {
         this.insecureConnection = target;
     }
     public downloadKey() {
-        window.location.href = this.baseUrl + this.info.links.connection + this.connection.key;
+        window.location.href = this.baseUrl + this.info.links.connection + "/key";
     }
     public downloadCert() {
-        window.location.href = this.baseUrl + this.info.links.connection + this.connection.cert;
+        window.location.href = this.baseUrl + this.info.links.connection + "/cert";
     }
     public closeAlert() {
         this.alert = false;

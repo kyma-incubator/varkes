@@ -15,6 +15,7 @@ function sendEvent(req: express.Request, res: express.Response) {
         event.send(req.body).then((result: any) => {
             res.status(200).send(result);
         }, (err: any) => {
+            LOGGER.error("Failed to send event: %s", err)
             res.status(500).send({ error: err.message });
         })
     }
