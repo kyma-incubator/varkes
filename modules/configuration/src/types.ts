@@ -5,7 +5,7 @@ type Event = {
     specification: string,
     name: string,
     description: string,
-    labels: {}
+    labels: any
 }
 type API = {
     basepath: string,
