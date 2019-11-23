@@ -51,8 +51,12 @@ describe('config loader', () => {
         expect(config.apis[1].name).equals("test2")
         expect(config.apis[1].specification).match(new RegExp(".*\.json"))
     })
-    it('works with Events Yaml file', ()=> {
+    it('works with Events Yaml URL', ()=> {
         expect(config.events[0].name).equals("test3")
         expect(config.events[0].specification).match(new RegExp("/generated/.*\.yaml"))
+    })
+    it('works with Events JSON file', ()=> {
+        expect(config.events[1].name).equals("test4")
+        expect(config.events[1].specification).match(new RegExp(".*\.json"))
     })
 });

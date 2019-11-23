@@ -17,6 +17,10 @@
         {
             "specification": "https://raw.githubusercontent.com/kyma-incubator/varkes/master/modules/api-server/src/test/events2.yaml",
             "name": "test3"
+        },
+        {
+            "specification": "events1.json",
+            "name": "test4"
         }
     ]
 }
