@@ -6,14 +6,12 @@ import * as express from "express"
 import { connection } from "@varkes/app-connector"
 
 const LOGGER = config.logger("api-server")
-const KEY_URL = "/key"
-const CERT_URL = "/cert"
-
 
 function disconnect(req: express.Request, res: express.Response) {
     try {
         connection.destroy()
     } catch (error) {
+        LOGGER.error("Failed to disconnect from kyma cluster: %s", error)
         res.status(500).send({ error: "There was an internal error while resetting the connection" })
         return
     }
@@ -25,10 +23,7 @@ function info(req: express.Request, res: express.Response) {
     if (err) {
         res.status(404).send({ error: err })
     } else {
-        let body: any = connection.info()
-        body.cert = CERT_URL
-        body.key = KEY_URL
-        res.status(200).send(body)
+        res.status(200).send(connection.info())
     }
 }
 
@@ -78,8 +73,8 @@ function router() {
     let connectionRouter = express.Router()
     connectionRouter.get("/", info)
     connectionRouter.delete("/", disconnect)
-    connectionRouter.get(KEY_URL, key)
-    connectionRouter.get(CERT_URL, cert)
+    connectionRouter.get("/key", key)
+    connectionRouter.get("/cert", cert)
     connectionRouter.post("/", connect)
 
     return connectionRouter

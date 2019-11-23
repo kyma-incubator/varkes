@@ -74,7 +74,7 @@ async function registerAll(req: express.Request, res: express.Response) {
         res.status(200).send(connection.info())
     }
     catch (error) {
-        LOGGER.error("Failed to register all APIs: %s")
+        LOGGER.error("Failed to register all Local APIs: %s", error)
         res.status(500).send({ error: error.message })
     }
 }
@@ -89,6 +89,7 @@ async function register(req: express.Request, res: express.Response) {
 
     let err = assureConnected()
     if (err) {
+        LOGGER.error("Failed to register all APIs: %s")
         res.status(400).send({ error: err })
     } else {
         let apiName = req.params.apiname;
@@ -124,6 +125,7 @@ async function register(req: express.Request, res: express.Response) {
                 res.status(200).send(result);
             }
         } catch (error) {
+            LOGGER.error("Failed to register API '%s' with error: %s", req.params.apiname, error)
             res.status(500).send({ error: error.message });
         }
     }

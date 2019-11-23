@@ -173,8 +173,10 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         let specInJson
         if (api.specification.endsWith(".json")) {
             specInJson = JSON.parse(fs.readFileSync(api.specification, 'utf8'))
-        } else {
+        } else if (api.specification.endsWith(".yaml") || api.specification.endsWith(".yml")) {
             specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
+        } else {
+            specInJson = fs.readFileSync(api.specification, 'utf8')
         }
 
         if (api.registerSpec != false) {
@@ -188,6 +190,7 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
                 api.description = specInJson.info.title
         }
     }
+
     let labels = api.labels ? api.labels : {};
     labels["type"] = api.type == "odata" ? "OData" : "OpenAPI"
     if (api.type == "odata") {
