@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
-    "@types/express-winston": "^4.0.0",
+    "@types/express-winston": "^3.0.4",
     "@types/json-schema": "^7.0.3",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
