@@ -211,11 +211,13 @@ function validateEvents(config: Config) {
                 } else {
                     specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
                 }
-                check_api.check_api(specInJson, {}, function (err: any, options: any) {
-                    if (err) {
-                        errors += "\nevent " + event.name + ": Schema validation Error \n" + pretty_yaml.stringify(err)
-                    }
-                })
+                if (specInJson.asyncapi != "2.0.0") {
+                    check_api.check_api(specInJson, {}, function (err: any, options: any) {
+                        if (err) {
+                            errors += "\nevent " + event.name + ": Schema validation Error \n" + pretty_yaml.stringify(err)
+                        }
+                    })
+                }
             }
         }
     }

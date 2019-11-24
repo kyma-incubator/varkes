@@ -3,6 +3,9 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
 import * as ace from 'ace-builds/src-min-noconflict/ace.js';
 import "ace-builds/webpack-resolver";
+
+const ASYNC_API_2 = "2.0.0"
+
 @Component({
     selector: 'send-event-view',
     templateUrl: './app.send.eventview.html'
@@ -32,7 +35,9 @@ export class SendEventViewComponent implements OnInit {
 
     public async ngOnInit() {
         this.event = JSON.parse(this.event);
-        this.topics = Object.keys(this.event.events.spec.topics);
+        this.topics = Object.keys(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels : this.event.events.spec.topics).map((key:string) =>{
+            return key.split("/").join(".");
+        });
         this.filteredTopicsNames = this.topics;
         this.filteredTopicsNames.sort();
         this.info = await this.serviceInstance.getInfo();
@@ -114,7 +119,7 @@ export class SendEventViewComponent implements OnInit {
 
     public selectedTopic(topic) {
         this.topicName = topic;
-        this.topic = JSON.stringify(this.event.events.spec.topics[topic].example, null, '\t');
+        this.topic = JSON.stringify(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels[topic.split(".").join("/")].example : this.event.events.spec.topics[topic].example, null, '\t');
         this.showTopics = false;
     }
     filterTopicsNames() {
