@@ -15,6 +15,11 @@
             "specification": "events2.yaml",
             "name": "events2",
             "description": "All Events v2"
+        },
+        {
+            "specification": "events3.yaml",
+            "name": "events3",
+            "description": "All Events v3"
         }
     ],
     "apis": [

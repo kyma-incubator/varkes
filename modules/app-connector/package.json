@@ -17,21 +17,21 @@
     "@varkes/configuration": "^0.8.0",
     "node-forge": "^0.9.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.3",
+    "@types/chai": "^4.2.5",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.12.12",
     "@types/request": "^2.48.3",
-    "@types/request-promise": "^4.1.44",
+    "@types/request-promise": "^4.1.45",
     "@varkes/example-kyma-mock": "^0.8.0",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
     "copyfiles": "^2.1.1",
-    "mocha": "^6.2.1",
-    "typescript": "~3.6.4"
+    "mocha": "^6.2.2",
+    "typescript": "~3.7.2"
   },
   "repository": {
     "type": "ssh",

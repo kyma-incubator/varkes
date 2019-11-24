@@ -23,9 +23,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-winston": "^4.0.1",
-    "json-schema-ref-parser": "^7.1.1",
+    "json-schema-ref-parser": "^7.1.2",
     "openapi-sampler": "^1.0.0-beta.14",
-    "swagger-ui-dist": "^3.24.0"
+    "swagger-ui-dist": "^3.24.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
@@ -33,15 +33,15 @@
     "@types/json-schema": "^7.0.3",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.12.12",
     "@types/supertest": "^2.0.8",
     "@types/yaml": "^1.2.0",
     "@varkes/example-kyma-mock": "^0.8.0",
     "copyfiles": "^2.1.1",
-    "mocha": "^6.2.1",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "supertest": "^4.0.2",
-    "typescript": "~3.6.4"
+    "typescript": "~3.7.2"
   },
   "repository": {
     "type": "ssh",

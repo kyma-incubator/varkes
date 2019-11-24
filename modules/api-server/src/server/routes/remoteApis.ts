@@ -115,14 +115,26 @@ function dereferenceApi(body: any) {
     return new Promise((resolve, reject) => {
         refParser.dereference(body.events.spec)
             .then((schema: any) => {
-                Object.keys(schema.topics).forEach((topicKey) => {
-                    if (schema.topics[topicKey].publish) {
-                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].publish.payload)
-                    }
-                    else {
-                        schema.topics[topicKey].example = openapiSampler.sample(schema.topics[topicKey].subscribe.payload)
-                    }
-                })
+                if (schema.asyncapi == "2.0.0") {
+                    Object.keys(schema.channels).forEach((key) => {
+                        if (schema.channels[key].publish) {
+                            schema.channels[key].example = openapiSampler.sample(schema.channels[key].publish.message.payload)
+                        }
+                        else {
+                            schema.channels[key].example = openapiSampler.sample(schema.channels[key].subscribe.message.payload)
+                        }
+                    })
+                } else {
+                    Object.keys(schema.topics).forEach((key) => {
+                        if (schema.topics[key].publish) {
+                            schema.topics[key].example = openapiSampler.sample(schema.topics[key].publish.payload)
+                        }
+                        else {
+                            schema.topics[key].example = openapiSampler.sample(schema.topics[key].subscribe.payload)
+                        }
+                    })
+                }
+
                 body.events.spec = schema
                 resolve(body);
             })
