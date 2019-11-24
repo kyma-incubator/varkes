@@ -24,20 +24,20 @@
     "js-yaml": "^3.13.1",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
-    "swagger-express-middleware": "^2.0.3",
-    "swagger-ui-dist": "^3.24.0"
+    "swagger-express-middleware": "^2.0.4",
+    "swagger-ui-dist": "^3.24.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1",
+    "@types/express": "^4.17.2",
     "@types/js-yaml": "^3.12.1",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
     "@types/supertest": "^2.0.8",
     "@types/swagger-express-middleware": "^1.0.10",
     "copyfiles": "^2.1.1",
-    "mocha": "^6.2.1",
+    "mocha": "^6.2.2",
     "supertest": "^4.0.2",
-    "typescript": "~3.6.4"
+    "typescript": "~3.7.2"
   },
   "repository": {
     "type": "ssh",

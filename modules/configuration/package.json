@@ -14,7 +14,7 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
-        "@types/request-promise": "^4.1.44",
+        "@types/request-promise": "^4.1.45",
         "check_api": "^1.2.2",
         "js-yaml": "^3.13.1",
         "json-to-pretty-yaml": "^1.2.2",
@@ -24,15 +24,15 @@
         "winston": "^3.2.1"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.4",
+        "@types/chai": "^4.2.5",
         "@types/mocha": "^5.2.7",
-        "@types/node": "^12.12.0",
+        "@types/node": "^12.12.12",
         "@types/winston": "^2.4.4",
         "chai": "^4.2.0",
         "chai-match": "^1.1.1",
         "copyfiles": "^2.1.1",
         "mocha": "^6.2.2",
-        "typescript": "^3.6.4"
+        "typescript": "^3.7.2"
     },
     "repository": {
         "type": "ssh",
