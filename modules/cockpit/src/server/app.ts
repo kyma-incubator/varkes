@@ -3,8 +3,12 @@ import * as path from 'path';
 import * as config from "@varkes/configuration"
 
 const app = express();
+const helmet = require('helmet')
 
 async function init(config: config.Config) {
+    app.use(helmet({
+        frameguard: false
+      }))
     app.use(express.static(path.resolve(__dirname + "/cockpit")));
 
     var payload = {
