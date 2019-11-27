@@ -84,7 +84,7 @@ export class ApiOverviewComponent implements OnInit {
             linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.labels.type });
         }
         else {
-            linkManager().fromClosestContext().navigate("/");
+            linkManager().navigate("/");
         }
     }
 }
