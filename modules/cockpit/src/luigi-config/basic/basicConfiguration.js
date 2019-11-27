@@ -20,6 +20,7 @@ xhttp.onreadystatechange = function () {
             hideSideNav: true,
             hideFromNav: true,
             context: { config: config },
+            navigationContext: 'apitable',
             children: [
               {
                 path: 'apitable'

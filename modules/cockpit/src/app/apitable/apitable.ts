@@ -96,7 +96,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
         this.alert = false;
     }
     public showApiDetails(apiId) {
-        linkManager().fromClosestContext().navigate('/apiview/' + apiId + "/" + (this.remote == true), "", true);
+        linkManager().fromContext('apitable').navigate('/apiview/' + apiId + "/" + (this.remote == true), "", true);
     }
 
     public onStatusCloseModalClick() {
@@ -104,10 +104,10 @@ export class ApiTableComponent implements OnInit, OnChanges {
         this.statusModalActive = false;
     }
     public showNewApi() {
-        linkManager().fromClosestContext().navigate('/createapi/false');
+        linkManager().fromContext('apitable').navigate('/createapi/false');
     }
     public showNewEvent() {
-        linkManager().fromClosestContext().navigate('/createapi/true');
+        linkManager().fromContext('apitable').navigate('/createapi/true');
     }
     public onRegisterAll() {
         this.batchStart = true;
