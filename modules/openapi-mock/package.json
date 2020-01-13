@@ -24,7 +24,7 @@
     "js-yaml": "^3.13.1",
     "json-to-pretty-yaml": "^1.2.2",
     "morgan": "^1.9.1",
-    "swagger-express-middleware": "^2.0.4",
+    "swagger-express-middleware": "^2.0.5",
     "swagger-ui-dist": "^3.24.3"
   },
   "devDependencies": {
@@ -35,9 +35,9 @@
     "@types/supertest": "^2.0.8",
     "@types/swagger-express-middleware": "^1.0.10",
     "copyfiles": "^2.1.1",
-    "mocha": "^6.2.2",
+    "mocha": "^7.0.0",
     "supertest": "^4.0.2",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.4"
   },
   "repository": {
     "type": "ssh",

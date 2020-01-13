@@ -22,7 +22,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "mocha": "^6.2.2",
+    "mocha": "^7.0.0",
     "supertest": "^4.0.2"
   },
   "repository": {
