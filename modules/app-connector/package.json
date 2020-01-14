@@ -20,18 +20,18 @@
     "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.5",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
-    "@types/node": "^12.12.12",
-    "@types/request": "^2.48.3",
+    "@types/node": "^13.1.6",
+    "@types/request": "^2.48.4",
     "@types/request-promise": "^4.1.45",
     "@varkes/example-kyma-mock": "^0.8.0",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
     "copyfiles": "^2.1.1",
-    "mocha": "^6.2.2",
-    "typescript": "~3.7.2"
+    "mocha": "^7.0.0",
+    "typescript": "~3.7.4"
   },
   "repository": {
     "type": "ssh",
