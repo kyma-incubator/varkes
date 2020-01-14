@@ -35,7 +35,7 @@
     "angular4-jsoneditor": "^1.0.7",
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.4.1",
-    "core-js": "^3.6.3",
+    "core-js": "^2.6.10",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fiori-fundamentals": "^1.7.3",
