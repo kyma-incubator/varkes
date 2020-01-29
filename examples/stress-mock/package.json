@@ -1,6 +1,6 @@
 {
   "name": "@varkes/stress-mock",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "combined stress test example of varkes openapi-mock, varkes odata-mock and varkes api-server",
   "main": "app.js",
   "private": true,
@@ -16,11 +16,11 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@varkes/api-server": "^0.8.0",
-    "@varkes/cockpit": "^0.8.0",
-    "@varkes/configuration": "^0.8.0",
-    "@varkes/odata-mock": "^0.8.0",
-    "@varkes/openapi-mock": "^0.8.0",
+    "@varkes/api-server": "^0.9.0",
+    "@varkes/cockpit": "^0.9.0",
+    "@varkes/configuration": "^0.9.0",
+    "@varkes/odata-mock": "^0.9.0",
+    "@varkes/openapi-mock": "^0.9.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
