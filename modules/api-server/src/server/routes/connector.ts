@@ -60,7 +60,7 @@ function assureConnected() {
 
 async function connect(req: express.Request, res: express.Response) {
     try {
-        await connection.connect(req.body.url, true, req.body.insecure)
+        await connection.connect(req.body.token, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info()!.domain)
         res.status(200).send(connection.info())
     } catch (error) {

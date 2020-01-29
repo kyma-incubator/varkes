@@ -33,7 +33,7 @@ describe("should work", () => {
         })
         await request(server)  //* Make sure we are connected to kyma
             .post("/connection")
-            .send({ "url": tokenURL })
+            .send({ "token": tokenURL })
             .set('Accept', 'application/json').
             expect(200)
         await request(server) //* Make sure we registered local apis to kyma

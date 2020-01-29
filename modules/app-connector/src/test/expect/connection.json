@@ -1,6 +1,5 @@
 {
     "insecure": false,
-    "infoUrl": ".*",
     "metadataUrl": ".*",
     "eventsUrl": ".*",
     "renewCertUrl": ".*",
@@ -8,5 +7,6 @@
     "consoleUrl": ".*",
     "applicationUrl": ".*",
     "domain": ".*",
-    "application": ".*"
+    "application": ".*",
+    "type": "Kyma"
 }

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as request from "request-promise";
 import * as fs from 'fs';
 import * as path from 'path';
-import * as url from 'url';
 import * as config from "@varkes/configuration"
+import * as kymaConnector from './kyma/connector';
+import * as compassConnector from './compass/connector';
 
 const LOGGER: any = config.logger("app-connector")
 const forge = require("node-forge");
@@ -30,7 +30,6 @@ export function init() {
         privateKeyData = generatePrivateKey(privateKeyFile)
     }
 
-
     if (fs.existsSync(connFile)) {
         connection = JSON.parse(fs.readFileSync(connFile, "utf-8"))
         LOGGER.info("Found existing connection info: %s", connFile)
@@ -42,95 +41,18 @@ export function init() {
     }
 }
 
-async function callTokenUrl(insecure: boolean, url: string) {
-    LOGGER.debug("Calling token URL '%s'", url)
-    return request({
-        uri: url,
-        method: "GET",
-        json: true,
-        rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true,
-        simple: false
-    }).then((response: any) => {
-        if (response.statusCode < 300) {
-            LOGGER.debug("Token URL returned %s", JSON.stringify(response.body, null, 2))
-            return response.body
-        } else if (response.statusCode == 403) {
-            LOGGER.debug("Token URL returned failed with status 403: %s", JSON.stringify(response.body, null, 2))
-            throw new Error("The token is invalid, please fetch a new token")
-        } else {
-            throw new Error("Calling token URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
-        }
-    })
-}
+function establish(newConnection: Info, newCertificate: string, persistFiles: boolean) {
+    connection = newConnection
+    certificateData = newCertificate
 
-async function callCSRUrl(csrUrl: string, csr: any, insecure: boolean) {
-    LOGGER.debug("Calling csr URL '%s'", csrUrl)
-    let csrData = forge.util.encode64(csr)
+    if (persistFiles) {
+        fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), { encoding: "utf8", flag: 'wx' })
+        fs.writeFileSync(crtFile, certificateData, { encoding: "utf8", flag: 'wx' })
+    }
 
-    return request.post({
-        uri: csrUrl,
-        body: { csr: csrData },
-        json: true,
-        rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true,
-        simple: false
-    }).then((response: any) => {
-        if (response.statusCode !== 201) {
-            throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
-        }
-        LOGGER.debug("CSR URL returned")
-        return Buffer.from(response.body.crt, 'base64').toString("ascii")
-    })
-}
+    LOGGER.info("Connected to %s", connection.domain)
 
-async function callInfoUrl(infoUrl: string, crt: any, privateKey: string, insecure: boolean) {
-    LOGGER.debug("Calling info URL '%s'", infoUrl)
-
-    return request.get({
-        uri: infoUrl,
-        json: true,
-        agentOptions: {
-            cert: crt,
-            key: privateKey
-        },
-        rejectUnauthorized: !insecure,
-        resolveWithFullResponse: true,
-        simple: false
-    }).then((response: any) => {
-        if (response.statusCode !== 200) {
-            throw new Error("Calling Info URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
-        }
-        LOGGER.debug("Got following Info URL returned: %s", JSON.stringify(response.body, null, 2))
-        return response.body
-    })
-}
-function generateCSR(subject: any) {
-    LOGGER.debug("Creating CSR using subject %s", subject)
-    let pk = forge.pki.privateKeyFromPem(privateKey())
-    let publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
-
-    // create a certification request (CSR)
-    let csr = forge.pki.createCertificationRequest()
-    csr.publicKey = publickey
-
-    csr.setSubject(parseSubjectToJsonArray(subject))
-    csr.sign(pk)
-    LOGGER.debug("Created csr using subject %s", subject)
-    return forge.pki.certificationRequestToPem(csr)
-}
-
-function parseSubjectToJsonArray(subject: any) {
-    let subjectsArray: any = []
-    subject.split(",").map((el: any) => {
-        const val = el.split("=")
-        subjectsArray.push({
-            shortName: val[0],
-            value: val[1]
-        })
-    })
-
-    return subjectsArray;
+    return connection
 }
 
 export function certificate(): string {
@@ -164,36 +86,6 @@ export function info(): Info {
     return connection!;
 }
 
-export async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false): Promise<Info> {
-    let tokenResponse = await callTokenUrl(insecure, tokenUrl)
-    let csr = generateCSR(tokenResponse.certificate.subject)
-    certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
-    let infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, certificateData, privateKeyData, insecure)
-
-    let domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
-    let connectionData: Info = {
-        insecure: insecure,
-        infoUrl: tokenResponse.api.infoUrl,
-        metadataUrl: infoResponse.urls.metadataUrl,
-        eventsUrl: infoResponse.urls.eventsUrl,
-        certificatesUrl: infoResponse.urls.certificatesUrl,
-        renewCertUrl: infoResponse.urls.renewCertUrl,
-        revocationCertUrl: infoResponse.urls.revocationCertUrl,
-        consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", ""),
-        applicationUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
-        domain: domains,
-        application: infoResponse.clientIdentity.application
-    }
-
-    if (persistFiles) {
-        fs.writeFileSync(connFile, JSON.stringify(connectionData, null, 2), { encoding: "utf8", flag: 'wx' })
-        fs.writeFileSync(crtFile, certificateData, { encoding: "utf8", flag: 'wx' })
-    }
-    connection = connectionData;
-    LOGGER.info("Connected to %s", connectionData.domain)
-    return connectionData;
-}
-
 export function destroy(): void {
     connection = null
 
@@ -205,16 +97,43 @@ export function destroy(): void {
     }
 }
 
+export async function connect(token: string, persistFiles: boolean = true, insecure: boolean = false): Promise<Info> {
+    if (!token) {
+        throw new Error("A token is required to establish a connection")
+    }
+
+    if (token.startsWith("http://") || token.startsWith("https://")) {
+        return kymaConnector.connect(token, insecure).then(result => {
+            return establish(result.connection, result.certificate, persistFiles)
+        })
+    }
+    return compassConnector.connect(token, insecure).then(result => {
+        return establish(result.connection, result.certificate, persistFiles)
+    })
+}
+
+export async function eventsUrl(): Promise<string> {
+    let result = connection!.eventsUrl;
+    if (result) {
+        return result
+    }
+    return compassConnector.eventsUrl(connection!.domain, connection!.application);
+}
+
 export type Info = {
     insecure: boolean,
-    infoUrl: string,
     metadataUrl: string,
-    eventsUrl: string,
-    certificatesUrl: string,
-    renewCertUrl: string,
-    revocationCertUrl: string,
+    eventsUrl: string | null,
+    renewCertUrl: string | null,
+    revocationCertUrl: string | null,
     consoleUrl: string,
     applicationUrl: string,
     domain: string,
     application: string
+    type: Type
+}
+
+export enum Type {
+    Kyma = "Kyma",
+    Compass = "Compass"
 }

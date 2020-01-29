@@ -20,19 +20,19 @@
         "json-to-pretty-yaml": "^1.2.2",
         "request": "^2.88.0",
         "request-promise": "^4.2.5",
-        "uuidv4": "^6.0.0",
+        "uuidv4": "^6.0.2",
         "winston": "^3.2.1"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.5",
+        "@types/chai": "^4.2.7",
         "@types/mocha": "^5.2.7",
-        "@types/node": "^12.12.12",
+        "@types/node": "^13.5.1",
         "@types/winston": "^2.4.4",
         "chai": "^4.2.0",
         "chai-match": "^1.1.1",
-        "copyfiles": "^2.1.1",
-        "mocha": "^6.2.2",
-        "typescript": "^3.7.2"
+        "copyfiles": "^2.2.0",
+        "mocha": "^7.0.1",
+        "typescript": "^3.7.5"
     },
     "repository": {
         "type": "ssh",

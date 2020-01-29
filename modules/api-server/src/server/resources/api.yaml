@@ -470,16 +470,16 @@ components:
     ConnectionDetails:
       type: "object"
       properties:
-        url:
+        token:
           type: "string"
           example: "https://kyma-cluster/v1/applications/sampleApp/info?token=xxx"
-          description: "The token url provided by the Kyma cluster to connect to"
+          description: "The token provided by a Kyma cluster or the token of a compass application"
         insecure:
           type: "boolean"
           description: "Connected Kyma cluster is running in minikube?"
           example: false
       required:
-        - url
+        - token
     ServiceId:
       type: "object"
       properties:
@@ -491,10 +491,6 @@ components:
     ConnectionResponse:
       type: "object"
       properties:
-        infoUrl:
-          type: "string"
-          description: "URL on connected Kyma cluster to retrieve the infos returned here"
-          example: https://gateway.mycluster.kyma.cx/v1/applications/management/info
         metadataUrl:
           type: "string"
           description: "URL on connected Kyma cluster to manage APIs"

@@ -25,7 +25,7 @@ describe("should work", () => {
             kymaServer = app.listen(port)
         })
         connection.init();
-        let connectionData = await connection.connect(tokenURL, false)
+        let connectionData = await connection.connect(tokenURL, false, false)
         await api.create(JSON.parse(schoolsAPI));
         await api.create(JSON.parse(eventAPI));
         return expect(new RegExp(JSON.stringify(connectionData), "g")).to.match(new RegExp(JSON.stringify(JSON.parse(connectionExpected)), "g"));
