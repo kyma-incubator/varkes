@@ -15,7 +15,7 @@ export class ConnectionOverviewComponent implements OnInit {
     public apis;
     public baseUrl;
     public info;
-    public url;
+    public token;
     public connection;
     public alert;
     public alertMessage;
@@ -49,6 +49,7 @@ export class ConnectionOverviewComponent implements OnInit {
     }
     public openModal() {
         this.insecureConnection = false;
+        this.token = undefined;
         uxManager().addBackdrop();
         this.connectionModalActive = true;
     }
@@ -60,9 +61,9 @@ export class ConnectionOverviewComponent implements OnInit {
         uxManager().removeBackdrop();
         this.statusModalActive = false;
     }
-    public onConnect(url) {
+    public onConnect() {
         var sendData = {
-            url: url,
+            token: this.token,
             baseUrl: this.baseUrl,
             insecure: this.insecureConnection
         };

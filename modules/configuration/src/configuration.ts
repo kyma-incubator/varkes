@@ -4,7 +4,7 @@
 import path = require("path");
 import fs = require("fs");
 import * as logger from "./logger"
-import { Config, API, Event } from "./types"
+import { Config, API, Event, APIType, APIAuth } from "./types"
 import * as request from "request-promise";
 import { uuid } from 'uuidv4';
 
@@ -128,7 +128,7 @@ function validateApis(config: Config) {
     if (apis) {
         for (let i = 1; i <= apis.length; i++) {
             let api = apis[i - 1]
-            if (api.auth && !(api.auth == "oauth" || api.auth == "none" || api.auth == "basic")) {
+            if (api.auth && !(api.auth === APIAuth.OAuth || api.auth === APIAuth.None || api.auth === APIAuth.Basic)) {
                 errors += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'auth' should be one of three values [oauth, basic, none]";
             }
 
@@ -136,13 +136,13 @@ function validateApis(config: Config) {
                 errors += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
 
             }
-            if (!api.type || api.type == "openapi") {
-                api.type = "openapi"
+            if (!api.type || api.type === APIType.OpenAPI) {
+                api.type = APIType.OpenAPI
                 api.oauth = api.oauth ? api.oauth : OAUTH
                 api.metadata = api.metadata ? api.metadata : METADATA
                 errors += validateOpenApi(api)
             }
-            else if (api.type == "odata") {
+            else if (api.type === APIType.OData) {
                 errors += validateOdata(api)
             }
             else {

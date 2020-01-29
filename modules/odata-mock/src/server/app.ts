@@ -12,12 +12,12 @@ const bodyParser = require('body-parser');
 const path = require("path")
 const LOGGER: any = config.logger("odata-mock")
 
-async function init(config: config.Config) {
+async function init(configuration: config.Config) {
   let promises: Promise<any>[] = [];
-  for (let i = 0; i < config.apis.length; i++) {
-    let api = config.apis[i]
-    if (api.type == "odata") {
-      promises.push(bootLoopback(api, config))
+  for (let i = 0; i < configuration.apis.length; i++) {
+    let api = configuration.apis[i]
+    if (api.type === config.APIType.OData) {
+      promises.push(bootLoopback(api, configuration))
     }
   }
 

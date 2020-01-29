@@ -3,21 +3,10 @@
 
 import * as config from "@varkes/configuration"
 
+const forge = require("node-forge");
 const LOGGER: any = config.logger("app-connector")
 
-function resolveError(statusCode: number, body: string, name: string) {
-    let message = ""
-    if (statusCode == 404) {
-        message = "The Kyma application is not reachable, check if the paired application at Kyma is healthy";
-    } else {
-        message = "Problem while " + name + ": Kyma application API responded with status " + statusCode + (body ?
-            " " + JSON.stringify(body, null, 2) : "");
-    }
-    LOGGER.error("Received error response with status: " + statusCode + " => " + message);
-    return new Error(message)
-}
-
-function assureConnected(connection: any): Promise<boolean> {
+export function assureConnected(connection: any): Promise<boolean> {
     return new Promise((resolve, reject) => {
         if (!connection.established()) {
             reject(new Error("Not connected to a kyma cluster, please re-connect"));
@@ -26,18 +15,30 @@ function assureConnected(connection: any): Promise<boolean> {
     })
 }
 
-function createRequestOptions(connection: any, source: any) {
-    LOGGER.debug("Calling " + source.method + " on " + source.uri)
-    return Object.assign({
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
-        rejectUnauthorized: !connection.info().insecure,
-        resolveWithFullResponse: true,
-        json: true,
-        simple: false
-    }, source)
+export function generateCSR(subject: any, privateKey: string) {
+    LOGGER.debug("Creating CSR using subject %s", subject)
+    let pk = forge.pki.privateKeyFromPem(privateKey)
+    let publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
+
+    // create a certification request (CSR)
+    let csr = forge.pki.createCertificationRequest()
+    csr.publicKey = publickey
+
+    csr.setSubject(parseSubjectToJsonArray(subject))
+    csr.sign(pk)
+    LOGGER.debug("Created csr using subject %s", subject)
+    return forge.pki.certificationRequestToPem(csr)
 }
 
-export { resolveError, assureConnected, createRequestOptions }
+function parseSubjectToJsonArray(subject: any) {
+    let subjectsArray: any = []
+    subject.split(",").map((el: any) => {
+        const val = el.split("=")
+        subjectsArray.push({
+            shortName: val[0],
+            value: val[1]
+        })
+    })
+
+    return subjectsArray;
+}

@@ -2,7 +2,7 @@
 'use strict'
 
 import * as config from "@varkes/configuration"
-import { api } from "@varkes/app-connector";
+import { api, connection } from "@varkes/app-connector";
 import * as fs from "fs"
 
 const LOGGER = config.logger("api-server")
@@ -130,7 +130,7 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         apiUrlWithBasepath = baseUrl + api.basepath
     }
     let specificationUrl = apiUrlWithBasepath + (api.metadata ? api.metadata : METADATA)
-    if (api.type == "odata") {
+    if (api.type === config.APIType.OData) {
         specificationUrl = apiUrlWithBasepath + "/$metadata"
     }
 
@@ -140,7 +140,7 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         specificationUrl: specificationUrl
     }
 
-    if (api.auth == "oauth") {
+    if (api.auth === config.APIAuth.OAuth) {
         apiData.credentials.oauth = {
             url: apiUrlWithBasepath + (api.oauth ? api.oauth : OAUTH),
             clientId: "admin",
@@ -153,7 +153,7 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         }
     }
 
-    if (api.auth == "basic") {
+    if (api.auth === config.APIAuth.Basic) {
         apiData.credentials.basic = {
             username: "admin",
             password: "nimda"
@@ -165,35 +165,33 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         }
     }
 
-    if (api.type == "odata") {
+    if (api.type === config.APIType.OData) {
         apiData.apiType = "odata"
     }
 
-    if (!api.type || api.type == "openapi") {
-        let specInJson
-        if (api.specification.endsWith(".json")) {
-            specInJson = JSON.parse(fs.readFileSync(api.specification, 'utf8'))
-        } else if (api.specification.endsWith(".yaml") || api.specification.endsWith(".yml")) {
-            specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
-        } else {
-            specInJson = fs.readFileSync(api.specification, 'utf8')
-        }
+    let specInJson
+    if (api.specification.endsWith(".json")) {
+        specInJson = JSON.parse(fs.readFileSync(api.specification, 'utf8'))
+    } else if (api.specification.endsWith(".yaml") || api.specification.endsWith(".yml")) {
+        specInJson = yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'))
+    } else {
+        specInJson = fs.readFileSync(api.specification, 'utf8')
+    }
 
-        if (api.registerSpec != false) {
-            apiData.spec = specInJson
-        }
+    if (api.registerSpec != false && !(api.type === config.APIType.OData && connection.info().type === connection.Type.Compass)) {
+        apiData.spec = specInJson
+    }
 
-        if (!api.description) {
-            if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
-                api.description = specInJson.info.description
-            } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title"))
-                api.description = specInJson.info.title
-        }
+    if (!api.description) {
+        if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
+            api.description = specInJson.info.description
+        } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title"))
+            api.description = specInJson.info.title
     }
 
     let labels = api.labels ? api.labels : {};
-    labels["type"] = api.type == "odata" ? "OData" : "OpenAPI"
-    if (api.type == "odata") {
+    labels["type"] = api.type === config.APIType.OData ? "OData" : "OpenAPI"
+    if (api.type === config.APIType.OData) {
         labels["type"] = "OData v" + 2
     }
     else if (apiData.spec.openapi) {

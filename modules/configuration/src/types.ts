@@ -15,7 +15,7 @@ type API = {
     description: string,
     metadata: string,
     specification: string,
-    type: string,
+    type: APIType,
     persistence: boolean,
     registerBasepath: boolean,
     registerSpec: boolean,
@@ -29,6 +29,17 @@ type Config = {
     apis: API[],
     events: Event[],
     location: string
+}
+
+export enum APIType {
+    OData = "odata",
+    OpenAPI = "openapi"
+}
+
+export enum APIAuth {
+    OAuth = "oauth",
+    Basic = "basic",
+    None = "none"
 }
 
 export { Config, API, Event }

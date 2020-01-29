@@ -57,6 +57,7 @@
             <td class="y-fd-table--col-2 fd-has-color-text-4">Status</td>
             <td>
               <span class="fd-badge fd-badge--success">Connected</span>
+              <span class="fd-badge fd-badge--success">{{connection.type}}</span>
               <span *ngIf="insecureConnection" class="fd-badge fd-badge--warning">Insecure</span>
             </td>
           </tr>
@@ -80,8 +81,15 @@
       <div class="fd-modal__body " style="height:60%;max-height: none;overflow-y:unset ">
         <div class="fd-form__group">
           <div class="fd-form__item">
-            <label class="fd-form__label" aria-required="true" for="input-2">Token*</label>
-            <textarea class="fd-form__control" style="resize: none;" #token_url></textarea>
+            <label class="fd-form__label" aria-required="true" for="input-1">
+              Token
+              <span class="fd-inline-help">
+                <span class="fd-inline-help__content fd-inline-help__content--bottom-right">
+                  Token copied from "Connect Application" dialog
+                </span>
+              </span>
+            </label>
+            <textarea class="fd-form__control" style="resize: none;" [(ngModel)]="token"></textarea>
           </div>
           <div class="fd-form__item fd-form__item--check">
             <label class="fd-form__label" for="Ai4ez611">
@@ -99,7 +107,7 @@
       </div>
       <footer class="fd-modal__footer">
         <div class="fd-modal__actions">
-          <button class="fd-button" (click)="onConnect(token_url.value)">Connect</button>
+          <button class="fd-button" (click)="onConnect()">Connect</button>
           <button (click)="onConnectionCloseModalClick()" class="fd-button--light">Cancel</button>
         </div>
       </footer>

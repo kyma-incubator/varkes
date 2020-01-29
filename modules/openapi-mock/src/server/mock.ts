@@ -14,12 +14,12 @@ const middleware = require("swagger-express-middleware")
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
 
-async function mock(config: config.Config) {
+async function mock(configuration: config.Config) {
     let resultApp = express()
     let error_message = "";
-    for (let i = 0; i < config.apis.length; i++) {
-        let api = config.apis[i];
-        if (!api.type || api.type == "openapi") {
+    for (let i = 0; i < configuration.apis.length; i++) {
+        let api = configuration.apis[i];
+        if (!api.type || api.type === config.APIType.OpenAPI) {
             try {
                 let app = express()
                 createOauthEndpoint(api, app);

@@ -48,7 +48,8 @@
     "tslib": "^1.10.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "node-sass":"~4.13.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.9",
