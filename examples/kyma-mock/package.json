@@ -1,6 +1,6 @@
 {
   "name": "@varkes/example-kyma-mock",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Standalone example of varkes kyma-mock",
   "main": "app.js",
   "private": true,
@@ -16,8 +16,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@varkes/configuration": "^0.8.0",
-    "@varkes/openapi-mock": "^0.8.0",
+    "@varkes/configuration": "^0.9.0",
+    "@varkes/openapi-mock": "^0.9.0",
     "express": "^4.17.1",
     "uuid": "^3.4.0"
   },
