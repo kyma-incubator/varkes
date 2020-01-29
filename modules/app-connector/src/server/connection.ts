@@ -102,7 +102,7 @@ export async function connect(token: string, persistFiles: boolean = true, insec
         throw new Error("A token is required to establish a connection")
     }
 
-    if (token.startsWith("https://")) {
+    if (token.startsWith("http://") || token.startsWith("https://")) {
         return kymaConnector.connect(token, insecure).then(result => {
             return establish(result.connection, result.certificate, persistFiles)
         })
