@@ -178,7 +178,7 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
         specInJson = fs.readFileSync(api.specification, 'utf8')
     }
 
-    if (api.registerSpec != false && !(api.type === config.APIType.OData && connection.info().type === connection.Type.Compass)) {
+    if (api.registerSpec != false && !(api.type === config.APIType.OData && connection.established() && connection.info().type === connection.Type.Kyma)) {
         apiData.spec = specInJson
     }
 
