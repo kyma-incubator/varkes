@@ -1,6 +1,6 @@
 {
   "name": "@varkes/openapi-mock",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
   "dependencies": {
-    "@varkes/configuration": "^0.9.1",
+    "@varkes/configuration": "^0.9.2",
     "api-spec-converter": "~2.9.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
