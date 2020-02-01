@@ -2,13 +2,11 @@
 'use strict'
 
 import * as connection from '../connection';
-import * as common from './common';
 import * as commonCommon from '../common';
 import * as config from "@varkes/configuration"
 import * as request from "request-promise";
 import * as url from 'url';
 
-const forge = require("node-forge");
 const LOGGER: any = config.logger("app-connector")
 
 async function callTokenUrl(insecure: boolean, url: string) {
@@ -33,13 +31,12 @@ async function callTokenUrl(insecure: boolean, url: string) {
     })
 }
 
-async function callCSRUrl(csrUrl: string, csr: any, insecure: boolean) {
+async function callCSRUrl(csrUrl: string, csr: Buffer, insecure: boolean):Promise<Buffer> {
     LOGGER.debug("Calling csr URL '%s'", csrUrl)
-    let csrData = forge.util.encode64(csr)
 
     return request.post({
         uri: csrUrl,
-        body: { csr: csrData },
+        body: { csr: csr.toString('base64') },
         json: true,
         rejectUnauthorized: !insecure,
         resolveWithFullResponse: true,
@@ -49,20 +46,18 @@ async function callCSRUrl(csrUrl: string, csr: any, insecure: boolean) {
             throw new Error("Calling CSR URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
         }
         LOGGER.debug("CSR returned")
-        return Buffer.from(response.body.crt, 'base64').toString("ascii")
+        return Buffer.from(response.body.crt, 'base64')
     })
 }
 
-async function callInfoUrl(infoUrl: string, crt: any, privateKey: string, insecure: boolean) {
+async function callInfoUrl(infoUrl: string, crt: Buffer, privateKey: Buffer, insecure: boolean):Promise<any> {
     LOGGER.debug("Calling info URL '%s'", infoUrl)
 
     return request.get({
         uri: infoUrl,
         json: true,
-        agentOptions: {
-            cert: crt,
-            key: privateKey
-        },
+        cert: crt,
+        key: privateKey,
         rejectUnauthorized: !insecure,
         resolveWithFullResponse: true,
         simple: false
