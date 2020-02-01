@@ -51,7 +51,7 @@ export function createDirectorClient(): ApolloClient<NormalizedCacheObject> {
     return createDirectorClientWithInfo(connection.info()!, connection.certificate())
 }
 
-export function createDirectorClientWithInfo(connectionInfo: connection.Info, certificate: string): ApolloClient<NormalizedCacheObject> {
+export function createDirectorClientWithInfo(connectionInfo: connection.Info, certificate: Buffer): ApolloClient<NormalizedCacheObject> {
     let authLink = setContext((_, { headers }) => {
         return {
             headers: {

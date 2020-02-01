@@ -7,7 +7,6 @@ import * as commonCommon from '../common';
 import * as config from "@varkes/configuration"
 import gql from "graphql-tag";
 
-const forge = require("node-forge");
 const LOGGER: any = config.logger("app-connector")
 
 async function getConfiguration(token: string, url: string, insecure: boolean): Promise<any> {
@@ -51,12 +50,11 @@ async function signCertificateSigningRequest(url: string, insecure: boolean, con
     }
 }`;
 
-  const csr = commonCommon.generateCSR(configuration.certificateSigningRequestInfo.subject, connection.privateKey());
-  const encodedCsr = forge.util.encode64(csr);
+  const csr:Buffer = commonCommon.generateCSR(configuration.certificateSigningRequestInfo.subject, connection.privateKey());
   var result = await common.createConnectorClient(configuration.token.token, url, insecure).mutate({
     mutation: SignCertificateSigningRequestMutation,
     variables: {
-      csr: encodedCsr
+      csr: csr.toString('base64')
     }
   }).catch(err => {
     if (err.networkError) {
@@ -69,7 +67,7 @@ async function signCertificateSigningRequest(url: string, insecure: boolean, con
   });
   LOGGER.debug(`Received CSR`);
   const encodedCert = result.data.result.certificateChain
-  return forge.util.decode64(encodedCert);
+  return Buffer.from(encodedCert,'base64');
 }
 
 export async function eventsUrl(domain: string, application: string): Promise<string> {
@@ -100,7 +98,7 @@ export async function eventsUrl(domain: string, application: string): Promise<st
   return result.data.application.eventingConfiguration.defaultURL
 }
 
-async function queryAppID(connectionInfo: connection.Info, certificate: string): Promise<string> {
+async function queryAppID(connectionInfo: connection.Info, certificate: Buffer): Promise<string> {
   const query = gql`query {
     viewer {
       id

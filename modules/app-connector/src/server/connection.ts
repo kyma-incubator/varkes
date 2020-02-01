@@ -14,8 +14,8 @@ const connFile = path.resolve(keysDirectory, "connection.json")
 const crtFile = path.resolve(keysDirectory, "kyma.crt")
 const privateKeyFile = path.resolve(keysDirectory, "app.key")
 
-var privateKeyData: string;
-var certificateData: string;
+var privateKeyData: Buffer;
+var certificateData: Buffer;
 var connection: Info | null = null;
 
 export function init() {
@@ -24,24 +24,24 @@ export function init() {
     }
 
     if (fs.existsSync(privateKeyFile)) {
-        privateKeyData = fs.readFileSync(privateKeyFile, "utf-8")
+        privateKeyData = fs.readFileSync(privateKeyFile)
         LOGGER.info("Found existing private key: %s", privateKeyFile)
     } else {
         privateKeyData = generatePrivateKey(privateKeyFile)
     }
 
     if (fs.existsSync(connFile)) {
-        connection = JSON.parse(fs.readFileSync(connFile, "utf-8"))
+        connection = JSON.parse(fs.readFileSync(connFile, "utf8"))
         LOGGER.info("Found existing connection info: %s", connFile)
     }
 
     if (fs.existsSync(crtFile)) {
-        certificateData = fs.readFileSync(crtFile, "utf-8")
+        certificateData = fs.readFileSync(crtFile)
         LOGGER.info("Found existing certificate: %s", crtFile)
     }
 }
 
-function establish(newConnection: Info, newCertificate: string, persistFiles: boolean) {
+function establish(newConnection: Info, newCertificate: Buffer, persistFiles: boolean) {
     connection = newConnection
     certificateData = newCertificate
 
@@ -55,14 +55,14 @@ function establish(newConnection: Info, newCertificate: string, persistFiles: bo
     return connection
 }
 
-export function certificate(): string {
+export function certificate(): Buffer {
     if (!established()) {
         throw new Error("Trying to access connection status without having a connection established. Please call connection.established() upfront to assure an available connection status")
     }
     return certificateData
 }
 
-export function privateKey(): string {
+export function privateKey(): Buffer {
     return privateKeyData
 }
 
@@ -70,13 +70,13 @@ export function established(): boolean {
     return connection != null
 }
 
-function generatePrivateKey(filePath: string): string {
+function generatePrivateKey(filePath: string): Buffer {
     LOGGER.debug("Generating new private key: %s", filePath)
     let keys = forge.pki.rsa.generateKeyPair(2048)
     const key = forge.pki.privateKeyToPem(keys.privateKey)
     fs.writeFileSync(filePath, key)
     LOGGER.info("Generated new private key: %s", filePath)
-    return key
+    return Buffer.from(key)
 }
 
 export function info(): Info {

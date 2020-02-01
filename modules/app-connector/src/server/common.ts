@@ -15,9 +15,9 @@ export function assureConnected(connection: any): Promise<boolean> {
     })
 }
 
-export function generateCSR(subject: any, privateKey: string) {
+export function generateCSR(subject: any, privateKey: Buffer):Buffer {
     LOGGER.debug("Creating CSR using subject %s", subject)
-    let pk = forge.pki.privateKeyFromPem(privateKey)
+    let pk = forge.pki.privateKeyFromPem(privateKey.toString())
     let publickey = forge.pki.setRsaPublicKey(pk.n, pk.e)
 
     // create a certification request (CSR)
@@ -27,7 +27,7 @@ export function generateCSR(subject: any, privateKey: string) {
     csr.setSubject(parseSubjectToJsonArray(subject))
     csr.sign(pk)
     LOGGER.debug("Created csr using subject %s", subject)
-    return forge.pki.certificationRequestToPem(csr)
+    return Buffer.from(forge.pki.certificationRequestToPem(csr))
 }
 
 function parseSubjectToJsonArray(subject: any) {

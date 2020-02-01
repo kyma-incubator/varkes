@@ -20,10 +20,8 @@ export function resolveError(statusCode: number, body: string, name: string) {
 export function createRequestOptions(connection: any, source: any) {
     LOGGER.debug("Calling " + source.method + " on " + source.uri)
     return Object.assign({
-        agentOptions: {
-            cert: connection.certificate(),
-            key: connection.privateKey()
-        },
+        cert: connection.certificate(),
+        key: connection.privateKey(),
         rejectUnauthorized: !connection.info().insecure,
         resolveWithFullResponse: true,
         json: true,
