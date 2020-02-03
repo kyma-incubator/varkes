@@ -33,7 +33,7 @@
     "strong-error-handler": "^3.4.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^7.0.1",
     "copyfiles": "^2.2.0",
     "mocha": "^7.0.1",
     "supertest": "^4.0.2",
