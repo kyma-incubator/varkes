@@ -1,6 +1,6 @@
 {
   "name": "@varkes/cockpit",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "main": "dist/app.js",
   "description": "Varkes Cockpit",
   "license": "Apache-2.0",
@@ -29,7 +29,7 @@
     "@babel/preset-env": "^7.8.2",
     "@kyma-project/luigi-client": "^0.7.3",
     "@kyma-project/luigi-core": "^0.7.3",
-    "@varkes/configuration": "^0.9.1",
+    "@varkes/configuration": "^0.9.2",
     "ace-builds": "^1.4.7",
     "ang-jsoneditor": "^1.8.4",
     "angular4-jsoneditor": "^1.0.7",
