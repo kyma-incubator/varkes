@@ -28,13 +28,14 @@
     "node-fetch": "^2.6.0",
     "node-forge": "^0.9.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "promise-request-retry":"^1.0.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^5.2.7",
+    "@types/chai": "^4.2.8",
+    "@types/mocha": "^7.0.1",
     "@types/morgan": "^1.7.37",
-    "@types/node": "^13.5.1",
+    "@types/node": "^13.7.0",
     "@types/node-fetch": "^2.5.4",
     "@types/request": "^2.48.4",
     "@types/request-promise": "^4.1.45",

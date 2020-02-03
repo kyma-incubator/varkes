@@ -4,7 +4,8 @@
 import * as connection from '../connection';
 import * as commonCommon from '../common';
 import * as config from "@varkes/configuration"
-import * as request from "request-promise";
+const request = require("promise-request-retry");
+
 import * as url from 'url';
 
 const LOGGER: any = config.logger("app-connector")
@@ -34,8 +35,9 @@ async function callTokenUrl(insecure: boolean, url: string) {
 async function callCSRUrl(csrUrl: string, csr: Buffer, insecure: boolean):Promise<Buffer> {
     LOGGER.debug("Calling csr URL '%s'", csrUrl)
 
-    return request.post({
+    return request({
         uri: csrUrl,
+        method: "POST",
         body: { csr: csr.toString('base64') },
         json: true,
         rejectUnauthorized: !insecure,
@@ -53,14 +55,20 @@ async function callCSRUrl(csrUrl: string, csr: Buffer, insecure: boolean):Promis
 async function callInfoUrl(infoUrl: string, crt: Buffer, privateKey: Buffer, insecure: boolean):Promise<any> {
     LOGGER.debug("Calling info URL '%s'", infoUrl)
 
-    return request.get({
+    return request({
         uri: infoUrl,
+        method: "GET",
         json: true,
         cert: crt,
         key: privateKey,
         rejectUnauthorized: !insecure,
         resolveWithFullResponse: true,
-        simple: false
+        simple: false,
+        retry: 5,
+        verbose_logging: false,
+        accepted: [ 400, 401, 403, 404 ],
+        delay: 1000,
+        factor: 1
     }).then((response: any) => {
         if (response.statusCode !== 200) {
             throw new Error("Calling Info URL failed with status '" + response.statusCode + "' and body '" + JSON.stringify(response.body, null, 2) + "'")
