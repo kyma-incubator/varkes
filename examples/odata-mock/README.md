@@ -14,7 +14,7 @@ npm install
 npm start
 ```
 
-Navigate to `http://localhost:10000/api/console` to see the console
+Navigate to `http://localhost:10000/api/odata/console` to see the console
 
 Navigate to `http://localhost:10000/odata/` to browse odata API
 
