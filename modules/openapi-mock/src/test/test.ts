@@ -98,6 +98,17 @@ describe('controllers', function () {
         });
       })
 
+      describe('GET console without baspath configured', function () {
+        it('should return response 200', function (done) {
+          request(app)
+            .get("/api4/console")
+            .expect('Content-Type', 'text/html; charset=utf-8')
+            .expect(200, done)
+            .expect(/'\/api4\/metadata.json'/)
+            .expect(/pets/)
+        });
+      })
+
       describe('GET oauth for default oauth endpoint', function () {
         it('should return response 200', function (done) {
           request(app)

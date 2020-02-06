@@ -1,9 +1,10 @@
 {
-    "provider": "Varkes",
-    "name": "courses",
-    "description": "Courses Webservices",
+    "provider": "myProvider",
+    "name": "Courses Webservices",
+    "description": "myDescription",
     "labels": {
-        "type": "OpenAPI v3"
+        "type": "OpenAPI v3",
+        "consoleURL": "http://(localhost|.+)"
     },
     "api": {
         "targetUrl": "http://(localhost|.+)/entity/v1",

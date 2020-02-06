@@ -72,7 +72,7 @@ async function generateBootConfig(api: config.API) {
   bootConfig.appRootDir = __dirname
   bootConfig.appConfigRootDir = __dirname
 
-  let restBasePath = api.basepath.replace("/odata", "/api")
+  let restBasePath = "/api" + api.basepath
   bootConfig.components["loopback-component-explorer"] = {
     mountPath: restBasePath + "/console",
     basePath: restBasePath

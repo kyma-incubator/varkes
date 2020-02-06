@@ -11,7 +11,7 @@ describe('test app', function () {
             describe('GET Advertisements via API', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/product.svc/Advertisements')
+                        .get('/api/odata/product.svc/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -20,7 +20,7 @@ describe('test app', function () {
             describe('GET Categories via API', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/northwind.svc/Categorys')
+                        .get('/api/odata/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -56,7 +56,7 @@ describe('test app', function () {
             describe('GET product console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/product.svc/console/')
+                        .get('/api/odata/product.svc/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });
@@ -64,7 +64,7 @@ describe('test app', function () {
             describe('GET northwind console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/northwind.svc/console/')
+                        .get('/api/odata/northwind.svc/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });

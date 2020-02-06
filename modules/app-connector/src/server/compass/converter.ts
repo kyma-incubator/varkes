@@ -47,7 +47,8 @@ export function convertApiToOld(newApi: any): any {
     name: newApi.name,
     description: newApi.description,
     labels: {
-      type: type
+      type: type,
+      consoleURL: newApi.targetURL + "/console"
     },
     api: {
       targetUrl: newApi.targetURL,

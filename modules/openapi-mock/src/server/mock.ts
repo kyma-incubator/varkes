@@ -22,8 +22,6 @@ async function mock(configuration: config.Config) {
         if (!api.type || api.type === config.APIType.OpenAPI) {
             try {
                 let app = express()
-                createOauthEndpoint(api, app);
-                createConsole(api, app);
 
                 let spec: any = loadSpec(api)
                 if (spec.openapi) {
@@ -35,11 +33,16 @@ async function mock(configuration: config.Config) {
                 if (api.basepath) {
                     spec.basePath = api.basepath
                 }
+                api.basepath = spec.basePath
+                if(!api.basepath){
+                    throw new Error(`Cannot resolve a basepath for API with specification '${api.specification}'`)
+                }
                 await validateSpec(api, 'swagger_2')
-
-                createMetadataEndpoint(spec, api, app);
-
                 writeSpec(pretty_yaml.stringify(spec), api, i)
+
+                createOauthEndpoint(api, app);
+                createConsole(api, app);
+                createMetadataEndpoint(spec, api, app);
 
                 let myDB = new middleware.MemoryDataStore();
                 if (api.persistence) {
@@ -78,13 +81,13 @@ async function mock(configuration: config.Config) {
 }
 
 function loadSpec(api: config.API) {
-    LOGGER.debug("Loading api '%s' from file '%s'", api.name, api.specification);
+    LOGGER.debug("Loading api from file '%s'", api.specification);
     return yaml.safeLoad(fs.readFileSync(api.specification, 'utf8'));
 }
 
 function writeSpec(specString: string, api: config.API, index: number) {
     let file_name = DIR_NAME + index + "_" + TMP_FILE;
-    LOGGER.debug("Writing api '%s' to file '%s' and length %d", api.name, file_name, specString.length);
+    LOGGER.debug("Writing api from '%s' to file '%s' and length %d", api.specification, file_name, specString.length);
 
     if (!fs.existsSync(DIR_NAME)) {
         fs.mkdirSync(DIR_NAME);
@@ -112,7 +115,7 @@ function createOauthEndpoint(api: config.API, app: express.Application) {
 }
 
 async function validateSpec(api: config.API, type: string) {
-    LOGGER.debug("Validating spec of api '%s'", api.name);
+    LOGGER.debug("Validating api from '%s'", api.specification);
     return Converter.getSpec(api.specification, type)
         .then((fromSpec: any) => {
             return fromSpec.validate()

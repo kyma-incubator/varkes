@@ -20,7 +20,6 @@
             "name": "pets swagger yaml"
         },
         {
-            "basepath": "/api4",
             "specification": "pets_swagger.json",
             "auth": "none",
             "name": "pets swagger json"

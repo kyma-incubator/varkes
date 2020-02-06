@@ -19,13 +19,14 @@ type API = {
     persistence: boolean,
     registerBasepath: boolean,
     registerSpec: boolean,
-    provider: string,
     labels: any,
     csrf: boolean
 }
 type Config = {
     name: string,
     logo: string,
+    provider: string,
+    application: string,
     apis: API[],
     events: Event[],
     location: string

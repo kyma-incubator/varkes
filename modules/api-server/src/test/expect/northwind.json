@@ -1,9 +1,10 @@
 {
-    "provider": "Varkes",
+    "provider": "myProvider",
     "name": "northwind",
     "description": "northwind",
     "labels": {
-        "type": "OData"
+        "type": "OData",
+        "consoleURL": "http://(localhost|.+)"
     },
     "api": {
         "targetUrl": "http://(localhost|.+)/northwind/odata/northwind.svc",

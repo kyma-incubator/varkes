@@ -89,6 +89,8 @@ function downloadSpec(api: API | Event): Promise<string> {
             fileType = ".yaml"
         } else if (api.specification.endsWith("xml")) {
             fileType = ".xml"
+        } else if (api.specification.endsWith("edmx")) {
+            fileType = ".xml"
         } else {
             throw new Error(`Cannot determine file extension for specification of API ${api.name} with URL ${api.specification}`)
         }
@@ -119,6 +121,15 @@ function validateBasics(config: Config) {
     if (config.logo && !config.logo.match(/^.+\.(svg)$/)) {
         errors += "\nlogo image must be in svg format"
     }
+    if (!config.name && !config.application) {
+        errors += "\nEither have the name of the mocked application configured with 'application' attribute or provide the name for the mock itself via the 'name' attribute"
+    }
+    if (config.application && !config.name) {
+        config.name = config.application + " Mock"
+    }
+    if (!config.provider) {
+        config.provider = "Varkes"
+    }
     return errors
 }
 
@@ -132,12 +143,18 @@ function validateApis(config: Config) {
                 errors += "\napi " + (api.name ? api.name : "number " + i) + ": attribute 'auth' should be one of three values [oauth, basic, none]";
             }
 
-            if (!api.name) {
-                errors += "\napi number " + i + ": missing attribute 'name', a name is mandatory";
-
+            if (!api.specification) {
+                errors += "\napi " + (api.name ? api.name : "number " + i) + ": an API requires an attribute 'specification'";
             }
-            if (!api.type || api.type === APIType.OpenAPI) {
-                api.type = APIType.OpenAPI
+
+            if (!api.type) {
+                if (api.specification.match(/^.+\.(xml|edmx)$/)) {
+                    api.type = APIType.OData
+                } else {
+                    api.type = APIType.OpenAPI
+                }
+            }
+            if (api.type === APIType.OpenAPI) {
                 api.oauth = api.oauth ? api.oauth : OAUTH
                 api.metadata = api.metadata ? api.metadata : METADATA
                 errors += validateOpenApi(api)
@@ -146,7 +163,7 @@ function validateApis(config: Config) {
                 errors += validateOdata(api)
             }
             else {
-                errors += "\napi '" + api.name + "': type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
+                errors += "\napi '" + (api.name ? api.name : "number " + i) + "': type '" + api.type + "' is not matching the pattern '^(openapi|odata)$'";
             }
         }
     }
@@ -156,16 +173,16 @@ function validateApis(config: Config) {
 function validateOdata(api: API): String {
     let errors = ""
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
-        errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\w]+$'";
     }
-    if (!api.specification.match(/^.+\.xml$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.json$'";
+    if (!api.specification.match(/^.+\.(xml|edmx)$/)) {
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': specification '" + api.specification + "' does not match pattern '^.+\\.(xml|edmx)$'";
     }
     if (!api.basepath) {
-        errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': missing attribute 'basepath', a basepath is mandatory for OData APIs";
     }
-    else if (!api.basepath.match(/^\/([/\\\w\.]+\/)*odata(\/[/\\\w\.]+)*$/)) {
-        errors += "\napi '" + api.name + "': basepath '" + api.basepath + "' is not matching the pattern '^\/([/\\\w\.]+\/)*odata(\/[/\\\w\.]+)*$'";
+    if (api.basepath && !api.basepath.match(/^\/[/\\\w\.]+$/)) {
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': basepath '" + api.basepath + "' is not matching the pattern '^\\/[/\\\\\w\\.]+$'";
     }
     return errors
 }
@@ -174,19 +191,16 @@ function validateOdata(api: API): String {
 function validateOpenApi(api: API): String {
     let errors = "";
     if (api.metadata && !api.metadata.match(/^\/[/\\\w]+$/)) {
-        errors += "\napi '" + api.name + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\\w]+$+'";
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': metadata '" + api.metadata + "' is not matching the pattern '^\\/[/\\\\\w]+$+'";
     }
     if (!api.oauth.match(/^\/[/\\\w]+$/)) {
-        errors += "\napi '" + api.name + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': oauth '" + api.oauth + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
     if (!api.specification.match(/^.+\.(json|yaml|yml)$/)) {
-        errors += "\napi '" + api.name + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': specification '" + api.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'";
     }
-    if (!api.basepath) {
-        errors += "\napi '" + api.name + "': missing attribute 'basepath', a basepath is mandatory";
-    }
-    else if (!api.basepath.match(/^\/[/\\\w]+$/)) {
-        errors += "\napi '" + api.name + "': basepath '" + api.basepath + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
+    if (api.basepath && !api.basepath.match(/^\/[/\\\w]+$/)) {
+        errors += "\napi '" + (api.name ? api.name : "with specification " + api.specification) + "': basepath '" + api.basepath + "' is not matching the pattern '^\\/[/\\\\\w]+$'";
     }
     return errors
 }
@@ -197,13 +211,10 @@ function validateEvents(config: Config) {
     if (events) {
         for (let i = 1; i <= events.length; i++) {
             let event = events[i - 1]
-            if (!event.name) {
-                errors += "\nevent number " + i + ": missing attribute 'name', a name is mandatory"
-            }
             if (!event.specification) {
-                errors += "\nevent '" + event.name + "': missing attribute 'specification', a specification is mandatory"
+                errors += "\nevent '" + (event.name ? event.name : "number " + i) + "': missing attribute 'specification', a specification is mandatory"
             } else if (!event.specification.match(/^.+\.(json|yaml|yml)$/)) {
-                errors += "\nevent '" + event.name + "': specification '" + event.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'"
+                errors += "\nevent '" + (event.name ? event.name : "number " + i) + "': specification '" + event.specification + "' does not match pattern '^.+\\.(json|yaml|yml)$'"
             } else {
                 let specInJson
                 if (event.specification.endsWith(".json")) {
@@ -214,7 +225,7 @@ function validateEvents(config: Config) {
                 if (specInJson.asyncapi != "2.0.0") {
                     check_api.check_api(specInJson, {}, function (err: any, options: any) {
                         if (err) {
-                            errors += "\nevent " + event.name + ": Schema validation Error \n" + pretty_yaml.stringify(err)
+                            errors += "\nevent " + (event.name ? event.name : "number " + i) + ": Schema validation Error \n" + pretty_yaml.stringify(err)
                         }
                     })
                 }

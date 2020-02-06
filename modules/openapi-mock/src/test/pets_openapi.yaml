@@ -23,7 +23,7 @@ servers:
       hostName:
         default: company.com
       basePath:
-        default: api1
+        default: wrong
 security:
   - petStoreBasic: []
     petStoreApiKey: []

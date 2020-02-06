@@ -11,7 +11,7 @@ describe('tests odata controllers', function () {
             describe('GET Advertisements via API', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/Advertisements')
+                        .get('/api/odata/Advertisements')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -29,7 +29,7 @@ describe('tests odata controllers', function () {
             describe('GET loopback console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/console/')
+                        .get('/api/odata/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });
