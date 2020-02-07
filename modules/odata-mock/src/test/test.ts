@@ -21,8 +21,8 @@ describe('test app', function () {
                     request(app)
                         .get('/api/service.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
@@ -31,8 +31,8 @@ describe('test app', function () {
                     request(app)
                         .get('/api/northwind/northwind.svc/Summary_of_Sales_by_Years')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
@@ -41,8 +41,8 @@ describe('test app', function () {
                     request(app)
                         .get('/api/service.svc/Advertisements/10')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(404, done)
+                        .expect(404)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
@@ -51,8 +51,8 @@ describe('test app', function () {
                     request(app)
                         .get('/api/northwind/northwind.svc/Summary_of_Sales_by_Years/10')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(404, done)
+                        .expect(404)
+                        .expect('Content-Type', 'application/json; charset=utf-8', 404)
                 });
             });
 
@@ -67,9 +67,9 @@ describe('test app', function () {
                                 AirDate: "2019-03-28T15:29:16.871Z"
                             })
                             .set('Accept', 'application/json')
+                            .expect(200)
                             .expect('Content-Type', 'application/json; charset=utf-8')
                             .expect(/"ID":"0"/)
-                            .expect(200)
                             .end((err: any, res: any) => {
                                 if (err) {
                                     reject(err)
@@ -81,9 +81,9 @@ describe('test app', function () {
                         return request(app)
                             .get('/api/service.svc/Advertisements/1')
                             .set('Accept', 'application/json')
+                            .expect(200)
                             .expect('Content-Type', 'application/json; charset=utf-8')
                             .expect(/"ID":"0"/)
-                            .expect(200)
                     })
                 });
             });
@@ -98,9 +98,9 @@ describe('test app', function () {
                                 "Subtotal": 0
                             })
                             .set('Accept', 'application/json')
+                            .expect(200)
                             .expect('Content-Type', 'application/json; charset=utf-8')
                             .expect(/"id":1/)
-                            .expect(200)
                             .end((err: any, res: any) => {
                                 if (err) {
                                     reject(err)
@@ -112,9 +112,9 @@ describe('test app', function () {
                         return request(app)
                             .get('/api/northwind/northwind.svc/Summary_of_Sales_by_Years/1')
                             .set('Accept', 'application/json')
+                            .expect(200)
                             .expect('Content-Type', 'application/json; charset=utf-8')
                             .expect(/"id":1/)
-                            .expect(200)
                     })
                 });
             });
@@ -124,8 +124,8 @@ describe('test app', function () {
                     request(app)
                         .get('/service.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
@@ -134,8 +134,8 @@ describe('test app', function () {
                     request(app)
                         .get('/northwind/northwind.svc/Summary_of_Sales_by_Years')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
@@ -143,8 +143,8 @@ describe('test app', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api/service.svc/console/')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
 
@@ -152,8 +152,8 @@ describe('test app', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api/northwind/northwind.svc/console/')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
 
@@ -162,8 +162,8 @@ describe('test app', function () {
                     request(app)
                         .get('/service.svc/$metadata')
                         .set('Accept', 'application/xml')
-                        .expect('Content-Type', 'application/xml; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/xml; charset=utf-8', done)
                 });
             });
 
@@ -172,8 +172,8 @@ describe('test app', function () {
                     request(app)
                         .get('/northwind/northwind.svc/$metadata')
                         .set('Accept', 'application/xml')
-                        .expect('Content-Type', 'application/xml; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/xml; charset=utf-8', done)
                 });
             });
 

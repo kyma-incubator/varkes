@@ -26,8 +26,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api1/metadata")
-            .expect('Content-Type', 'text/x-yaml; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'text/x-yaml; charset=utf-8', done)
         });
       })
 
@@ -35,8 +35,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api5/mymetadata")
-            .expect('Content-Type', 'text/x-yaml; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'text/x-yaml; charset=utf-8', done)
         });
       });
 
@@ -44,8 +44,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api1/metadata.json")
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       })
 
@@ -53,8 +53,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api5/mymetadata.json")
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -62,8 +62,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api1/metadata.yaml")
-            .expect('Content-Type', 'text/x-yaml; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'text/x-yaml; charset=utf-8', done)
         });
       })
 
@@ -71,8 +71,8 @@ describe('controllers', function () {
         it('should return response 200', function (done) {
           request(app)
             .get("/api5/mymetadata.yaml")
-            .expect('Content-Type', 'text/x-yaml; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'text/x-yaml; charset=utf-8', done)
         });
       });
 
@@ -81,9 +81,9 @@ describe('controllers', function () {
           request(app)
             .get("/api1/console")
             .expect('Content-Type', 'text/html; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
             .expect(/'\/api1\/metadata.json'/)
-            .expect(/pets openapi yaml/)
+            .expect(/pets openapi yaml/, done)
         });
       })
 
@@ -92,9 +92,9 @@ describe('controllers', function () {
           request(app)
             .get("/api5/console")
             .expect('Content-Type', 'text/html; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
             .expect(/'\/api5\/mymetadata.json'/)
-            .expect(/courses/)
+            .expect(/courses/, done)
         });
       })
 
@@ -103,9 +103,9 @@ describe('controllers', function () {
           request(app)
             .get("/api4/console")
             .expect('Content-Type', 'text/html; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
             .expect(/'\/api4\/metadata.json'/)
-            .expect(/pets/)
+            .expect(/pets/, done)
         });
       })
 
@@ -115,8 +115,8 @@ describe('controllers', function () {
             .post("/api1/authorizationserver/oauth/token")
             .send({ client_id: "1", client_secret: "2", grant_type: "3" })
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -126,8 +126,8 @@ describe('controllers', function () {
             .post("/api5/myoauth/token")
             .send({ client_id: "1", client_secret: "2", grant_type: "3" })
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200, done)
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -136,9 +136,9 @@ describe('controllers', function () {
           request(app)
             .get("/api1/pets?Type=dog")
             .set('Accept', 'application/json')
+            .expect(200)
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(/\[\]/)
-            .expect(200, done)
+            .expect(/\[\]/, done)
         });
       });
 
@@ -147,8 +147,8 @@ describe('controllers', function () {
           request(app)
             .get("/api1/pets")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(400, done)
+            .expect(400)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -157,9 +157,9 @@ describe('controllers', function () {
           request(app)
             .get("/api1/pets/1")
             .set('Accept', 'application/json')
+            .expect(200)
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(/"success":"1"/)
-            .expect(200, done)
+            .expect(/"success":"1"/, done)
         });
       });
 
@@ -168,9 +168,9 @@ describe('controllers', function () {
           request(app)
             .get("/api2/pets?Type=dog")
             .set('Accept', 'application/json')
+            .expect(200)
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(/\[\]/)
-            .expect(200, done)
+            .expect(/\[\]/, done)
         });
       });
 
@@ -179,8 +179,8 @@ describe('controllers', function () {
           request(app)
             .get("/api2/pets")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(400, done)
+            .expect(400)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -189,9 +189,9 @@ describe('controllers', function () {
           request(app)
             .get("/api3/pets?type=dog")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
             .expect(/\[\]/)
-            .expect(200, done)
         });
       });
 
@@ -200,8 +200,8 @@ describe('controllers', function () {
           request(app)
             .get("/api3/pets")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(400, done)
+            .expect(400)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
@@ -210,9 +210,10 @@ describe('controllers', function () {
           request(app)
             .get("/api4/pets?type=dog")
             .set('Accept', 'application/json')
+            .expect(200)
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(/\[\]/)
-            .expect(200, done)
+            .expect(/\[\]/, done)
+
         });
       });
 
@@ -221,8 +222,8 @@ describe('controllers', function () {
           request(app)
             .get("/api4/pets")
             .set('Accept', 'application/json')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(400, done)
+            .expect(400)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
         });
       });
 
