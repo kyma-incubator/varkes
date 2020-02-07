@@ -122,7 +122,7 @@ function validateBasics(config: Config) {
         errors += "\nlogo image must be in svg format"
     }
     if (!config.name && !config.application) {
-        errors += "\nEither have the name of the mocked application configured with 'application' attribute or provide the name for the mock itself via the 'name' attribute"
+        config.name = "Varkes"
     }
     if (config.application && !config.name) {
         config.name = config.application + " Mock"

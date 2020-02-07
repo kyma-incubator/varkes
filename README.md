@@ -29,12 +29,14 @@ The diagram shows how an application mock integrates with a Kyma cluster and whi
 
 ![Mocks Architecture](/assets/architecture.svg)
 
-## Examples
+## Examples & Usage
 
 The `examples` folder includes mocks based on OpenAPI and OData packages. 
 >**NOTE:** Using examples in the `master` branch without cloning the repository is currently impossible because of the development version numbers used in the `package.json` files which are not published to the npm registry. If you want to use the examples without cloning the whole repository, use the tags in the `release` branch. There you can find the latest version of the dependencies already included in the `package.json` files. 
 
 To create Docker images of examples, use the `release` branch, where the npm installed in Docker containers can get the latest version from the registry.
+
+Explanation of the different configuration options available in a varkes config file you can find in the [Type definition](modules/configuration/src/types.ts)
 
 ## Development
 

@@ -9,10 +9,12 @@ describe('config parser', () => {
     it('works with empty config', (done) => {
         let input = JSON.stringify({})
         let config = configuration.resolve(input).then((result) => {
-            done(new Error("should fail"))
+            expect(result.name).equals("Varkes")
+            expect(result.provider).equals("Varkes")
+            done()
         },
             (err) => {
-                done()
+                done(err)
             })
         expect(config).to.be.empty
     })
@@ -50,16 +52,6 @@ describe('config parser', () => {
         configuration.resolve(input).then((result: Config) => {
             expect(result.name).equals("test")
             expect(result.application).equals("App")
-            done()
-        },
-            (err) => {
-                done(err)
-            })
-    })
-    it('has default provider', (done) => {
-        let input = JSON.stringify({ name: "test" })
-        configuration.resolve(input).then((result: Config) => {
-            expect(result.provider).equals("Varkes")
             done()
         },
             (err) => {

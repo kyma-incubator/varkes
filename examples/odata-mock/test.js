@@ -11,27 +11,27 @@ describe('tests odata controllers', function () {
             describe('GET Advertisements via API', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/odata/Advertisements')
+                        .get('/api/services.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET Advertisements via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/Advertisements')
+                        .get('/services.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET loopback console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/odata/console/')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .get('/api/services.svc/console/')
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
 
