@@ -1,5 +1,6 @@
 {
     "name": "Kyma-Mock",
+    "provider": "Kyma",
     "apis": [
         {
             "basepath": "/connector",

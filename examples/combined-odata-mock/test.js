@@ -38,7 +38,7 @@ describe('test app', function () {
             describe('GET Categories via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/northwind.svc/Categorys')
+                        .get('/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
                         .expect('Content-Type', 'application/json; charset=utf-8')
                         .expect(200, done)
@@ -56,7 +56,7 @@ describe('test app', function () {
             describe('GET product console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/odata/product.svc/console/')
+                        .get('/api/product.svc/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });
@@ -64,7 +64,7 @@ describe('test app', function () {
             describe('GET northwind console', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/api/odata/northwind.svc/console/')
+                        .get('/api/northwind.svc/console/')
                         .expect('Content-Type', 'text/html; charset=UTF-8')
                         .expect(200, done)
                 });
