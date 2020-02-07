@@ -1,6 +1,6 @@
 {
     "name": "@varkes/configuration",
-    "version": "0.9.3",
+    "version": "0.10.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "description": "Configuration for varkes modules",
