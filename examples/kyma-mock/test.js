@@ -20,8 +20,9 @@ describe('tests kyma controllers', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/connector/v1/applications/signingRequests/info?token=123')
-                        .expect(/"csrUrl".*applications\/certificates/)
-                        .expect(200,done)
+                        .expect(200)
+                        .expect(/"csrUrl".*applications\/certificates/, done)
+
                 });
             });
 
@@ -29,9 +30,9 @@ describe('tests kyma controllers', function () {
                 it('should return 201', function (done) {
                     request(app)
                         .post('/connector/v1/applications/certificates?token=validToken')
-                        .send({body:"bla"})
-                        .expect(/"crt":"L/)
-                        .expect(201,done)
+                        .send({ body: "bla" })
+                        .expect(201)
+                        .expect(/"crt":"L/, done)
                 });
             });
 
@@ -53,24 +54,25 @@ describe('tests kyma controllers', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/connector/console')
-                        .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=utf-8', done)
                 });
             });
             describe('GET events api console', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/events/console')
-                        .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=utf-8', done)
+
                 });
             });
             describe('GET metadata api console', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/metadata/console')
-                        .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=utf-8', done)
                 });
             });
 

@@ -13,16 +13,16 @@ describe('test app', function () {
                     request(app)
                         .get('/api1/courses')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET console', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api1/console')
-                        .expect('Content-Type', 'text/html; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=utf-8', done)
                 });
             });
 

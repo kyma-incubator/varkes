@@ -31,16 +31,47 @@ The diagram shows how an application mock integrates with a Kyma cluster and whi
 
 ## Examples & Usage
 
-The `examples` folder includes mocks based on OpenAPI and OData packages. 
+Use the modules as express middleware in your express based NodeJs application.
+Depending on the modules you require, add the dependencies to your package.json like that:
+```
+  "dependencies": {
+    "@varkes/configuration": "*",
+    "@varkes/api-server": "*",
+    "@varkes/odata-mock": "*",
+    "@varkes/openapi-mock": "*",
+    "@varkes/cockpit": "*"
+  }
+```
+
+In your application enable the modules in your express app like that:
+```
+const config = require("@varkes/configuration")
+const odataMock = require("@varkes/odata-mock")
+const openapiMock = require("@varkes/openapi-mock")
+const server = require("@varkes/api-server")
+const cockpit = require("@varkes/cockpit")
+const app = require('express')()
+
+let configuration = await config.resolveFile("./varkes_config.json")
+app.use(await odataMock.init(configuration))
+app.use(await openapiMock.init(configuration))
+app.use(await server.init(configuration))
+app.use(await cockpit.init(configuration))
+
+app.listen(10000, function () {
+       console.info("Started application on port %d", 10000)
+})
+```
+
+Furthermore a configuration is required, specified in the `./varkes_config.json` file. The simplest configuration is `{}`. For examples on configurations look at the examples in the `examples` folder. They include different mocks based on OpenAPI and OData packages.
+
+A reference documentation on the configuration you can find at the [Type definition](modules/configuration/src/types.ts)
+
 >**NOTE:** Using examples in the `master` branch without cloning the repository is currently impossible because of the development version numbers used in the `package.json` files which are not published to the npm registry. If you want to use the examples without cloning the whole repository, use the tags in the `release` branch. There you can find the latest version of the dependencies already included in the `package.json` files. 
-
-To create Docker images of examples, use the `release` branch, where the npm installed in Docker containers can get the latest version from the registry.
-
-Explanation of the different configuration options available in a varkes config file you can find in the [Type definition](modules/configuration/src/types.ts)
 
 ## Development
 
-This project is maintained by Lerna. To start developing perform these steps:
+This project is maintained with [Lerna](https://lerna.js.org/). To start developing perform these steps:
 
 1. If you don't have lerna, install it by running `npm install -g lerna`.
 2. Clone this repo and run `make resolve` in the project root to install dependencies and link local dependencies.
@@ -49,3 +80,5 @@ This project is maintained by Lerna. To start developing perform these steps:
 To increase the version number, run `lerna version --no-git-tag-version`, stating the new version number. When omitting the flag, it also creates a new git tag with the given version number. This command also updates the dependency version in the `package.json` of subprojects.
 
 To see how CI operates on Lerna, check the makefile in the root folder.
+
+>**NOTE:** To create Docker images of examples, use the `release` branch, where the npm installed in Docker containers can get the latest version from the registry.
