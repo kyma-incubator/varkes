@@ -84,7 +84,7 @@ describe('test app', function () {
                         .get('/info')
                         .set('Accept', 'application/json')
                         .expect(200)
-                        .expect('Content-Type', 'text/application; json=UTF-8', done)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
