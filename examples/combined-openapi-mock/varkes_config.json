@@ -2,9 +2,7 @@
     "name": "Combined OpenAPI-Mock",
     "apis": [
         {
-            "basepath": "/api2",
             "specification": "apis/schools.yaml",
-            "name": "Schools API",
             "auth": "basic",
             "persistence": true
         },
@@ -22,7 +20,6 @@
     "events": [
         {
             "specification": "apis/events.json",
-            "name": "School events",
             "description": "Events related to schools for demo purpose"
         }
     ]

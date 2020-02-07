@@ -1,5 +1,5 @@
 {
-    "provider": "Varkes",
+    "provider": "myProvider",
     "name": "events2",
     "description": "All Events v2",
     "labels": {

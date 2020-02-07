@@ -13,8 +13,8 @@ describe('test app', function () {
                     request(app)
                         .get('/api/product.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET Categories via API', function () {
@@ -22,34 +22,34 @@ describe('test app', function () {
                     request(app)
                         .get('/api/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET Advertisements via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/product.svc/Advertisements')
+                        .get('/product.svc/Advertisements')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET Categories via odata', function () {
                 it('should return 200', function (done) {
                     request(app)
-                        .get('/odata/northwind.svc/Categorys')
+                        .get('/northwind.svc/Categorys')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
             describe('GET varkes console', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/console')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
 
@@ -57,16 +57,16 @@ describe('test app', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api/product.svc/console/')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
             describe('GET northwind console', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/api/northwind.svc/console/')
-                        .expect('Content-Type', 'text/html; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/html; charset=UTF-8', done)
                 });
             });
 
@@ -74,8 +74,8 @@ describe('test app', function () {
                 it('should return 200', function (done) {
                     request(app)
                         .get('/metadata')
-                        .expect('Content-Type', 'text/yaml; charset=UTF-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'text/yaml; charset=UTF-8', done)
                 });
             });
             describe('GET info', function () {
@@ -83,8 +83,8 @@ describe('test app', function () {
                     request(app)
                         .get('/info')
                         .set('Accept', 'application/json')
-                        .expect('Content-Type', 'application/json; charset=utf-8')
-                        .expect(200, done)
+                        .expect(200)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 

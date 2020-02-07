@@ -16,7 +16,9 @@ npm start
 
 Navigate to `http://localhost:10000` to see the UI of the `cockpit`.
 Navigate to `http://localhost:10000/console` to see the console of the `api-server`.
-Navigate to `http://localhost:10000/api/console` to see the console of the `odata-mock`.
+Navigate to `http://localhost:10000/api/odata/northwind.svc/console` to see the console of the `northwind.svc`.
+Navigate to `http://localhost:10000/odata/northwind.svc/` to see the basepath of the `northwind.svc` ODATA API.
+Navigate to `http://localhost:10000/odata/northwind.svc/$metadata` to see the metadata of the `northwind.svc` ODATA API.
 
 ## Run local using docker
 

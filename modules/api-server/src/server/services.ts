@@ -29,7 +29,7 @@ async function createServicesFromConfig(baseUrl: string, varkesConfig: config.Co
         if (registeredApis.length > 0)
             reg_api = registeredApis.find((x: any) => x.name == varkesApi.name)
         try {
-            let serviceData = fillServiceMetadata(varkesApi, baseUrl)
+            let serviceData = fillServiceMetadata(varkesConfig, varkesApi, baseUrl)
             if (!reg_api) {
                 await api.create(serviceData);
                 apiSucceedCount++;
@@ -63,7 +63,7 @@ async function createServicesFromConfig(baseUrl: string, varkesConfig: config.Co
         if (registeredApis.length > 0)
             reg_api = registeredApis.find((x: any) => x.name == event.name)
         try {
-            let serviceData = fillEventData(event)
+            let serviceData = fillEventData(varkesConfig, event)
             if (!reg_api) {
                 await api.create(serviceData);
                 apiSucceedCount++;
@@ -102,7 +102,7 @@ function getStatus() {
     }
 }
 
-function fillEventData(event: any) {
+function fillEventData(varkesConfig: config.Config, event: config.Event) {
     let specInJson
     if (event.specification.endsWith(".json")) {
         specInJson = JSON.parse(fs.readFileSync(event.specification, 'utf8'))
@@ -111,9 +111,23 @@ function fillEventData(event: any) {
     }
     let labels = event.labels ? event.labels : {};
     labels["type"] = "AsyncApi v" + specInJson.asyncapi.substring(0, specInJson.asyncapi.indexOf("."));
+
+    if (!event.description) {
+        if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
+            event.description = specInJson.info.description
+        }
+    }
+    if (!event.name) {
+        if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
+            event.name = specInJson.info.title
+        } else {
+            throw new Error(`Cannot resolve a name for Event API with specification '${event.specification}', please configure the 'name' attribute`)
+        }
+    }
+
     let serviceData = {
-        provider: event.provider ? event.provider : "Varkes",
-        name: event.name,
+        provider: varkesConfig.provider,
+        name: varkesConfig.application ? varkesConfig.application + " - " + event.name : event.name,
         description: event.description ? event.description : event.name,
         labels: labels,
         events: {
@@ -123,7 +137,7 @@ function fillEventData(event: any) {
     return serviceData
 }
 
-function fillServiceMetadata(api: config.API, baseUrl: string) {
+function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseUrl: string) {
     let apiUrl = baseUrl
     let apiUrlWithBasepath = baseUrl
     if (api.basepath) {
@@ -185,28 +199,37 @@ function fillServiceMetadata(api: config.API, baseUrl: string) {
     if (!api.description) {
         if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
             api.description = specInJson.info.description
-        } else if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title"))
-            api.description = specInJson.info.title
+        }
+    }
+    if (!api.name) {
+        if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("title")) {
+            api.name = specInJson.info.title
+        } else {
+            throw new Error(`Cannot resolve a name for API with specification '${api.specification}', please configure the 'name' attribute`)
+        }
     }
 
     let labels = api.labels ? api.labels : {};
-    labels["type"] = api.type === config.APIType.OData ? "OData" : "OpenAPI"
     if (api.type === config.APIType.OData) {
         labels["type"] = "OData v" + 2
-    }
-    else if (apiData.spec.openapi) {
+        labels["consoleURL"] = baseUrl + "/api" + (api.basepath ? api.basepath : "") + "/console"
+    } else {
+        if (apiData.spec.openapi) {
 
-        labels["type"] = "OpenAPI v" + apiData.spec.openapi.substring(0, apiData.spec.openapi.indexOf("."));
+            labels["type"] = "OpenAPI v" + apiData.spec.openapi.substring(0, apiData.spec.openapi.indexOf("."));
+        }
+        else if (apiData.spec.swagger) {
+            labels["type"] = "Swagger v" + apiData.spec.swagger.substring(0, apiData.spec.swagger.indexOf("."))
+        }
+        else {
+            labels["type"] = "Other"
+        }
+        labels["consoleURL"] = baseUrl + (api.basepath ? api.basepath : "") + "/console"
     }
-    else if (apiData.spec.swagger) {
-        labels["type"] = "Swagger v" + apiData.spec.swagger.substring(0, apiData.spec.swagger.indexOf("."))
-    }
-    else {
-        labels["type"] = "Other"
-    }
+
     let serviceData = {
-        provider: api.provider ? api.provider : "Varkes",
-        name: api.name,
+        provider: varkesConfig.provider,
+        name: varkesConfig.application ? varkesConfig.application + " - " + api.name : api.name,
         description: api.description ? api.description : api.name,
         labels: labels,
         api: apiData

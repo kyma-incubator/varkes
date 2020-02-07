@@ -3,17 +3,15 @@
     "apis": [
         {
             "name": "services",
-            "basepath": "/service/odata/service.svc",
-            "specification": "services.xml",
-            "auth": "none",
-            "type": "odata"
+            "basepath": "/service.svc",
+            "specification": "services.edmx",
+            "auth": "none"
         },
         {
             "name": "northwind",
-            "basepath": "/northwind/odata/northwind.svc",
+            "basepath": "/northwind/northwind.svc",
             "specification": "northwind.xml",
-            "auth": "none",
-            "type": "odata"
+            "auth": "none"
         }
     ]
 }

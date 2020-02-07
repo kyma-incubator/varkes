@@ -13,7 +13,7 @@ function getAll(req: express.Request, res: express.Response) {
     if(configApis){
         for (let i = 0; i < configApis.length; i++) {
             let api = configApis[i]
-            let metadata: any = services.fillServiceMetadata(api, getOrigin(req))
+            let metadata: any = services.fillServiceMetadata(varkesConfig, api, getOrigin(req))
             metadata.id = api.name
             apis.push(metadata)
         }
@@ -22,7 +22,7 @@ function getAll(req: express.Request, res: express.Response) {
     if(configEvents){
         for (let i = 0; i < configEvents.length; i++) {
             let event = configEvents[i];
-            let metadata: any = services.fillEventData(event)
+            let metadata: any = services.fillEventData(varkesConfig, event)
             metadata.id = event.name;
             apis.push(metadata);
         }
@@ -35,14 +35,14 @@ function getLocalApi(req: express.Request, res: express.Response) {
     let apiname = req.params.apiname;
     let api = varkesConfig.apis.find((x: config.API) => x.name == apiname);
     if (api) {
-        let serviceMetadata: any = services.fillServiceMetadata(api, getOrigin(req))
+        let serviceMetadata: any = services.fillServiceMetadata(varkesConfig, api, getOrigin(req))
         serviceMetadata.id = apiname;
         res.status(200).send(serviceMetadata);
     }
     else {
         let event = varkesConfig.events.find((x: config.Event) => x.name == apiname);
         if (event) {
-            let eventMetadata: any = services.fillEventData(event)
+            let eventMetadata: any = services.fillEventData(varkesConfig, event)
             eventMetadata.id = apiname;
             res.status(200).send(eventMetadata);
         }
@@ -100,7 +100,7 @@ async function register(req: express.Request, res: express.Response) {
         for (let i = 0; i < apis.length; i++) {
             let apiEntry = apis[i];
             if (apiEntry.name == apiName) {
-                serviceMetadata = services.fillServiceMetadata(apiEntry, getOrigin(req));
+                serviceMetadata = services.fillServiceMetadata(varkesConfig, apiEntry, getOrigin(req));
                 apiFound = true;
                 break;
             }
@@ -108,7 +108,7 @@ async function register(req: express.Request, res: express.Response) {
         for (let i = 0; i < events.length && !apiFound; i++) {
             let event = events[i];
             if (event.name == apiName) {
-                serviceMetadata = services.fillEventData(event);
+                serviceMetadata = services.fillEventData(varkesConfig, event);
                 break;
             }
         }

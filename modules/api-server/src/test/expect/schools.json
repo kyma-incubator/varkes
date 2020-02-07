@@ -1,10 +1,11 @@
 {
-    "provider": "schoolProvider",
+    "provider": "myProvider",
     "name": "schools",
     "description": "Schools Webservices",
     "labels": {
         "label1": "value1",
-        "type": "OpenAPI v3"
+        "type": "OpenAPI v3",
+        "consoleURL": "http://(localhost|.+)"
     },
     "api": {
         "targetUrl": "http://(localhost|.+)",

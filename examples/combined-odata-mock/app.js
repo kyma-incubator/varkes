@@ -15,8 +15,8 @@ let runAsync = async () => {
 
     try {
         let configuration = await config.resolveFile("./varkes_config.json")
-        app.use(await mock.init(configuration))
         app.use(await server.init(configuration))
+        app.use(await mock.init(configuration))
         app.use(await cockpit.init(configuration))
         if (port)
             app.listen(port, function () {

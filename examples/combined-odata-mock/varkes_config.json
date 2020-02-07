@@ -1,27 +1,25 @@
 {
-    "name": "Combined OData-Mock",
+    "application": "Combined OData-Mock",
     "apis": [
         {
             "name": "Product Service",
-            "specification": "apis/products.xml",
+            "specification": "apis/products.edmx",
             "auth": "basic",
             "type": "odata",
-            "basepath": "/odata/product.svc",
+            "basepath": "/product.svc",
             "persistence": true
         },
         {
             "name": "Northwind Service",
             "specification": "apis/northwind.xml",
             "auth": "basic",
-            "type": "odata",
-            "basepath": "/odata/northwind.svc",
+            "basepath": "/northwind.svc",
             "persistence": true
         }
     ],
     "events": [
         {
             "specification": "apis/events.json",
-            "name": "events",
             "description": "All Events v1"
         }
     ]
