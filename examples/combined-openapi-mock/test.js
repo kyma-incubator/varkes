@@ -31,7 +31,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/api1/console')
                         .expect(200)
-                        .expect('Content-Type', 'application/html; charset=utf-8', done)
+                        .expect('Content-Type', 'text/html; charset=utf-8', done)
                 });
             });
             describe('GET api1 metadata', function () {
@@ -48,7 +48,7 @@ describe('tests odata controllers', function () {
                     request(app)
                         .get('/metadata')
                         .expect(200)
-                        .expect('Content-Type', 'application/yaml; charset=utf-8', done)
+                        .expect('Content-Type', 'text/yaml; charset=UTF-8', done)
                 });
             });
 
