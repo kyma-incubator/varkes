@@ -190,8 +190,8 @@ describe('controllers', function () {
             .get("/api3/pets?type=dog")
             .set('Accept', 'application/json')
             .expect(200)
-            .expect('Content-Type', 'application/json; charset=utf-8', done)
-            .expect(/\[\]/)
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(/\[\]/, done)
         });
       });
 

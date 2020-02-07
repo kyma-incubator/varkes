@@ -52,7 +52,7 @@ describe('test app', function () {
                         .get('/api/northwind/northwind.svc/Summary_of_Sales_by_Years/10')
                         .set('Accept', 'application/json')
                         .expect(404)
-                        .expect('Content-Type', 'application/json; charset=utf-8', 404)
+                        .expect('Content-Type', 'application/json; charset=utf-8', done)
                 });
             });
 
