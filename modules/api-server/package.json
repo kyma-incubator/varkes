@@ -1,6 +1,6 @@
 {
   "name": "@varkes/api-server",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -17,8 +17,8 @@
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
   "dependencies": {
-    "@varkes/app-connector": "^0.9.3",
-    "@varkes/configuration": "^0.9.3",
+    "@varkes/app-connector": "^0.10.0",
+    "@varkes/configuration": "^0.10.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -37,7 +37,7 @@
     "@types/node": "^13.7.0",
     "@types/supertest": "^2.0.8",
     "@types/yaml": "^1.2.0",
-    "@varkes/example-kyma-mock": "^0.9.3",
+    "@varkes/example-kyma-mock": "^0.10.0",
     "copyfiles": "^2.2.0",
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
