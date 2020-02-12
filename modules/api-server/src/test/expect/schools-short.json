@@ -1,0 +1,15 @@
+{
+    "provider": "myProvider",
+    "name": "schools",
+    "description": "Schools Webservices",
+    "labels": {
+        "label1": "value1"
+    },
+    "api": {},
+    "varkes": {
+        "type": "OpenAPI v3",
+        "consoleURL": "http://(localhost|.+)",
+        "metadataURL": "http://(localhost|.+)/entity/schoolMetadata"
+    },
+    "id": ".*"
+}

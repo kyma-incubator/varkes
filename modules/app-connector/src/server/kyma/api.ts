@@ -15,11 +15,43 @@ export function findAll(): Promise<any> {
     })).then((response: any) => {
         if (response.statusCode < 300) {
             LOGGER.debug("Received all APIs: %s", JSON.stringify(response.body, ["id", "name"], 2))
-            return response.body;
+            return response.body.map((entry: any) => {
+                entry.varkes = determineType(entry)
+                return entry
+            });
         } else {
             throw common.resolveError(response.statusCode, response.body, "getting all APIs")
         }
     })
+}
+
+function determineType(entry: any) {
+    let type = "unknown"
+    if (entry.api && entry.api.apiType == "odata") {
+        type = "OData v2"
+    } else if (entry.api && entry.api.spec && entry.api.spec.openapi) {
+        type = "OpenAPI v" + entry.api.spec.openapi.substring(0, entry.api.spec.openapi.indexOf("."));
+    } else if (entry.api && entry.api.spec && entry.api.spec.swagger) {
+        type = "Swagger v" + entry.api.spec.swagger.substring(0, entry.api.spec.swagger.indexOf("."))
+    } else if (entry.events && entry.events.spec && entry.events.spec.asyncapi) {
+        type = "AsyncApi v" + entry.events.spec.asyncapi.substring(0, entry.events.spec.asyncapi.indexOf("."));
+    }
+
+    let varkesInfo: any = {
+        type: type,
+    }
+    if (entry.api && entry.api.targetUrl) {
+        if (type == "OData v2") {
+            let targetURL = new URL(entry.api.targetUrl)
+            targetURL.pathname = "/api" + targetURL.pathname + "/console"
+            varkesInfo.consoleURL = targetURL.toString()
+            varkesInfo.metadataURL = (entry.api && entry.api.specificationUrl) ? entry.api.specificationUrl : entry.api.targetURL + "/$metadata"
+        } else {
+            varkesInfo.consoleURL = entry.api.targetUrl + "/console"
+            varkesInfo.metadataURL = (entry.api && entry.api.specificationUrl) ? entry.api.specificationUrl : entry.api.targetURL + "/metadata"
+        }
+    }
+    return varkesInfo
 }
 
 export function create(api: any): Promise<any> {
@@ -67,7 +99,8 @@ export function findOne(apiId: string): Promise<any | null> {
     })).then((response: any) => {
         if (response.statusCode < 300) {
             LOGGER.debug("Received APIs: %s", JSON.stringify(response.body, ["id", "name"], 2))
-            return response.body;
+            response.body.varkes = determineType(response.body);
+            return response.body
         } else if (response.statusCode == 404) {
             return null
         } else {

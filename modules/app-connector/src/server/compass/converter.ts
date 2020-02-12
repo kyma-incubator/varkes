@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict'
-
+const url = require('url');
 import * as config from "@varkes/configuration"
 const LOGGER: any = config.logger("app-connector")
 
@@ -41,15 +41,26 @@ export function convertApiToOld(newApi: any): any {
     type = "Unknown"
   }
 
+  let varkesInfo: any = {
+    type: type,
+  }
+  
+  if (newApi.spec && newApi.spec.type == "ODATA") {
+    varkesInfo.metadataURL = newApi.targetURL + "/$metadata"
+    let targetURL = new URL(newApi.targetURL)
+    targetURL.pathname = "/api"+targetURL.pathname+ "/console"
+    varkesInfo.consoleURL = targetURL.toString()
+  } else {
+    varkesInfo.metadataURL = newApi.targetURL + "/metadata"
+    varkesInfo.consoleURL = newApi.targetURL + "/console"
+  }
+
   return {
     provider: "Varkes",
     id: newApi.id,
     name: newApi.name,
     description: newApi.description,
-    labels: {
-      type: type,
-      consoleURL: newApi.targetURL + "/console"
-    },
+    varkes: varkesInfo,
     api: {
       targetUrl: newApi.targetURL,
       spec: spec
@@ -92,11 +103,11 @@ export function convertEventToOld(newEvent: any): any {
     id: newEvent.id,
     name: newEvent.name,
     description: newEvent.description,
-    labels: {
-      type: type
-    },
     events: {
       spec: spec
+    },
+    varkes: {
+      type: type
     }
   }
 }

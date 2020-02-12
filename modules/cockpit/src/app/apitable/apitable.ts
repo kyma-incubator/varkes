@@ -39,7 +39,7 @@ export class ApiTableComponent implements OnInit, OnChanges {
                         index = i;
                         x.name = goBackContext.name;
                         x.description = goBackContext.description;
-                        x.labels.type = goBackContext.type;
+                        x.varkes.type = goBackContext.type;
                         return x;
                     }
                 });

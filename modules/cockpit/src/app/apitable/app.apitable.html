@@ -76,7 +76,7 @@
                 <a (click)="showApiDetails(api.id)" class="fd-has-font-weight-bold">{{api.name}}</a>
               </td>
               <td>{{api.description}}</td>
-              <td>{{api.labels.type}}</td>
+              <td>{{api.varkes.type}}</td>
               <td *ngIf="!remote">
                 <button *ngIf="connected" class="fd-button--light" (click)="registerApi(api)">Register</button>
               </td>

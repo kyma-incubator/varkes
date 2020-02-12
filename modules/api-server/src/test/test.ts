@@ -10,8 +10,10 @@ import * as config from "@varkes/configuration"
 
 const kyma = require("@varkes/example-kyma-mock")
 const testAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/test-api.json"), "utf-8"))
-const schoolsAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools.json"), "utf-8"))
-const coursesAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses.json"), "utf-8"))
+const schoolsShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-short.json"), "utf-8"))
+const schoolsLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-long.json"), "utf-8"))
+const coursesShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-short.json"), "utf-8"))
+const coursesLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-long.json"), "utf-8"))
 const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/northwind.json"), "utf-8"))
 const events1API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events1.json"), "utf-8"))
 const events2API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events2.json"), "utf-8"))
@@ -79,16 +81,16 @@ describe("should work", () => {
             return request(server)
                 .get('/remote/apis')
                 .expect(200)
-                .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
-                .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
+                .expect(new RegExp(JSON.stringify(schoolsShortAPI), "g"))
+                .expect(new RegExp(JSON.stringify(coursesShortAPI), "g"))
         })
 
         it('local apis contains schools and courses', () => {
             return request(server)
                 .get('/local/apis')
                 .expect(200)
-                .expect(new RegExp(JSON.stringify(schoolsAPI), "g"))
-                .expect(new RegExp(JSON.stringify(coursesAPI), "g"))
+                .expect(new RegExp(JSON.stringify(schoolsShortAPI), "g"))
+                .expect(new RegExp(JSON.stringify(coursesShortAPI), "g"))
         })
 
         it('registered events contains events1 and events2', () => {
@@ -105,6 +107,20 @@ describe("should work", () => {
                 .expect(200)
             //.expect(new RegExp(JSON.stringify(events1API), "g"))
             //.expect(new RegExp(JSON.stringify(events2API), "g"))
+        })
+
+        it('local schools api is as expected', () => {
+            return request(server)
+                .get('/local/apis/schools')
+                .expect(200)
+                .expect(new RegExp(JSON.stringify(schoolsLongAPI), "g"))
+        })
+
+        it('local courses api is as expected', () => {
+            return request(server)
+                .get('/local/apis/Courses%20Webservices')
+                .expect(200)
+                .expect(new RegExp(JSON.stringify(coursesLongAPI), "g"))
         })
 
         it('404 everything else', () => {

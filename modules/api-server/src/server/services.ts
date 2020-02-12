@@ -109,8 +109,8 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
     } else {
         specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
     }
-    let labels = event.labels ? event.labels : {};
-    labels["type"] = "AsyncApi v" + specInJson.asyncapi.substring(0, specInJson.asyncapi.indexOf("."));
+    let varkesInfo: any = {};
+    varkesInfo.type = "AsyncApi v" + specInJson.asyncapi.substring(0, specInJson.asyncapi.indexOf("."));
 
     if (!event.description) {
         if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
@@ -129,10 +129,11 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
         provider: varkesConfig.provider,
         name: varkesConfig.application ? varkesConfig.application + " - " + event.name : event.name,
         description: event.description ? event.description : event.name,
-        labels: labels,
+        labels: event.labels,
         events: {
             spec: specInJson
-        }
+        },
+        varkes: varkesInfo
     }
     return serviceData
 }
@@ -209,30 +210,31 @@ function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseU
         }
     }
 
-    let labels = api.labels ? api.labels : {};
+    let varkesInfo: any = {};
     if (api.type === config.APIType.OData) {
-        labels["type"] = "OData v" + 2
-        labels["consoleURL"] = baseUrl + "/api" + (api.basepath ? api.basepath : "") + "/console"
+        varkesInfo.type = "OData v" + 2
+        varkesInfo.consoleURL = baseUrl + "/api" + (api.basepath ? api.basepath : "") + "/console"
     } else {
         if (apiData.spec.openapi) {
-
-            labels["type"] = "OpenAPI v" + apiData.spec.openapi.substring(0, apiData.spec.openapi.indexOf("."));
+            varkesInfo.type = "OpenAPI v" + apiData.spec.openapi.substring(0, apiData.spec.openapi.indexOf("."));
         }
         else if (apiData.spec.swagger) {
-            labels["type"] = "Swagger v" + apiData.spec.swagger.substring(0, apiData.spec.swagger.indexOf("."))
+            varkesInfo.type = "Swagger v" + apiData.spec.swagger.substring(0, apiData.spec.swagger.indexOf("."))
         }
         else {
-            labels["type"] = "Other"
+            varkesInfo.type = "Other"
         }
-        labels["consoleURL"] = baseUrl + (api.basepath ? api.basepath : "") + "/console"
+        varkesInfo.consoleURL = baseUrl + (api.basepath ? api.basepath : "") + "/console"
     }
+    varkesInfo.metadataURL = specificationUrl
 
     let serviceData = {
         provider: varkesConfig.provider,
         name: varkesConfig.application ? varkesConfig.application + " - " + api.name : api.name,
         description: api.description ? api.description : api.name,
-        labels: labels,
-        api: apiData
+        labels: api.labels,
+        api: apiData,
+        varkes: varkesInfo
     }
 
     return serviceData

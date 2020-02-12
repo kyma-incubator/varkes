@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ApiTableComponent } from './apitable/apitable';
-import { ConnectionOverviewComponent } from './connectionOverview/connection.overview';
 import { ApiViewComponent } from './apiView/api.view';
 import { ApiOverviewComponent } from './apiOverview/api.overview';
 import { HttpModule } from '@angular/http';
@@ -14,11 +12,12 @@ import { SendEventViewComponent } from './sendEventView/send.eventview';
 import { CreateApiViewComponent } from './createApi/create.api.view';
 import { ServiceInstancesService } from './service-instances/service-instances.service';
 import { FormsModule } from '@angular/forms';
+import { ApiTableModule } from './apitable/apitable.module';
+import { ConnectionOverviewModule } from './connectionOverview/connection.overview.module';
+
 @NgModule({
   declarations: [
     AppComponent,
-    ConnectionOverviewComponent,
-    ApiTableComponent,
     ApiViewComponent,
     ApiOverviewComponent,
     SpecViewComponent,
@@ -29,6 +28,8 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     AceEditorModule,
+    ApiTableModule,
+    ConnectionOverviewModule,
     HttpModule,
     ClickOutsideModule,
     FormsModule

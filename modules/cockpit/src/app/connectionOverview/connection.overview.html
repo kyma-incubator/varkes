@@ -88,7 +88,7 @@
                 </span>
               </span>
             </label>
-            <textarea class="fd-form__control" style="resize: none;" [(ngModel)]="token"></textarea>
+            <textarea class="fd-form__control" style="resize: none;" #token></textarea>
           </div>
           <div class="fd-form__item fd-form__item--check">
             <label class="fd-form__label" for="Ai4ez611">
@@ -106,7 +106,7 @@
       </div>
       <footer class="fd-modal__footer">
         <div class="fd-modal__actions">
-          <button class="fd-button" (click)="onConnect()">Connect</button>
+          <button class="fd-button" (click)="onConnect(token.value)">Connect</button>
           <button (click)="onConnectionCloseModalClick()" class="fd-button--light">Cancel</button>
         </div>
       </footer>

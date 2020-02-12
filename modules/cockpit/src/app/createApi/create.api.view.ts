@@ -51,7 +51,7 @@ export class CreateApiViewComponent implements OnInit {
             let editor = ace.edit("specEditor");
             let spec = JSON.parse(editor.getValue());
 
-            linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.labels.type });
+            linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.varkes.type });
         }
         else {
             linkManager().navigate("/");
@@ -62,9 +62,6 @@ export class CreateApiViewComponent implements OnInit {
             "provider": "Varkes",
             "name": "test-event",
             "description": "testing... 1.2.3.",
-            "labels": {
-                "type": "AsyncApi"
-            },
             "events": {
                 "spec": {
                     "asyncapi": "1.0.0",
@@ -98,9 +95,6 @@ export class CreateApiViewComponent implements OnInit {
             "provider": "Varkes",
             "name": "test-api",
             "description": "testing... 1.2.3.",
-            "labels": {
-                "type": "OpenApi"
-            },
             "api": {
                 "targetUrl": "http://localhost/target",
                 "credentials": {

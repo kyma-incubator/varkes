@@ -1,48 +1,39 @@
 {
     "provider": "myProvider",
-    "name": "schools",
-    "description": "Schools Webservices",
-    "labels": {
-        "label1": "value1",
-        "type": "OpenAPI v3",
-        "consoleURL": "http://(localhost|.+)"
-    },
+    "name": "Courses Webservices",
+    "description": "myDescription",
     "api": {
-        "targetUrl": "http://(localhost|.+)",
+        "targetUrl": "http://(localhost|.+)/entity/v1",
         "credentials": {
-            "oauth": {
-                "url": "http://(localhost|.+)/entity/schoolToken",
-                "clientId": "admin",
-                "clientSecret": "nimda",
-                "csrfInfo": {
-                    "tokenEndpointURL": "http://(localhost|.+)/entity"
-                }
+            "basic": {
+                "username": "admin",
+                "password": "nimda"
             }
         },
-        "specificationUrl": "http://(localhost|.+)/entity/schoolMetadata",
+        "specificationUrl": "http://(localhost|.+)/entity/v1/metadata",
         "spec": {
             "openapi": "3.0.0",
             "info": {
-                "description": "Schools Webservices",
+                "description": "Courses Webservices",
                 "version": "2.0",
-                "title": "Schools Webservices"
+                "title": "Courses Webservices"
             },
-            "basePath": "/entity",
+            "basePath": "/entity/v1",
             "paths": {
-                "/schools": {
+                "/courses": {
                     "get": {
-                        "summary": "Get a list of available schools.",
-                        "description": "Lists all available schools.",
+                        "summary": "Get a list of available courses.",
+                        "description": "Lists all available courses.",
                         "responses": {
                             "200": {
                                 "description": "OK",
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "schools": {
+                                        "courses": {
                                             "type": "array",
                                             "items": {
-                                                "areacode": {
+                                                "code": {
                                                     "type": "string"
                                                 },
                                                 "name": {
@@ -67,6 +58,11 @@
                 }
             }
         }
+    },
+    "varkes": {
+        "type": "OpenAPI v3",
+        "consoleURL": "http://(localhost|.+)",
+        "metadataURL": "http://(localhost|.+)/entity/v1/metadata"
     },
     "id": ".*"
 }

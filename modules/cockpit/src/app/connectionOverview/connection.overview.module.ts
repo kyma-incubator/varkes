@@ -2,17 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ConnectionRoutingModule } from './connection-routing.module';
 import { ConnectionOverviewComponent } from './connection.overview';
-import { ApiTableComponent } from '../apitable/apitable';
+import { ApiTableModule } from '../apitable/apitable.module';
 @NgModule({
     declarations: [
-        ConnectionOverviewComponent,
-        ApiTableComponent
+        ConnectionOverviewComponent
     ],
     imports: [
         BrowserModule,
-        ConnectionRoutingModule
+        ConnectionRoutingModule,
+        ApiTableModule
     ],
-    exports: [ConnectionOverviewComponent, ApiTableComponent],
+    exports: [ConnectionOverviewComponent],
     providers: [],
     bootstrap: []
 })
