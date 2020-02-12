@@ -81,7 +81,7 @@ export class ApiOverviewComponent implements OnInit {
             let editor = ace.edit("specEditor");
             let spec = JSON.parse(editor.getValue());
 
-            linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.labels.type });
+            linkManager().goBack({ id: spec.id, name: spec.name, description: spec.description, type: spec.varkes.type });
         }
         else {
             linkManager().navigate("/");

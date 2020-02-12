@@ -14,8 +14,16 @@ function getAll(req: express.Request, res: express.Response) {
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        api.findAll().then((result: any) => {
-            res.status(200).send(result);
+        api.findAll().then((result: any[]) => {
+            res.status(200).send(result.map((entity)=>{
+                if(entity.api){
+                    entity.api = {}
+                }
+                if(entity.events){
+                    entity.events = {}
+                }
+                return entity
+            }));
         }, (err: any) => {
             LOGGER.error("Failed to get all apis: %s", err)
             res.status(500).send({ error: err.message })

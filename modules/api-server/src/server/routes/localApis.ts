@@ -14,6 +14,7 @@ function getAll(req: express.Request, res: express.Response) {
         for (let i = 0; i < configApis.length; i++) {
             let api = configApis[i]
             let metadata: any = services.fillServiceMetadata(varkesConfig, api, getOrigin(req))
+            metadata.api = {}
             metadata.id = api.name
             apis.push(metadata)
         }
@@ -23,6 +24,7 @@ function getAll(req: express.Request, res: express.Response) {
         for (let i = 0; i < configEvents.length; i++) {
             let event = configEvents[i];
             let metadata: any = services.fillEventData(varkesConfig, event)
+            metadata.events = {}
             metadata.id = event.name;
             apis.push(metadata);
         }
