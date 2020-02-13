@@ -12,7 +12,7 @@
     "ng": "ng",
     "build-tsc": "tsc -p src/server/tscconfig.app.json",
     "start": "node dist/server",
-    "build": "ng build",
+    "build": "ng build --prod",
     "compile": "npm run buildConfig && npm run build && npm run build-tsc"
   },
   "dependencies": {
