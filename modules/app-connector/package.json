@@ -1,6 +1,6 @@
 {
   "name": "@varkes/app-connector",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
     "clean": "rm -rf dist || true && rm -rf logs || true"
   },
   "dependencies": {
-    "@varkes/configuration": "^0.10.1",
+    "@varkes/configuration": "^0.10.2",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-env": "^0.6.1",
@@ -39,7 +39,7 @@
     "@types/node-fetch": "^2.5.4",
     "@types/request": "^2.48.4",
     "@types/request-promise": "^4.1.45",
-    "@varkes/example-kyma-mock": "^0.10.1",
+    "@varkes/example-kyma-mock": "^0.10.2",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
     "copyfiles": "^2.2.0",
