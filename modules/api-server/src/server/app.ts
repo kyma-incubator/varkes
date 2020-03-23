@@ -8,6 +8,7 @@ import * as bodyParser from "body-parser";
 import * as expressWinston from "express-winston";
 import * as cors from "cors";
 import * as connector from "./routes/connector";
+import * as healthz from "./routes/healthz";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
@@ -19,6 +20,7 @@ const LOCAL_APIS_URL = "/local";
 const REMOTE_APIS_URL = "/remote/apis";
 const EVENTS_URL = "/events";
 const CONNECTION = "/connection";
+const HEALTHZ = "/healthz";
 const BATCH_REGISTRATION = "/local/registration";
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 const LOGGER = config.logger("api-server")
@@ -33,6 +35,7 @@ async function init(config: config.Config) {
     app.use(LOCAL_APIS_URL, localApis.router(config))
     app.use(CONNECTION, connector.router())
     app.use(EVENTS_URL, events.router())
+    app.use(HEALTHZ, healthz.router())
 
     app.use("/swagger-ui", express.static(pathToSwaggerUI))
 

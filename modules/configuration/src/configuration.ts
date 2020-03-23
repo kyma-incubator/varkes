@@ -130,6 +130,13 @@ function validateBasics(config: Config) {
     if (!config.provider) {
         config.provider = "Varkes"
     }
+    if (!config.package) {
+        if (config.application) {
+            config.package = config.application
+        } else {
+            config.package = "Varkes"
+        }
+    }
     return errors
 }
 

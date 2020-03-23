@@ -4,29 +4,33 @@ const url = require('url');
 import * as config from "@varkes/configuration"
 const LOGGER: any = config.logger("app-connector")
 
-export function convertApiArrayToOldArray(newArray: any[]): any[] {
+export function convertPackageArrayToOldArray(newArray: any[]): any[] {
   const result = [];
   if (newArray.length > 0) {
     for (var i = 0; i < newArray.length; i++) {
-      let newApi = newArray[i];
-      result.push(convertApiToOld(newApi));
+      let newPackage = newArray[i];
+      if (newPackage.apiDefinitions) {
+        if (newPackage.apiDefinitions.data.length > 0) {
+          for (var j = 0; j < newPackage.apiDefinitions.data.length; j++) {
+            let newEntry = newPackage.apiDefinitions.data[j];
+            result.push(convertApiToOld(newPackage.id, newPackage.name, newEntry));
+          }
+        }
+      }
+      if (newPackage.eventDefinitions) {
+        if (newPackage.eventDefinitions.data.length > 0) {
+          for (var j = 0; j < newPackage.eventDefinitions.data.length; j++) {
+            let newEntry = newPackage.eventDefinitions.data[j];
+            result.push(convertEventToOld(newPackage.id, newPackage.name, newEntry));
+          }
+        }
+      }
     }
   }
   return result;
 }
 
-export function convertEventArrayToOldArray(newArray: any[]): any[] {
-  const result = [];
-  if (newArray.length > 0) {
-    for (var i = 0; i < newArray.length; i++) {
-      let newApi = newArray[i];
-      result.push(convertEventToOld(newApi));
-    }
-  }
-  return result;
-}
-
-export function convertApiToOld(newApi: any): any {
+export function convertApiToOld(packageId: string, packageName: string | null, newApi: any): any {
   let spec: any = decodeApiSpec(newApi.spec)
   let type
   if (newApi.spec && newApi.spec.type == "ODATA") {
@@ -43,12 +47,13 @@ export function convertApiToOld(newApi: any): any {
 
   let varkesInfo: any = {
     type: type,
+    packageId: packageId
   }
-  
+
   if (newApi.spec && newApi.spec.type == "ODATA") {
     varkesInfo.metadataURL = newApi.targetURL + "/$metadata"
     let targetURL = new URL(newApi.targetURL)
-    targetURL.pathname = "/api"+targetURL.pathname+ "/console"
+    targetURL.pathname = "/api" + targetURL.pathname + "/console"
     varkesInfo.consoleURL = targetURL.toString()
   } else {
     varkesInfo.metadataURL = newApi.targetURL + "/metadata"
@@ -95,7 +100,7 @@ function decodeApiSpec(spec: any): any {
   }
 }
 
-export function convertEventToOld(newEvent: any): any {
+export function convertEventToOld(packageId: string, packageName: string | null, newEvent: any): any {
   let spec: any = decodeApiSpec(newEvent.spec)
   let type = "AsyncApi v" + spec.asyncapi.substring(0, spec.asyncapi.indexOf("."));
   return {
@@ -107,7 +112,8 @@ export function convertEventToOld(newEvent: any): any {
       spec: spec
     },
     varkes: {
-      type: type
+      type: type,
+      packageId: packageId
     }
   }
 }

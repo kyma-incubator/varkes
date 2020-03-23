@@ -62,7 +62,8 @@
     "varkes": {
         "type": "OpenAPI v3",
         "consoleURL": "http://(localhost|.+)",
-        "metadataURL": "http://(localhost|.+)/entity/v1/metadata"
+        "metadataURL": "http://(localhost|.+)/entity/v1/metadata",
+        "packageName": "Varkes"
     },
     "id": ".*"
 }
