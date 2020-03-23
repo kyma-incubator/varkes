@@ -8,6 +8,7 @@ type Config = {
     application: string, //optional name of the application which is mocked. Value will be used as prefix for every API name
     apis: API[],         //optional APIs to mock and register
     events: Event[],     //optional event APIs to register
+    package: string,     //optional package name to be used for API management with compass
     location: string     //Do not set: internal attribute to store the absolue path to this configuration itself
 }
 

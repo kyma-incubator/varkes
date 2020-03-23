@@ -111,6 +111,7 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
     }
     let varkesInfo: any = {};
     varkesInfo.type = "AsyncApi v" + specInJson.asyncapi.substring(0, specInJson.asyncapi.indexOf("."));
+    varkesInfo.packageName = varkesConfig.package
 
     if (!event.description) {
         if (specInJson.hasOwnProperty("info") && specInJson.info.hasOwnProperty("description")) {
@@ -227,6 +228,7 @@ function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseU
         varkesInfo.consoleURL = baseUrl + (api.basepath ? api.basepath : "") + "/console"
     }
     varkesInfo.metadataURL = specificationUrl
+    varkesInfo.packageName = varkesConfig.package
 
     let serviceData = {
         provider: varkesConfig.provider,
