@@ -9,7 +9,7 @@ import * as request from "request-promise";
 import { uuid } from 'uuidv4';
 
 const URL = require("url").URL;
-const check_api = require("check_api");
+const asyncApiParser = require('@asyncapi/parser')
 const yaml = require("js-yaml");
 const pretty_yaml = require('json-to-pretty-yaml')
 const OAUTH = "/authorizationserver/oauth/token";
@@ -30,7 +30,7 @@ export async function resolve(configText: string, location: string = ""): Promis
     }
     LOGGER.info("Loading configuration from %s", config.location ? config.location : "string")
     await resolveSpecs(config)
-    validate(config)
+    await validate(config)
     return config
 }
 
@@ -106,9 +106,9 @@ function downloadSpec(api: API | Event): Promise<string> {
     })
 }
 
-function validate(config: Config) {
+async function validate(config: Config) {
     let errors = validateBasics(config)
-    errors = errors + validateEvents(config)
+    errors = errors + await validateEvents(config)
     errors = errors + validateApis(config)
 
     if (errors != "") {
@@ -212,7 +212,7 @@ function validateOpenApi(api: API): String {
     return errors
 }
 
-function validateEvents(config: Config) {
+async function validateEvents(config: Config) {
     let events = config.events
     let errors = ""
     if (events) {
@@ -229,8 +229,8 @@ function validateEvents(config: Config) {
                 } else {
                     specInJson = yaml.safeLoad(fs.readFileSync(event.specification, 'utf8'))
                 }
-                if (specInJson.asyncapi != "2.0.0") {
-                    check_api.check_api(specInJson, {}, function (err: any, options: any) {
+                if (specInJson.asyncapi != "1.0.0") {
+                   await asyncApiParser.parse(specInJson).catch((err:any)=> {
                         if (err) {
                             errors += "\nevent " + (event.name ? event.name : "number " + i) + ": Schema validation Error \n" + pretty_yaml.stringify(err)
                         }
