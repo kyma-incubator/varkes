@@ -64,7 +64,7 @@ async function callInfoUrl(infoUrl: string, crt: Buffer, privateKey: Buffer, ins
         rejectUnauthorized: !insecure,
         resolveWithFullResponse: true,
         simple: false,
-        retry: 5,
+        retry: process.env.CONNECTION_RETRY || 5,
         verbose_logging: false,
         accepted: [ 400, 401, 403, 404 ],
         delay: 1000,
