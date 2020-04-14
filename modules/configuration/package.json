@@ -14,19 +14,19 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
-        "@types/request-promise": "^4.1.45",
-        "@asyncapi/parser": "^0.16.0",
+        "@types/request-promise": "^4.1.46",
+        "@asyncapi/parser": "^0.17.0",
         "js-yaml": "^3.13.1",
         "json-to-pretty-yaml": "^1.2.2",
         "request": "^2.88.2",
         "request-promise": "^4.2.5",
-        "uuidv4": "^6.0.6",
+        "uuidv4": "^6.0.7",
         "winston": "^3.2.1"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",
         "@types/mocha": "^7.0.2",
-        "@types/node": "^13.9.1",
+        "@types/node": "^13.11.1",
         "@types/winston": "^2.4.4",
         "chai": "^4.2.0",
         "chai-match": "^1.1.1",

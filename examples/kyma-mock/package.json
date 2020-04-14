@@ -19,7 +19,7 @@
     "@varkes/configuration": "^0.10.3",
     "@varkes/openapi-mock": "^0.10.3",
     "express": "^4.17.1",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "mocha": "^7.1.1",
