@@ -4,7 +4,7 @@
 const mock = require("@varkes/openapi-mock")
 const config = require("@varkes/configuration")
 const app = require('express')()
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid');
 const bodyParser = require('body-parser');
 
 let runAsync = async () => {
