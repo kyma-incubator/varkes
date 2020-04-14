@@ -21,6 +21,13 @@ spec:
         env:
         - name: DEBUG
           value: "true"
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "50m"
+          limits:
+            memory: "250Mi"
+            cpu: "100m"
 ---
 apiVersion: v1
 kind: Service
