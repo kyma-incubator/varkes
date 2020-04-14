@@ -11,6 +11,8 @@ spec:
   replicas: 1
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
       labels:
         app: example-combined-odata-mock
     spec:
@@ -21,6 +23,14 @@ spec:
         ports:
         - name: http
           containerPort: 10000
+        livenessProbe:
+          httpGet:
+            port: http
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            port: http
+          initialDelaySeconds: 60
         env:
         - name: DEBUG
           value: "true"
