@@ -26,10 +26,10 @@ let runAsync = async () => {
     fs.writeFileSync("./generated/varkes_config.json", JSON.stringify(generatedConfig, null, 2))
     try {
         let configuration = await config.resolveFile("./generated/varkes_config.json", __dirname)
+        app.use(await cockpit.init(configuration))
         app.use(await server.init(configuration))
         app.use(await odataMock.init(configuration))
         app.use(await openapiMock.init(configuration))
-        app.use(await cockpit.init(configuration))
         if (port)
             app.listen(port, function () {
                 console.info("Started application on port %d with %d OpenAPIs, %d ODatas and %d Events", port, OPENAPI_COUNT, ODATA_COUNT, EVENT_COUNT)

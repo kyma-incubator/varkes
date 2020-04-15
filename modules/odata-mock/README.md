@@ -12,9 +12,7 @@ The OData mock mocks the application APIs based on the OData specification.
 The OData mock brings you the following features:
 
 - Based on the n-odata package: The odata-mock application is based on the [n-odata-server](https://github.com/htammen/n-odata-server) project, which is based on [loopback](https://loopback.io/).
-
-- Records every request made to the node: Uses the [morgan](https://www.npmjs.com/package/morgan) logging framework to create `requests.log` file. This file contains the called URLs, the header of the request and the body of the request if exists.
-
+ 
 - Returns the OData specification as metadata: Call `/odata/$metadata` to see the OData `edmx` specification used in `xml` format.
 
 

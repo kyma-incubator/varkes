@@ -33,7 +33,6 @@ async function init(configuration: config.Config) {
 async function bootLoopback(api: config.API, varkesConfig: config.Config) {
   let app = loopback();
   app.use(bodyParser.json());
-  app.varkesConfig = varkesConfig
 
   LOGGER.debug("Parsing specification and generating models for api %s", api.name)
   let bootConfig = await generateBootConfig(api)
