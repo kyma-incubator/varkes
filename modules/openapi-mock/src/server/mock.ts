@@ -8,7 +8,7 @@ import * as config from "@varkes/configuration"
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 const LOGGER = config.logger("openapi-mock")
 const Converter = require("api-spec-converter")
-const middleware = require("swagger-express-middleware")
+const middleware = require("@apidevtools/swagger-express-middleware")
 
 const DIR_NAME = "./generated/";
 const TMP_FILE = "tmp.yaml";
