@@ -5,7 +5,6 @@ import * as express from "express"
 import * as yaml from "js-yaml"
 import * as fs from "fs"
 import * as config from "@varkes/configuration"
-import { SwaggerMiddleware } from "swagger-express-middleware";
 const pretty_yaml = require("json-to-pretty-yaml") //use require for libraries without type
 const LOGGER = config.logger("openapi-mock")
 const Converter = require("api-spec-converter")
@@ -54,7 +53,7 @@ async function mock(configuration: config.Config) {
 
                 let middlewares = [];
                 middlewares.push(
-                    middleware(api.specification, app, (_err: Error, middleware: SwaggerMiddleware) => {
+                    middleware(api.specification, app, (_err: Error, middleware: any) => {
                         app.use(
                             middleware.metadata(),
                             middleware.CORS(),
