@@ -1,6 +1,6 @@
 {
   "name": "@varkes/openapi-mock",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -17,13 +17,13 @@
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
   "dependencies": {
-    "@varkes/configuration": "^0.10.3",
+    "@apidevtools/swagger-express-middleware": "^4.0.0",
+    "@varkes/configuration": "^0.10.4",
     "api-spec-converter": "~2.9.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "js-yaml": "^3.13.1",
     "json-to-pretty-yaml": "^1.2.2",
-    "@apidevtools/swagger-express-middleware": "^4.0.0",
     "swagger-ui-dist": "^3.25.0"
   },
   "devDependencies": {
