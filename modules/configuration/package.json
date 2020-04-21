@@ -1,6 +1,6 @@
 {
     "name": "@varkes/configuration",
-    "version": "0.10.3",
+    "version": "0.10.4",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "description": "Configuration for varkes modules",
@@ -14,8 +14,8 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
-        "@types/request-promise": "^4.1.46",
         "@asyncapi/parser": "^0.17.0",
+        "@types/request-promise": "^4.1.46",
         "js-yaml": "^3.13.1",
         "json-to-pretty-yaml": "^1.2.2",
         "request": "^2.88.2",
