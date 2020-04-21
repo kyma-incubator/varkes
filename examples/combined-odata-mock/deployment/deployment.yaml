@@ -54,15 +54,3 @@ spec:
     port: 10000
   selector:
     app: example-combined-odata-mock
----
-apiVersion: gateway.kyma-project.io/v1alpha2
-kind: Api
-metadata:
-  labels:
-    app: example-combined-odata-mock
-  name: example-combined-odata-mock
-spec:
-  hostname: example-combined-odata-mock
-  service:
-    name: example-combined-odata-mock
-    port: 10000

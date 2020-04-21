@@ -17,7 +17,8 @@ The count of APIs can be adjusted via environment variables having these names:
 ## Run local
 
 To run it local run:
-```
+
+```bash
 npm install
 npm start
 ```
@@ -30,20 +31,21 @@ Navigate to `http://localhost:10000/api[3,..,152]/console` to see the console of
 ## Run local using docker
 
 To run it using docker, call:
-```
+
+```bash
 docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-stress-mock:latest
 ```
 
-## Run in Kyma
+## Run in Kubernetes
 
-To run the mock using Kyma as runtime envrironment, run the following kubectl command to set up a namespace:
+To run the mock using Kubernetes as runtime envrironment, run the following kubectl command to set up a namespace:
 
 ```bash
 kubectl create namespace mocks
-kubectl label namespace mocks env=true
 ```
 
 and to deploy the mock
+
 ```bash
 kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/examples/stress-mock/deployment/deployment.yaml
 ```

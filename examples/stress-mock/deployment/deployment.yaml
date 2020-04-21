@@ -50,15 +50,3 @@ spec:
       port: 10000
   selector:
     app: example-stress-mock
----
-apiVersion: gateway.kyma-project.io/v1alpha2
-kind: Api
-metadata:
-  labels:
-    app: example-stress-mock
-  name: example-stress-mock
-spec:
-  hostname: example-stress-mock
-  service:
-    name: example-stress-mock
-    port: 10000

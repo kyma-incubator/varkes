@@ -9,7 +9,8 @@ This example illustrate how to use the `varkes-odata-mock` in combination with t
 ## Run local using npm
 
 To run it local run:
-```
+
+```bash
 npm install
 npm start
 ```
@@ -23,20 +24,21 @@ Navigate to `http://localhost:10000/odata/northwind.svc/$metadata` to see the me
 ## Run local using docker
 
 To run it using docker, call:
-```
+
+```bash
 docker run -p 10000:10000 eu.gcr.io/kyma-project/incubator/varkes-example-combined-odata-mock:latest
 ```
 
-## Run in Kyma
+## Run in Kubernetes
 
-To run the mock using Kyma as runtime envrironment, run the following kubectl command to set up a namespace:
+To run the mock using Kubernetes as runtime envrironment, run the following kubectl command to set up a namespace:
 
 ```bash
 kubectl create namespace mocks
-kubectl label namespace mocks env=true
 ```
 
 and to deploy the mock
+
 ```bash
 kubectl apply -n mocks -f https://raw.githubusercontent.com/kyma-incubator/varkes/master/examples/combined-odata-mock/deployment/deployment.yaml
 ```

@@ -44,15 +44,3 @@ spec:
     port: 10000
   selector:
     app: example-kyma-mock
----
-apiVersion: gateway.kyma-project.io/v1alpha2
-kind: Api
-metadata:
-  labels:
-    app: example-kyma-mock
-  name: example-kyma-mock
-spec:
-  hostname: example-kyma-mock
-  service:
-    name: example-kyma-mock
-    port: 10000
