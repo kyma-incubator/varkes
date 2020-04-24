@@ -128,7 +128,7 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
 
     let serviceData = {
         provider: varkesConfig.provider,
-        name: (varkesConfig.application && (!connection.established || isConnectedToKyma())) ? varkesConfig.application + " - " + event.name : event.name,
+        name: (varkesConfig.application && (!connection.established() || isConnectedToKyma())) ? varkesConfig.application + " - " + event.name : event.name,
         description: event.description ? event.description : event.name,
         labels: event.labels,
         events: {
@@ -237,7 +237,7 @@ function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseU
 
     let serviceData = {
         provider: varkesConfig.provider,
-        name: (varkesConfig.application && (!connection.established || isConnectedToKyma())) ? varkesConfig.application + " - " + api.name : api.name,
+        name: (varkesConfig.application && (!connection.established() || isConnectedToKyma())) ? varkesConfig.application + " - " + api.name : api.name,
         description: api.description ? api.description : api.name,
         labels: api.labels,
         api: apiData,
