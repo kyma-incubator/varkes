@@ -128,7 +128,7 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
 
     let serviceData = {
         provider: varkesConfig.provider,
-        name: varkesConfig.application ? varkesConfig.application + " - " + event.name : event.name,
+        name: (varkesConfig.application && (!connection.established || isConnectedToKyma())) ? varkesConfig.application + " - " + event.name : event.name,
         description: event.description ? event.description : event.name,
         labels: event.labels,
         events: {
@@ -138,6 +138,11 @@ function fillEventData(varkesConfig: config.Config, event: config.Event) {
     }
     return serviceData
 }
+
+function isConnectedToKyma(): boolean {
+    return connection.established() && connection.info().type === connection.Type.Kyma
+}
+
 
 function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseUrl: string) {
     let apiUrl = baseUrl
@@ -194,7 +199,7 @@ function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseU
         specInJson = fs.readFileSync(api.specification, 'utf8')
     }
 
-    if (api.registerSpec != false && !(api.type === config.APIType.OData && connection.established() && connection.info().type === connection.Type.Kyma)) {
+    if (api.registerSpec != false && !(api.type === config.APIType.OData && isConnectedToKyma())) {
         apiData.spec = specInJson
     }
 
@@ -232,7 +237,7 @@ function fillServiceMetadata(varkesConfig: config.Config, api: config.API, baseU
 
     let serviceData = {
         provider: varkesConfig.provider,
-        name: varkesConfig.application ? varkesConfig.application + " - " + api.name : api.name,
+        name: (varkesConfig.application && (!connection.established || isConnectedToKyma())) ? varkesConfig.application + " - " + api.name : api.name,
         description: api.description ? api.description : api.name,
         labels: api.labels,
         api: apiData,

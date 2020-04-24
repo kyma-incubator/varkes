@@ -118,7 +118,7 @@ export function convertEventToOld(packageId: string, packageName: string | null,
   }
 }
 
-export function convertApiToNew(api: any): any {
+export function convertAuthToNew(api: any): any{
   let defaultAuth;
   if (api.api.credentials) {
     if (api.api.credentials.basic) {
@@ -142,7 +142,9 @@ export function convertApiToNew(api: any): any {
       }
     }
   }
-
+  return defaultAuth
+}
+export function convertApiToNew(api: any): any {
   let spec;
   if (api.api.spec && api.api.apiType == "odata") {
     spec = {
@@ -162,7 +164,6 @@ export function convertApiToNew(api: any): any {
     name: api.name,
     description: api.description,
     targetURL: api.api.targetUrl,
-    defaultAuth: defaultAuth,
     spec: spec
   }
 }

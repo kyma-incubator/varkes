@@ -74,7 +74,7 @@ export async function create(api: any): Promise<any> {
 async function createEvent(api: any) {
   let packageId = await getPackageId(connection.info()!.application, api.varkes.packageName)
   if (!packageId) {
-    packageId = await createPackage(api.varkes.packageName)
+    packageId = await createPackage(api.varkes.packageName, undefined)
   }
   const payload = converter.convertEventToNew(api)
   LOGGER.debug(`Payload for event creation is: ${JSON.stringify(payload, null, 2)}`)
@@ -146,12 +146,13 @@ async function getPackageId(appId: string, packageName: string): Promise<string 
   return null
 }
 
-async function createPackage(packageName: string): Promise<string> {
+async function createPackage(packageName: string, defaultAuth: any): Promise<string> {
   LOGGER.debug(`Creating package with name: ${packageName}`)
 
   const payload = {
     name: packageName,
     description: packageName,
+    defaultInstanceAuth:defaultAuth
   }
   const mutation = gql`mutation ($appId : ID! $payload : PackageCreateInput!){
     addPackage(
@@ -185,7 +186,7 @@ async function createPackage(packageName: string): Promise<string> {
 async function createApi(api: any) {
   let packageId = await getPackageId(connection.info()!.application, api.varkes.packageName)
   if (!packageId) {
-    packageId = await createPackage(api.varkes.packageName)
+    packageId = await createPackage(api.varkes.packageName, converter.convertAuthToNew(api))
   }
   const payload = converter.convertApiToNew(api)
   LOGGER.debug(`Payload for API creation is: ${JSON.stringify(payload, null, 2)}`)
