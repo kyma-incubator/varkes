@@ -60,7 +60,7 @@ function getOrigin(req: express.Request) {
     if (req.body.baseUrl && !req.body.baseUrl.match(/http(s)?:\/\//)) {
         return req.protocol + req.body.baseUrl
     }
-    return req.body.baseUrl || req.headers.origin || req.protocol + "://" + req.headers.host
+    return req.body.baseUrl || req.headers.origin || req.headers.referer || req.protocol + "://" + req.headers.host
 }
 
 async function registerAll(req: express.Request, res: express.Response) {
