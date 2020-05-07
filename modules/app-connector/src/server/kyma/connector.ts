@@ -84,15 +84,15 @@ export async function connect(tokenUrl: string, insecure: boolean = false): Prom
     let certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
     let infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, certificateData, connection.privateKey(), insecure)
 
-    let domains = new url.URL(infoResponse.urls.metadataUrl).hostname.replace("gateway.", "");
+    let domains = new url.URL(infoResponse.urls.eventsUrl).hostname.replace("gateway.", "");
     let connectionData: connection.Info = {
         insecure: insecure,
         metadataUrl: infoResponse.urls.metadataUrl,
         eventsUrl: infoResponse.urls.eventsUrl,
         renewCertUrl: infoResponse.urls.renewCertUrl,
         revocationCertUrl: infoResponse.urls.revocationCertUrl,
-        consoleUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", ""),
-        applicationUrl: infoResponse.urls.metadataUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/metadata/services", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
+        consoleUrl: infoResponse.urls.eventsUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/events", ""),
+        applicationUrl: infoResponse.urls.eventsUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/events", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
         domain: domains,
         application: infoResponse.clientIdentity.application,
         type: connection.Type.Kyma
