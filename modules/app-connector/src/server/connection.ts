@@ -50,7 +50,7 @@ function establish(newConnection: Info, newCertificate: Buffer, persistFiles: bo
         fs.writeFileSync(crtFile, certificateData, { encoding: "utf8", flag: 'wx' })
     }
 
-    LOGGER.info("Connected to %s", connection.domain)
+    LOGGER.info("Connected to %s", connection.metadataUrl)
 
     return connection
 }
@@ -113,22 +113,20 @@ export async function connect(token: string, persistFiles: boolean = true, insec
 }
 
 export async function eventsUrl(): Promise<string> {
-    let result = connection!.eventsUrl;
-    if (result) {
-        return result
-    }
-    return compassConnector.eventsUrl(connection!.domain, connection!.application);
+    if (connection!.type === Type.Kyma)
+        return kymaConnector.eventsUrl();
+    else
+        return compassConnector.eventsUrl();
 }
 
 export type Info = {
     insecure: boolean,
     metadataUrl: string,
-    eventsUrl: string | null,
+    infoUrl: string | null,
     renewCertUrl: string | null,
     revocationCertUrl: string | null,
     consoleUrl: string,
     applicationUrl: string,
-    domain: string,
     application: string
     type: Type
 }

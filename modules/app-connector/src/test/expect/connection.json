@@ -1,12 +1,11 @@
 {
     "insecure": false,
     "metadataUrl": ".*",
-    "eventsUrl": ".*",
+    "infoUrl": ".*",
     "renewCertUrl": ".*",
     "revocationCertUrl": ".*",
     "consoleUrl": ".*",
     "applicationUrl": ".*",
-    "domain": ".*",
     "application": ".*",
     "type": "Kyma"
 }
