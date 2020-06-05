@@ -70,7 +70,7 @@ async function signCertificateSigningRequest(url: string, insecure: boolean, con
   return Buffer.from(encodedCert,'base64');
 }
 
-export async function eventsUrl(domain: string, application: string): Promise<string> {
+export async function eventsUrl(): Promise<string> {
   const query = gql`query($appId: ID!) {
     application (id : $appId){
       eventingConfiguration{
@@ -143,17 +143,15 @@ export async function connect(token: string, insecure: boolean = false): Promise
 
   let directorUrl = configResult.managementPlaneInfo.directorURL;
 
-  let domains = new URL(directorUrl).hostname.replace("compass-gateway-mtls.", "");
   let connectionData: connection.Info = {
     insecure: insecure,
     metadataUrl: directorUrl,
-    eventsUrl: null,
+    infoUrl: "",
     renewCertUrl: configResult.managementPlaneInfo.certificateSecuredConnectorURL,
     revocationCertUrl: configResult.managementPlaneInfo.certificateSecuredConnectorURL,
     consoleUrl: directorUrl.replace("compass-gateway-mtls", "compass").replace("/director/graphql", ""),
     applicationUrl: directorUrl.replace("compass-gateway-mtls", "compass").replace("/director/graphql", "/tenant/default/applications/details/"),
-    domain: domains,
-    application: "temporary",
+    application: "",
     type: connection.Type.Compass
   }
 

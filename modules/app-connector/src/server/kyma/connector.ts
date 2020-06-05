@@ -6,8 +6,6 @@ import * as commonCommon from '../common';
 import * as config from "@varkes/configuration"
 const request = require("promise-request-retry");
 
-import * as url from 'url';
-
 const LOGGER: any = config.logger("app-connector")
 
 async function callTokenUrl(insecure: boolean, url: string) {
@@ -84,19 +82,26 @@ export async function connect(tokenUrl: string, insecure: boolean = false): Prom
     let certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure)
     let infoResponse = await callInfoUrl(tokenResponse.api.infoUrl, certificateData, connection.privateKey(), insecure)
 
-    let domains = new url.URL(infoResponse.urls.eventsUrl).hostname.replace("gateway.", "");
     let connectionData: connection.Info = {
         insecure: insecure,
         metadataUrl: infoResponse.urls.metadataUrl,
-        eventsUrl: infoResponse.urls.eventsUrl,
+        infoUrl: tokenResponse.api.infoUrl,
         renewCertUrl: infoResponse.urls.renewCertUrl,
         revocationCertUrl: infoResponse.urls.revocationCertUrl,
         consoleUrl: infoResponse.urls.eventsUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/events", ""),
         applicationUrl: infoResponse.urls.eventsUrl.replace("gateway", "console").replace(infoResponse.clientIdentity.application + "/v1/events", "home/cmf-apps/details/" + infoResponse.clientIdentity.application),
-        domain: domains,
         application: infoResponse.clientIdentity.application,
         type: connection.Type.Kyma
     }
 
     return { connection: connectionData, certificate: certificateData };
+}
+
+
+export async function eventsUrl(): Promise<string> {
+    let infoResponse = await callInfoUrl(connection.info().infoUrl!, connection.certificate(), connection.privateKey(), connection.info().insecure)
+    if(infoResponse.urls.eventsUrl){
+        return infoResponse.urls.eventsUrl
+    }
+    throw new Error("Cannot determine an endpoint for sending events, is the application assigned to a runtime?")
 }
