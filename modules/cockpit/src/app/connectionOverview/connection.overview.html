@@ -66,25 +66,26 @@
         </div>
       </div>
 
-      <div *ngIf="connection.applicationUrl">
       <table class="fd-table fd-table--no-borders">
         <tbody>
           <tr>
             <td class="y-fd-table--col-2 fd-has-color-text-4">Application</td>
             <td>
-              <a href="{{connection.applicationUrl}}" target="_blank"
+              <a *ngIf="connection.applicationUrl" href="{{connection.applicationUrl}}" target="_blank"
                 >{{connection.application}}
                 <span class="sap-icon--action sap-icon--s"></span
               ></a>
+              <div *ngIf="!connection.applicationUrl">N/A</div>
             </td>
           </tr>
           <tr>
             <td class="y-fd-table--col-2 fd-has-color-text-4">Cluster</td>
             <td>
-              <a href="{{connection.consoleUrl}}" target="_blank"
+              <a *ngIf="connection.consoleUrl" href="{{connection.consoleUrl}}" target="_blank"
                 >{{connection.consoleUrl}}
                 <span class="sap-icon--action sap-icon--s"></span
               ></a>
+              <div *ngIf="!connection.consoleUrl">N/A</div>
             </td>
           </tr>
           <tr>
@@ -100,7 +101,6 @@
           </tr>
         </tbody>
       </table>
-      </div>
     </section>
   </header>
 
