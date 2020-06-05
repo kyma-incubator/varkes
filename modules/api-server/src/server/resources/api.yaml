@@ -495,9 +495,9 @@ components:
           type: "string"
           description: "URL on connected Kyma cluster to manage APIs"
           example: https://gateway.mycluster.kyma.cx/event-trial/v1/metadata/services
-        eventsUrl:
+        infoUrl:
           type: "string"
-          description: "URL on connected Kyma cluster to send events"
+          description: "URL to retrieve more info about connected kyma cluster"
           example: https://gateway.mycluster.kyma.cx/event-trial/v1/events
         consoleUrl:
           type: "string"
@@ -511,10 +511,6 @@ components:
           type: "string"
           description: "URL on connected Kyma cluster to renew client certifactes"
           example: https://gateway.mycluster.kyma.cx/v1/applications/certificates/renewals
-        domain:
-          type: "string"
-          description: "Domain of the connected Kyma cluster"
-          example: prod-cluster
         application:
           type: "string"
           description: "Application name on connected Kyma cluster"
