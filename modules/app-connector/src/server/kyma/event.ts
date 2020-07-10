@@ -10,12 +10,16 @@ const LOGGER: any = config.logger("app-connector")
 
 export function send(event: any): Promise<any> {
     return connection.eventsUrl().then((eventsUrl) => {
+        let headers: any = {
+            "Content-Type": "application/json"
+        }
+        if (event["event-tracing"]) {
+            headers["x-b3-sampled"] = "1"
+        }
         return request(common.createRequestOptions(connection, {
             uri: eventsUrl,
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: headers,
             body: event
         })).then((response: any) => {
             if (response.statusCode < 300) {
