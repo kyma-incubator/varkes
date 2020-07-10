@@ -10,7 +10,7 @@ function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all Local APIs")
     let apis = []
     let configApis = varkesConfig.apis;
-    if(configApis){
+    if (configApis) {
         for (let i = 0; i < configApis.length; i++) {
             let api = configApis[i]
             let metadata: any = services.fillServiceMetadata(varkesConfig, api, getOrigin(req))
@@ -20,7 +20,7 @@ function getAll(req: express.Request, res: express.Response) {
         }
     }
     let configEvents = varkesConfig.events;
-    if(configEvents){
+    if (configEvents) {
         for (let i = 0; i < configEvents.length; i++) {
             let event = configEvents[i];
             let metadata: any = services.fillEventData(varkesConfig, event)
@@ -57,10 +57,14 @@ function getLocalApi(req: express.Request, res: express.Response) {
 }
 
 function getOrigin(req: express.Request) {
+    let result
     if (req.body.baseUrl && !req.body.baseUrl.match(/http(s)?:\/\//)) {
-        return req.protocol + req.body.baseUrl
+        result = req.protocol + req.body.baseUrl
+    } else {
+        result = req.body.baseUrl || req.headers.origin || req.headers.referer || req.protocol + "://" + req.headers.host
     }
-    return req.body.baseUrl || req.headers.origin || req.headers.referer || req.protocol + "://" + req.headers.host
+    result = result.replace(/\/$/, "")
+    return result
 }
 
 async function registerAll(req: express.Request, res: express.Response) {
