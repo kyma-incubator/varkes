@@ -24,6 +24,7 @@ export class SendEventViewComponent implements OnInit {
     public alertMessage;
     public ariaExpanded = false;
     public ariaHidden = true;
+    public tracing = true;
     public success;
     public topicName;
     public successMessage;
@@ -35,7 +36,7 @@ export class SendEventViewComponent implements OnInit {
 
     public async ngOnInit() {
         this.event = JSON.parse(this.event);
-        this.topics = Object.keys(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels : this.event.events.spec.topics).map((key:string) =>{
+        this.topics = Object.keys(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels : this.event.events.spec.topics).map((key: string) => {
             return key.split("/").join(".");
         });
         this.filteredTopicsNames = this.topics;
@@ -52,6 +53,9 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public sendEvent() {
+        if(!this.topicName){
+            return
+        }
         this.loading = true;
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let httpOptions = new RequestOptions({ headers: headers });
@@ -73,7 +77,8 @@ export class SendEventViewComponent implements OnInit {
                 "event-type": eventType,
                 "event-type-version": version, //event types normally end with .v1
                 "event-time": eventTime,
-                "data": JSON.parse(editor.getValue())
+                "data": JSON.parse(editor.getValue()),
+                "event-tracing": this.tracing
             }
             this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
                 .subscribe(

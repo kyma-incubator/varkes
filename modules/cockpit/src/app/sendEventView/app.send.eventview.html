@@ -18,7 +18,16 @@
         <h3 class="fd-panel__title">Event Topics</h3>
       </div>
       <div class="fd-panel__actions">
-        <button *ngIf="event && remote" class=" fd-button--primary fd-button--l" (click)="sendEvent()">Send
+        <div *ngIf="event && remote" class="fd-form__item fd-form__item--check" style="padding: 8px" title="When enabled, the 'x-b3-sampled' header will be set to '1' for the call to Kyma, causing the istio-proxies to collect traces no matter what trace sampling rate is configured for istio.">
+          <label class="fd-form__label" for="tracing">
+            Force Trace Sampling 
+            <span class="fd-toggle fd-toggle--compact fd-form__control" style="margin: 5px">
+                <input type="checkbox" name="tracing" id="tracing" [(ngModel)]="tracing">
+                <span class="fd-toggle__switch" role="presentation"></span>
+            </span>
+          </label>
+        </div>
+        <button *ngIf="event && remote" class="fd-button--primary fd-button--l" [attr.aria-disabled]="!topicName" (click)="sendEvent()">Send
           Event</button>
       </div>
     </div>
