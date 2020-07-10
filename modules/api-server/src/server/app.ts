@@ -78,7 +78,7 @@ function morganLogger():any {
       else
         return "-";
     });
-    morgan.token('body', function (req) {
+    morgan.token('body', function (req: any) {
       if (req.body && Object.keys(req.body).length != 0)
         return JSON.stringify(req.body);
       else
