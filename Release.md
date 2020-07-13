@@ -8,7 +8,7 @@
 
 ## Process
 
-1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do just testing. They have the same functionality.
+1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do the testing. They have the same functionality.
 
 2) There is a new branch called `release ` that is only used by the release process. When we want to create a new release, we create a new branch from master with the new release name and run `npm version (lerna version)` locally and push to update versions in package.json.
 
