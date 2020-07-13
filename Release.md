@@ -19,4 +19,3 @@
 5) The branch with the individual release name can be deleted. Different versions will be tracked by git tag created in step 2.
 
 > This approach allows us to have dummy version numbers in master. For each RC, we can define a custom version number and keep the version in master always 0.1.0. That way we don't have to merge back from release to master.
-
