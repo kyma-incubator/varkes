@@ -8,7 +8,7 @@
 
 ## Process
 
-1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do just testing. They have the same functionality.
+1) New features are merged to `master` branch. `pre-submit` and `post-submit jobs` do the testing. They have the same functionality.
 
 2) There is a new branch called `release ` that is only used by the release process. When we want to create a new release, we create a new branch from master with the new release name and run `npm version (lerna version)` locally and push to update versions in package.json.
 
@@ -19,4 +19,3 @@
 5) The branch with the individual release name can be deleted. Different versions will be tracked by git tag created in step 2.
 
 > This approach allows us to have dummy version numbers in master. For each RC, we can define a custom version number and keep the version in master always 0.1.0. That way we don't have to merge back from release to master.
-
