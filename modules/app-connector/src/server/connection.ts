@@ -22,8 +22,9 @@ var connection: Info | null = null;
 
 var jobRenewCertificateStarted: Boolean = false;
 var jobRenewCertificatePersistFile: Boolean = false;
+//"0 */1 * * * *" - every minute
+//"00 00 1 * * *" - 1am once a day
 const jobRenewCertificate = new CronJob("00 00 1 * * *", function () {
-  console.log("Running certificate renewal job...");
   renewCertificate();
 });
 
@@ -49,9 +50,8 @@ export function init() {
     LOGGER.info("Found existing certificate: %s", crtFile);
   }
 
-  if (privateKeyData && certificateData && connection) {
-    console.log("Starting certificate renewal job...");
-    jobRenewCertificateStarted = true;
+  if (privateKeyData && certificateData && connection && connection!.type === Type.Kyma) {
+    LOGGER.info("Found existing files, certificate renewal job will run at %s", jobRenewCertificate.nextDates()._d);
     jobRenewCertificatePersistFile = true;
     jobRenewCertificate.start();
   }
@@ -60,14 +60,15 @@ export function init() {
 function establish(newConnection: Info, newCertificate: Buffer, persistFiles: boolean) {
   connection = newConnection;
   certificateData = newCertificate;
+  jobRenewCertificatePersistFile = persistFiles;
 
   if (persistFiles) {
-    fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), {encoding: "utf8", flag: "wx"});
-    fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "wx"});
-    jobRenewCertificatePersistFile = true;
+    fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), {encoding: "utf8", flag: "w"});
+    fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "w"});
   }
 
-  if (!jobRenewCertificateStarted) {
+  if (!jobRenewCertificateStarted && connection!.type === Type.Kyma) {
+    LOGGER.info("Connecting established: certificate renewal job will run at %s", jobRenewCertificate.nextDates()._d);
     jobRenewCertificate.start();
   }
 
@@ -160,25 +161,31 @@ export enum Type {
 }
 
 async function renewCertificate() {
+  jobRenewCertificateStarted = true;
   if (established()) {
-    var subject: any = common.parseSubjectFromCert(certificateData);
-    const csr = common.generateCSR(subject, privateKeyData);
+    var subject: String = common.parseSubjectFromCert(certificateData);
+    const csr: Buffer = common.generateCSR(subject, privateKeyData);
 
     if (connection!.type === Type.Kyma && connection!.renewCertUrl) {
-      LOGGER.info("Calling cert renewal: ", connection!.renewCertUrl);
+      LOGGER.info("Calling cert renewal: %s", connection!.renewCertUrl);
 
       try {
-        let reNewedCertificateData: any = await kymaConnector.renewCertificate(
+        let rewNewedCertificateData: any = await kymaConnector.renewCertificate(
           connection!.renewCertUrl,
           csr,
           certificateData,
-          privateKeyData
+          privateKeyData,
+          connection!.insecure
         );
+
+        LOGGER.info("Certificate successfully renewed... job will run again at %s", jobRenewCertificate.nextDates()._d);
+
         if (jobRenewCertificatePersistFile) {
-          fs.writeFileSync(crtFile, reNewedCertificateData, {encoding: "utf8", flag: "wx"});
+          fs.writeFileSync(crtFile, rewNewedCertificateData, {encoding: "utf8", flag: "w"});
         }
       } catch (error) {
-        LOGGER.debug("An error occurred while attempting to renew certificate: ", error);
+        LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection");
+        LOGGER.error(error);
       }
     }
   } else {

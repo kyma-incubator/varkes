@@ -140,13 +140,8 @@ export async function renewCertificate(
   csr: Buffer,
   crt: Buffer,
   privateKey: Buffer,
-  insecure: boolean = false
+  insecure: Boolean = false
 ): Promise<any> {
-  LOGGER.debug("Calling certificate renewal URL '%s'", certRenewalUrl);
-
-  console.log("csr: ", csr.toString());
-  //.toString("base64")
-
   return request({
     uri: certRenewalUrl,
     method: "POST",
@@ -158,7 +153,6 @@ export async function renewCertificate(
     resolveWithFullResponse: true,
     simple: false,
   }).then((response: any) => {
-    console.log("response.statusCode: ", response.statusCode);
     if (response.statusCode !== 201) {
       throw new Error(
         "Calling Certificate Renewal URL failed with status '" +
@@ -168,8 +162,6 @@ export async function renewCertificate(
           "'"
       );
     }
-    LOGGER.debug("New certificate returned");
-    console.log("New certificate returned");
     return Buffer.from(response.body.crt, "base64");
   });
 }
