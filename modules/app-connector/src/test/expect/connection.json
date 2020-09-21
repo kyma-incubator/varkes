@@ -1,11 +1,12 @@
 {
-    "insecure": false,
-    "metadataUrl": ".*",
-    "infoUrl": ".*",
-    "renewCertUrl": ".*",
-    "revocationCertUrl": ".*",
-    "consoleUrl": ".*",
-    "applicationUrl": ".*",
-    "application": ".*",
-    "type": "Kyma"
+  "insecure": false,
+  "persistFiles": false,
+  "metadataUrl": ".*",
+  "infoUrl": ".*",
+  "renewCertUrl": ".*",
+  "revocationCertUrl": ".*",
+  "consoleUrl": ".*",
+  "applicationUrl": ".*",
+  "application": ".*",
+  "type": "Kyma"
 }

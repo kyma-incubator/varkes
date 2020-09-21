@@ -120,6 +120,8 @@ export function destroy(): void {
   if (fs.existsSync(crtFile)) {
     fs.unlinkSync(crtFile);
   }
+
+  jobRenewCertificate.stop();
 }
 
 export async function connect(token: string, persistFiles: boolean = true, insecure: boolean = false): Promise<Info> {
