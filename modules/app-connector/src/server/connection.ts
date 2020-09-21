@@ -21,10 +21,11 @@ var certificateData: Buffer;
 var connection: Info | null = null;
 
 var jobRenewCertificateStarted: Boolean = false;
-var jobRenewCertificatePersistFile: Boolean = false;
 //"0 */1 * * * *" - every minute
 //"00 00 1 * * *" - 1am once a day
-const jobRenewCertificate = new CronJob("00 00 1 * * *", function () {
+const RENEWCERT_JOB_CRON = process.env.RENEWCERT_JOB_CRON || "00 00 1 * * *";
+LOGGER.info("Setting jobRenewCertificate schedule to: %s", RENEWCERT_JOB_CRON);
+const jobRenewCertificate = new CronJob(RENEWCERT_JOB_CRON, function () {
   renewCertificate();
 });
 
@@ -52,17 +53,15 @@ export function init() {
 
   if (privateKeyData && certificateData && connection && connection!.type === Type.Kyma) {
     LOGGER.info("Found existing files, certificate renewal job will run at %s", jobRenewCertificate.nextDates()._d);
-    jobRenewCertificatePersistFile = true;
     jobRenewCertificate.start();
   }
 }
 
-function establish(newConnection: Info, newCertificate: Buffer, persistFiles: boolean) {
+function establish(newConnection: Info, newCertificate: Buffer) {
   connection = newConnection;
   certificateData = newCertificate;
-  jobRenewCertificatePersistFile = persistFiles;
 
-  if (persistFiles) {
+  if (connection.persistFiles) {
     fs.writeFileSync(connFile, JSON.stringify(connection, null, 2), {encoding: "utf8", flag: "w"});
     fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "w"});
   }
@@ -129,12 +128,12 @@ export async function connect(token: string, persistFiles: boolean = true, insec
   }
 
   if (token.startsWith("http://") || token.startsWith("https://")) {
-    return kymaConnector.connect(token, insecure).then((result) => {
-      return establish(result.connection, result.certificate, persistFiles);
+    return kymaConnector.connect(token, persistFiles, insecure).then((result) => {
+      return establish(result.connection, result.certificate);
     });
   }
-  return compassConnector.connect(token, insecure).then((result) => {
-    return establish(result.connection, result.certificate, persistFiles);
+  return compassConnector.connect(token, persistFiles, insecure).then((result) => {
+    return establish(result.connection, result.certificate);
   });
 }
 
@@ -145,6 +144,7 @@ export async function eventsUrl(): Promise<string> {
 
 export type Info = {
   insecure: boolean;
+  persistFiles: boolean;
   metadataUrl: string;
   infoUrl: string | null;
   renewCertUrl: string | null;
@@ -170,7 +170,7 @@ async function renewCertificate() {
       LOGGER.info("Calling cert renewal: %s", connection!.renewCertUrl);
 
       try {
-        let rewNewedCertificateData: any = await kymaConnector.renewCertificate(
+        let reNewedCertificateData: any = await kymaConnector.renewCertificate(
           connection!.renewCertUrl,
           csr,
           certificateData,
@@ -180,8 +180,8 @@ async function renewCertificate() {
 
         LOGGER.info("Certificate successfully renewed... job will run again at %s", jobRenewCertificate.nextDates()._d);
 
-        if (jobRenewCertificatePersistFile) {
-          fs.writeFileSync(crtFile, rewNewedCertificateData, {encoding: "utf8", flag: "w"});
+        if (connection?.persistFiles) {
+          fs.writeFileSync(crtFile, reNewedCertificateData, {encoding: "utf8", flag: "w"});
         }
       } catch (error) {
         LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection");

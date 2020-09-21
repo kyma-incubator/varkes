@@ -94,7 +94,7 @@ async function callInfoUrl(infoUrl: string, crt: Buffer, privateKey: Buffer, ins
   });
 }
 
-export async function connect(tokenUrl: string, insecure: boolean = false): Promise<any> {
+export async function connect(tokenUrl: string, persistFiles: boolean = true, insecure: boolean = false): Promise<any> {
   let tokenResponse = await callTokenUrl(insecure, tokenUrl);
   let csr = commonCommon.generateCSR(tokenResponse.certificate.subject, connection.privateKey());
   let certificateData = await callCSRUrl(tokenResponse.csrUrl, csr, insecure);
@@ -102,6 +102,7 @@ export async function connect(tokenUrl: string, insecure: boolean = false): Prom
 
   let connectionData: connection.Info = {
     insecure: insecure,
+    persistFiles: persistFiles,
     metadataUrl: infoResponse.urls.metadataUrl,
     infoUrl: tokenResponse.api.infoUrl,
     renewCertUrl: infoResponse.urls.renewCertUrl,

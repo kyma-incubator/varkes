@@ -30,6 +30,8 @@ spec:
           value: "100"
         - name: EVENT
           value: "100"
+        - name: RENEWCERT_JOB_CRON
+          value: "00 00 1 * * *"
         resources:
           requests:
             memory: "150Mi"
