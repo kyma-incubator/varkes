@@ -122,6 +122,7 @@ export function destroy(): void {
   }
 
   jobRenewCertificate.stop();
+  jobRenewCertificateStarted = false;
 }
 
 export async function connect(token: string, persistFiles: boolean = true, insecure: boolean = false): Promise<Info> {
