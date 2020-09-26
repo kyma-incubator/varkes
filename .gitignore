@@ -12,3 +12,4 @@ luigiconfig.js
 examples/commerce-mock
 examples/marketing-mock
 *.Dockerfile
+*.DS_Store
