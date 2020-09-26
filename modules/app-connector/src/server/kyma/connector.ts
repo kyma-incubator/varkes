@@ -138,11 +138,13 @@ export async function eventsUrl(): Promise<string> {
 
 export async function renewCertificate(
   certRenewalUrl: string,
-  csr: Buffer,
   crt: Buffer,
   privateKey: Buffer,
-  insecure: Boolean = false
+  insecure: boolean = false
 ): Promise<any> {
+  const subject = commonCommon.parseSubjectFromCert(crt);
+  const csr = commonCommon.generateCSR(subject, privateKey);
+
   return request({
     uri: certRenewalUrl,
     method: "POST",

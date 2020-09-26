@@ -6,10 +6,31 @@ import * as common from "./common";
 import * as commonCommon from "../common";
 import * as config from "@varkes/configuration";
 import gql from "graphql-tag";
+import {DocumentNode} from "graphql";
 
 const LOGGER: any = config.logger("app-connector");
 
+async function getConfigurationCertSecured(connection: connection.Info, certificate: Buffer): Promise<any> {
+  const func: Function = () => common.createSecuredConnectorClient(connection, certificate, connection.renewCertUrl!);
+  const configurationQuery = gql`
+    {
+      result: configuration {
+        certificateSigningRequestInfo {
+          subject
+          keyAlgorithm
+        }
+        managementPlaneInfo {
+          directorURL
+        }
+      }
+    }
+  `;
+  return getConfigurationBase(func, connection.renewCertUrl!, configurationQuery);
+}
+
 async function getConfiguration(token: string, url: string, insecure: boolean): Promise<any> {
+  const func: Function = () => common.createConnectorClient(token, url, insecure);
+
   const configurationQuery = gql`
     {
       result: configuration {
@@ -28,12 +49,19 @@ async function getConfiguration(token: string, url: string, insecure: boolean): 
     }
   `;
 
-  var result = await common
-    .createConnectorClient(token, url, insecure)
+  return getConfigurationBase(func, url, configurationQuery);
+}
+
+async function getConfigurationBase(
+  connectorClientFn: Function,
+  url: string,
+  configurationQuery: DocumentNode
+): Promise<any> {
+  var result = await connectorClientFn()
     .query({
       query: configurationQuery,
     })
-    .catch((err) => {
+    .catch((err: any) => {
       if (err.networkError) {
         LOGGER.debug(`Detailed network error: ${JSON.stringify(err.networkError, null, 2)}`);
         throw new Error(
@@ -48,7 +76,24 @@ async function getConfiguration(token: string, url: string, insecure: boolean): 
   return result.data.result;
 }
 
-async function signCertificateSigningRequest(url: string, insecure: boolean, configuration: any) {
+export function renewalCertificateSigningRequest(
+  url: string,
+  connection: connection.Info,
+  certificate: Buffer,
+  configuration: any
+) {
+  LOGGER.debug("Sending signCertificateSigningRequest to: %s", url);
+  const func: Function = () => common.createSecuredConnectorClient(connection, certificate, connection.renewCertUrl!);
+  return signCertificateSigningRequestBase(func, url, configuration.certificateSigningRequestInfo.subject);
+}
+
+export function signCertificateSigningRequest(url: string, insecure: boolean, configuration: any) {
+  LOGGER.debug("Sending signCertificateSigningRequest to: %s", url);
+  const func: Function = () => common.createConnectorClient(configuration.token.token, url, insecure);
+  return signCertificateSigningRequestBase(func, url, configuration.certificateSigningRequestInfo.subject);
+}
+
+async function signCertificateSigningRequestBase(connectorClientFn: Function, url: string, subject: string) {
   const SignCertificateSigningRequestMutation = gql`
     mutation($csr: String!) {
       result: signCertificateSigningRequest(csr: $csr) {
@@ -59,19 +104,16 @@ async function signCertificateSigningRequest(url: string, insecure: boolean, con
     }
   `;
 
-  const csr: Buffer = commonCommon.generateCSR(
-    configuration.certificateSigningRequestInfo.subject,
-    connection.privateKey()
-  );
-  var result = await common
-    .createConnectorClient(configuration.token.token, url, insecure)
+  const csr: Buffer = commonCommon.generateCSR(subject, connection.privateKey());
+
+  var result = await connectorClientFn()
     .mutate({
       mutation: SignCertificateSigningRequestMutation,
       variables: {
         csr: csr.toString("base64"),
       },
     })
-    .catch((err) => {
+    .catch((err: any) => {
       if (err.networkError) {
         LOGGER.debug(`Detailed network error: ${JSON.stringify(err.networkError, null, 2)}`);
         throw new Error(
@@ -137,7 +179,7 @@ async function queryAppID(connectionInfo: connection.Info, certificate: Buffer):
   `;
 
   let result = await common
-    .createDirectorClientWithInfo(connectionInfo, certificate)
+    .createDirectorClientWithInfo(connectionInfo, certificate, connectionInfo.metadataUrl)
     .query({
       query: query,
     })
@@ -198,4 +240,9 @@ export async function connect(token: string, persistFiles: boolean = true, insec
   connectionData.applicationUrl = connectionData.applicationUrl + appId;
 
   return {connection: connectionData, certificate: certificateData};
+}
+
+export async function renewCertificate(connection: connection.Info, certificate: Buffer, privateKeyData: Buffer) {
+  let configResult = await getConfigurationCertSecured(connection, certificate);
+  return await renewalCertificateSigningRequest(connection.renewCertUrl!, connection, certificate, configResult);
 }

@@ -6,7 +6,6 @@ import * as path from "path";
 import * as config from "@varkes/configuration";
 import * as kymaConnector from "./kyma/connector";
 import * as compassConnector from "./compass/connector";
-import * as common from "./common";
 
 const LOGGER: any = config.logger("app-connector");
 const forge = require("node-forge");
@@ -51,7 +50,7 @@ export function init() {
     LOGGER.info("Found existing certificate: %s", crtFile);
   }
 
-  if (privateKeyData && certificateData && connection && connection!.type === Type.Kyma) {
+  if (privateKeyData && certificateData && connection) {
     LOGGER.info("Found existing files, certificate renewal job will run at %s", jobRenewCertificate.nextDates()._d);
     jobRenewCertificate.start();
   }
@@ -66,7 +65,7 @@ function establish(newConnection: Info, newCertificate: Buffer) {
     fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "w"});
   }
 
-  if (!jobRenewCertificateStarted && connection!.type === Type.Kyma) {
+  if (!jobRenewCertificateStarted) {
     LOGGER.info("Connecting established: certificate renewal job will run at %s", jobRenewCertificate.nextDates()._d);
     jobRenewCertificate.start();
   }
@@ -165,31 +164,30 @@ export enum Type {
 
 async function renewCertificate() {
   jobRenewCertificateStarted = true;
-  if (established()) {
-    var subject: String = common.parseSubjectFromCert(certificateData);
-    const csr: Buffer = common.generateCSR(subject, privateKeyData);
-
-    if (connection!.type === Type.Kyma && connection!.renewCertUrl) {
-      LOGGER.info("Calling cert renewal: %s", connection!.renewCertUrl);
-
-      try {
-        let reNewedCertificateData: any = await kymaConnector.renewCertificate(
+  if (established() && connection!.renewCertUrl) {
+    try {
+      LOGGER.info("Calling cert renewal procedure for %s connection: %s", connection!.type, connection!.renewCertUrl);
+      if (connection!.type === Type.Kyma) {
+        certificateData = await kymaConnector.renewCertificate(
           connection!.renewCertUrl,
-          csr,
           certificateData,
           privateKeyData,
           connection!.insecure
         );
-
-        LOGGER.info("Certificate successfully renewed... job will run again at %s", jobRenewCertificate.nextDates()._d);
-
-        if (connection?.persistFiles) {
-          fs.writeFileSync(crtFile, reNewedCertificateData, {encoding: "utf8", flag: "w"});
-        }
-      } catch (error) {
-        LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection");
-        LOGGER.error(error);
+      } else {
+        certificateData = await compassConnector.renewCertificate(connection!, certificateData, privateKeyData);
       }
+
+      const cert = forge.pki.certificateFromPem(certificateData);
+      LOGGER.info("Certificate successfully renewed... job will run again at %s", jobRenewCertificate.nextDates()._d);
+      LOGGER.info("Certificate valid between: %s and %s", cert.validity.notBefore, cert.validity.notAfter);
+
+      if (connection?.persistFiles) {
+        fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "w"});
+      }
+    } catch (error) {
+      LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection");
+      LOGGER.error(error);
     }
   } else {
     LOGGER.info("no connection established... renewCertificate not performed");
