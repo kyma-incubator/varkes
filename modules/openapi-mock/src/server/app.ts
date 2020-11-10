@@ -14,6 +14,7 @@ async function init(config: config.Config) {
   let app = express()
 
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }))
 
   app.use(await mock(config))
   app.use("/swagger-ui", express.static(pathToSwaggerUI))

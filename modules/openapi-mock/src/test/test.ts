@@ -120,6 +120,16 @@ describe('controllers', function () {
         });
       });
 
+      describe('Get default oauth with x-www-form-urlencoded', function() {
+        it('should return 200', function (done) {
+            request(app)
+            .post("/api1/authorizationserver/oauth/token")
+            .send('client_id=admin&client_secret=nimda&grant_type=client_credentials')
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8', done)
+        })
+    });
+
       describe('GET oauth for custom oauth endpoint', function () {
         it('should return response 200', function (done) {
           request(app)
