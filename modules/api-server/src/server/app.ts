@@ -13,7 +13,6 @@ import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
 import * as config from "@varkes/configuration"
-import * as morgan from "morgan"
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
@@ -31,8 +30,12 @@ async function init(config: config.Config) {
     app.use(bodyParser.json())
     app.use(cors())
     app.options('*', cors())
-    app.use(expressWinston.logger(LOGGER))
-    app.use(morganLogger())
+
+    app.use(expressWinston.logger({
+      winstonInstance: LOGGER,
+      msg: "{{req.method}} {{req.url}}, status: {{res.statusCode}}{{process.env.DEBUG && process.env.NODE_ENV!='production' ?', headers: '+JSON.stringify(req.headers):''}}",
+      expressFormat: false
+    }))
     app.use(REMOTE_APIS_URL, remoteApis.router())
     app.use(LOCAL_APIS_URL, localApis.router(config))
     app.use(CONNECTION, connector.router())
@@ -42,7 +45,6 @@ async function init(config: config.Config) {
     app.use("/swagger-ui", express.static(pathToSwaggerUI))
 
     app.get("/info", function (req, res) {
-
         let info = {
             appName: config.name,
             links: {
@@ -70,22 +72,5 @@ async function init(config: config.Config) {
     
     return app;
 }
-
-function morganLogger():any {
-    morgan.token('header', (req: any) => {
-      if (req.rawHeaders && Object.keys(req.rawHeaders).length != 0)
-        return req.rawHeaders;
-      else
-        return "-";
-    });
-    morgan.token('body', function (req: any) {
-      if (req.body && Object.keys(req.body).length != 0)
-        return JSON.stringify(req.body);
-      else
-        return "-";
-    });
-    let logging_string = '[:date[clf]] ":method :url, Status: :status"\n Headers:\n :header\n Body:\n :body'
-    return morgan(logging_string)
-  }
 
 export { init }
