@@ -95,8 +95,8 @@ export class ApiTableComponent implements OnInit, OnChanges {
     public closeAlert() {
         this.alert = false;
     }
-    public showApiDetails(packageId, apiId) {
-        linkManager().fromContext('apitable').navigate('/apiview/' + (packageId ? packageId + "_" : "") + apiId + "/" + (this.remote == true), "", true);
+    public showApiDetails(bundleId, apiId) {
+        linkManager().fromContext('apitable').navigate('/apiview/' + (bundleId ? bundleId + "_" : "") + apiId + "/" + (this.remote == true), "", true);
     }
 
     public onStatusCloseModalClick() {

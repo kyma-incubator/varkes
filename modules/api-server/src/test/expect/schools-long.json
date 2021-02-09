@@ -70,7 +70,7 @@
         "type": "OpenAPI v3",
         "consoleURL": "http://(localhost|.+)",
         "metadataURL": "http://(localhost|.+)/entity/schoolMetadata",
-        "packageName": "Varkes"
+        "bundleName": "Varkes"
     },
     "id": ".*"
 }

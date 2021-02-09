@@ -73,7 +73,7 @@
           <tbody>
             <tr *ngFor="let api of apis; index as i" id="api{{i}}">
               <td>
-                <a (click)="showApiDetails(api.varkes.packageId, api.id)" class="fd-has-font-weight-bold">{{api.name}}</a>
+                <a (click)="showApiDetails(api.varkes.bundleId, api.id)" class="fd-has-font-weight-bold">{{api.name}}</a>
               </td>
               <td>{{api.description}}</td>
               <td>{{api.varkes.type}}</td>
@@ -82,7 +82,7 @@
               </td>
               <td *ngIf="remote" class="y--fixed-width">
                 <div class="fd-has-text-align-right">
-                  <a (click)="showApiDetails(api.varkes.packageId, api.id)" class="fd-has-margin-left-small fd-has-margin-right-small"><span
+                  <a (click)="showApiDetails(api.varkes.bundleId, api.id)" class="fd-has-margin-left-small fd-has-margin-right-small"><span
                       class="sap-icon--edit sap-icon--m"></span></a>
                   <a (click)="deleteApi(api,i)" href="javascript:void(null)"
                     class="fd-has-margin-left-small fd-has-margin-right-small fd-has-color-status-3"><span

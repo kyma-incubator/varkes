@@ -4,24 +4,24 @@ const url = require('url');
 import * as config from "@varkes/configuration"
 const LOGGER: any = config.logger("app-connector")
 
-export function convertPackageArrayToOldArray(newArray: any[]): any[] {
+export function convertBundleArrayToOldArray(newArray: any[]): any[] {
   const result = [];
   if (newArray.length > 0) {
     for (var i = 0; i < newArray.length; i++) {
-      let newPackage = newArray[i];
-      if (newPackage.apiDefinitions) {
-        if (newPackage.apiDefinitions.data.length > 0) {
-          for (var j = 0; j < newPackage.apiDefinitions.data.length; j++) {
-            let newEntry = newPackage.apiDefinitions.data[j];
-            result.push(convertApiToOld(newPackage.id, newPackage.name, newEntry));
+      let newBundle = newArray[i];
+      if (newBundle.apiDefinitions) {
+        if (newBundle.apiDefinitions.data.length > 0) {
+          for (var j = 0; j < newBundle.apiDefinitions.data.length; j++) {
+            let newEntry = newBundle.apiDefinitions.data[j];
+            result.push(convertApiToOld(newBundle.id, newBundle.name, newEntry));
           }
         }
       }
-      if (newPackage.eventDefinitions) {
-        if (newPackage.eventDefinitions.data.length > 0) {
-          for (var j = 0; j < newPackage.eventDefinitions.data.length; j++) {
-            let newEntry = newPackage.eventDefinitions.data[j];
-            result.push(convertEventToOld(newPackage.id, newPackage.name, newEntry));
+      if (newBundle.eventDefinitions) {
+        if (newBundle.eventDefinitions.data.length > 0) {
+          for (var j = 0; j < newBundle.eventDefinitions.data.length; j++) {
+            let newEntry = newBundle.eventDefinitions.data[j];
+            result.push(convertEventToOld(newBundle.id, newBundle.name, newEntry));
           }
         }
       }
@@ -30,7 +30,7 @@ export function convertPackageArrayToOldArray(newArray: any[]): any[] {
   return result;
 }
 
-export function convertApiToOld(packageId: string, packageName: string | null, newApi: any): any {
+export function convertApiToOld(bundleId: string, bundleName: string | null, newApi: any): any {
   let spec: any = decodeApiSpec(newApi.spec)
   let type
   if (newApi.spec && newApi.spec.type == "ODATA") {
@@ -47,7 +47,7 @@ export function convertApiToOld(packageId: string, packageName: string | null, n
 
   let varkesInfo: any = {
     type: type,
-    packageId: packageId
+    bundleId: bundleId
   }
 
   if (newApi.spec && newApi.spec.type == "ODATA") {
@@ -100,7 +100,7 @@ function decodeApiSpec(spec: any): any {
   }
 }
 
-export function convertEventToOld(packageId: string, packageName: string | null, newEvent: any): any {
+export function convertEventToOld(bundleId: string, bundleName: string | null, newEvent: any): any {
   let spec: any = decodeApiSpec(newEvent.spec)
   let type = "AsyncApi v" + spec.asyncapi.substring(0, spec.asyncapi.indexOf("."));
   return {
@@ -113,7 +113,7 @@ export function convertEventToOld(packageId: string, packageName: string | null,
     },
     varkes: {
       type: type,
-      packageId: packageId
+      bundleId: bundleId
     }
   }
 }
