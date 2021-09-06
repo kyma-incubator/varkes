@@ -21,6 +21,7 @@ function sendEvent(req: express.Request, res: express.Response) {
     }
 }
 
+
 function router() {
     let eventsRouter = express.Router()
     eventsRouter.post("/", sendEvent)
