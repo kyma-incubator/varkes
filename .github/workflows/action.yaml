@@ -1,0 +1,61 @@
+name: build-and-push-master
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+  release:
+    types: [published, created, released, prereleased]
+  workflow_dispatch: {}
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm test
+      
+# name: Node.js Package
+# on:
+#   release:
+#     types: [created]
+#   push:
+#     branches: [ gh-action, master ]
+# jobs:
+#   # build:
+#   #   runs-on: ubuntu-latest 
+#   #   steps:
+#   #     - uses: actions/checkout@v2
+#   #     # Setup .npmrc file to publish to GitHub Packages
+#   #     - uses: actions/setup-node@v2
+#   #       with:
+#   #         node-version: 14
+#   #     - run: npm ci
+#       # - run: npm test # test on varkes
+
+  # publish-gpr:
+  #   # needs: build
+  #   runs-on: ubuntu-latest
+  #   permissions: 
+  #     contents: read
+  #     packages: write 
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+  #         registry-url: https://npm.pkg.github.com/
+  #     - run: npm ci #install --no-package-lock
+  #     - run: npx lerna publish from-package --yes --registry='https://npm.pkg.github.com/'
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
