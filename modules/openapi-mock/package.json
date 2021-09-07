@@ -38,6 +38,7 @@
   },
   "repository": {
     "type": "ssh",
-    "url": "git@github.com:kyma-incubator/varkes.git"
+    "url": "git@github.com:kyma-incubator/varkes.git",
+    "directory": "modules/openapi-mock"
   }
 }
