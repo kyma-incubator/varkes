@@ -11,7 +11,7 @@ on:
     branches:
       - master
   release:
-    types: [published, created, released, prereleased]
+    types: [published]
   workflow_dispatch: {}
 jobs:
   build:
@@ -20,14 +20,20 @@ jobs:
       contents: read
       packages: write 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
           node-version: 14
           scope: '@varkes'
-      - run: make resolve
-      - run: make validate
-      - run: npx lerna publish from-package --yes --registry='https://npm.pkg.github.com/'
+          registry-url: https://npm.pkg.github.com/
+      - name: Install and Build
+        run: make resolve
+      - name: Test
+        run: make validate
+      - name: Publish
+        run: npx lerna publish from-package --yes --registry='https://npm.pkg.github.com/'
         if: github.event_name == 'release'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
