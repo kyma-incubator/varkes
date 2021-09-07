@@ -27,13 +27,13 @@ jobs:
         with:
           node-version: 14
           scope: '@varkes'
-          registry-url: https://npm.pkg.github.com/
+          registry-url: https://npm.pkg.github.com/@varkes
       - name: Install and Build
         run: make resolve
       - name: Test
         run: make validate
       - name: Publish
-        run: npx lerna publish from-package --yes --registry='https://npm.pkg.github.com/'
+        run: npx lerna publish from-package --yes --registry='https://npm.pkg.github.com/@varkes'
         if: github.event_name == 'release'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
