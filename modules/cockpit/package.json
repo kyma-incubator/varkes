@@ -5,7 +5,8 @@
   "description": "Varkes Cockpit",
   "license": "Apache-2.0",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/@varkes"
   },
   "scripts": {
     "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/luigiconfig.js --mode production",
