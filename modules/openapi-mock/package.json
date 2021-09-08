@@ -7,7 +7,7 @@
   "description": "Open API Mock",
   "publishConfig": {
     "access": "public",
-    "registry": "https://npm.pkg.github.com/@varkes"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "compile": "tsc && copyfiles -f -e '**/*.ts' src/test/* dist/test && copyfiles -f src/server/resources/* dist/server/resources",

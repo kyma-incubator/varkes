@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public",
-    "registry": "https://npm.pkg.github.com/@varkes"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "buildConfig": "webpack --entry ./src/luigi-config/basic/basicConfiguration.js -o ./src/assets/luigiconfig.js --mode production",
