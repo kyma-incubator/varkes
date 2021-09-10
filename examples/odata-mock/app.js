@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-const mock = require("@varkes/odata-mock")
-const config = require("@varkes/configuration")
+const mock = require("varkes-odata-mock")
+const config = require("varkes-configuration")
 const app = require('express')()
 
 async function runAsync() {
