@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 const LOGGER = config.logger("api-server")
 import * as express from "express"
 const openapiSampler = require('openapi-sampler')
 import * as refParser from 'json-schema-ref-parser'
-import { api, connection } from "@varkes/app-connector"
+import { api, connection } from "varkes-app-connector"
 
 function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all APIs")

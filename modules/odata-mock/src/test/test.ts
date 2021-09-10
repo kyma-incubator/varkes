@@ -2,7 +2,7 @@
 'use strict'
 
 import * as mock from "../server/app"
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 
 const request = require('supertest')
 const express = require('express')

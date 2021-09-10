@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-import * as config from "@varkes/configuration";
+import * as config from "varkes-configuration";
 
 const forge = require("node-forge");
 const LOGGER: any = config.logger("app-connector");

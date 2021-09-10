@@ -3,7 +3,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as config from "@varkes/configuration";
+import * as config from "varkes-configuration";
 import * as kymaConnector from "./kyma/connector";
 import * as compassConnector from "./compass/connector";
 

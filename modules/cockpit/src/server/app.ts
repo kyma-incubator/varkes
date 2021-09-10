@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as path from 'path';
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 
 const app = express();
 const helmet = require('helmet')

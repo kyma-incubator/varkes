@@ -2,7 +2,7 @@
 'use strict'
 
 import * as parser from "./parser"
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 
 const loopback = require('loopback');
 const boot = require('loopback-boot');

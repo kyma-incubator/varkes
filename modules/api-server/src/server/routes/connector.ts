@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 import * as express from "express"
-import { connection } from "@varkes/app-connector"
+import { connection } from "varkes-app-connector"
 
 const LOGGER = config.logger("api-server")
 

@@ -1,5 +1,5 @@
 {
-  "name": "@varkes/odata-mock",
+  "name": "varkes-odata-mock",
   "version": "0.12.0",
   "main": "dist/server/app.js",
   "types": "dist/server/types.d.ts",
@@ -18,7 +18,7 @@
     "clean": "rm -rf dist || true && rm -r logs || true"
   },
   "dependencies": {
-    "@varkes/configuration": "^0.12.0",
+    "varkes-configuration": "^0.12.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",

@@ -1,5 +1,5 @@
 {
-    "name": "@varkes/configuration",
+    "name": "varkes-configuration",
     "version": "0.12.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

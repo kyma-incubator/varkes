@@ -4,7 +4,7 @@
 import * as connection from "../connection";
 import * as common from "./common";
 import * as commonCommon from "../common";
-import * as config from "@varkes/configuration";
+import * as config from "varkes-configuration";
 import gql from "graphql-tag";
 import {DocumentNode} from "graphql";
 

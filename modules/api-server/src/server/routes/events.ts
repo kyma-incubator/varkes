@@ -2,9 +2,9 @@
 'use strict'
 
 import * as express from "express"
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 const LOGGER = config.logger("api-server")
-import { event, connection } from "@varkes/app-connector"
+import { event, connection } from "varkes-app-connector"
 
 function sendEvent(req: express.Request, res: express.Response) {
     LOGGER.debug("Sending event %s", JSON.stringify(req.body, null, 2))

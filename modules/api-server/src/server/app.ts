@@ -12,7 +12,7 @@ import * as healthz from "./routes/healthz";
 import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
-import * as config from "@varkes/configuration"
+import * as config from "varkes-configuration"
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
