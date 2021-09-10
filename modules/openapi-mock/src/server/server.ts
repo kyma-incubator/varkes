@@ -3,7 +3,7 @@
 
 import { init } from "./app"
 import * as express from "express"
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 
 const app = express()
 var configPath: string

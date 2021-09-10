@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-import * as config from "varkes-configuration";
+import * as config from "@kyma-incubator/varkes-configuration";
 import * as connection from "../connection";
 import {HttpLink} from "apollo-link-http";
 import ApolloClient from "apollo-client";

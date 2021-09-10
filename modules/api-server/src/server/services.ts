@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "varkes-configuration"
-import { api, connection } from "varkes-app-connector";
+import * as config from "@kyma-incubator/varkes-configuration"
+import { api, connection } from "@kyma-incubator/varkes-app-connector";
 import * as fs from "fs"
 
 const LOGGER = config.logger("api-server")

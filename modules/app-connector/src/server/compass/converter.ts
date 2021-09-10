@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 const url = require('url');
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 const LOGGER: any = config.logger("app-connector")
 
 export function convertPackageArrayToOldArray(newArray: any[]): any[] {

@@ -6,9 +6,9 @@ import * as request from "supertest"
 import * as express from "express"
 import * as fs from "fs"
 import * as path from "path"
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 
-const kyma = require("varkes-example-kyma-mock")
+const kyma = require("@kyma-incubator/varkes-example-kyma-mock")
 const testAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/test-api.json"), "utf-8"))
 const schoolsShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-short.json"), "utf-8"))
 const schoolsLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-long.json"), "utf-8"))

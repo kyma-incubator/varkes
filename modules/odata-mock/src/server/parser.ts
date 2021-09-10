@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 import { ParsedModels } from "./types"
 
 const LOGGER: any = config.logger("odata-mock")

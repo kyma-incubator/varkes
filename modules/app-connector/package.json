@@ -1,5 +1,5 @@
 {
-  "name": "varkes-app-connector",
+  "name": "@kyma-incubator/varkes-app-connector",
   "version": "0.12.0",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
@@ -15,7 +15,7 @@
     "clean": "rm -rf dist || true && rm -rf logs || true"
   },
   "dependencies": {
-    "varkes-configuration": "^0.12.0",
+    "@kyma-incubator/varkes-configuration": "^0.12.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-env": "^0.6.5",
@@ -41,7 +41,7 @@
     "@types/node-fetch": "^2.5.7",
     "@types/request": "^2.48.5",
     "@types/request-promise": "^4.1.46",
-    "varkes-example-kyma-mock": "^0.12.0",
+    "@kyma-incubator/varkes-example-kyma-mock": "^0.12.0",
     "chai": "^4.2.0",
     "chai-match": "^1.1.1",
     "copyfiles": "^2.4.0",

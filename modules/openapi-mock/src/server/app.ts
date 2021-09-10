@@ -4,7 +4,7 @@
 import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 import * as fs from "fs"
 
 const LOGGER = config.logger("openapi-mock")

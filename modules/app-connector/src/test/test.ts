@@ -1,5 +1,5 @@
 var {api, event, connection} = require("../server/app");
-var kyma = require("varkes-example-kyma-mock");
+var kyma = require("@kyma-incubator/varkes-example-kyma-mock");
 import * as fs from "fs";
 import * as chai from "chai";
 chai.use(require("chai-match"));

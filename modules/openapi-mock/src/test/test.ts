@@ -5,7 +5,7 @@
 import * as  mock from "../server/app"
 import * as request from "supertest"
 import * as express from "express"
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 let configuration: config.Config;
 describe('controllers', function () {
   before(async () => {

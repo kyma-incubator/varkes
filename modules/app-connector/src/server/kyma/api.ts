@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 import * as request from 'request-promise';
 import * as connection from '../connection';
 import * as common from './common';

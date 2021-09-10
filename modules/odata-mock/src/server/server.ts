@@ -2,7 +2,7 @@
 'use strict'
 
 import { init } from "./app"
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 
 const app = require('express')()
 

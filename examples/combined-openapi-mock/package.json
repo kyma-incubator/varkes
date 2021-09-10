@@ -1,5 +1,5 @@
 {
-  "name": "varkes-example-combined-openapi-mock",
+  "name": "@kyma-incubator/varkes-example-combined-openapi-mock",
   "version": "0.12.0",
   "description": "combined example of varkes openapi-mock and varkes api-server",
   "main": "app.js",
@@ -16,10 +16,10 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "varkes-api-server": "^0.12.0",
-    "varkes-cockpit": "^0.12.0",
-    "varkes-configuration": "^0.12.0",
-    "varkes-openapi-mock": "^0.12.0",
+    "@kyma-incubator/varkes-api-server": "^0.12.0",
+    "@kyma-incubator/varkes-cockpit": "^0.12.0",
+    "@kyma-incubator/varkes-configuration": "^0.12.0",
+    "@kyma-incubator/varkes-openapi-mock": "^0.12.0",
     "express": "^4.17.1"
   },
   "devDependencies": {

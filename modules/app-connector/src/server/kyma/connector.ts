@@ -3,7 +3,7 @@
 
 import * as connection from "../connection";
 import * as commonCommon from "../common";
-import * as config from "varkes-configuration";
+import * as config from "@kyma-incubator/varkes-configuration";
 const request = require("promise-request-retry");
 
 const LOGGER: any = config.logger("app-connector");

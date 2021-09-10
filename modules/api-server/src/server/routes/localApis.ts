@@ -1,8 +1,8 @@
-import * as config from "varkes-configuration"
+import * as config from "@kyma-incubator/varkes-configuration"
 const LOGGER = config.logger("api-server")
 import * as express from "express"
 import * as services from "../services";
-import { api, connection } from "varkes-app-connector"
+import { api, connection } from "@kyma-incubator/varkes-app-connector"
 
 var varkesConfig: config.Config;
 

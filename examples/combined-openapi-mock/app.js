@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict'
 
-const mock = require("varkes-openapi-mock")
-const server = require("varkes-api-server")
-const cockpit = require("varkes-cockpit");
-const config = require("varkes-configuration")
+const mock = require("@kyma-incubator/varkes-openapi-mock")
+const server = require("@kyma-incubator/varkes-api-server")
+const cockpit = require("@kyma-incubator/varkes-cockpit");
+const config = require("@kyma-incubator/varkes-configuration")
 const app = require('express')()
 
 let runAsync = async () => {
