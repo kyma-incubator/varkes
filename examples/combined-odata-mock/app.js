@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const mock = require("@kyma-incubator/@kyma-incubator/varkes-odata-mock")
+const mock = require("@kyma-incubator/varkes-odata-mock")
 const cockpit = require("@kyma-incubator/varkes-cockpit");
 const server = require("@kyma-incubator/varkes-api-server")
 const config = require("@kyma-incubator/varkes-configuration")
