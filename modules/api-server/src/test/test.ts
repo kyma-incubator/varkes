@@ -141,9 +141,10 @@ describe("should work", () => {
     })
 
     describe("events endpoints", () => {
-        it("sends event", () => {
+        it("sends legacy event", () => {
             return request(server)
                 .post('/events')
+                .set('content-type', 'application/json')
                 .send({
                     "event-type": "customer.created.v1",
                     "event-type-version": "v1",
@@ -151,6 +152,22 @@ describe("should work", () => {
                     "data": {
                         "customerUid": "icke"
                     }
+                })
+                .expect(200)
+        })
+    })
+
+    describe("events endpoints", () => {
+        it("sends cloud event", () => {
+            return request(server)
+                .post('/events')
+                .set('content-type', 'application/cloudevents+json')
+                .send({
+                    "specversion": "1.0",
+                    "source": "/default/sap.kyma/kt1",
+                    "type": "sap.kyma.FreightOrder.Arrived.v1",
+                    "id": "A234-1234-1234",
+                    "data" : "{\"foo\":\"bar\"}",
                 })
                 .expect(200)
         })

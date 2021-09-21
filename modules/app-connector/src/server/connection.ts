@@ -139,9 +139,14 @@ export async function connect(token: string, persistFiles: boolean = true, insec
   });
 }
 
-export async function eventsUrl(): Promise<string> {
-  if (connection!.type === Type.Kyma) return kymaConnector.eventsUrl();
+export async function legacyEventsUrl(): Promise<string> {
+  if (connection!.type === Type.Kyma) return kymaConnector.legacyEventsUrl();
   else return compassConnector.eventsUrl();
+}
+
+export async function cloudEventsUrl(): Promise<string> {
+  if (connection!.type === Type.Kyma) return kymaConnector.cloudEventsUrl();
+  else return compassConnector.eventsUrl(); //TODO
 }
 
 export type Info = {

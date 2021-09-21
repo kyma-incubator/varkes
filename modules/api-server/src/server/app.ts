@@ -4,7 +4,6 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import * as bodyParser from "body-parser";
 import * as expressWinston from "express-winston";
 import * as cors from "cors";
 import * as connector from "./routes/connector";
@@ -27,7 +26,12 @@ const LOGGER = config.logger("api-server")
 
 async function init(config: config.Config) {
     let app = express()
-    app.use(bodyParser.json())
+    app.use(express.json({
+        type: function (req) {
+            return req.headers['content-type'] === 'application/json'
+            || req.headers['content-type'] === 'application/cloudevents+json'
+        }
+    }))
     app.use(cors())
     app.options('*', cors())
 

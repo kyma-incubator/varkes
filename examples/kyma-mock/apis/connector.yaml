@@ -298,6 +298,9 @@ components:
         eventsUrl:
           type: 'string'
           example: 'https://gateway.test.cluster.kyma.cx/{APP_NAME}/v1/events'
+        cloudeventsUrl:
+          type: 'string'
+          example: 'https://gateway.test.cluster.kyma.cx/{APP_NAME}/events'
         certificatesUrl:
           type: 'string'
           example: 'https://certificate-service.kyma.cluster.cx/v1/applications'

@@ -123,7 +123,7 @@ export async function connect(tokenUrl: string, persistFiles: boolean = true, in
   return {connection: connectionData, certificate: certificateData};
 }
 
-export async function eventsUrl(): Promise<string> {
+export async function legacyEventsUrl(): Promise<string> {
   let infoResponse = await callInfoUrl(
     connection.info().infoUrl!,
     connection.certificate(),
@@ -131,9 +131,25 @@ export async function eventsUrl(): Promise<string> {
     connection.info().insecure
   );
   if (infoResponse.urls.eventsUrl) {
+    LOGGER.debug("Legacy events URL: %s", infoResponse.urls.eventsUrl)
     return infoResponse.urls.eventsUrl;
   }
   throw new Error("Cannot determine an endpoint for sending events, is the application assigned to a runtime?");
+}
+
+export async function cloudEventsUrl(): Promise<string> {
+  let infoResponse = await callInfoUrl(
+    connection.info().infoUrl!,
+    connection.certificate(),
+    connection.privateKey(),
+    connection.info().insecure 
+  );
+  if (infoResponse.urls.eventsUrl) {
+    let cloudeventsUrl = infoResponse.urls.eventsUrl.replace("/v1/events", "/events");
+    LOGGER.debug("Cloud events URL: %s", cloudeventsUrl)
+    return cloudeventsUrl;
+  }
+  throw new Error("Cannot determine an endpoint for sending cloud events, is the application assigned to a runtime?");
 }
 
 export async function renewCertificate(

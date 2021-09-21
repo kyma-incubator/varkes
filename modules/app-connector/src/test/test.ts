@@ -16,6 +16,7 @@ const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools
 const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString();
 const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
 const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
+const cloudeventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudevent.json")).toString();
 
 describe("should work", () => {
   let kymaServer: any;
@@ -66,15 +67,27 @@ describe("should work", () => {
           assert(JSON.stringify(result).indexOf("error") <= -1);
         });
     });
-    it("send event", () => {
+    it("send legacy event", () => {
       let eventData = {
         "event-type": "customer.created",
         "event-type-version": "v1", //event types normally end with .v1
         "event-time": new Date().toISOString(),
         data: JSON.parse(eventPublishAPI),
       };
-      return event.send(eventData).then((result: any) => {
+      return event.sendLegacyEvent(eventData).then((result: any) => {
         expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"));
+      });
+    });
+    it("send cloud event", () => {
+      let eventData = {
+        "specversion": "1.0",
+        "source": "/default/sap.kyma/kt1",
+        "type": "sap.kyma.FreightOrder.Arrived.v1",
+        "id": "A234-1234-1234",
+        data: JSON.parse(eventPublishAPI),
+      };
+      return event.sendCloudEvent(eventData).then((result: any)=> {
+        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudeventResponseExpected)), "g"));
       });
     });
   });
