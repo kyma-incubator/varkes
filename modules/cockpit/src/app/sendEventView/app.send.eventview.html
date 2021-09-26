@@ -20,9 +20,18 @@
       <div class="fd-panel__actions">
         <div *ngIf="event && remote" class="fd-form__item fd-form__item--check" style="padding: 8px" title="When enabled, the 'x-b3-sampled' header will be set to '1' for the call to Kyma, causing the istio-proxies to collect traces no matter what trace sampling rate is configured for istio.">
           <label class="fd-form__label" for="tracing">
-            Force Trace Sampling 
+            Force Trace Sampling
             <span class="fd-toggle fd-toggle--compact fd-form__control" style="margin: 5px">
                 <input type="checkbox" name="tracing" id="tracing" [(ngModel)]="tracing">
+                <span class="fd-toggle__switch" role="presentation"></span>
+            </span>
+          </label>
+        </div>
+        <div *ngIf="event && remote" class="fd-form__item fd-form__item--check" style="padding: 8px" title="When enabled, a cloud event will be sent.">
+          <label class="fd-form__label" for="cloudevent">
+            Cloud Event
+            <span class="fd-toggle fd-toggle--compact fd-form__control" style="margin: 5px">
+                <input type="checkbox" name="cloudevent" id="cloudevent" [(ngModel)]="cloudevent">
                 <span class="fd-toggle__switch" role="presentation"></span>
             </span>
           </label>

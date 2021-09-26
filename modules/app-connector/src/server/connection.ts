@@ -146,7 +146,7 @@ export async function legacyEventsUrl(): Promise<string> {
 
 export async function cloudEventsUrl(): Promise<string> {
   if (connection!.type === Type.Kyma) return kymaConnector.cloudEventsUrl();
-  else return compassConnector.eventsUrl(); //TODO
+  else return compassConnector.eventsUrl();
 }
 
 export type Info = {

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
+import {v4 as uuidv4} from 'uuid'
 import * as ace from 'ace-builds/src-min-noconflict/ace.js';
 import "ace-builds/webpack-resolver";
 
@@ -25,6 +26,7 @@ export class SendEventViewComponent implements OnInit {
     public ariaExpanded = false;
     public ariaHidden = true;
     public tracing = true;
+    public cloudevent = false;
     public success;
     public topicName;
     public successMessage;
@@ -53,52 +55,84 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public sendEvent() {
-        if(!this.topicName){
-            return
-        }
-        this.loading = true;
+      if(!this.topicName){
+        return
+      }
+      let eventData;
+      if(!this.cloudevent) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let httpOptions = new RequestOptions({ headers: headers });
-        var editor = ace.edit("eventTopicEditor");
-        let eventTime = new Date().toISOString();
-        let eventType = this.topicName;
-        var version;
-        var regex = /^(.*)\.([v|V][0-9]+$)/;
-        if (eventType.match(regex)) {
-            var matchedGroups = regex.exec(eventType);
-            version = matchedGroups[2];
-            eventType = matchedGroups[1];
-        }
-        else {
-            version = this.event.events.spec.info.version;
-        }
-        try {
-            let eventData = {
-                "event-type": eventType,
-                "event-type-version": version, //event types normally end with .v1
-                "event-time": eventTime,
-                "data": JSON.parse(editor.getValue()),
-                "event-tracing": this.tracing
-            }
-            this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
-                .subscribe(
-                    success => {
-                        this.loading = false;
-                        this.successMessage = "Event has been sent Successfully";
-                        this.success = true;
-                    },
-                    error => {
-                        this.alertMessage = JSON.parse(error._body).error
-                        this.alert = true;
-                        this.loading = false;
-                    });
-        }
-        catch (err) {
-            this.alertMessage = "Please make sure that the Event Data follows JSON format";
-            this.alert = true;
-            this.loading = false;
-        }
+        var httpOptions = new RequestOptions({ headers: headers });
+        eventData = this.sendLegacyEvent();
+      } else {
+        let headers = new Headers({ 'Content-Type': 'application/cloudevents+json' });
+        var httpOptions = new RequestOptions({ headers: headers });
+        eventData = this.sendCloudEvent();
+      }
+      try {
+        this.http.post(this.baseUrl + this.info.links.events, eventData, httpOptions)
+            .subscribe(
+                success => {
+                  this.loading = false;
+                  this.successMessage = "Event has been sent Successfully";
+                  this.success = true;
+                },
+                error => {
+                    this.alertMessage = JSON.parse(error._body).error
+                    this.alert = true;
+                    this.loading = false;
+                });
+      }
+      catch (err) {
+        this.alertMessage = "Please make sure that the Event Data follows JSON format";
+        this.alert = true;
+        this.loading = false;
+      }
     }
+
+    private sendLegacyEvent(): any {
+      this.loading = true;
+      let editor = ace.edit("eventTopicEditor");
+      let eventTime = new Date().toISOString();
+      let eventType = this.topicName;
+      let regex = /^(.*)\.([v|V][0-9]+$)/;
+      if (eventType.match(regex)) {
+        let matchedGroups = regex.exec(eventType);
+        var version = matchedGroups[2];
+        eventType = matchedGroups[1];
+      }
+      else {
+        version = this.event.events.spec.info.version;
+      }
+      let eventData = {
+            "event-type": eventType,
+            "event-type-version": version, //event types normally end with .v1
+            "event-time": eventTime,
+            "data": JSON.parse(editor.getValue()),
+            "event-tracing": this.tracing
+          }
+      return eventData;
+    }
+
+    private sendCloudEvent(): any {
+      this.loading = true;
+      let editor = ace.edit("eventTopicEditor");
+      let specversion = "1.0";
+      let eventType = this.topicName;
+      let eventSource = this.event.provider;
+      let eventId = uuidv4();
+      let eventTime = new Date().toISOString();
+
+      let eventData = {
+            "specversion": specversion,
+            "type": eventType,
+            "source": eventSource,
+            "id": eventId,
+            "time": eventTime,
+            "data": JSON.parse(editor.getValue())
+          }
+      return eventData;
+    }
+
 
     public closeAlert() {
         this.alert = false;
