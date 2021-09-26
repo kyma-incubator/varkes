@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 import * as ace from 'ace-builds/src-min-noconflict/ace.js';
 import "ace-builds/webpack-resolver";
 
-const ASYNC_API_2 = "2.0.0"
+const ASYNC_API_2 = "2.0.0";
 
 @Component({
     selector: 'send-event-view',
@@ -55,17 +55,17 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public sendEvent() {
-      if(!this.topicName){
-        return
+      if (!this.topicName) {
+        return;
       }
       let eventData;
-      if(!this.cloudevent) {
+      if (!this.cloudevent) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        var httpOptions = new RequestOptions({ headers: headers });
+        var httpOptions = new RequestOptions({ headers });
         eventData = this.sendLegacyEvent();
       } else {
         let headers = new Headers({ 'Content-Type': 'application/cloudevents+json' });
-        var httpOptions = new RequestOptions({ headers: headers });
+        var httpOptions = new RequestOptions({ headers });
         eventData = this.sendCloudEvent();
       }
       try {
@@ -77,12 +77,11 @@ export class SendEventViewComponent implements OnInit {
                   this.success = true;
                 },
                 error => {
-                    this.alertMessage = JSON.parse(error._body).error
+                    this.alertMessage = JSON.parse(error._body).error;
                     this.alert = true;
                     this.loading = false;
                 });
-      }
-      catch (err) {
+      } catch (err) {
         this.alertMessage = "Please make sure that the Event Data follows JSON format";
         this.alert = true;
         this.loading = false;
@@ -99,17 +98,16 @@ export class SendEventViewComponent implements OnInit {
         let matchedGroups = regex.exec(eventType);
         var version = matchedGroups[2];
         eventType = matchedGroups[1];
-      }
-      else {
+      } else {
         version = this.event.events.spec.info.version;
       }
       let eventData = {
             "event-type": eventType,
-            "event-type-version": version, //event types normally end with .v1
+            "event-type-version": version, // event types normally end with .v1
             "event-time": eventTime,
             "data": JSON.parse(editor.getValue()),
             "event-tracing": this.tracing
-          }
+      };
       return eventData;
     }
 
@@ -119,7 +117,7 @@ export class SendEventViewComponent implements OnInit {
       let specversion = "1.0";
       let eventType = this.topicName;
       let eventSource = this.event.provider;
-      let eventId = uuidv4();
+      let eventId = "123-456-789"; // uuidv4();
       let eventTime = new Date().toISOString();
 
       let eventData = {
@@ -129,7 +127,7 @@ export class SendEventViewComponent implements OnInit {
             "id": eventId,
             "time": eventTime,
             "data": JSON.parse(editor.getValue())
-          }
+      };
       return eventData;
     }
 
