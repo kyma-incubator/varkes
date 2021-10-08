@@ -68,9 +68,9 @@ function assureConnected() {
     return null
 }
 
-function connect(req: express.Request, res: express.Response) {
+async function connect(req: express.Request, res: express.Response) {
     try {
-        connection.connect(req.body.token, true, req.body.insecure)
+        await connection.connect(req.body.token, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info()!.metadataUrl)
         res.status(200).send(connection.info())
     } catch (error) {
