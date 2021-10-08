@@ -39,6 +39,16 @@ function key(req: express.Request, res: express.Response) {
     }
 }
 
+function renew(req: express.Request, res: express.Response){
+    let err = assureConnected()
+    if (err) {
+        res.status(400).send({ error: err })
+    } else {
+        connection.renewCertificate()
+        res.status(200).send(connection.info())
+    }
+}
+
 function cert(req: express.Request, res: express.Response) {
     let err = assureConnected()
     if (err) {
@@ -58,9 +68,9 @@ function assureConnected() {
     return null
 }
 
-async function connect(req: express.Request, res: express.Response) {
+function connect(req: express.Request, res: express.Response) {
     try {
-        await connection.connect(req.body.token, true, req.body.insecure)
+        connection.connect(req.body.token, true, req.body.insecure)
         LOGGER.info("Connected to %s", connection.info()!.metadataUrl)
         res.status(200).send(connection.info())
     } catch (error) {
@@ -75,6 +85,7 @@ function router() {
     connectionRouter.delete("/", disconnect)
     connectionRouter.get("/key", key)
     connectionRouter.get("/cert", cert)
+    connectionRouter.post("/renew", renew)
     connectionRouter.post("/", connect)
 
     return connectionRouter

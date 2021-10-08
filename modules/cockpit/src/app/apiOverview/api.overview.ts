@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import * as ace from 'ace-builds';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import { linkManager } from '@kyma-project/luigi-client';
+import { linkManager } from '@luigi-project/client';
 @Component({
     selector: 'api-overview',
     templateUrl: './app.apioverview.html'

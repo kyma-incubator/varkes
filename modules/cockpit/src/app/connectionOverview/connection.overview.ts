@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { Http, Headers, RequestOptions } from "@angular/http";
-import { uxManager, linkManager } from "@kyma-project/luigi-client";
+import { uxManager, linkManager } from "@luigi-project/client";
 import { ServiceInstancesService } from "../service-instances/service-instances.service";
 
 @Component({
@@ -14,6 +14,8 @@ export class ConnectionOverviewComponent implements OnInit {
   public connection;
   public alert;
   public alertMessage;
+  public success;
+  public successMessage;
   public keyUrl;
   public searchInd;
   public certUrl;
@@ -29,7 +31,7 @@ export class ConnectionOverviewComponent implements OnInit {
   public constructor(
     private http: Http,
     private serviceInstance: ServiceInstancesService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.baseUrl = this.serviceInstance.getBaseUrl();
@@ -109,7 +111,22 @@ export class ConnectionOverviewComponent implements OnInit {
   public downloadCert() {
     window.location.href = this.baseUrl + this.info.links.connection + "/cert";
   }
+  public renewCert() {
+    this.http.post(this.baseUrl + this.info.links.connection + "/renew", "").subscribe(
+      (success) => {
+        this.successMessage = "Certificate renewed";
+        this.success = true;
+      },
+      (error) => {
+        this.alertMessage = JSON.parse(error._body).error;
+        this.alert = true;
+      }
+    );
+  }
   public closeAlert() {
     this.alert = false;
   }
+  public closeSuccess() {
+    this.success = false;
+}
 }
