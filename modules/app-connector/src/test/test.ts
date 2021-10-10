@@ -5,6 +5,7 @@ import * as chai from "chai";
 chai.use(require("chai-match"));
 const expect = chai.expect;
 import * as path from "path";
+import { certificate } from "../server/connection";
 const assert = chai.assert;
 
 const port = 10001; //! listen in different port
@@ -75,6 +76,18 @@ describe("should work", () => {
       };
       return event.send(eventData).then((result: any) => {
         expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"));
+      });
+    });
+    it("gets key", () => {
+      return expect(connection.privateKey()).exist
+    });
+    it("gets cert", () => {
+      return expect(connection.certificate()).exist
+    });
+    it("renew cert", () => {
+      let cert=connection.certificate().toString()
+      return connection.renewCertificate().then((result: any) => {
+        expect(connection.certificate().toString()).equals(cert) //same as mock returns the same
       });
     });
   });

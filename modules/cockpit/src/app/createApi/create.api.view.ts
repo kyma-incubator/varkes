@@ -3,7 +3,7 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as ace from 'ace-builds';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import { linkManager } from '@kyma-project/luigi-client';
+import { linkManager } from '@luigi-project/client';
 @Component({
     selector: 'create-api-view',
     templateUrl: './app.createapiview.html'

@@ -10,7 +10,8 @@ xhttp.onreadystatechange = function () {
         header: {
           title: (config.name ? config.name : 'Varkes'),
           logo: '/logo',
-        }
+        },
+        customSandboxRules: ['allow-downloads'],
       },
       navigation: {
         nodes: [
