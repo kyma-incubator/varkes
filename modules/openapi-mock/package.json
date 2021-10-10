@@ -1,6 +1,6 @@
 {
   "name": "@varkes/openapi-mock",
-  "version": "0.11.2",
+  "version": "0.12.0",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-express-middleware": "^4.0.2",
-    "@varkes/configuration": "^0.11.2",
+    "@varkes/configuration": "^0.12.0",
     "api-spec-converter": "~2.9.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
