@@ -23,8 +23,9 @@ validate:
 	npx lerna run test
 
 npm-publish:
-	echo "//registry.npmjs.org/:_authToken=\"${BOT_NPM_TOKEN}\"" > .npmrc
+	@echo "//registry.npmjs.org/:_authToken='${BOT_NPM_TOKEN}'" > .npmrc
 	npx lerna publish from-package --yes
+	sleep 60
 
 clean:
 	npx lerna clean

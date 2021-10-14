@@ -161,6 +161,8 @@ export async function renewCertificate(
   const subject = commonCommon.parseSubjectFromCert(crt);
   const csr = commonCommon.generateCSR(subject, privateKey);
 
+  LOGGER.debug("Calling POST on '%s'", certRenewalUrl);
+
   return request({
     uri: certRenewalUrl,
     method: "POST",

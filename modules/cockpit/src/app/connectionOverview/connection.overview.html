@@ -1,14 +1,11 @@
-<div
-  *ngIf="alert"
-  class="fd-alert fd-alert--error fd-alert--dismissible"
-  role="alert"
->
-  <button
-    class="fd-alert__close"
-    aria-label="Close"
-    (click)="closeAlert()"
-  ></button>
+<div *ngIf="alert" class="fd-alert fd-alert--error fd-alert--dismissible" role="alert">
+  <button class="fd-alert__close" aria-label="Close" (click)="closeAlert()"></button>
   {{alertMessage}}
+  <br />
+</div>
+<div *ngIf="success" class="fd-alert fd-alert--success fd-alert--dismissible" role="alert">
+  <button class="fd-alert__close" aria-label="Close" (click)="closeSuccess()"></button>
+  {{successMessage}}
   <br />
 </div>
 
@@ -52,16 +49,22 @@
             Disconnect
           </button>
           <button
+            class="fd-button fd-button--negative"
+            (click)="renewCert()"
+          >
+            Renew Certificate
+          </button>
+          <button
             class="fd-button--light sap-icon--download"
             (click)="downloadKey()"
           >
-            private key
+            Private Key
           </button>
           <button
             class="fd-button--light sap-icon--download"
             (click)="downloadCert()"
           >
-            certificate
+            Certificate
           </button>
         </div>
       </div>

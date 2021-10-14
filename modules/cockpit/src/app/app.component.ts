@@ -5,7 +5,7 @@ import {
   addInitListener,
   addContextUpdateListener,
   getEventData
-} from '@kyma-project/luigi-client';
+} from '@luigi-project/client';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

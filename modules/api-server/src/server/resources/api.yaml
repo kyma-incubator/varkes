@@ -96,6 +96,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /connection/renew:
+    post:
+      tags:
+        - "connection"
+      summary: Renews the client certificate for the connected Kyma cluster
+      responses:
+        "200":
+          description: "Renew of client certificate for connected kyma cluster was successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectionResponse"
+        "400":
+          description: "Not connected to kyma cluster"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /events:
     post:
       tags:

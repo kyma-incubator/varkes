@@ -25,6 +25,7 @@ var jobRenewCertificateStarted: Boolean = false;
 const RENEWCERT_JOB_CRON = process.env.RENEWCERT_JOB_CRON || "00 00 1 * * *";
 LOGGER.info("Setting jobRenewCertificate schedule to: %s", RENEWCERT_JOB_CRON);
 const jobRenewCertificate = new CronJob(RENEWCERT_JOB_CRON, function () {
+  jobRenewCertificateStarted = true;
   renewCertificate();
 });
 
@@ -166,9 +167,7 @@ export enum Type {
   Kyma = "Kyma",
   Compass = "Compass",
 }
-
-async function renewCertificate() {
-  jobRenewCertificateStarted = true;
+export async function renewCertificate() {
   if (established() && connection!.renewCertUrl) {
     try {
       LOGGER.info("Calling cert renewal procedure for %s connection: %s", connection!.type, connection!.renewCertUrl);
@@ -191,8 +190,8 @@ async function renewCertificate() {
         fs.writeFileSync(crtFile, certificateData, {encoding: "utf8", flag: "w"});
       }
     } catch (error) {
-      LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection");
-      LOGGER.error(error);
+      LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection: ", error);
+      throw error
     }
   } else {
     LOGGER.info("no connection established... renewCertificate not performed");

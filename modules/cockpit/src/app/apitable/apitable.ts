@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import { linkManager, uxManager, addContextUpdateListener } from '@kyma-project/luigi-client';
+import { linkManager, uxManager, addContextUpdateListener } from '@luigi-project/client';
 @Component({
     selector: 'api-table',
     templateUrl: './app.apitable.html'
