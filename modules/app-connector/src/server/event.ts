@@ -19,3 +19,9 @@ export function sendCloudEvent(event: any): Promise<any> {
         return kymaEvent.sendCloudEvent(event)
     })
 }
+
+export function sendCloudEventBinary(event: any, header: any): Promise<any> {
+    return common.assureConnected(connection).then( () => {
+        return kymaEvent.sendCloudEventBinary(event, header)
+    })
+}

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { ServiceInstancesService } from '../service-instances/service-instances.service';
-import { v4 as uuidv4 } from 'uuid';
+const { v4: uuid } = require('uuid');
 import * as ace from 'ace-builds/src-min-noconflict/ace.js';
 import "ace-builds/webpack-resolver";
 
@@ -117,7 +117,7 @@ export class SendEventViewComponent implements OnInit {
       let specversion = "1.0";
       let eventType = this.topicName;
       let eventSource = this.event.provider;
-      let eventId = "123-456-789"; // uuidv4();
+      let eventId = uuid();
       let eventTime = new Date().toISOString();
 
       let eventData = {

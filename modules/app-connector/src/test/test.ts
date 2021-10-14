@@ -17,7 +17,8 @@ const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools
 const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString();
 const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
 const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
-const cloudeventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudevent.json")).toString();
+const cloudEventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudevent.json")).toString();
+const cloudEventBinaryResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudeventbinary.json")).toString();
 
 describe("should work", () => {
   let kymaServer: any;
@@ -88,7 +89,21 @@ describe("should work", () => {
         data: JSON.parse(eventPublishAPI),
       };
       return event.sendCloudEvent(eventData).then((result: any)=> {
-        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudeventResponseExpected)), "g"));
+        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudEventResponseExpected)), "g"));
+      });
+    });
+    it("send cloud event in binary mode", () => {
+      let eventData = {
+        data: JSON.parse(eventPublishAPI),
+      };
+      let eventHeader = {
+        "ce-specversion": "1.0",
+        "ce-source": "/default/sap.kyma/kt1",
+        "ce-type": "sap.kyma.FreightOrder.Arrived.v1",
+        "ce-id": "A234-1234-1234",
+      }
+      return event.sendCloudEventBinary(eventData, eventHeader).then((result: any)=> {
+        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudEventBinaryResponseExpected)), "g"));
       });
     });
     it("gets key", () => {

@@ -69,6 +69,9 @@ paths:
         description: 'The event to be published'
         required: true
         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishBinaryCloudRequest'
           application/cloudevents+json:
             schema:
               $ref: '#/components/schemas/PublishCloudRequest'
@@ -169,6 +172,34 @@ components:
         - specversion
         - type
         - data
+    PublishBinaryCloudRequest:
+      type: object
+      description: A Publish request
+      properties:
+        id:
+          description:  Identifies the event.
+          type: string
+          pattern: '^[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}$'
+          example: 'A234-1234-1234'
+        source:
+          description: Identifies the context in which an event happened.
+          type: string
+          pattern: '(\/[a-zA-Z0-9]+){1,}'
+          example: '/cloudevents/spec/pull/123'
+        specversion:
+          description: The version of the CloudEvents specification which the event uses.
+          type: string
+          pattern: '^[0-9]{1}.[0-9]{1}$'
+          example: '1.0'
+        type:
+          description: This attribute contains a value describing the type of event related to the originating occurrence.
+          type: string
+          pattern: '^[a-zA-Z]+([_\-\.]?[a-zA-Z0-9]+)*$'
+          example: 'sap.kyma.FreightOrder.Arrived.v1'
+        data:
+          $ref: '#/components/schemas/AnyValue'
+      required:
+        - data
     PublishResponse:
       type: object
       description: A Publish response
@@ -191,6 +222,17 @@ components:
           example: 'A234-1234-1234'
       required:
         - id
+    PublishBinaryCloudResponse:
+      type: object
+      description: A Publish response
+      properties:
+        ce-id:
+          description:  Identifies the event.
+          type: string
+          pattern: '^[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}$'
+          example: 'A234-1234-1234'
+      required:
+        - ce-id
     AnyValue:
       description: Can be any value but null. nullable false
     APIError:

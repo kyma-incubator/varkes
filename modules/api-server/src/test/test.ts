@@ -155,9 +155,6 @@ describe("should work", () => {
                 })
                 .expect(200)
         })
-    })
-
-    describe("events endpoints", () => {
         it("sends cloud event", () => {
             return request(server)
                 .post('/events')
@@ -167,6 +164,20 @@ describe("should work", () => {
                     "source": "/default/sap.kyma/kt1",
                     "type": "sap.kyma.FreightOrder.Arrived.v1",
                     "id": "A234-1234-1234",
+                    "data" : "{\"foo\":\"bar\"}",
+                })
+                .expect(200)
+        })
+        it("sends cloud event in binary", () => {
+            return request(server)
+                .post('/events')
+                .set({
+                    'ce-specversion': '1.0',
+                    'ce-type': 'sap.kyma.FreightOrder.Arrived.v1',
+                    'ce-source': '/default/sap.kyma/kt1',
+                    'ce-id': 'A234-1234-1234',
+                })
+                .send({
                     "data" : "{\"foo\":\"bar\"}",
                 })
                 .expect(200)

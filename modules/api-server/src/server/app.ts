@@ -12,6 +12,7 @@ import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
 import * as config from "@varkes/configuration"
+import { EWOULDBLOCK } from "constants";
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
@@ -28,8 +29,7 @@ async function init(config: config.Config) {
     let app = express()
     app.use(express.json({
         type: function (req) {
-            return req.headers['content-type'] === 'application/json'
-            || req.headers['content-type'] === 'application/cloudevents+json'
+            return req.headers['content-type']
         }
     }))
     app.use(cors())
