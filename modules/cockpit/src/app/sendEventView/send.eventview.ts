@@ -126,7 +126,8 @@ export class SendEventViewComponent implements OnInit {
             "source": eventSource,
             "id": eventId,
             "time": eventTime,
-            "data": JSON.parse(editor.getValue())
+            "data": JSON.parse(editor.getValue()),
+            "eventtracing": this.tracing
       };
       return eventData;
     }

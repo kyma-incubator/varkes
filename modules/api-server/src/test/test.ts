@@ -14,9 +14,6 @@ const schoolsShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expec
 const schoolsLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-long.json"), "utf-8"))
 const coursesShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-short.json"), "utf-8"))
 const coursesLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-long.json"), "utf-8"))
-const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/northwind.json"), "utf-8"))
-const events1API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events1.json"), "utf-8"))
-const events2API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events2.json"), "utf-8"))
 
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
@@ -149,6 +146,7 @@ describe("should work", () => {
                     "event-type": "customer.created.v1",
                     "event-type-version": "v1",
                     "event-time": "2019-03-04T14:19:29.450Z",
+                    "event-tracing": "true",
                     "data": {
                         "customerUid": "icke"
                     }
@@ -164,6 +162,7 @@ describe("should work", () => {
                     "source": "/default/sap.kyma/kt1",
                     "type": "sap.kyma.FreightOrder.Arrived.v1",
                     "id": "A234-1234-1234",
+                    "eventtracing": "true",
                     "data" : "{\"foo\":\"bar\"}",
                 })
                 .expect(200)
@@ -178,6 +177,7 @@ describe("should work", () => {
                     'ce-id': 'A234-1234-1234',
                 })
                 .send({
+                    "event-tracing": "true",
                     "data" : "{\"foo\":\"bar\"}",
                 })
                 .expect(200)
@@ -287,7 +287,7 @@ function createAPI(server: any) {
 function deleteKeysFile() {
     const path = "./keys"
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file: any, index: any) {
+        fs.readdirSync(path).forEach(function (file: any) {
             fs.unlinkSync(path + "/" + file)
         })
         fs.rmdirSync(path)

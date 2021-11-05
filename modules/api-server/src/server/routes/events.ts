@@ -14,7 +14,6 @@ function sendEvent(req: express.Request, res: express.Response) {
     } else {
         if (req.get('ce-specversion')) {
             event.sendCloudEventBinary(req.body, req.headers).then((result: any) => {
-                LOGGER.info("Result: " + JSON.stringify(result));
                 res.status(200).send(result);
             }, (err: any) => {
                 LOGGER.error("Failed to send cloud event in binary mode: %s", err)

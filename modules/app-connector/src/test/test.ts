@@ -5,7 +5,6 @@ import * as chai from "chai";
 chai.use(require("chai-match"));
 const expect = chai.expect;
 import * as path from "path";
-import { certificate } from "../server/connection";
 const assert = chai.assert;
 
 const port = 10001; //! listen in different port
@@ -74,6 +73,7 @@ describe("should work", () => {
         "event-type": "customer.created",
         "event-type-version": "v1", //event types normally end with .v1
         "event-time": new Date().toISOString(),
+        "event-tracing": "true",
         data: JSON.parse(eventPublishAPI),
       };
       return event.sendLegacyEvent(eventData).then((result: any) => {
@@ -86,6 +86,7 @@ describe("should work", () => {
         "source": "/default/sap.kyma/kt1",
         "type": "sap.kyma.FreightOrder.Arrived.v1",
         "id": "A234-1234-1234",
+        "eventtracing": "true",
         data: JSON.parse(eventPublishAPI),
       };
       return event.sendCloudEvent(eventData).then((result: any)=> {
@@ -94,6 +95,7 @@ describe("should work", () => {
     });
     it("send cloud event in binary mode", () => {
       let eventData = {
+        "event-tracing": "true",
         data: JSON.parse(eventPublishAPI),
       };
       let eventHeader = {

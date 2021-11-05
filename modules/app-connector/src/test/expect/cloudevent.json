@@ -3,6 +3,7 @@
     "source": "/default/sap.kyma/kt1",
     "type": "sap.kyma.FreightOrder.Arrived.v1",
     "id": "A234-1234-1234",
+    "eventtracing":"true",
     "data": {
         "customerUid": ".*",
         "storeUid": "4caad296",
