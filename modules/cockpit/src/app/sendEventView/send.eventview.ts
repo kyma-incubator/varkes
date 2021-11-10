@@ -26,7 +26,7 @@ export class SendEventViewComponent implements OnInit {
     public ariaExpanded = false;
     public ariaHidden = true;
     public tracing = true;
-    public cloudevent = false;
+    public cloudevent = true;
     public success;
     public topicName;
     public successMessage;
@@ -82,7 +82,7 @@ export class SendEventViewComponent implements OnInit {
                     this.loading = false;
                 });
       } catch (err) {
-        this.alertMessage = "Please make sure that the Event Data follows JSON format";
+        this.alertMessage = "Event could not be sent.\n Please ensure that the sent data is formatted correctly by making sure that no error messages are displayed in the editor.";
         this.alert = true;
         this.loading = false;
       }
@@ -90,7 +90,6 @@ export class SendEventViewComponent implements OnInit {
 
     private sendLegacyEvent(): any {
       this.loading = true;
-      let editor = ace.edit("eventTopicEditor");
       let eventTime = new Date().toISOString();
       let eventType = this.topicName;
       let regex = /^(.*)\.([v|V][0-9]+$)/;
@@ -105,7 +104,7 @@ export class SendEventViewComponent implements OnInit {
             "event-type": eventType,
             "event-type-version": version, // event types normally end with .v1
             "event-time": eventTime,
-            "data": JSON.parse(editor.getValue()),
+            "data": this.parseData(),
             "event-tracing": this.tracing
       };
       return eventData;
@@ -113,7 +112,6 @@ export class SendEventViewComponent implements OnInit {
 
     private sendCloudEvent(): any {
       this.loading = true;
-      let editor = ace.edit("eventTopicEditor");
       let specversion = "1.0";
       let eventType = this.topicName;
       let eventSource = this.event.provider;
@@ -126,12 +124,23 @@ export class SendEventViewComponent implements OnInit {
             "source": eventSource,
             "id": eventId,
             "time": eventTime,
-            "data": JSON.parse(editor.getValue()),
+            "data": this.parseData(),
             "eventtracing": this.tracing
       };
       return eventData;
     }
 
+    private parseData(): any {
+      let editor = ace.edit("eventTopicEditor");
+      try {
+        var data = JSON.parse(editor.getValue());
+        return data
+      } catch (err) {
+        this.alertMessage = "Event was sent with empty data field. Please ensure that the sent data is formatted correctly by making sure that no error messages are displayed in the editor.";
+        this.alert = true;
+        this.loading = false;
+      }
+    }
 
     public closeAlert() {
         this.alert = false;

@@ -64,16 +64,12 @@ export function sendCloudEvent(event: any): Promise<any> {
 export function sendCloudEventBinary(body: any, header: any): Promise<any> {
     return connection.cloudEventsUrl().then((cloudEventsUrl) => {
         LOGGER.debug("Received Body: " + JSON.stringify(body, null, 2) + " and Header: " + JSON.stringify(header, null, 2));
-        let spec = header["ce-specversion"];
-        let type = header["ce-type"];
-        let source = header["ce-source"];
-        let id = header["ce-id"];
         let headers: any = {
             "Content-Type": "application/json",
-            "ce-specversion": spec,
-            "ce-type": type,
-            "ce-source": source,
-            "ce-id": id
+            "ce-specversion": header["ce-specversion"],
+            "ce-type": header["ce-type"],
+            "ce-source": header["ce-source"],
+            "ce-id": header["ce-id"]
         }
         if (body["event-tracing"]) {
             headers["x-b3-sampled"] = "1"

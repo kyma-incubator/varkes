@@ -14,6 +14,9 @@ const schoolsShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expec
 const schoolsLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/schools-long.json"), "utf-8"))
 const coursesShortAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-short.json"), "utf-8"))
 const coursesLongAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/courses-long.json"), "utf-8"))
+const northwindAPI = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/northwind.json"), "utf-8"))
+const events1API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events1.json"), "utf-8"))
+const events2API = JSON.parse(fs.readFileSync(path.resolve("dist/test/expect/events2.json"), "utf-8"))
 
 const port = 10001 //! listen in different port
 const tokenURL = `http://localhost:${port}/connector/v1/applications/signingRequests/info?token=123`
