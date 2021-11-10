@@ -141,16 +141,47 @@ describe("should work", () => {
     })
 
     describe("events endpoints", () => {
-        it("sends event", () => {
+        it("sends legacy event", () => {
             return request(server)
                 .post('/events')
+                .set('content-type', 'application/json')
                 .send({
                     "event-type": "customer.created.v1",
                     "event-type-version": "v1",
                     "event-time": "2019-03-04T14:19:29.450Z",
+                    "event-tracing": "true",
                     "data": {
                         "customerUid": "icke"
                     }
+                })
+                .expect(200)
+        })
+        it("sends cloud event", () => {
+            return request(server)
+                .post('/events')
+                .set('content-type', 'application/cloudevents+json')
+                .send({
+                    "specversion": "1.0",
+                    "source": "/default/sap.kyma/kt1",
+                    "type": "sap.kyma.FreightOrder.Arrived.v1",
+                    "id": "A234-1234-1234",
+                    "eventtracing": "true",
+                    "data" : "{\"foo\":\"bar\"}",
+                })
+                .expect(200)
+        })
+        it("sends cloud event in binary", () => {
+            return request(server)
+                .post('/events')
+                .set({
+                    'ce-specversion': '1.0',
+                    'ce-type': 'sap.kyma.FreightOrder.Arrived.v1',
+                    'ce-source': '/default/sap.kyma/kt1',
+                    'ce-id': 'A234-1234-1234',
+                })
+                .send({
+                    "event-tracing": "true",
+                    "data" : "{\"foo\":\"bar\"}",
                 })
                 .expect(200)
         })
@@ -259,7 +290,7 @@ function createAPI(server: any) {
 function deleteKeysFile() {
     const path = "./keys"
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function (file: any, index: any) {
+        fs.readdirSync(path).forEach(function (file: any) {
             fs.unlinkSync(path + "/" + file)
         })
         fs.rmdirSync(path)

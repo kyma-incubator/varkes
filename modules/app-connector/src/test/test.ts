@@ -5,7 +5,6 @@ import * as chai from "chai";
 chai.use(require("chai-match"));
 const expect = chai.expect;
 import * as path from "path";
-import { certificate } from "../server/connection";
 const assert = chai.assert;
 
 const port = 10001; //! listen in different port
@@ -17,6 +16,8 @@ const updatedSchoolsAPI = fs.readFileSync(path.resolve("dist/test/updatedSchools
 const eventAPI = fs.readFileSync(path.resolve("dist/test/event.json")).toString();
 const eventPublishAPI = fs.readFileSync(path.resolve("dist/test/eventPublish.json")).toString();
 const eventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/event.json")).toString();
+const cloudEventResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudevent.json")).toString();
+const cloudEventBinaryResponseExpected = fs.readFileSync(path.resolve("dist/test/expect/cloudeventbinary.json")).toString();
 
 describe("should work", () => {
   let kymaServer: any;
@@ -67,15 +68,44 @@ describe("should work", () => {
           assert(JSON.stringify(result).indexOf("error") <= -1);
         });
     });
-    it("send event", () => {
+    it("send legacy event", () => {
       let eventData = {
         "event-type": "customer.created",
         "event-type-version": "v1", //event types normally end with .v1
         "event-time": new Date().toISOString(),
+        "event-tracing": "true",
         data: JSON.parse(eventPublishAPI),
       };
-      return event.send(eventData).then((result: any) => {
+      return event.sendLegacyEvent(eventData).then((result: any) => {
         expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(eventResponseExpected)), "g"));
+      });
+    });
+    it("send cloud event", () => {
+      let eventData = {
+        "specversion": "1.0",
+        "source": "/default/sap.kyma/kt1",
+        "type": "sap.kyma.FreightOrder.Arrived.v1",
+        "id": "A234-1234-1234",
+        "eventtracing": "true",
+        data: JSON.parse(eventPublishAPI),
+      };
+      return event.sendCloudEvent(eventData).then((result: any)=> {
+        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudEventResponseExpected)), "g"));
+      });
+    });
+    it("send cloud event in binary mode", () => {
+      let eventData = {
+        "event-tracing": "true",
+        data: JSON.parse(eventPublishAPI),
+      };
+      let eventHeader = {
+        "ce-specversion": "1.0",
+        "ce-source": "/default/sap.kyma/kt1",
+        "ce-type": "sap.kyma.FreightOrder.Arrived.v1",
+        "ce-id": "A234-1234-1234",
+      }
+      return event.sendCloudEventBinary(eventData, eventHeader).then((result: any)=> {
+        expect(JSON.stringify(result)).to.match(new RegExp(JSON.stringify(JSON.parse(cloudEventBinaryResponseExpected)), "g"));
       });
     });
     it("gets key", () => {

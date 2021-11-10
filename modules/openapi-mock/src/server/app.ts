@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 'use strict'
 
-import * as bodyParser from "body-parser"
 import { mock } from "./mock"
 import * as express from "express"
 import * as config from "@varkes/configuration"
-import * as fs from "fs"
 
 const LOGGER = config.logger("openapi-mock")
 const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
@@ -13,8 +11,8 @@ const pathToSwaggerUI = require("swagger-ui-dist").absolutePath()
 async function init(config: config.Config) {
   let app = express()
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }))
 
   app.use(await mock(config))
   app.use("/swagger-ui", express.static(pathToSwaggerUI))

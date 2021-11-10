@@ -8,8 +8,20 @@ import * as kymaEvent from './kyma/event';
 
 const LOGGER: any = config.logger("app-connector")
 
-export function send(event: any): Promise<any> {
+export function sendLegacyEvent(event: any): Promise<any> {
     return common.assureConnected(connection).then(() => {
-        return kymaEvent.send(event)
+        return kymaEvent.sendLegacyEvent(event)
+    })
+}
+
+export function sendCloudEvent(event: any): Promise<any> {
+    return common.assureConnected(connection).then( () => {
+        return kymaEvent.sendCloudEvent(event)
+    })
+}
+
+export function sendCloudEventBinary(event: any, header: any): Promise<any> {
+    return common.assureConnected(connection).then( () => {
+        return kymaEvent.sendCloudEventBinary(event, header)
     })
 }

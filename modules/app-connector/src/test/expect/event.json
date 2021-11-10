@@ -2,6 +2,7 @@
     "event-type": ".*",
     "event-type-version": "v1",
     "event-time": ".*",
+    "event-tracing":"true",
     "data": {
         "customerUid": ".*",
         "storeUid": "4caad296",

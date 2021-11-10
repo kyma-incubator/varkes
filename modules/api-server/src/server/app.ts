@@ -4,7 +4,6 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import * as bodyParser from "body-parser";
 import * as expressWinston from "express-winston";
 import * as cors from "cors";
 import * as connector from "./routes/connector";
@@ -13,6 +12,7 @@ import * as events from "./routes/events";
 import * as remoteApis from "./routes/remoteApis";
 import * as localApis from "./routes/localApis";
 import * as config from "@varkes/configuration"
+import { EWOULDBLOCK } from "constants";
 
 const VARKES_LOGO = path.resolve(__dirname, 'resources/logo.svg')
 const LOGO_URL = "/logo";
@@ -27,7 +27,11 @@ const LOGGER = config.logger("api-server")
 
 async function init(config: config.Config) {
     let app = express()
-    app.use(bodyParser.json())
+    app.use(express.json({
+        type: function (req) {
+            return req.headers['content-type']
+        }
+    }))
     app.use(cors())
     app.options('*', cors())
 
