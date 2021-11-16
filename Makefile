@@ -24,7 +24,8 @@ validate:
 
 npm-publish:
 	@echo "//registry.npmjs.org/:_authToken='${BOT_NPM_TOKEN}'" > .npmrc
-	npx lerna publish from-package --yes
+	npm whoami
+	npx lerna publish from-package --no-verify-access --yes
 	sleep 60
 
 clean:
