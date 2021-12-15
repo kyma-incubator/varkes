@@ -129,7 +129,7 @@ async function signCertificateSigningRequestBase(connectorClientFn: Function, ur
   return Buffer.from(encodedCert, "base64");
 }
 
-export async function eventsUrl(): Promise<string> {
+export async function legacyEventsUrl(): Promise<string> {
   const query = gql`
     query($appId: ID!) {
       application(id: $appId) {
@@ -165,7 +165,16 @@ export async function eventsUrl(): Promise<string> {
         : " application not found"
     }`
   );
+  LOGGER.debug("Legacy events URL: %s", result.data.application.eventingConfiguration.defaultURL)
   return result.data.application.eventingConfiguration.defaultURL;
+}
+
+export async function cloudEventsUrl(): Promise<string> {
+  let legacyUrl = await legacyEventsUrl();
+
+  let cloudeventsUrl = legacyUrl.replace("/v1/events", "/events");
+  LOGGER.debug("Cloud events URL: %s", cloudeventsUrl)
+  return cloudeventsUrl;
 }
 
 async function queryAppID(connectionInfo: connection.Info, certificate: Buffer): Promise<string> {
