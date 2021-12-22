@@ -68,7 +68,7 @@ function customizeMock(app) {
             urls:
             {
                 eventsUrl: localDomain + "/events/v1/events",
-                cloudeventsUrl: localDomain + "events/events",
+                cloudeventsUrl: localDomain + "/events/events",
                 metadataUrl:
                     localDomain + "/metadata/v1/metadata/services",
                 renewCertUrl:

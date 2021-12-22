@@ -28,9 +28,10 @@ const LOGGER = config.logger("api-server")
 async function init(config: config.Config) {
     let app = express()
     app.use(express.json({
-        type: function (req) {
-            return req.headers['content-type']
-        }
+        type: [
+            "application/cloudevents+json",
+            "application/json"
+        ]
     }))
     app.use(cors())
     app.options('*', cors())

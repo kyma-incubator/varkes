@@ -142,12 +142,12 @@ export async function connect(token: string, persistFiles: boolean = true, insec
 
 export async function legacyEventsUrl(): Promise<string> {
   if (connection!.type === Type.Kyma) return kymaConnector.legacyEventsUrl();
-  else return compassConnector.eventsUrl();
+  else return compassConnector.legacyEventsUrl();
 }
 
 export async function cloudEventsUrl(): Promise<string> {
   if (connection!.type === Type.Kyma) return kymaConnector.cloudEventsUrl();
-  else return compassConnector.eventsUrl();
+  else return compassConnector.cloudEventsUrl();
 }
 
 export type Info = {
