@@ -1,6 +1,6 @@
 {
   "name": "@varkes/example-combined-odata-mock",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "combined example of odata and api-server",
   "main": "app.js",
   "private": true,
@@ -16,7 +16,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@varkes/api-server": "^0.13.0",
+    "@varkes/api-server": "^0.13.1",
     "@varkes/cockpit": "^0.13.0",
     "@varkes/configuration": "^0.13.0",
     "@varkes/odata-mock": "^0.13.0",

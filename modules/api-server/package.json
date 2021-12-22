@@ -1,6 +1,6 @@
 {
   "name": "@varkes/api-server",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "main": "dist/server/app.js",
   "types": "dist/server/app.d.ts",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
     "clean": "rm -rf dist || true && rm -rf logs || true && rm -rf generated || true"
   },
   "dependencies": {
-    "@varkes/app-connector": "^0.13.0",
+    "@varkes/app-connector": "^0.13.1",
     "@varkes/configuration": "^0.13.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
