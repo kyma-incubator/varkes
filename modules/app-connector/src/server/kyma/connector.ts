@@ -178,11 +178,12 @@ export async function renewCertificate(
       throw new Error(
         "Calling Certificate Renewal URL failed with status '" +
           response.statusCode +
-          "' and body '" +
+          "' and payload '" +
           JSON.stringify(response.body, null, 2) +
           "'"
       );
     }
+    LOGGER.debug("Renewal was successful with status code 201");
     return Buffer.from(response.body.crt, "base64");
   });
 }

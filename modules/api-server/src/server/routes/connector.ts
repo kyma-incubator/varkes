@@ -44,8 +44,12 @@ function renew(req: express.Request, res: express.Response){
     if (err) {
         res.status(400).send({ error: err })
     } else {
-        connection.renewCertificate()
-        res.status(200).send(connection.info())
+        connection.renewCertificate().then((result: any) => {
+            res.status(201).send(connection.info())
+        }, (err: any) => {
+            LOGGER.error("Certificate renewal failed, a new connection url may be needed to reestablished the connection: %s", err)
+            res.status(500).send({ error: err.message });
+        }) 
     }
 }
 
