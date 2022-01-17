@@ -26,7 +26,7 @@ export class SendEventViewComponent implements OnInit {
     public ariaExpanded = false;
     public ariaHidden = true;
     public tracing = true;
-    public cloudevent = true;
+    public cloudevent = false;
     public success;
     public topicName;
     public successMessage;
