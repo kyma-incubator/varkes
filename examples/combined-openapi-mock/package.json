@@ -1,6 +1,6 @@
 {
   "name": "@varkes/example-combined-openapi-mock",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "combined example of varkes openapi-mock and varkes api-server",
   "main": "app.js",
   "private": true,
@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@varkes/api-server": "^0.13.1",
-    "@varkes/cockpit": "^0.13.0",
+    "@varkes/cockpit": "^0.13.2",
     "@varkes/configuration": "^0.13.0",
     "@varkes/openapi-mock": "^0.13.0",
     "express": "^4.17.1"
