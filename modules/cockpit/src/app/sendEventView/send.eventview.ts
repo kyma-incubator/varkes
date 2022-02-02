@@ -29,6 +29,8 @@ export class SendEventViewComponent implements OnInit {
     public cloudevent = false;
     public success;
     public topicName;
+    public inputSource;
+    public inputType;
     public successMessage;
     public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
@@ -113,8 +115,8 @@ export class SendEventViewComponent implements OnInit {
     private sendCloudEvent(): any {
       this.loading = true;
       let specversion = "1.0";
-      let eventType = this.topicName;
-      let eventSource = this.event.provider;
+      let eventType = this.inputType;
+      let eventSource = this.inputSource;
       let eventId = uuid();
       let eventTime = new Date().toISOString();
 
