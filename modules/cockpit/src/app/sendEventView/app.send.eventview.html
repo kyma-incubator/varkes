@@ -69,11 +69,13 @@
         </div>
         <div class="fd-form___item">
           <label class="fd-from__label" for="input-source">Event Source:</label>
-          <input class="fd-form__control" type="text" id="input-source" name="inputSource" placeholder="Event Source" [(ngModel)]="inputSource" [attr.aria-disabled]="!cloudevent">
+          <input class="fd-form__control" type="text" id="input-source" name="inputSource" [(ngModel)]="inputSource"
+          (keyup)="updateEventType()" [attr.aria-disabled]="!cloudevent">
         </div>
         <div class="fd-form___item">
           <label class="fd-from__label" for="input-type">Event Type:</label>
-          <input class="fd-form__control" type="text" id="input-type" name="inputType" placeholder="Event Type" [(ngModel)]="inputType" [attr.aria-disabled]="!cloudevent">
+          <input class="fd-form__control" type="text" id="input-type" name="inputType" [(ngModel)]="inputType"
+          [attr.aria-disabled]="!cloudevent">
         </div>
       </div>
     </div>

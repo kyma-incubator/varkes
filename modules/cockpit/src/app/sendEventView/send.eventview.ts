@@ -48,6 +48,8 @@ export class SendEventViewComponent implements OnInit {
         this.info = await this.serviceInstance.getInfo();
         this.baseUrl = this.serviceInstance.getBaseUrl();
         this.options['basePath'] = this.baseUrl;
+        this.inputSource = "ck-varkes";
+        this.inputType = "sap.kyma.custom." + this.inputSource + "." + this.topics[0];
     }
     public onOpenDropDown() {
         this.showTopics = true;
@@ -166,10 +168,15 @@ export class SendEventViewComponent implements OnInit {
         this.ariaHidden = true;
     }
 
+    public updateEventType() {
+      this.inputType = "sap.kyma.custom." + this.inputSource + "." + this.topicName;
+    }
+
     public selectedTopic(topic) {
         this.topicName = topic;
         this.topic = JSON.stringify(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels[topic.split(".").join("/")].example : this.event.events.spec.topics[topic].example, null, '\t');
         this.showTopics = false;
+        this.inputType = "sap.kyma.custom." + this.inputSource + "." + topic;
     }
     filterTopicsNames() {
         this.filteredTopicsNames = [];
