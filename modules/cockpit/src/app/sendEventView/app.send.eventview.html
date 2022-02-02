@@ -45,10 +45,11 @@
         <div class="fd-dropdown fd-has-display-block" (clickOutside)="closeDropDown()" excludeBeforeClick="true">
           <div class="fd-popover fd-has-display-block">
             <div class="fd-popover__control">
+              <label class="fd-from__label" for="input-topic">Event Topic:</label>
               <button class="fd-dropdown__control y-fd-dropdown__control fd-button fd-has-padding-none"
                 aria-controls="nNJnB279" [attr.aria-expanded]="ariaExpanded" aria-haspopup="true"
                 (click)="toggleDropDown()">
-                <input class="fd-form__control y-fd-form__control" type="text" name="topicName" autocomplete="off"
+                <input class="fd-form__control y-fd-form__control" type="text" id="input-topic" name="topicName" autocomplete="off"
                   placeholder="Select" [(ngModel)]="topicName" (ngModelChange)="filterTopicsNames()"
                   (keydown)="openDropDown($event)" (click)="openDropDown($event)">
               </button>
@@ -65,6 +66,14 @@
               </nav>
             </div>
           </div>
+        </div>
+        <div class="fd-form___item">
+          <label class="fd-from__label" for="input-source">Event Source:</label>
+          <input class="fd-form__control" type="text" id="input-source" placeholder="Event Source" [attr.aria-disabled]="!cloudevent">
+        </div>
+        <div class="fd-form___item">
+          <label class="fd-from__label" for="input-type">Event Type:</label>
+          <input class="fd-form__control" type="text" id="input-type" placeholder="Event Type" [attr.aria-disabled]="!cloudevent">
         </div>
       </div>
     </div>
