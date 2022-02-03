@@ -31,6 +31,7 @@ export class SendEventViewComponent implements OnInit {
     public topicName;
     public inputSource;
     public inputType;
+    public inputApplication;
     public successMessage;
     public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
@@ -48,8 +49,8 @@ export class SendEventViewComponent implements OnInit {
         this.info = await this.serviceInstance.getInfo();
         this.baseUrl = this.serviceInstance.getBaseUrl();
         this.options['basePath'] = this.baseUrl;
-        this.inputSource = "ck-varkes";
-        this.inputType = "sap.kyma.custom." + this.inputSource + "." + this.topics[0];
+        this.inputApplication = "Application";
+        this.inputType = "sap.kyma.custom." + this.inputApplication + "." + this.topics[0];
     }
     public onOpenDropDown() {
         this.showTopics = true;
@@ -59,7 +60,7 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public sendEvent() {
-      if (!this.topicName) {
+      if (!this.topicName || this.cloudevent && (!this.inputSource || !this.inputApplication || !this.inputType)){
         return;
       }
       let eventData;
@@ -169,14 +170,14 @@ export class SendEventViewComponent implements OnInit {
     }
 
     public updateEventType() {
-      this.inputType = "sap.kyma.custom." + this.inputSource + "." + this.topicName;
+      this.inputType = "sap.kyma.custom." + this.inputApplication + "." + this.topicName;
     }
 
     public selectedTopic(topic) {
         this.topicName = topic;
         this.topic = JSON.stringify(this.event.events.spec.asyncapi == ASYNC_API_2 ? this.event.events.spec.channels[topic.split(".").join("/")].example : this.event.events.spec.topics[topic].example, null, '\t');
         this.showTopics = false;
-        this.inputType = "sap.kyma.custom." + this.inputSource + "." + topic;
+        this.inputType = "sap.kyma.custom." + this.inputApplication + "." + topic;
     }
     filterTopicsNames() {
         this.filteredTopicsNames = [];

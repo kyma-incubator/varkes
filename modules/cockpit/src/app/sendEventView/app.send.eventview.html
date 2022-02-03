@@ -36,7 +36,7 @@
             </span>
           </label>
         </div>
-        <button *ngIf="event && remote" class="fd-button--primary fd-button--l" [attr.aria-disabled]="!topicName" (click)="sendEvent()">Send
+        <button *ngIf="event && remote" class="fd-button--primary fd-button--l" [attr.aria-disabled]="!topicName || cloudevent && (!inputApplication || !inputSource || !inputType)" (click)="sendEvent()">Send
           Event</button>
       </div>
     </div>
@@ -67,13 +67,26 @@
             </div>
           </div>
         </div>
+      <div class="fd-form__set">
         <div class="fd-form___item">
-          <label class="fd-from__label" for="input-source">Event Source:</label>
+          <label class="fd-from__label" for="input-source">Cloud Event Source:
+            <span class="fd-inline-help fd-has-float-right">
+              <span class="fd-inline-help__content fd-inline-help__content--bottom-left">
+                In case of BEB: BEB Namespace e.g. "/default/sap.kyma/id".
+              </span>
+            </span>
+          </label>
           <input class="fd-form__control" type="text" id="input-source" name="inputSource" [(ngModel)]="inputSource"
+          placeholder="Cloud Event Source" [attr.aria-disabled]="!cloudevent">
+        </div>
+      </div>
+        <div class="fd-form___item">
+          <label class="fd-from__label" for="input-application">Cloud Event Application:</label>
+          <input class="fd-form__control" type="text" id="input-application" name="inputApplication" [(ngModel)]="inputApplication"
           (keyup)="updateEventType()" [attr.aria-disabled]="!cloudevent">
         </div>
         <div class="fd-form___item">
-          <label class="fd-from__label" for="input-type">Event Type:</label>
+          <label class="fd-from__label" for="input-type">Cloud Event Type:</label>
           <input class="fd-form__control" type="text" id="input-type" name="inputType" [(ngModel)]="inputType"
           [attr.aria-disabled]="!cloudevent">
         </div>
