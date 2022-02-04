@@ -32,6 +32,7 @@ export class SendEventViewComponent implements OnInit {
     public inputSource;
     public inputType;
     public inputApplication;
+    public connection;
     public successMessage;
     public filteredTopicsNames = [];
     options: any = { maxLines: 1000, printMargin: false };
@@ -49,7 +50,11 @@ export class SendEventViewComponent implements OnInit {
         this.info = await this.serviceInstance.getInfo();
         this.baseUrl = this.serviceInstance.getBaseUrl();
         this.options['basePath'] = this.baseUrl;
-        this.inputApplication = "Application";
+        this.http.get(this.baseUrl + this.info.links.connection).subscribe(
+          (success) => {
+            this.connection = JSON.parse(success["_body"]);
+          }
+        );
         this.inputType = "sap.kyma.custom." + this.inputApplication + "." + this.topics[0];
     }
     public onOpenDropDown() {

@@ -82,7 +82,7 @@
       </div>
         <div class="fd-form___item">
           <label class="fd-from__label" for="input-application">Cloud Event Application:</label>
-          <input class="fd-form__control" type="text" id="input-application" name="inputApplication" [(ngModel)]="inputApplication"
+          <input class="fd-form__control" type="text" id="input-application" name="inputApplication" value="{{connection.application}}" [(ngModel)]="inputApplication"
           (keyup)="updateEventType()" [attr.aria-disabled]="!cloudevent">
         </div>
         <div class="fd-form___item">
