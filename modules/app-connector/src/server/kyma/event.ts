@@ -55,6 +55,8 @@ export function sendCloudEvent(event: any): Promise<any> {
                 LOGGER.debug("Received send confirmation: %s", JSON.stringify(response.body, null, 2))
                 return response.body;
             } else {
+                LOGGER.debug("Received error response for event payload: " + JSON.stringify(event, null, 2));
+
                 throw common.resolveError(response.statusCode, response.body, "sending cloud event in structured mode")
             }
         })
