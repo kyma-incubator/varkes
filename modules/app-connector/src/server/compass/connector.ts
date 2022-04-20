@@ -6,7 +6,7 @@ import * as common from "./common";
 import * as commonCommon from "../common";
 import * as config from "@varkes/configuration";
 import gql from "graphql-tag";
-import {DocumentNode} from "graphql";
+import { DocumentNode } from "graphql";
 
 const LOGGER: any = config.logger("app-connector");
 
@@ -158,15 +158,14 @@ export async function legacyEventsUrl(): Promise<string> {
       }
     });
 
-  LOGGER.debug(
-    `Received eventsURL Result = ${
-      result.data.application
-        ? JSON.stringify(result.data.application.eventingConfiguration, null, 2)
-        : " application not found"
-    }`
-  );
-  LOGGER.debug("Legacy events URL: %s", result.data.application.eventingConfiguration.defaultURL)
-  return result.data.application.eventingConfiguration.defaultURL;
+  if (result.data.application) {
+    LOGGER.debug(`Received eventsURL Result = ${JSON.stringify(result.data.application.eventingConfiguration, null, 2)}`);
+    if (result.data.application.eventingConfiguration) {
+      LOGGER.debug("Legacy events URL: %s", result.data.application.eventingConfiguration.defaultURL)
+      return result.data.application.eventingConfiguration.defaultURL;
+    }
+  }
+  throw new Error("Cannot determine an endpoint for sending events, is the application " + connection.info()!.application + " assigned to a runtime?");
 }
 
 export async function cloudEventsUrl(): Promise<string> {
@@ -248,7 +247,7 @@ export async function connect(token: string, persistFiles: boolean = true, insec
   connectionData.application = appId;
   connectionData.applicationUrl = connectionData.applicationUrl + appId;
 
-  return {connection: connectionData, certificate: certificateData};
+  return { connection: connectionData, certificate: certificateData };
 }
 
 export async function renewCertificate(connection: connection.Info, certificate: Buffer, privateKeyData: Buffer) {
