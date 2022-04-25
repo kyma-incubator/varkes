@@ -7,6 +7,9 @@ import * as express from "express"
 const openapiSampler = require('openapi-sampler')
 import * as refParser from 'json-schema-ref-parser'
 import { api, connection } from "@varkes/app-connector"
+import * as services from "../services";
+
+var varkesConfig: config.Config;
 
 function getAll(req: express.Request, res: express.Response) {
     LOGGER.debug("Getting all APIs")
@@ -15,11 +18,11 @@ function getAll(req: express.Request, res: express.Response) {
         res.status(400).send({ error: err })
     } else {
         api.findAll().then((result: any[]) => {
-            res.status(200).send(result.map((entity)=>{
-                if(entity.api){
+            res.status(200).send(result.map((entity) => {
+                if (entity.api) {
                     entity.api = {}
                 }
-                if(entity.events){
+                if (entity.events) {
                     entity.events = {}
                 }
                 return entity
@@ -53,6 +56,9 @@ function get(req: express.Request, res: express.Response) {
                 })
             }
             else {
+                if (body.name) {
+                    body.events = loadEventSpecFromLocal(body.name)
+                }
                 res.status(200).type("json").send(body)
             }
         }, (err: any) => {
@@ -60,6 +66,18 @@ function get(req: express.Request, res: express.Response) {
             res.status(500).send({ error: err.message });
         })
     }
+}
+
+function loadEventSpecFromLocal(apiname: string) {
+    LOGGER.debug("API with name " + apiname + " has no event spec, trying to find it local");
+
+    let event = varkesConfig.events.find((x: config.Event) => x.name == apiname);
+    if (event) {
+        let eventMetadata: any = services.fillEventData(varkesConfig, event)
+        return eventMetadata.events
+    }
+    LOGGER.debug("local lookup of event API with name " + apiname + " failed as it does not exist");
+    return null
 }
 
 function update(req: express.Request, res: express.Response) {
@@ -152,9 +170,9 @@ function dereferenceApi(body: any) {
     })
 
 }
-function router() {
+function router(config: config.Config) {
     let apiRouter = express.Router()
-
+    varkesConfig = config
     apiRouter.get("/", getAll)
     apiRouter.post("/", create)
     apiRouter.get("/:api", get)

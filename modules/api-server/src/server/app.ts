@@ -41,7 +41,7 @@ async function init(config: config.Config) {
       msg: "{{req.method}} {{req.url}}, status: {{res.statusCode}}{{process.env.DEBUG && process.env.NODE_ENV!='production' ?', headers: '+JSON.stringify(req.headers):''}}",
       expressFormat: false
     }))
-    app.use(REMOTE_APIS_URL, remoteApis.router())
+    app.use(REMOTE_APIS_URL, remoteApis.router(config))
     app.use(LOCAL_APIS_URL, localApis.router(config))
     app.use(CONNECTION, connector.router())
     app.use(EVENTS_URL, events.router())
