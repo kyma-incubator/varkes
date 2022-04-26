@@ -71,11 +71,17 @@ function get(req: express.Request, res: express.Response) {
 function loadEventSpecFromLocal(apiname: string) {
     LOGGER.debug("API with name " + apiname + " has no event spec, trying to find it local");
 
-    let event = varkesConfig.events.find((x: config.Event) => x.name == apiname);
-    if (event) {
-        let eventMetadata: any = services.fillEventData(varkesConfig, event)
-        return eventMetadata.events
+    let configEvents = varkesConfig.events;
+    if (configEvents) {
+        for (let i = 0; i < configEvents.length; i++) {
+            let event = configEvents[i];
+            let metadata: any = services.fillEventData(varkesConfig, event)
+            if (metadata.name == apiname) {
+                return metadata.events;
+            }
+        }
     }
+
     LOGGER.debug("local lookup of event API with name " + apiname + " failed as it does not exist");
     return null
 }
