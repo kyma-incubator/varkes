@@ -47,6 +47,9 @@ function get(req: express.Request, res: express.Response) {
             }
             let body = result;
             body.id = req.params.api //comply with the api spec
+            if (body.name && !body.events){
+                body.events = loadEventSpecFromLocal(body.name)
+            }
             if (body.events && body.events.spec && Object.keys(body.events.spec).length !== 0) { //an empty events.spec {} causes bug
                 dereferenceApi(body).then((result) => {
                     res.status(200).type("json").send(result)
@@ -56,9 +59,6 @@ function get(req: express.Request, res: express.Response) {
                 })
             }
             else {
-                if (body.name) {
-                    body.events = loadEventSpecFromLocal(body.name)
-                }
                 res.status(200).type("json").send(body)
             }
         }, (err: any) => {
