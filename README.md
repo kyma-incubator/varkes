@@ -1,8 +1,14 @@
+
 <p align="center">
  <img src="./assets/logo.svg" width="150">
 </p>
 
 # Varkes
+
+## :warning: **Archived**
+
+This project is discontinued and the repository has been deprecated and archived on Mar 7th, 2023.
+
 [![Build status](https://status.build.kyma-project.io/badge.svg?jobs=post-master-varkes)](https://status.build.kyma-project.io/?repo=kyma-incubator%2Fvarkes&job=post-master-varkes)
 
 ## Overview
